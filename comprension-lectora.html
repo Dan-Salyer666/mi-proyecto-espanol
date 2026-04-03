@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="quiz-level" content="dynamic">
+  <meta name="quiz-focus" content="dynamic">
+  <meta name="quiz-region" content="dynamic">
+  <meta name="quiz-register" content="dynamic">
+  <title>Comprensión Lectora — Mi Proyecto Español</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --bg-deep:       #0a1628;
+      --bg-card:       #111d35;
+      --bg-card-hover: #162544;
+      --bg-input:      #0d1a2f;
+      --border:        #1e3355;
+      --border-focus:  #3b6cb5;
+      --text-primary:  #e2e8f0;
+      --text-secondary:#8a9bb8;
+      --text-muted:    #5a6f8e;
+      --accent:        #4a90d9;
+      --accent-glow:   rgba(74,144,217,0.15);
+      --correct:       #34d399;
+      --warning:       #fbbf24;
+      --incorrect:     #f87171;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(74,144,217,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      opacity: 0.035;
+      background-image:
+        linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+        linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+        linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+        linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+        linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e),
+        linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e);
+      background-size: 80px 140px;
+      background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .back-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding-top: 8px;
+      white-space: nowrap;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .header-text h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.9rem, 4vw, 2.7rem);
+      font-style: italic;
+      line-height: 1.1;
+    }
+
+    .header-text p {
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 300;
+      margin-top: 5px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 16px;
+    }
+
+    .card-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    /* ── Button group (param selectors) ── */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-option {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 0.875rem;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-option:hover {
+      border-color: #2a4a75;
+      color: var(--text-primary);
+      background: var(--accent-glow);
+    }
+    .btn-option.selected {
+      background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+      border-color: transparent;
+      color: #fff;
+    }
+
+    /* ── Text inputs ── */
+    .param-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s, opacity 0.2s;
+    }
+    .param-input:focus { border-color: var(--border-focus); }
+    .param-input::placeholder { color: var(--text-muted); }
+    .param-input:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .toggle-label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+    .toggle-label input[type="checkbox"] { accent-color: var(--accent); cursor: pointer; }
+
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+    /* episode count */
+    .episode-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .episode-row label { font-size: 0.82rem; color: var(--text-muted); }
+    .episode-input {
+      width: 72px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      outline: none;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .episode-input:focus { border-color: var(--border-focus); }
+
+    /* SE checkbox */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .checkbox-row input[type="checkbox"] { accent-color: var(--accent); width: 17px; height: 17px; cursor: pointer; flex-shrink: 0; }
+    .checkbox-row span { font-size: 0.9rem; color: var(--text-secondary); }
+
+    /* ── Primary / secondary buttons ── */
+    .btn-primary {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+    .btn-primary:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-secondary {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-secondary:hover { border-color: #2a4a75; color: var(--text-primary); }
+
+    .btn-warn {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: 1px solid rgba(251,191,36,0.35);
+      background: rgba(251,191,36,0.08);
+      color: #fbbf24;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-warn:hover { background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.5); }
+
+    .btn-danger {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.35);
+      background: rgba(248,113,113,0.08);
+      color: #f87171;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-danger:hover { background: rgba(248,113,113,0.15); border-color: rgba(248,113,113,0.5); }
+
+    .btn-save {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 11px 22px;
+      border-radius: 10px;
+      border: 1px solid rgba(52,211,153,0.35);
+      background: rgba(52,211,153,0.08);
+      color: #34d399;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+    .btn-save:hover { background: rgba(52,211,153,0.15); border-color: rgba(52,211,153,0.5); }
+
+    .btn-save-primary {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #22a877, #34d399);
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+    .btn-save-primary:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+    .btn-save-primary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .star-btn {
+      font-size: 1.8rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 14px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .star-btn:hover { color: #fbbf24; border-color: rgba(251,191,36,0.4); }
+    .star-btn.active { color: #fbbf24; border-color: rgba(251,191,36,0.5); background: rgba(251,191,36,0.1); }
+
+    /* ── Loading ── */
+    .loading-wrap {
+      text-align: center;
+      padding: 70px 20px;
+    }
+    .spinner {
+      width: 46px; height: 46px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.85s linear infinite;
+      margin: 0 auto 22px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-wrap p { color: var(--text-secondary); font-size: 0.9rem; }
+    .loading-wrap .sub { color: var(--text-muted); font-size: 0.78rem; margin-top: 6px; }
+
+    /* ── SE Legend ── */
+    .se-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 12px 18px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 18px;
+    }
+    .se-swatch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.77rem;
+      color: var(--text-secondary);
+    }
+    .swatch-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Passage text ── */
+    .passage-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      color: var(--text-primary);
+    }
+    .passage-text p { margin-bottom: 1.15em; }
+    .passage-text p:last-child { margin-bottom: 0; }
+
+    .se-mark {
+      font-weight: 700;
+      border-radius: 3px;
+      padding: 0 1px;
+      cursor: help;
+    }
+
+    /* ── Questions ── */
+    .question-block {
+      padding-bottom: 26px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--border);
+    }
+    .question-block:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+
+    .q-num {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 7px;
+    }
+
+    .q-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      line-height: 1.55;
+      color: var(--text-primary);
+      margin-bottom: 14px;
+    }
+
+    .options-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .opt {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 11px 15px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-input);
+      cursor: pointer;
+      transition: all 0.17s;
+    }
+    .opt:hover:not(.disabled) { border-color: #2a4a75; background: var(--bg-card-hover); }
+    .opt.selected  { border-color: var(--accent); background: var(--accent-glow); }
+    .opt.correct   { border-color: #34d399; background: rgba(52,211,153,0.10); }
+    .opt.incorrect { border-color: #f87171; background: rgba(248,113,113,0.10); }
+    .opt.missed    { border-color: #34d399; background: rgba(52,211,153,0.06); }
+    .opt.disabled  { cursor: default; }
+
+    .opt-letter {
+      font-size: 0.73rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      min-width: 16px;
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+    .opt.selected  .opt-letter { color: var(--accent); }
+    .opt.correct   .opt-letter { color: #34d399; }
+    .opt.incorrect .opt-letter { color: #f87171; }
+    .opt.missed    .opt-letter { color: #34d399; }
+
+    .opt-text {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+    .opt.selected  .opt-text,
+    .opt.correct   .opt-text,
+    .opt.incorrect .opt-text,
+    .opt.missed    .opt-text { color: var(--text-primary); }
+
+    .explanation {
+      margin-top: 10px;
+      padding: 10px 14px;
+      background: rgba(74,144,217,0.07);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    /* ── Score banner ── */
+    .score-banner {
+      border-radius: 14px;
+      text-align: center;
+      padding: 30px 24px;
+      margin-bottom: 20px;
+    }
+    .score-banner.great { background: rgba(52,211,153,0.10); border: 1px solid rgba(52,211,153,0.28); }
+    .score-banner.ok    { background: rgba(251,191,36,0.09);  border: 1px solid rgba(251,191,36,0.28); }
+    .score-banner.low   { background: rgba(248,113,113,0.09); border: 1px solid rgba(248,113,113,0.28); }
+
+    .score-num {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3.2rem;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .score-banner.great .score-num { color: #34d399; }
+    .score-banner.ok    .score-num { color: #fbbf24; }
+    .score-banner.low   .score-num { color: #f87171; }
+
+    .score-msg { font-size: 0.88rem; color: var(--text-secondary); }
+
+    /* ── Action rows ── */
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+    .action-row .btn-primary  { flex: 1; min-width: 160px; }
+    .action-row .btn-secondary { flex: 1; min-width: 130px; }
+    .action-row .btn-save-primary { flex: 1; min-width: 160px; }
+    .action-row .btn-save { flex: 1; min-width: 130px; }
+    .action-row .btn-warn { flex: 1; min-width: 130px; }
+    .action-row .btn-danger { flex: 1; min-width: 130px; }
+
+    /* ── Quiz header bar ── */
+    .quiz-meta-bar {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .quiz-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      flex: 1;
+    }
+    .quiz-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+    }
+
+    /* ── Password modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,15,30,0.82);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px;
+      max-width: 400px;
+      width: 100%;
+    }
+    .modal-box h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 6px;
+    }
+    .modal-box p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; }
+    .modal-err { color: var(--incorrect); font-size: 0.82rem; margin-top: 8px; min-height: 18px; }
+    .modal-btns { display: flex; gap: 10px; margin-top: 16px; }
+    .modal-btns .btn-primary { width: auto; flex: 1; }
+
+    /* ── Error ── */
+    .err-box {
+      background: rgba(248,113,113,0.09);
+      border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 12px;
+      padding: 20px 24px;
+      color: #f87171;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+    .err-box strong { display: block; margin-bottom: 6px; font-size: 1rem; }
+
+
+    /* ── Drive / Track Hub ── */
+    .drive-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 0.82rem;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .drive-status { display: flex; align-items: center; gap: 8px; color: var(--text-muted); }
+    .drive-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .drive-dot.connected  { background: #34d399; }
+    .drive-dot.disconnected { background: var(--text-muted); }
+    .drive-dot.busy { background: #fbbf24; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .story-slot {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .story-slot-info { flex: 1; }
+    .story-slot-title { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-bottom: 3px; }
+    .story-slot-meta  { font-size: 0.75rem; color: var(--text-muted); }
+    .story-slot-btns  { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-slot-continue {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem; font-weight: 600;
+      padding: 7px 16px; border-radius: 8px;
+      border: none;
+      background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+      color: #fff; cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-slot-continue:hover { opacity: 0.85; }
+    .btn-slot-discard {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem; font-weight: 500;
+      padding: 7px 14px; border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted);
+      cursor: pointer; transition: all 0.18s;
+    }
+    .btn-slot-discard:hover { border-color: #f87171; color: #f87171; }
+
+    /* ── Utils ── */
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeUp 0.35s ease both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ── Header ── -->
+  <header>
+    <a href="index.html" class="back-link">← Inicio</a>
+    <div class="header-text">
+      <h1>Comprensión Lectora</h1>
+      <p>Generador dinámico · IA</p>
+    </div>
+    <div id="headerDriveStatus" style="display:flex;align-items:center;flex-shrink:0;padding-top:6px">
+      <button id="headerDriveLabel" onclick="connectDriveInline()" style="font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:500;color:var(--text-muted);background:transparent;border:1px solid var(--border);border-radius:20px;cursor:pointer;white-space:nowrap;padding:5px 12px;transition:all 0.2s;display:flex;align-items:center;gap:6px">
+        <span class="drive-dot disconnected" id="headerDriveDot" style="width:7px;height:7px"></span>
+        Drive ✗
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Password modal ── -->
+  <div id="pwModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>Acceso API</h3>
+      <p>Introduce la contraseña para activar la generación de cuestionarios.</p>
+      <input type="password" id="pwInput" class="param-input" placeholder="Contraseña">
+      <div id="pwErr" class="modal-err"></div>
+      <div class="modal-btns">
+        <button class="btn-primary" onclick="submitPw()">Continuar</button>
+        <button class="btn-secondary" onclick="closePwModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       SCREEN 1 — PARAMETERS
+  ════════════════════════════════════════ -->
+  <div id="sParams">
+
+    <!-- Drive status + Track Hub -->
+    <div class="drive-bar" id="driveBar">
+      <div class="drive-status">
+        <div class="drive-dot disconnected" id="driveDot"></div>
+        <span id="driveLabel">Google Drive: no conectado</span>
+      </div>
+      <button class="btn-secondary" id="driveBtn" onclick="connectDrive()" style="font-size:0.8rem;padding:6px 14px">Conectar Drive</button>
+    </div>
+
+    <div id="trackHub" class="hidden" style="margin-bottom:16px">
+      <div class="card-label" style="margin-bottom:10px">Historias en progreso</div>
+      <div id="trackSlots"></div>
+    </div>
+
+    <!-- Level -->
+    <div class="card">
+      <div class="card-label">Nivel</div>
+      <div class="btn-group">
+        <button class="btn-option" data-key="level" data-val="A2" onclick="pickOpt(this)">A2</button>
+        <button class="btn-option" data-key="level" data-val="B1" onclick="pickOpt(this)">B1</button>
+        <button class="btn-option selected" data-key="level" data-val="B2" onclick="pickOpt(this)">B2</button>
+        <button class="btn-option" data-key="level" data-val="C1" onclick="pickOpt(this)">C1</button>
+        <button class="btn-option" data-key="level" data-val="C2" onclick="pickOpt(this)">C2</button>
+      </div>
+    </div>
+
+    <!-- Mode -->
+    <div class="card">
+      <div class="card-label">Modo</div>
+      <div class="btn-group">
+        <button class="btn-option selected" data-key="mode" data-val="individual" onclick="pickMode(this)">Individual</button>
+        <button class="btn-option" data-key="mode" data-val="fixed" onclick="pickMode(this)">Historia Fija</button>
+        <button class="btn-option" data-key="mode" data-val="open" onclick="pickMode(this)">Historia Abierta</button>
+      </div>
+      <div id="episodeRow" class="episode-row hidden">
+        <label for="epCount">Número de episodios:</label>
+        <input type="number" id="epCount" class="episode-input" value="5" min="2" max="20">
+      </div>
+    </div>
+
+    <!-- Register -->
+    <div class="card">
+      <div class="card-label">Registro</div>
+      <div class="btn-group">
+        <button class="btn-option selected" data-key="register" data-val="everyday" onclick="pickOpt(this)">Cotidiano</button>
+        <button class="btn-option" data-key="register" data-val="conversational" onclick="pickOpt(this)">Conversacional</button>
+        <button class="btn-option" data-key="register" data-val="formal" onclick="pickOpt(this)">Formal</button>
+        <button class="btn-option" data-key="register" data-val="literary" onclick="pickOpt(this)">Literario</button>
+        <button class="btn-option" data-key="register" data-val="news" onclick="pickOpt(this)">Periodístico</button>
+      </div>
+    </div>
+
+    <!-- Regionality -->
+    <div class="card">
+      <div class="card-label">Regionalidad</div>
+      <div class="btn-group">
+        <button class="btn-option selected" data-key="region" data-val="neutral" onclick="pickOpt(this)">Neutro</button>
+        <button class="btn-option" data-key="region" data-val="rioplatense" onclick="pickOpt(this)">Rioplatense</button>
+        <button class="btn-option" data-key="region" data-val="latin_american" onclick="pickOpt(this)">Latinoamericano</button>
+        <button class="btn-option" data-key="region" data-val="spain" onclick="pickOpt(this)">España</button>
+      </div>
+    </div>
+
+    <!-- Theme + Grammar Focus -->
+    <div class="card">
+      <div class="card-label">Tema</div>
+      <input type="text" id="themeInput" class="param-input"
+             placeholder="Ej: una noche en Buenos Aires, un viaje en tren, una decisión difícil…">
+      <div class="toggle-row">
+        <label class="toggle-label">
+          <input type="checkbox" id="surpriseMe" onchange="toggleDisable('surpriseMe','themeInput')">
+          Sorpréndeme — tema libre
+        </label>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="card-label">Enfoque gramatical</div>
+      <input type="text" id="grammarInput" class="param-input"
+             placeholder="Ej: pretérito vs imperfecto, tres personajes en pasado, sueño en futuro…">
+      <div class="toggle-row">
+        <label class="toggle-label">
+          <input type="checkbox" id="noGrammar" onchange="toggleDisable('noGrammar','grammarInput')">
+          Sin enfoque específico
+        </label>
+      </div>
+    </div>
+
+    <!-- SE Highlight -->
+    <div class="card">
+      <label class="checkbox-row">
+        <input type="checkbox" id="seCheck" checked>
+        <span>Resaltar usos de <em>se</em> con código de colores</span>
+      </label>
+    </div>
+
+    <!-- Generate button -->
+    <button class="btn-primary" style="margin-top:8px" onclick="startGenerate()">
+      Generar cuestionario
+    </button>
+
+  </div><!-- /sParams -->
+
+
+  <!-- ════════════════════════════════════════
+       SCREEN 2 — LOADING
+  ════════════════════════════════════════ -->
+  <div id="sLoading" class="hidden">
+    <div id="genContextLabel" style="text-align:center;font-size:0.78rem;color:var(--text-muted);margin-bottom:12px;padding:8px 14px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;display:none"></div>
+    <div class="card loading-wrap">
+      <div class="spinner"></div>
+      <p id="loadingMsg">Generando tu cuestionario…</p>
+      <p class="sub" id="loadingSub">Esto puede tardar unos segundos</p>
+      <div style="margin-top:18px;background:var(--bg-input);border:1px solid var(--border);border-radius:8px;overflow:hidden;height:6px;width:260px;margin-left:auto;margin-right:auto">
+        <div id="loadingBar" style="height:100%;background:linear-gradient(90deg,#3b6cb5,#4a90d9);width:0%;transition:width 0.4s ease;border-radius:8px"></div>
+      </div>
+      <p id="loadingTokens" style="font-size:0.72rem;color:var(--text-muted);margin-top:8px"></p>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════════
+       SCREEN 3 — QUIZ
+  ════════════════════════════════════════ -->
+  <div id="sQuiz" class="hidden fade-in">
+
+    <div class="quiz-meta-bar">
+      <div id="qTitle" class="quiz-title"></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div id="qTags" class="quiz-tags"></div>
+        <div id="qEpisode" style="font-size:0.72rem;color:var(--text-muted);display:none"></div>
+      </div>
+    </div>
+
+    <div id="seLegend" class="se-legend hidden">
+      <span style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-right:4px">SE:</span>
+      <div class="se-swatch"><div class="swatch-dot" style="background:#4ECDC4"></div>Pronominal</div>
+      <div class="se-swatch"><div class="swatch-dot" style="background:#C084FC"></div>Pasiva/Impersonal</div>
+      <div class="se-swatch" style="color:var(--text-muted);font-style:italic">Sin color = otro uso (reflexivo, recíproco, accidental, IOP)</div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-label">Lectura</div>
+      <div id="passageDisplay" class="passage-text"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Preguntas de comprensión</div>
+      <div id="questionsList"></div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-primary" id="gradeBtn" onclick="gradeQuiz()" disabled>Calificar</button>
+      <div id="quizNewConfigWrap" class="hidden">
+        <button class="btn-secondary" onclick="confirmNewConfig()">Nueva configuración</button>
+        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:4px;text-align:center">El cuestionario actual no se guardará</div>
+      </div>
+    </div>
+    <div id="answerCount" style="font-size:0.78rem;color:var(--text-muted);text-align:center;margin-top:8px"></div>
+
+  </div><!-- /sQuiz -->
+
+
+  <!-- ════════════════════════════════════════
+       SCREEN 4 — GRADED / REVIEW
+  ════════════════════════════════════════ -->
+  <div id="sGraded" class="hidden fade-in">
+
+    <div id="scoreBanner" class="score-banner">
+      <div id="scoreNum" class="score-num"></div>
+      <div id="scoreMsg" class="score-msg"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-label">Lectura</div>
+      <div id="passageReview" class="passage-text"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">Revisión de respuestas</div>
+      <div id="reviewList"></div>
+    </div>
+
+    <div class="action-row" id="gradedActions"></div>
+
+    <div id="starRatingSection" class="hidden" style="text-align:center;margin-top:18px;padding:16px;background:var(--bg-input);border:1px solid var(--border);border-radius:12px">
+      <div style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:10px">¿Cómo fue este cuestionario?</div>
+      <div style="display:flex;justify-content:center;gap:12px">
+        <button id="star1" class="star-btn" onclick="pickStar(1)" title="No me gustó">★</button>
+        <button id="star2" class="star-btn" onclick="pickStar(2)" title="Neutral">★</button>
+        <button id="star3" class="star-btn" onclick="pickStar(3)" title="Me gustó">★</button>
+      </div>
+    </div>
+
+  </div><!-- /sGraded -->
+
+  <!-- ════════════════════════════════════════
+       CONFLICT / UTILITY MODAL
+  ════════════════════════════════════════ -->
+  <div id="conflictModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3 id="conflictModalTitle"></h3>
+      <p id="conflictModalBody"></p>
+      <div id="conflictModalBtns" class="modal-btns" style="flex-wrap:wrap;gap:10px"></div>
+    </div>
+  </div>
+
+</div><!-- /page-wrap -->
+
+
+<script>
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let sessionPw        = null;
+let pendingFn        = null;
+let currentQuiz      = null;
+let currentCfg       = {};
+let answers          = [];
+
+// Story state
+let storyBible       = null;
+let prevBible        = null;
+let episodeNum       = 0;
+let episodeTarget    = 0;
+let storyId          = null;
+let biblePromise     = null;
+let regenerating     = false;
+
+// Active story trackers
+let activeFixedStory = null;
+let activeOpenStory  = null;
+const storyCache     = {};
+
+// Grading / rating
+let lastScore        = null;
+let currentStarRating= null;
+let isProcessing     = false;
+
+const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false };
+
+// Drive state
+const CLIENT_ID    = '10393001786-l8rfutuihm2301jf6a5rkmqumtfla8t5.apps.googleusercontent.com';
+const DRIVE_SCOPE  = 'https://www.googleapis.com/auth/drive.file';
+const FOLDER_NAME  = 'Quiz Archive';
+const PARENT_FOLDER= 'Spanish Learning';
+let driveToken     = null;
+let tokenClient    = null;
+let folderId       = null;
+let driveReady     = false;
+
+// ═══════════════════════════════════════════════
+//  PARAM UI
+// ═══════════════════════════════════════════════
+function pickOpt(btn) {
+  const key = btn.dataset.key;
+  document.querySelectorAll(`[data-key="${key}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  cfg[key] = btn.dataset.val;
+}
+
+function pickMode(btn) {
+  const newMode = btn.dataset.val;
+  if (newMode === 'fixed' && activeFixedStory) { showFixedConflictModal(); return; }
+  if (newMode === 'open'  && activeOpenStory)  { showOpenStoryModal();     return; }
+  // Clear any lingering story state when switching modes
+  if (storyId) clearStoryState();
+  pickOpt(btn);
+  document.getElementById('episodeRow').classList.toggle('hidden', cfg.mode !== 'fixed');
+}
+
+function pickRegion(btn) {
+  pickOpt(btn);
+  const voseoRow = document.getElementById('voseoRow');
+  if (voseoRow) {
+    voseoRow.classList.toggle('hidden', cfg.region !== 'latin_american');
+    if (cfg.region !== 'latin_american') {
+      document.getElementById('voseoCheck').checked = false;
+      cfg.voseo = false;
+    }
+  }
+}
+
+function toggleDisable(cbId, inputId) {
+  const cb    = document.getElementById(cbId);
+  const input = document.getElementById(inputId);
+  input.disabled = cb.checked;
+  if (cb.checked) input.value = '';
+}
+
+// ═══════════════════════════════════════════════
+//  PASSWORD
+// ═══════════════════════════════════════════════
+function requirePw(fn) {
+  if (sessionPw) { fn(); return; }
+  pendingFn = fn;
+  document.getElementById('pwModal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('pwInput').focus(), 60);
+}
+
+function submitPw() {
+  const pw = document.getElementById('pwInput').value.trim();
+  if (!pw) { document.getElementById('pwErr').textContent = 'Introduce una contraseña.'; return; }
+  sessionPw = pw;
+  document.getElementById('pwModal').classList.add('hidden');
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwErr').textContent = '';
+  if (pendingFn) { const f = pendingFn; pendingFn = null; f(); }
+}
+
+function closePwModal() {
+  document.getElementById('pwModal').classList.add('hidden');
+  document.getElementById('pwErr').textContent = '';
+  pendingFn = null;
+}
+
+document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitPw(); });
+window.addEventListener('load', () => { setTimeout(initDriveAuth, 500); });
+window.addEventListener('beforeunload', e => {
+  // Warn if on quiz or graded screen with active content
+  const onQuiz   = !document.getElementById('sQuiz').classList.contains('hidden');
+  const onGraded = !document.getElementById('sGraded').classList.contains('hidden');
+  const onLoading = !document.getElementById('sLoading').classList.contains('hidden');
+  if ((onQuiz || onGraded || onLoading) && currentQuiz) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  SCREENS
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  ['sParams','sLoading','sQuiz','sGraded'].forEach(s =>
+    document.getElementById(s).classList.add('hidden')
+  );
+  document.getElementById(id).classList.remove('hidden');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function goParams() {
+  showScreen('sParams');
+  unlockParams();
+  if (driveToken) loadActiveStories();
+}
+
+// ═══════════════════════════════════════════════
+//  SE COLORS
+// ═══════════════════════════════════════════════
+const SE_COLOR = {
+  pronominal:'#4ECDC4',
+  pasiva:'#C084FC',
+};
+const SE_LABEL = {
+  pronominal:'Pronominal',
+  pasiva:'Pasiva/Impersonal',
+};
+
+function renderPassage(raw, highlight) {
+  let html = raw;
+  if (highlight) {
+    html = html.replace(/\[SE:(\w+)\]([\s\S]*?)\[\/SE\]/g, (_, fn, txt) => {
+      if (SE_COLOR[fn]) {
+        const col = SE_COLOR[fn], label = SE_LABEL[fn];
+        return `<span class="se-mark" style="color:${col}" title="${label}">${txt}</span>`;
+      }
+      // Not a highlighted category — strip markup, show plain text
+      return txt;
+    });
+  } else {
+    html = html.replace(/\[SE:\w+\]([\s\S]*?)\[\/SE\]/g, '$1');
+  }
+  return html.split(/\n{2,}/).filter(p => p.trim()).map(p => `<p>${p.trim()}</p>`).join('');
+}
+
+let generateRetries = 0;
+
+function tryRepairJSON(str) {
+  // Strategy 1: Fix literal newlines inside string values
+  // JSON strings must use \n not actual newlines
+  try {
+    let fixed = str;
+    // Replace actual newlines/tabs inside strings with escaped versions
+    // Walk through and only escape newlines that are inside quotes
+    let inString = false, escaped = false, result = '';
+    for (let i = 0; i < fixed.length; i++) {
+      const ch = fixed[i];
+      if (escaped) { result += ch; escaped = false; continue; }
+      if (ch === '\\') { result += ch; escaped = true; continue; }
+      if (ch === '"') { inString = !inString; result += ch; continue; }
+      if (inString && ch === '\n') { result += '\\n'; continue; }
+      if (inString && ch === '\r') { result += ''; continue; }
+      if (inString && ch === '\t') { result += '\\t'; continue; }
+      result += ch;
+    }
+    fixed = result;
+
+    // Strategy 2: Fix trailing commas
+    fixed = fixed.replace(/,\s*([}\]])/g, '$1');
+
+    // Strategy 3: Close truncated JSON
+    const opens = (fixed.match(/{/g) || []).length;
+    const closes = (fixed.match(/}/g) || []).length;
+    const arrOpens = (fixed.match(/\[/g) || []).length;
+    const arrCloses = (fixed.match(/\]/g) || []).length;
+    for (let i = 0; i < arrOpens - arrCloses; i++) fixed += ']';
+    for (let i = 0; i < opens - closes; i++) fixed += '}';
+
+    const parsed = JSON.parse(fixed);
+    if (parsed && parsed.questions) return parsed;
+
+    // Strategy 4: If we got valid JSON but missing questions, check nesting
+    if (parsed && typeof parsed === 'object') {
+      // Maybe questions are nested under a different key
+      for (const key of Object.keys(parsed)) {
+        if (Array.isArray(parsed[key]) && parsed[key].length > 0 && parsed[key][0].question) {
+          parsed.questions = parsed[key];
+          return parsed;
+        }
+      }
+    }
+    return parsed;
+  } catch (e1) {
+    // Strategy 5: Try to extract just the JSON object with regex
+    try {
+      const match = str.match(/\{[\s\S]*"title"[\s\S]*"passage"[\s\S]*"questions"[\s\S]*\}/);
+      if (match) {
+        let extracted = match[0];
+        // Re-run newline fix on extracted
+        let inStr = false, esc = false, res = '';
+        for (let i = 0; i < extracted.length; i++) {
+          const c = extracted[i];
+          if (esc) { res += c; esc = false; continue; }
+          if (c === '\\') { res += c; esc = true; continue; }
+          if (c === '"') { inStr = !inStr; res += c; continue; }
+          if (inStr && c === '\n') { res += '\\n'; continue; }
+          if (inStr && c === '\r') { continue; }
+          res += c;
+        }
+        // Fix trailing commas and close brackets
+        res = res.replace(/,\s*([}\]])/g, '$1');
+        const o2 = (res.match(/{/g)||[]).length, c2 = (res.match(/}/g)||[]).length;
+        const a2 = (res.match(/\[/g)||[]).length, ac2 = (res.match(/\]/g)||[]).length;
+        for (let i = 0; i < a2 - ac2; i++) res += ']';
+        for (let i = 0; i < o2 - c2; i++) res += '}';
+        return JSON.parse(res);
+      }
+    } catch {}
+    return null;
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  PROMPT BUILDER
+// ═══════════════════════════════════════════════
+function buildPrompt(p) {
+  const levelMap = {
+    A2:'elementary A2 — simple sentences, basic vocabulary, present and simple past only',
+    B1:'intermediate B1 — moderate complexity, common vocabulary, varied tenses',
+    B2:'upper-intermediate B2 — complex sentences, broad vocabulary, full tense range including subjunctive',
+    C1:'advanced C1 — sophisticated structures, nuanced vocabulary, complex subordination',
+    C2:'mastery C2 — near-native complexity, full stylistic and lexical range',
+  };
+  const regionDesc = {
+    neutral:       'neutral Spanish — broadly accessible to all Spanish speakers',
+    rioplatense:   'Rioplatense Spanish (Argentine/Uruguayan) — use voseo throughout, lunfardo touches, local Río de la Plata flavor',
+    latin_american:'Latin American Spanish' + (p.voseo ? ' — include voseo (vos/te) naturally alongside tú forms' : ' — use tú/usted, no voseo'),
+    spain:         'Castilian Spanish — use vosotros, peninsular vocabulary',
+  };
+  const registerMap = {
+    everyday:'everyday register — natural, relaxed prose',
+    conversational:'conversational — dialogue-heavy, colloquial',
+    formal:'formal register — structured, elevated tone',
+    literary:'literary register — stylistically rich, figurative language',
+    news:'journalistic register — informative, objective',
+  };
+
+  const seInstr = p.seOn
+    ? `SE HIGHLIGHTING — TWO CATEGORIES ONLY:
+Mark ONLY the standalone pronoun "se" — NEVER mark "se" when it is part of another word (ser, sería, señor, seco, según, etc). Only the pronoun "se" that appears as its own word.
+
+Mark ONLY these two types — all other uses of "se" should appear as plain text with NO markup.
+
+Category 1 — PRONOMINAL (inherently pronominal verbs where "se" is part of the verb's identity):
+Wrap like this: [SE:pronominal]se[/SE]
+These are verbs that change meaning or only exist with "se": irse, quedarse, darse cuenta, convertirse, atreverse, quejarse, arrepentirse, enterarse, burlarse, referirse, tratarse de, etc.
+DO NOT mark reflexive actions (lavarse las manos, mirarse al espejo) — those are reflexive, not pronominal.
+DO NOT mark reciprocal actions (se abrazaron, se escribieron) — leave unmarked.
+
+Category 2 — PASIVA REFLEJA / IMPERSONAL (no specific agent performing the action):
+Wrap like this: [SE:pasiva]se[/SE]
+Examples: se vende, se dice, se habla español, se pedía silencio, se buscan empleados, se prohibe fumar.
+These describe actions without naming who does them.
+
+DO NOT mark any other "se" usage — leave reflexive, reciprocal, accidental (se le cayó), and IOP replacement (se lo dije) as plain unmarked text.
+
+When in doubt, leave it unmarked. Only mark when you are confident it is pronominal or pasiva/impersonal.`
+    : 'Do not add any special markup.';
+
+  const themeStr   = p.theme   ? `Tema: ${p.theme}` : 'Tema: elige algo interesante, sorpréndeme';
+  const grammarStr = p.grammar ? `Enfoque gramatical: ${p.grammar}. Diseña el pasaje y preguntas para evaluar este punto.`
+                               : 'Sin enfoque gramatical específico.';
+
+  const bibleSection = p.bible
+    ? `\n\nCONTINUIDAD (episodio ${p.epNum}):\n${p.bible}\n\nEscribe el siguiente episodio. Mantén continuidad de personajes, lugar y tono. Avanza la trama.`
+    : '';
+
+  const isWrapUpFinal = p.epTarget > 0 && p.epNum === p.epTarget;
+  const epLabel = p.epNum > 0
+    ? (p.epTarget > 0
+        ? ` (Episodio ${p.epNum} de ${p.epTarget}${isWrapUpFinal ? ' — EPISODIO FINAL: da un cierre narrativo satisfactorio' : ''})`
+        : ` (Episodio ${p.epNum} — historia abierta)`)
+    : '';
+
+  return `Crea un cuestionario de comprensión lectora en español. Responde SOLO con JSON válido, sin texto adicional ni comillas de código.
+
+Nivel: ${levelMap[p.level] || p.level}
+Registro: ${registerMap[p.register] || p.register}
+Variedad: ${regionDesc[p.region] || p.region}
+${themeStr}${epLabel}
+${grammarStr}${bibleSection}
+
+PASAJE: 3-4 párrafos. Narración auténtica, no ejercicio de libro de texto. ${seInstr}
+
+PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia, implicación y comprensión profunda — no localización de palabras. Incluye preguntas sobre motivación, tono y significado implícito.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
+
+JSON requerido:
+{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto","options":["A","B","C","D"],"correct":0,"explanation":"por qué"}]}
+
+correct es índice 0-based (0=A, 1=B, 2=C, 3=D).`;
+}
+
+// ═══════════════════════════════════════════════
+//  GENERATION
+// ═══════════════════════════════════════════════
+function setProgress(pct, msg, sub) {
+  document.getElementById('loadingBar').style.width = pct + '%';
+  if (msg) document.getElementById('loadingMsg').textContent = msg;
+  if (sub !== undefined) document.getElementById('loadingTokens').textContent = sub;
+}
+
+function startGenerate() {
+  if (isProcessing) return;
+  if (!driveToken) {
+    showTwoOptionModal(
+      'Google Drive no está conectado',
+      'Tu cuestionario no se guardará automáticamente. Puedes conectar Drive ahora o continuar sin guardado.',
+      'Conectar Drive y generar', () => { pendingFn = () => requirePw(doGenerate); connectDrive(); },
+      'Continuar sin guardar',   () => requirePw(doGenerate)
+    );
+  } else {
+    requirePw(doGenerate);
+  }
+}
+
+async function doGenerate() {
+  const theme   = document.getElementById('surpriseMe').checked ? null : document.getElementById('themeInput').value.trim() || null;
+  const grammar = document.getElementById('noGrammar').checked  ? null : document.getElementById('grammarInput').value.trim() || null;
+  const seOn    = document.getElementById('seCheck').checked;
+  const voseo   = cfg.region === 'latin_american' && (document.getElementById('voseoCheck')?.checked || false);
+
+  const isContinuation = (cfg.mode !== 'individual') && storyId !== null;
+
+  if (!isContinuation) {
+    storyBible   = null; prevBible = null; biblePromise = null;
+    storyId      = cfg.mode === 'individual' ? null : 'story-' + Date.now();
+    episodeNum   = cfg.mode === 'individual' ? 0 : 1;
+    episodeTarget= cfg.mode === 'fixed' ? (parseInt(document.getElementById('epCount').value) || 5) : (episodeTarget || 0);
+  } else if (regenerating) {
+    regenerating = false;
+    storyBible   = prevBible;
+    // episodeNum stays the same
+  } else {
+    episodeNum++;
+  }
+
+  currentCfg = { ...cfg, theme, grammar, seOn, voseo,
+    bible: storyBible, epNum: episodeNum, epTarget: episodeTarget };
+
+  const epMsg = episodeNum > 0
+    ? (episodeTarget > 0 ? `Generando episodio ${episodeNum} de ${episodeTarget}…` : `Generando episodio ${episodeNum}…`)
+    : 'Generando tu cuestionario…';
+
+  const modeLabels = { individual: 'Individual', fixed: 'Historia Fija', open: 'Historia Abierta' };
+  const regionLabels = { neutral: 'Neutro', rioplatense: 'Rioplatense', latin_american: 'Latinoamericano', spain: 'España' };
+  const registerLabels = { everyday: 'Cotidiano', conversational: 'Conversacional', formal: 'Formal', literary: 'Literario', news: 'Periodístico' };
+  const ctxParts = [modeLabels[cfg.mode] || cfg.mode];
+  if (episodeNum > 0) ctxParts.push(episodeTarget > 0 ? `Ep. ${episodeNum}/${episodeTarget}` : `Ep. ${episodeNum}`);
+  ctxParts.push(currentCfg.level);
+  ctxParts.push(registerLabels[currentCfg.register] || currentCfg.register);
+  ctxParts.push(regionLabels[currentCfg.region] || currentCfg.region);
+  if (theme) ctxParts.push(`Tema: ${theme}`);
+  const ctxLabel = document.getElementById('genContextLabel');
+  ctxLabel.textContent = ctxParts.join(' · ');
+  ctxLabel.style.display = 'block';
+
+  showScreen('sLoading');
+  isProcessing = false;
+  setProgress(0, epMsg, '');
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password:   sessionPw,
+        model:      'claude-opus-4-6',
+        max_tokens: 8000,
+        stream:     true,
+        system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
+Return ONLY valid JSON matching the exact schema. No preamble, no explanation, no markdown fences.
+CRITICAL JSON RULES:
+- For dialogue in passages, use Spanish guillemets «» or em-dashes (—), NEVER use double quotes inside strings.
+- Escape any special characters in string values: use \\n for newlines, \\" if a double quote is absolutely necessary.
+- All JSON must be on a single logical structure with properly escaped strings.
+Spanish must be natural and authentic. Never include medical, clinical, or doctor-patient content.`,
+        messages: [{ role: 'user', content: buildPrompt(currentCfg) }]
+      })
+    });
+
+    if (res.status === 401) { sessionPw = null; showScreen('sParams'); alert('Contraseña incorrecta.'); return; }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const reader = res.body.getReader(), decoder = new TextDecoder();
+    let buffer = '', fullText = '', tokenCount = 0;
+    setProgress(8, epMsg, '');
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n'); buffer = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const raw = line.slice(6).trim();
+        if (!raw || raw === '[DONE]') continue;
+        try {
+          const evt = JSON.parse(raw);
+          if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+            fullText += evt.delta.text;
+            tokenCount += Math.ceil(evt.delta.text.length / 4);
+            const pct = Math.min(90, 8 + Math.round((tokenCount / 900) * 82));
+            const phase = pct < 35 ? epMsg : pct < 65 ? 'Construyendo las preguntas…' : 'Finalizando…';
+            setProgress(pct, phase, `≈ ${tokenCount} tokens`);
+          }
+        } catch {}
+      }
+    }
+
+    setProgress(98, 'Procesando…', '');
+    let clean = fullText.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
+    // Pre-clean: escape literal newlines and fix unescaped quotes inside JSON string values
+    let inStr = false, esc = false, preCleaned = '';
+    for (let i = 0; i < clean.length; i++) {
+      const c = clean[i];
+      if (esc) { preCleaned += c; esc = false; continue; }
+      if (c === '\\') { preCleaned += c; esc = true; continue; }
+      if (c === '"') {
+        if (!inStr) {
+          // Opening a string
+          inStr = true; preCleaned += c; continue;
+        }
+        // We're inside a string and hit a quote — is this the closing quote or a content quote?
+        // Look ahead: if next non-space char is , } ] : then it's structural (closing quote)
+        let lookAhead = '';
+        for (let j = i + 1; j < clean.length && j < i + 10; j++) {
+          if (clean[j] !== ' ' && clean[j] !== '\t') { lookAhead = clean[j]; break; }
+        }
+        if (',}]:'.includes(lookAhead) || i === clean.length - 1) {
+          // Structural closing quote
+          inStr = false; preCleaned += c; continue;
+        } else {
+          // Content quote inside a string — replace with guillemet
+          preCleaned += '«'; continue;
+        }
+      }
+      if (inStr && c === '\n') { preCleaned += '\\n'; continue; }
+      if (inStr && c === '\r') { continue; }
+      preCleaned += c;
+    }
+    clean = preCleaned;
+    let quiz;
+    try {
+      quiz = JSON.parse(clean);
+    } catch (parseErr) {
+      // Attempt lightweight repair
+      quiz = tryRepairJSON(clean);
+      if (!quiz) throw new Error(`JSON inválido del modelo: ${parseErr.message}`);
+    }
+
+    if (!quiz.questions || !Array.isArray(quiz.questions) || quiz.questions.length === 0)
+      throw new Error('El cuestionario generado no tiene preguntas. Inténtalo de nuevo.');
+
+    currentQuiz = quiz;
+    generateRetries = 0;
+    answers     = new Array(quiz.questions.length).fill(null);
+    renderQuiz(quiz, currentCfg.seOn);
+    showScreen('sQuiz');
+    syncDriveBtns();
+
+    if (currentCfg.mode !== 'individual') {
+      prevBible    = storyBible;
+      biblePromise = generateBible(quiz.passage, currentCfg);
+    }
+
+  } catch (err) {
+    console.error('Generation error:', err);
+    isProcessing = false;
+    goParams();
+    const canRetry = generateRetries < 3;
+    generateRetries++;
+    const retryBtn = canRetry
+      ? `<button class="btn-primary" style="margin-top:12px;width:auto;padding:10px 24px" onclick="this.closest('.err-box').remove();regenerating=true;requirePw(doGenerate)">Reintentar</button>`
+      : '';
+    const errHtml = `<div class="err-box" style="margin-bottom:16px">
+      <strong>Error al generar el cuestionario</strong>
+      ${err.message}<br><small style="color:var(--text-muted)">Revisa la consola para más detalles.</small>
+      ${retryBtn}
+      <button class="btn-secondary" style="margin-top:12px;margin-left:8px;width:auto;padding:10px 24px" onclick="this.closest('.err-box').remove()">Cerrar</button>
+    </div>`;
+    // Remove any existing error box first
+    document.querySelector('.err-box')?.remove();
+    document.getElementById('sParams').insertAdjacentHTML('afterbegin', errHtml);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER QUIZ
+// ═══════════════════════════════════════════════
+const LETTERS = ['A','B','C','D'];
+
+function renderQuiz(quiz, seOn) {
+  document.getElementById('qTitle').textContent = quiz.title;
+  const tags = [currentCfg.level, currentCfg.register];
+  if (currentCfg.region !== 'neutral') tags.push(currentCfg.region.replace('_',' '));
+  document.getElementById('qTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  const epEl = document.getElementById('qEpisode');
+  if (episodeNum > 0) {
+    epEl.style.display = 'block';
+    epEl.textContent = episodeTarget > 0 ? `Episodio ${episodeNum} de ${episodeTarget}` : `Episodio ${episodeNum}`;
+  } else { epEl.style.display = 'none'; }
+
+  const hasSeMarkers = /\[SE:/.test(quiz.passage);
+  document.getElementById('seLegend').classList.toggle('hidden', !(seOn && hasSeMarkers));
+  document.getElementById('passageDisplay').innerHTML = renderPassage(quiz.passage, seOn);
+
+  // Show "Nueva configuración" only for individual mode
+  document.getElementById('quizNewConfigWrap').classList.toggle('hidden', currentCfg.mode !== 'individual');
+
+  // Reset grade button and answer counter
+  updateAnswerCount();
+
+  const list = document.getElementById('questionsList');
+  list.innerHTML = '';
+  quiz.questions.forEach((q, qi) => {
+    const div = document.createElement('div');
+    div.className = 'question-block';
+    div.innerHTML = `
+      <div class="q-num">Pregunta ${qi + 1}</div>
+      <div class="q-text">${q.question}</div>
+      <div class="options-list" id="ol-${qi}">
+        ${q.options.map((opt, oi) => `
+          <div class="opt" onclick="pickAnswer(${qi},${oi})">
+            <span class="opt-letter">${LETTERS[oi]}</span>
+            <span class="opt-text">${opt}</span>
+          </div>`).join('')}
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function confirmNewConfig() {
+  if (!confirm('Este cuestionario no se guardará. ¿Volver al menú?')) return;
+  clearStoryState();
+  goParams();
+}
+
+function updateAnswerCount() {
+  const total = answers.length;
+  const answered = answers.filter(a => a !== null).length;
+  const remaining = total - answered;
+  const countEl = document.getElementById('answerCount');
+  const gradeBtn = document.getElementById('gradeBtn');
+  if (remaining > 0) {
+    countEl.textContent = `${remaining} pregunta${remaining !== 1 ? 's' : ''} sin responder`;
+    countEl.style.color = 'var(--text-muted)';
+    gradeBtn.disabled = true;
+  } else {
+    countEl.textContent = '¡Todas las preguntas respondidas!';
+    countEl.style.color = '#34d399';
+    gradeBtn.disabled = false;
+  }
+}
+
+function pickAnswer(qi, oi) {
+  answers[qi] = oi;
+  document.getElementById(`ol-${qi}`).querySelectorAll('.opt')
+    .forEach((el, i) => el.classList.toggle('selected', i === oi));
+  updateAnswerCount();
+}
+
+// ═══════════════════════════════════════════════
+//  GRADING
+// ═══════════════════════════════════════════════
+function gradeQuiz() {
+  if (!currentQuiz) return;
+
+  let correct = 0;
+  const qs = currentQuiz.questions;
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+
+  qs.forEach((q, qi) => {
+    const ua = answers[qi], isRight = ua === q.correct;
+    if (isRight) correct++;
+    const div = document.createElement('div');
+    div.className = 'question-block';
+    const opts = q.options.map((opt, oi) => {
+      let cls = 'opt disabled';
+      if      (oi === q.correct && oi === ua) cls += ' correct';
+      else if (oi === q.correct)              cls += ' missed';
+      else if (oi === ua)                     cls += ' incorrect';
+      return `<div class="${cls}"><span class="opt-letter">${LETTERS[oi]}</span><span class="opt-text">${opt}</span></div>`;
+    }).join('');
+    const verdict = isRight ? `<span style="color:#34d399">✓ Correcta</span>` : `<span style="color:#f87171">✗ Incorrecta</span>`;
+    div.innerHTML = `
+      <div class="q-num">Pregunta ${qi + 1} — ${verdict}</div>
+      <div class="q-text">${q.question}</div>
+      <div class="options-list">${opts}</div>
+      <div class="explanation">${q.explanation}</div>`;
+    reviewList.appendChild(div);
+  });
+
+  const total = qs.length, pct = Math.round((correct / total) * 100);
+  lastScore = { correct, total, percent: pct };
+  const band = pct >= 80 ? 'great' : pct >= 60 ? 'ok' : 'low';
+  document.getElementById('scoreBanner').className   = `score-banner ${band}`;
+  document.getElementById('scoreNum').textContent    = `${correct} / ${total}`;
+  document.getElementById('scoreMsg').textContent    = `${pct}% — ${scoreMsg(pct)}`;
+  document.getElementById('passageReview').innerHTML = renderPassage(currentQuiz.passage, currentCfg.seOn);
+
+  currentStarRating = null;
+  buildGradedActions();
+  syncDriveBtns();
+  showScreen('sGraded');
+}
+
+function scoreMsg(pct) {
+  if (pct === 100) return '¡Perfecto! Comprensión total';
+  if (pct >= 90)   return '¡Excelente comprensión!';
+  if (pct >= 80)   return 'Muy bien. Comprensión sólida.';
+  if (pct >= 70)   return 'Bien. Hay cosas para revisar.';
+  if (pct >= 60)   return 'Regular. Vale la pena releer.';
+  return 'Sigue practicando. Vuelve al texto.';
+}
+
+// ═══════════════════════════════════════════════
+//  STAR RATING
+// ═══════════════════════════════════════════════
+function pickStar(n) {
+  currentStarRating = (currentStarRating === n) ? null : n;
+  [1,2,3].forEach(i => {
+    const btn = document.getElementById('star' + i);
+    if (btn) btn.classList.toggle('active', i <= (currentStarRating || 0));
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  BUILD GRADED ACTIONS
+// ═══════════════════════════════════════════════
+function buildGradedActions() {
+  const el   = document.getElementById('gradedActions');
+  const mode = currentCfg.mode;
+  const isFinal = mode === 'individual' ||
+    (mode === 'fixed' && episodeNum >= episodeTarget) ||
+    (mode === 'open'  && episodeTarget > 0 && episodeNum >= episodeTarget);
+
+  // Star rating: show for individual and final episode
+  const starSection = document.getElementById('starRatingSection');
+  if (starSection) {
+    starSection.classList.toggle('hidden', !isFinal);
+    currentStarRating = null;
+    [1,2,3].forEach(i => { const b = document.getElementById('star'+i); if(b) b.classList.remove('active'); });
+  }
+
+  if (mode === 'individual') {
+    el.innerHTML = `
+      <button class="btn-save-primary" onclick="actionSaveAndContinue()">Guardar y generar otro</button>
+      <button class="btn-save"         onclick="actionSaveAndReturn()">Guardar y volver al menú</button>
+      <button class="btn-warn"         onclick="actionDiscardAndRegenerate()">Descartar y regenerar</button>
+      <button class="btn-danger"       onclick="actionDiscardAndReturn()">Descartar y volver al menú</button>`;
+    return;
+  }
+
+  const savedCount = episodeNum - 1;
+  const deleteLabel = savedCount > 0 ? `Eliminar serie (${savedCount} ep. guardados)` : 'Descartar y volver al menú';
+
+  if (!isFinal) {
+    const nextNum = episodeNum + 1;
+    const nextLabel = episodeTarget > 0 ? `episodio ${nextNum} de ${episodeTarget}` : `episodio ${nextNum}`;
+    el.innerHTML = `
+      <button class="btn-save-primary" id="nextEpBtn" onclick="actionSaveAndContinue()">
+        Guardar y continuar — ${nextLabel}
+        <span id="bibleStatus" style="font-size:0.72rem;opacity:0.65;margin-left:6px">(preparando…)</span>
+      </button>
+      <button class="btn-save"   onclick="actionSaveAndReturn()">Guardar y volver al menú</button>
+      <button class="btn-warn"   onclick="actionDiscardAndRegenerate()">Descartar episodio ${episodeNum} y regenerar</button>
+      <button class="btn-danger" onclick="actionDeleteSeries()">${deleteLabel}</button>`;
+    watchBibleReady();
+  } else {
+    const anotherLabel = mode === 'fixed' ? 'Guardar e iniciar otra historia fija' : 'Guardar e iniciar otra historia abierta';
+    el.innerHTML = `
+      <button class="btn-save-primary" onclick="actionSaveAndReturn()">Guardar y volver al menú</button>
+      <button class="btn-save"         onclick="actionSaveAndStartAnother()">${anotherLabel}</button>
+      <button class="btn-warn"         onclick="actionDiscardAndRegenerate()">Descartar episodio ${episodeNum} y regenerar</button>
+      <button class="btn-danger"       onclick="actionDeleteSeries()">${deleteLabel}</button>`;
+  }
+}
+
+function watchBibleReady() {
+  if (!biblePromise) return;
+  biblePromise.then(() => {
+    const s = document.getElementById('bibleStatus');
+    if (s) s.textContent = '✓ listo';
+  }).catch(() => {
+    const s = document.getElementById('bibleStatus');
+    if (s) s.textContent = '(sin contexto)';
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  ACTION FUNCTIONS
+// ═══════════════════════════════════════════════
+async function saveCurrentQuiz(callback) {
+  if (!driveToken) {
+    showTwoOptionModal(
+      'Drive no conectado — no se guardará',
+      'Si continúas sin conectar Drive, este cuestionario/episodio se perderá.',
+      'Conectar Drive ahora',  () => { pendingFn = () => _doSave(callback); connectDrive(); },
+      'Continuar sin guardar', () => callback()
+    );
+    return;
+  }
+  await _doSave(callback);
+}
+
+async function _doSave(callback) {
+  if (driveToken && folderId && currentQuiz) {
+    const isFinal = (currentCfg.mode === 'fixed' && episodeNum >= episodeTarget) ||
+                    (currentCfg.mode === 'open'  && episodeTarget > 0 && episodeNum >= episodeTarget);
+    const status = currentCfg.mode === 'individual' ? null : isFinal ? 'complete' : 'in-progress';
+    await saveQuizToDrive({
+      story_status:   status,
+      episode_target: episodeTarget || null,
+      star_rating:    currentStarRating,
+    });
+    if (isFinal) {
+      if (currentCfg.mode === 'fixed') activeFixedStory = null;
+      if (currentCfg.mode === 'open')  activeOpenStory  = null;
+    }
+  }
+  callback();
+}
+
+function actionSaveAndContinue() {
+  if (isProcessing) return;
+  isProcessing = true;
+  saveCurrentQuiz(async () => {
+    const btn = document.getElementById('nextEpBtn');
+    if (btn) btn.disabled = true;
+    if (biblePromise) { try { await biblePromise; } catch {} }
+    doGenerate();
+  });
+}
+
+function actionSaveAndReturn() {
+  if (isProcessing) return;
+  isProcessing = true;
+  // Wait for bible to finish before saving so Drive record has continuity data
+  (async () => {
+    if (biblePromise) { try { await biblePromise; } catch {} }
+    saveCurrentQuiz(() => {
+      clearStoryState();
+      isProcessing = false;
+      goParams();
+    });
+  })();
+}
+
+function actionSaveAndStartAnother() {
+  if (isProcessing) return;
+  isProcessing = true;
+  const mode = currentCfg.mode;
+  (async () => {
+    if (biblePromise) { try { await biblePromise; } catch {} }
+    saveCurrentQuiz(() => {
+      clearStoryState();
+      if (mode === 'fixed') { isProcessing = false; showStartAnotherModal(); }
+      else doGenerate();
+    });
+  })();
+}
+
+function actionDiscardAndRegenerate() {
+  if (isProcessing) return;
+  const savedCount = episodeNum - 1;
+  const msg = savedCount > 0
+    ? `El episodio ${episodeNum} no se guardará. Se generará uno nuevo. Los ${savedCount} episodio(s) anteriores permanecen en Drive.`
+    : 'Este cuestionario no se guardará. Se generará uno nuevo con los mismos parámetros.';
+  if (!confirm(msg)) return;
+  isProcessing = true;
+  regenerating = true;
+  doGenerate();
+}
+
+function actionDiscardAndReturn() {
+  if (!confirm('Este cuestionario no se guardará. ¿Volver al menú?')) return;
+  isProcessing = false;
+  clearStoryState();
+  goParams();
+}
+
+async function actionDeleteSeries() {
+  const savedCount = episodeNum - 1;
+  const msg = savedCount > 0
+    ? `Se eliminarán el episodio actual (no guardado) y los ${savedCount} episodio(s) ya guardados en Drive. Esta acción es permanente.`
+    : 'Se descartará el episodio actual sin guardar. ¿Confirmar?';
+  if (!confirm(msg)) return;
+  isProcessing = true;
+  if (driveToken && storyId) await deleteStoryFromDrive(storyId);
+  clearStoryState();
+  isProcessing = false;
+  goParams();
+}
+
+function clearStoryState() {
+  storyBible = null; prevBible = null; storyId = null;
+  episodeNum = 0; episodeTarget = 0; biblePromise = null;
+  regenerating = false; currentStarRating = null;
+}
+
+// ═══════════════════════════════════════════════
+//  DELETE STORY FROM DRIVE
+// ═══════════════════════════════════════════════
+async function deleteStoryFromDrive(sid) {
+  if (!driveToken || !folderId) return;
+  try {
+    setDriveUI('busy', 'Eliminando de Drive…');
+    const q   = `'${folderId}' in parents and mimeType='application/json' and trashed=false`;
+    const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id)&pageSize=100`);
+    const data = await res.json();
+    if (!data.files) return;
+    for (const file of data.files) {
+      try {
+        const fr = await driveRequest(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`);
+        const record = await fr.json();
+        if (record.story_id === sid) {
+          await fetch(`https://www.googleapis.com/drive/v3/files/${file.id}`, {
+            method: 'DELETE', headers: { 'Authorization': 'Bearer ' + driveToken }
+          });
+        }
+      } catch {}
+    }
+    setDriveUI('connected', 'Google Drive: conectado ✓');
+  } catch (e) { console.error('Delete error:', e); setDriveUI('connected', 'Google Drive: conectado ✓'); }
+}
+
+// ═══════════════════════════════════════════════
+//  BIBLE GENERATION
+// ═══════════════════════════════════════════════
+async function generateBible(passage, cfg) {
+  const biblePrompt = `Lee este pasaje y escribe un documento de continuidad compacto (~300 palabras):
+- Personajes: nombres, relaciones, rasgos, situación actual
+- Lugar y atmósfera
+- Eventos clave ocurridos
+- Hilos narrativos sin resolver
+- Dirección narrativa sugerida
+- Notas de registro (variedad: ${cfg.region}, registro: ${cfg.register})
+
+PASAJE:
+${passage.replace(/\[SE:\w+\]([\s\S]*?)\[\/SE\]/g, '$1')}
+
+Responde SOLO con el documento en texto plano.`;
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: sessionPw, model: 'claude-sonnet-4-20250514',
+        max_tokens: 600, stream: false,
+        system: 'Eres un asistente que crea documentos de continuidad narrativa. Responde solo con el documento.',
+        messages: [{ role: 'user', content: biblePrompt }]
+      })
+    });
+    if (!res.ok) throw new Error('Bible failed');
+    const data = await res.json();
+    storyBible = data.content[0].text.trim();
+    return storyBible;
+  } catch (err) { console.warn('Bible failed:', err); storyBible = null; return null; }
+}
+
+// ═══════════════════════════════════════════════
+//  MODE CONFLICT / UTILITY MODALS
+// ═══════════════════════════════════════════════
+function showTwoOptionModal(title, body, primaryLabel, primaryFn, secondaryLabel, secondaryFn) {
+  document.getElementById('conflictModalTitle').textContent = title;
+  document.getElementById('conflictModalBody').innerHTML    = body;
+  document.getElementById('conflictModalBtns').innerHTML   = `
+    <button class="btn-primary"   id="m1">${primaryLabel}</button>
+    <button class="btn-secondary" id="m2">${secondaryLabel}</button>`;
+  document.getElementById('m1').onclick = () => { closeConflictModal(); primaryFn();   };
+  document.getElementById('m2').onclick = () => { closeConflictModal(); secondaryFn(); };
+  document.getElementById('conflictModal').classList.remove('hidden');
+}
+
+function showFixedConflictModal() {
+  const s = activeFixedStory;
+  storyCache[s.story_id] = s;
+  const displayTitle = s.title || s.theme || 'Sin título';
+  const epInfo = `episodio ${s.episode} de ${s.episode_target || '?'}`;
+  document.getElementById('conflictModalTitle').textContent = 'Historia fija en progreso';
+  document.getElementById('conflictModalBody').innerHTML    =
+    `Tienes una historia fija en progreso: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
+  document.getElementById('conflictModalBtns').innerHTML   = `
+    <button class="btn-primary"   onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
+    <button class="btn-danger"    onclick="confirmDeleteActiveStory('${s.story_id}','fixed')">Eliminar historia completa</button>
+    <button class="btn-secondary" onclick="closeConflictModal()">Cancelar</button>`;
+  document.getElementById('conflictModal').classList.remove('hidden');
+}
+
+function showOpenStoryModal() {
+  const s = activeOpenStory;
+  storyCache[s.story_id] = s;
+  const hasWrapUp = s.episode_target > 0;
+  const epInfo = hasWrapUp
+    ? `episodio ${s.episode} · cierre en ${s.episode_target - s.episode} ep. más`
+    : `episodio ${s.episode} — historia abierta`;
+  const wrapUpOption = !hasWrapUp ? `
+    <div style="display:flex;align-items:center;gap:8px;margin:4px 0;flex-wrap:wrap">
+      <button class="btn-secondary" onclick="setWrapUpAndContinue()" style="padding:8px 14px;white-space:nowrap">Continuar y cerrar en</button>
+      <input type="number" id="wrapUpInput" value="3" min="1" max="20" class="episode-input" style="width:58px">
+      <span style="font-size:0.82rem;color:var(--text-muted)">episodios más</span>
+    </div>` : '';
+  const displayTitle = s.title || s.theme || 'Sin título';
+  document.getElementById('conflictModalTitle').textContent = 'Historia abierta en progreso';
+  document.getElementById('conflictModalBody').innerHTML    =
+    `Historia: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
+  document.getElementById('conflictModalBtns').innerHTML   = `
+    <button class="btn-primary"   onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
+    ${wrapUpOption}
+    <button class="btn-danger"    onclick="confirmDeleteActiveStory('${s.story_id}','open')">Eliminar historia completa</button>
+    <button class="btn-secondary" onclick="closeConflictModal()">Cancelar</button>`;
+  document.getElementById('conflictModal').classList.remove('hidden');
+}
+
+function setWrapUpAndContinue() {
+  const n = parseInt(document.getElementById('wrapUpInput')?.value) || 3;
+  episodeTarget = activeOpenStory.episode + n;
+  resumeStory(activeOpenStory);
+  closeConflictModal();
+}
+
+function closeConflictModal() {
+  document.getElementById('conflictModal').classList.add('hidden');
+}
+
+async function confirmDeleteActiveStory(sid, type) {
+  if (!confirm('Se eliminarán todos los episodios guardados. Esta acción es permanente.')) return;
+  if (driveToken) await deleteStoryFromDrive(sid);
+  if (type === 'fixed') activeFixedStory = null;
+  if (type === 'open')  activeOpenStory  = null;
+  closeConflictModal();
+  await loadActiveStories();
+}
+
+function showStartAnotherModal() {
+  document.getElementById('conflictModalTitle').textContent = 'Nueva historia fija';
+  document.getElementById('conflictModalBody').innerHTML    = '¿Cuántos episodios para la nueva historia?';
+  document.getElementById('conflictModalBtns').innerHTML   = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <label style="font-size:0.85rem;color:var(--text-muted)">Episodios:</label>
+      <input type="number" id="newEpCount" value="${episodeTarget || 5}" min="2" max="20" class="episode-input">
+    </div>
+    <button class="btn-primary"   onclick="startAnotherFixed()">Generar</button>
+    <button class="btn-secondary" onclick="closeConflictModal()">Cancelar</button>`;
+  document.getElementById('conflictModal').classList.remove('hidden');
+}
+
+function startAnotherFixed() {
+  const n = parseInt(document.getElementById('newEpCount')?.value) || 5;
+  episodeTarget = n;
+  closeConflictModal();
+  doGenerate();
+}
+
+// ═══════════════════════════════════════════════
+//  DRIVE INLINE CONNECT + SYNC
+// ═══════════════════════════════════════════════
+function connectDriveInline() {
+  if (!driveReady) { alert('La biblioteca de Google aún se está cargando.'); return; }
+  if (driveToken)  { alert('Google Drive ya está conectado.'); return; }
+  connectDrive();
+}
+
+function syncDriveBtns() {
+  const connected = !!driveToken;
+  ['quizDriveBtn','gradedDriveBtn'].forEach(id => {
+    const btn = document.getElementById(id);
+    if (!btn) return;
+    btn.textContent      = connected ? '⬡ Drive ✓' : '⬡ Drive ✗';
+    btn.style.color      = connected ? '#34d399' : 'var(--text-muted)';
+    btn.style.borderColor= connected ? 'rgba(52,211,153,0.3)' : 'var(--border)';
+    btn.style.cursor     = connected ? 'default' : 'pointer';
+    btn.onclick          = connected ? null : connectDriveInline;
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE — AUTH
+// ═══════════════════════════════════════════════
+function setDriveUI(state, label) {
+  const dot = document.getElementById('driveDot'),
+        lbl = document.getElementById('driveLabel'),
+        btn = document.getElementById('driveBtn');
+  if (dot) dot.className   = 'drive-dot ' + state;
+  if (lbl) lbl.textContent = label;
+  if (btn) { btn.textContent = state === 'connected' ? 'Desconectar' : 'Conectar Drive';
+             btn.onclick     = state === 'connected' ? disconnectDrive : connectDrive; }
+  const hdot = document.getElementById('headerDriveDot'),
+        hlbl = document.getElementById('headerDriveLabel');
+  if (hdot) hdot.className   = 'drive-dot ' + state;
+  if (hlbl) {
+    const isConn = state === 'connected';
+    const isBusy = state === 'busy';
+    hlbl.innerHTML = `<span class="drive-dot ${state}" id="headerDriveDot" style="width:7px;height:7px"></span>${isConn ? 'Drive ✓' : isBusy ? 'Drive…' : 'Drive ✗'}`;
+    hlbl.style.color = isConn ? '#34d399' : isBusy ? '#fbbf24' : 'var(--text-muted)';
+    hlbl.style.borderColor = isConn ? 'rgba(52,211,153,0.4)' : isBusy ? 'rgba(251,191,36,0.3)' : 'var(--border)';
+    hlbl.style.cursor = isConn ? 'default' : 'pointer';
+    hlbl.onclick = isConn ? () => alert('Google Drive ya está conectado.') : connectDriveInline;
+  }
+  syncDriveBtns();
+}
+
+function initDriveAuth() {
+  if (typeof google === 'undefined' || !google.accounts) { setTimeout(initDriveAuth, 300); return; }
+  driveReady  = true;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: DRIVE_SCOPE, callback: handleTokenResponse,
+  });
+}
+
+function connectDrive() {
+  if (!driveReady) { alert('La biblioteca de Google aún se está cargando. Inténtalo de nuevo.'); return; }
+  setDriveUI('busy', 'Conectando…');
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+function disconnectDrive() {
+  if (driveToken) google.accounts.oauth2.revoke(driveToken, () => {});
+  driveToken = null; folderId = null; activeFixedStory = null; activeOpenStory = null;
+  setDriveUI('disconnected', 'Google Drive: no conectado');
+  document.getElementById('trackHub').classList.add('hidden');
+}
+
+async function handleTokenResponse(resp) {
+  if (resp.error) { setDriveUI('disconnected', 'Error al conectar Drive'); return; }
+  driveToken = resp.access_token;
+  setDriveUI('busy', 'Verificando carpeta…');
+  try {
+    folderId = await ensureFolder();
+    setDriveUI('connected', 'Google Drive: conectado ✓');
+    await loadActiveStories();
+    // If pendingFn was set (e.g. connect-then-generate), call it now
+    if (pendingFn) { const f = pendingFn; pendingFn = null; f(); }
+  } catch (e) {
+    console.error('Drive setup error:', e);
+    setDriveUI('disconnected', 'Error al acceder a Drive');
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE — FOLDER MANAGEMENT
+// ═══════════════════════════════════════════════
+async function driveRequest(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json', ...(options.headers||{}) }
+  });
+  if (res.status === 401) { driveToken = null; setDriveUI('disconnected','Sesión Drive expirada — reconecta'); throw new Error('Drive token expired'); }
+  return res;
+}
+
+async function findFolder(name, parentId) {
+  const q = parentId
+    ? `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
+    : `name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)`);
+  const data = await res.json();
+  return data.files?.length > 0 ? data.files[0].id : null;
+}
+
+async function createFolder(name, parentId) {
+  const body = { name, mimeType:'application/vnd.google-apps.folder' };
+  if (parentId) body.parents = [parentId];
+  const res  = await driveRequest('https://www.googleapis.com/drive/v3/files', { method:'POST', body:JSON.stringify(body) });
+  return (await res.json()).id;
+}
+
+async function ensureFolder() {
+  let p = await findFolder(PARENT_FOLDER, null); if (!p) p = await createFolder(PARENT_FOLDER, null);
+  let a = await findFolder(FOLDER_NAME, p);       if (!a) a = await createFolder(FOLDER_NAME, p);
+  return a;
+}
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE — SAVE
+// ═══════════════════════════════════════════════
+async function saveQuizToDrive(extraFields = {}) {
+  if (!driveToken || !folderId || !currentQuiz) return;
+  setDriveUI('busy', 'Guardando en Drive…');
+  const record = {
+    id: storyId || ('ind-' + Date.now()),
+    date: new Date().toISOString(),
+    title: currentQuiz.title || null,
+    mode: currentCfg.mode, story_id: storyId,
+    episode: episodeNum || null,
+    story_status: extraFields.story_status || (currentCfg.mode === 'individual' ? null : 'in-progress'),
+    level: currentCfg.level, register: currentCfg.register, region: currentCfg.region,
+    theme: currentCfg.theme || null, grammar_focus: currentCfg.grammar || null,
+    passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
+    questions: currentQuiz.questions, story_bible: storyBible || null,
+    score: { correct: lastScore?.correct??null, total: lastScore?.total??null, percent: lastScore?.percent??null },
+    star_rating: extraFields.star_rating || null, ...extraFields
+  };
+  const filename = `quiz_${record.id}_ep${record.episode||0}_${Date.now()}.json`;
+  const boundary = '-------314159265358979323846';
+  const body = [
+    `--${boundary}`, 'Content-Type: application/json; charset=UTF-8', '',
+    JSON.stringify({ name: filename, parents: [folderId] }),
+    `--${boundary}`, 'Content-Type: application/json', '',
+    JSON.stringify(record), `--${boundary}--`,
+  ].join('\r\n');
+  try {
+    await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+      method: 'POST',
+      headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':`multipart/related; boundary="${boundary}"` },
+      body,
+    });
+    setDriveUI('connected', 'Google Drive: guardado ✓');
+    setTimeout(() => setDriveUI('connected', 'Google Drive: conectado ✓'), 2500);
+  } catch (e) { console.error('Save error:', e); setDriveUI('connected', 'Google Drive: error al guardar'); }
+}
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE — LOAD ACTIVE STORIES
+// ═══════════════════════════════════════════════
+async function loadActiveStories() {
+  if (!driveToken || !folderId) return;
+  activeFixedStory = null; activeOpenStory = null;
+  document.getElementById('trackHub').classList.add('hidden');
+  document.getElementById('trackSlots').innerHTML = '';
+  try {
+    const q   = `'${folderId}' in parents and mimeType='application/json' and trashed=false`;
+    const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc&pageSize=100`);
+    const data = await res.json();
+    if (!data.files?.length) return;
+    const allStories = {};
+    for (const file of data.files.slice(0,40)) {
+      try {
+        const fr = await driveRequest(`https://www.googleapis.com/drive/v3/files/${file.id}?alt=media`);
+        const record = await fr.json();
+        if (record.story_id && (!allStories[record.story_id] || record.episode > allStories[record.story_id].episode))
+          allStories[record.story_id] = { ...record, fileId: file.id };
+      } catch {}
+    }
+    const stories = Object.values(allStories).filter(s => s.story_status === 'in-progress');
+    if (!stories.length) return;
+    stories.forEach(s => { if (s.mode==='fixed') activeFixedStory=s; if (s.mode==='open') activeOpenStory=s; });
+    renderTrackHub(stories);
+  } catch (e) { console.error('Load stories error:', e); }
+}
+
+function renderTrackHub(stories) {
+  const hub = document.getElementById('trackHub'), slots = document.getElementById('trackSlots');
+  slots.innerHTML = '';
+  stories.forEach(s => {
+    storyCache[s.story_id] = s;
+    const modeLabel = s.mode === 'fixed' ? 'Historia Fija' : 'Historia Abierta';
+    const hasWrapUp = s.mode === 'open' && s.episode_target > 0;
+    let epLabel;
+    if      (s.mode === 'fixed')  epLabel = `Episodio ${s.episode} de ${s.episode_target || '?'}`;
+    else if (hasWrapUp)           { const r = s.episode_target - s.episode; epLabel = `${r} episodio${r!==1?'s':''} restante${r!==1?'s':''}`; }
+    else                          epLabel = `Episodio ${s.episode}`;
+    const displayTitle = s.title || s.theme || 'Sin título';
+    const date = new Date(s.date).toLocaleDateString('es-ES', { day:'numeric', month:'short' });
+    const div  = document.createElement('div');
+    div.className = 'story-slot';
+    div.innerHTML = `
+      <div class="story-slot-info">
+        <div class="story-slot-title">${displayTitle}</div>
+        <div class="story-slot-meta">${modeLabel} · ${epLabel} · ${s.level} · ${s.register} · ${date}</div>
+      </div>
+      <div class="story-slot-btns">
+        <button class="btn-slot-continue" onclick="handleHubContinue('${s.story_id}')">Continuar</button>
+        <button class="btn-slot-discard"  onclick="hubDeleteStory('${s.story_id}','${s.mode}',this.closest('.story-slot'))">Eliminar</button>
+      </div>`;
+    slots.appendChild(div);
+  });
+  hub.classList.remove('hidden');
+}
+
+function handleHubContinue(storyIdKey) {
+  const s = storyCache[storyIdKey];
+  if (!s) { alert('No se encontró la historia. Reconecta Drive e intenta de nuevo.'); return; }
+  if (s.mode === 'open' && !(s.episode_target > 0)) { activeOpenStory = s; showOpenStoryModal(); }
+  else resumeStory(s);
+}
+
+async function hubDeleteStory(sid, type, slotEl) {
+  if (!confirm('Se eliminarán todos los episodios guardados. ¿Confirmar?')) return;
+  slotEl.style.opacity = '0.4'; slotEl.style.pointerEvents = 'none';
+  if (driveToken) await deleteStoryFromDrive(sid);
+  slotEl.remove();
+  if (type === 'fixed') activeFixedStory = null;
+  if (type === 'open')  activeOpenStory  = null;
+  if (!document.getElementById('trackSlots').children.length)
+    document.getElementById('trackHub').classList.add('hidden');
+}
+
+async function resumeStory(s) {
+  storyId = s.story_id; episodeNum = s.episode;
+  episodeTarget = s.episode_target || episodeTarget || 0;
+  storyBible = s.story_bible || null; prevBible = null; biblePromise = null; regenerating = false;
+  cfg.level=s.level||cfg.level; cfg.register=s.register||cfg.register;
+  cfg.region=s.region||cfg.region; cfg.mode=s.mode||cfg.mode;
+  ['level','register','region','mode'].forEach(key =>
+    document.querySelectorAll(`[data-key="${key}"]`).forEach(b =>
+      b.classList.toggle('selected', b.dataset.val === cfg[key])
+    )
+  );
+  // Populate theme and grammar from saved record
+  if (s.theme) { document.getElementById('themeInput').value = s.theme; document.getElementById('surpriseMe').checked = false; document.getElementById('themeInput').disabled = false; }
+  if (s.grammar_focus) { document.getElementById('grammarInput').value = s.grammar_focus; document.getElementById('noGrammar').checked = false; document.getElementById('grammarInput').disabled = false; }
+  lockParams();
+  requirePw(doGenerate);
+}
+
+function lockParams() {
+  document.querySelectorAll('#sParams .btn-option').forEach(b => {
+    b.style.pointerEvents = 'none'; b.style.opacity = '0.5';
+  });
+  ['themeInput','grammarInput'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.disabled = true; el.style.opacity = '0.5'; }
+  });
+  ['surpriseMe','noGrammar','seCheck'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.disabled = true; el.style.opacity = '0.5'; }
+  });
+  const epRow = document.getElementById('episodeRow');
+  if (epRow) { const inp = document.getElementById('epCount'); if (inp) { inp.disabled = true; inp.style.opacity = '0.5'; } }
+  // Show a lock indicator
+  let lockMsg = document.getElementById('paramLockMsg');
+  if (!lockMsg) {
+    lockMsg = document.createElement('div');
+    lockMsg.id = 'paramLockMsg';
+    lockMsg.style.cssText = 'text-align:center;font-size:0.82rem;color:var(--warning);padding:10px;margin-bottom:12px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);border-radius:10px';
+    document.getElementById('sParams').insertBefore(lockMsg, document.getElementById('sParams').querySelector('.card'));
+  }
+  lockMsg.textContent = 'Parámetros bloqueados — continuando historia en progreso';
+  lockMsg.classList.remove('hidden');
+}
+
+function unlockParams() {
+  document.querySelectorAll('#sParams .btn-option').forEach(b => {
+    b.style.pointerEvents = ''; b.style.opacity = '';
+  });
+  ['themeInput','grammarInput'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity = ''; if (!document.getElementById(id === 'themeInput' ? 'surpriseMe' : 'noGrammar').checked) el.disabled = false; }
+  });
+  ['surpriseMe','noGrammar','seCheck'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.disabled = false; el.style.opacity = ''; }
+  });
+  const epInp = document.getElementById('epCount');
+  if (epInp) { epInp.disabled = false; epInp.style.opacity = ''; }
+  const lockMsg = document.getElementById('paramLockMsg');
+  if (lockMsg) lockMsg.classList.add('hidden');
+}
+
+</script>
+</body>
+</html>

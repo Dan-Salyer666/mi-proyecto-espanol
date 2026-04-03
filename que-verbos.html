@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Verbos con Que- — Spanish Vocab Explorer</title>
+<meta name="quiz-level" content="B2">
+<meta name="quiz-focus" content="vocabulary">
+<meta name="quiz-region" content="neutral">
+<meta name="quiz-register" content="everyday">
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg-deep:       #0a1628;
+  --bg-card:       #111d35;
+  --bg-card-hover: #162544;
+  --bg-input:      #0d1a2f;
+  --border:        #1e3355;
+  --border-focus:  #3b6cb5;
+  --text-primary:  #e2e8f0;
+  --text-secondary:#8a9bb8;
+  --text-muted:    #5a6f8e;
+  --accent:        #4a90d9;
+  --accent-glow:   rgba(74,144,217,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:''; position:fixed; top:0; left:0; right:0; bottom:0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(74,144,217,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.06) 0%, transparent 50%);
+  pointer-events:none; z-index:0;
+}
+body::after {
+  content:''; position:fixed; top:0; left:0; right:0; bottom:0;
+  opacity:0.035;
+  background-image:
+    linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e),
+    linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e);
+  background-size:80px 140px;
+  background-position:0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  pointer-events:none; z-index:0;
+}
+
+#root { position:relative; z-index:1; min-height:100vh; }
+
+@keyframes fadeSlideIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn      { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp     { from { opacity:0; transform:translateY(48px); } to { opacity:1; transform:translateY(0); } }
+@keyframes spin        { to { transform:rotate(360deg); } }
+
+.view-fade { animation: fadeSlideIn 0.3s ease both; }
+
+.btn {
+  font-family:'Outfit',sans-serif; font-weight:500; font-size:0.9rem;
+  border:none; border-radius:10px; padding:12px 22px;
+  cursor:pointer; transition:all 0.2s ease; letter-spacing:0.02em;
+}
+.btn-primary {
+  background:linear-gradient(135deg,#3b6cb5,#4a90d9); color:#fff;
+  box-shadow:0 2px 12px rgba(74,144,217,0.25);
+}
+.btn-primary:hover { box-shadow:0 4px 20px rgba(74,144,217,0.4); transform:translateY(-1px); }
+.btn-primary:disabled { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-ghost {
+  background:transparent; color:var(--text-secondary); border:1px solid var(--border);
+  cursor:pointer; transition:all 0.2s; border-radius:10px;
+  font-family:'Outfit',sans-serif; font-size:0.85rem; padding:9px 18px; font-weight:400;
+}
+.btn-ghost:hover { background:var(--bg-card-hover); color:var(--text-primary); border-color:var(--border-focus); }
+
+.main { min-height:100vh; display:flex; flex-direction:column; }
+
+.top-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:15px 28px; border-bottom:1px solid var(--border);
+  background:rgba(10,22,40,0.85); backdrop-filter:blur(10px);
+  position:sticky; top:0; z-index:20;
+}
+.top-bar-title {
+  font-family:'DM Serif Display',serif; font-size:1.25rem; font-style:italic;
+  background:linear-gradient(135deg,#e2e8f0 0%,#f0a0b0 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.breadcrumb { display:flex; align-items:center; gap:8px; font-size:0.78rem; }
+.breadcrumb-link { color:var(--accent); cursor:pointer; transition:opacity 0.15s; }
+.breadcrumb-link:hover { opacity:0.8; text-decoration:underline; }
+.breadcrumb-sep { color:var(--text-muted); opacity:0.5; }
+.breadcrumb-current { color:var(--text-secondary); font-weight:500; }
+
+.tree-container {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  padding:16px 16px 32px;
+}
+.tree-intro { text-align:center; margin-bottom:10px; max-width:520px; }
+.tree-intro p { color:var(--text-muted); font-size:0.8rem; font-weight:300; }
+.tree-svg-wrapper { width:100%; max-width:860px; }
+.tree-svg-wrapper svg { width:100%; height:auto; display:block; }
+
+.verb-node { cursor:pointer; }
+.verb-node .node-bg { transition:opacity 0.2s; }
+.verb-node .node-border { transition:stroke-opacity 0.2s, filter 0.2s; }
+.verb-node:hover .node-bg { opacity:0.22 !important; }
+.verb-node:hover .node-border { stroke-opacity:1 !important; filter:url(#glow-node); }
+
+.detail-container {
+  padding:28px 28px 60px; max-width:760px; margin:0 auto; width:100%;
+}
+.detail-header { margin-bottom:24px; }
+.detail-verb-hero {
+  font-family:'DM Serif Display',serif; font-size:2.4rem; font-weight:400;
+  margin-bottom:5px; line-height:1.1;
+}
+.detail-core-def { color:var(--text-muted); font-size:0.88rem; font-weight:300; }
+
+.detail-note {
+  background:rgba(74,144,217,0.05); border:1px solid rgba(74,144,217,0.18);
+  border-left:3px solid var(--accent);
+  border-radius:10px; padding:14px 17px; margin-bottom:22px;
+  color:var(--text-secondary); font-size:0.85rem; line-height:1.6; font-weight:300;
+}
+.detail-note strong { color:var(--text-primary); font-weight:600; }
+.detail-note em { font-style:italic; color:var(--text-primary); }
+
+.pattern-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
+  padding:20px 22px; margin-bottom:14px; transition:border-color 0.2s;
+}
+.pattern-card:hover { border-color:#2a4a75; }
+.pattern-head { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:8px; flex-wrap:wrap; }
+.pattern-name { font-family:'DM Serif Display',serif; font-size:1.1rem; line-height:1.3; }
+.pattern-tags { display:flex; gap:5px; flex-wrap:wrap; }
+
+.tag {
+  font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+  padding:2px 7px; border-radius:4px; white-space:nowrap;
+}
+
+.pattern-def {
+  color:var(--text-secondary); font-size:0.88rem; margin-bottom:12px; line-height:1.55; font-weight:300;
+}
+.pattern-def em { font-style:italic; color:var(--text-primary); }
+.pattern-structure { font-size:0.76rem; font-weight:500; color:var(--accent); margin-bottom:10px; opacity:0.85; }
+
+.example-card {
+  background:var(--bg-input); border:1px solid var(--border); border-radius:10px;
+  padding:13px 16px; margin-bottom:8px; transition:border-color 0.15s;
+}
+.example-card:hover { border-color:#2a4a75; }
+.example-es {
+  font-family:'DM Serif Display',serif; font-size:1rem; font-style:italic;
+  color:var(--text-primary); margin-bottom:4px; line-height:1.4;
+}
+.example-en { color:var(--text-secondary); font-size:0.8rem; font-weight:300; line-height:1.4; }
+
+.mas-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  margin-top:12px; padding:8px 16px;
+  background:transparent; border:1px solid var(--border); border-radius:10px;
+  color:var(--text-secondary); font-family:'Outfit',sans-serif;
+  font-size:0.82rem; font-weight:400; cursor:pointer; transition:all 0.2s;
+}
+.mas-btn:hover { border-color:var(--accent); color:var(--accent); background:var(--accent-glow); }
+
+.api-area {
+  margin-top:12px; padding:14px; border-radius:10px; display:none;
+  background:rgba(74,144,217,0.04); border:1px solid rgba(74,144,217,0.12);
+}
+.api-area.visible { display:block; animation:fadeSlideIn 0.25s ease; }
+.usage-note {
+  background:rgba(74,144,217,0.05); border:1px solid rgba(74,144,217,0.18);
+  border-radius:10px; padding:14px 17px; margin-top:12px;
+  color:var(--text-secondary); font-size:0.83rem; line-height:1.55; font-weight:300;
+}
+.usage-note-label {
+  font-size:0.63rem; font-weight:700; text-transform:uppercase; letter-spacing:0.11em;
+  color:var(--accent); margin-bottom:6px;
+}
+
+.pw-inline {
+  display:none; margin-top:10px; padding:14px 16px;
+  background:var(--bg-input); border:1px solid var(--border); border-radius:12px;
+}
+.pw-inline.visible { display:block; }
+.pw-inline-label {
+  font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:0.1em;
+  color:var(--accent); margin-bottom:10px;
+}
+.pw-inline-row { display:flex; gap:8px; }
+.text-input {
+  flex:1; background:var(--bg-deep); border:1px solid var(--border);
+  border-radius:10px; padding:10px 14px; color:var(--text-primary);
+  font-family:'Outfit',sans-serif; font-size:0.9rem; font-weight:300; outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.text-input::placeholder { color:var(--text-muted); }
+.text-input:focus { border-color:var(--border-focus); box-shadow:0 0 0 3px var(--accent-glow); }
+
+.spinner {
+  width:20px; height:20px; border:2px solid var(--border);
+  border-top-color:var(--accent); border-radius:50%; animation:spin 0.75s linear infinite; flex-shrink:0;
+}
+.spinner-row {
+  display:flex; align-items:center; gap:10px;
+  color:var(--text-muted); font-size:0.83rem; padding:16px 0;
+}
+
+.special-card {
+  background:var(--bg-card); border:1px solid rgba(78,205,196,0.3); border-radius:14px;
+  padding:18px 22px; margin-top:26px; display:flex; align-items:center;
+  justify-content:space-between; cursor:pointer; transition:all 0.25s;
+}
+.special-card:hover { border-color:#4ECDC4; background:var(--bg-card-hover); transform:translateY(-1px); }
+.special-card-title { font-family:'DM Serif Display',serif; font-size:1.05rem; color:#4ECDC4; }
+.special-card-desc { color:var(--text-muted); font-size:0.82rem; margin-top:2px; }
+.special-card-arrow { color:#4ECDC4; font-size:1.3rem; flex-shrink:0; }
+
+.cmp-table {
+  width:100%; border-collapse:separate; border-spacing:0;
+  border-radius:10px; overflow:hidden; margin-bottom:24px;
+}
+.cmp-table th {
+  background:var(--bg-deep); padding:11px 16px; text-align:left;
+  font-weight:600; font-size:0.72rem; text-transform:uppercase;
+  letter-spacing:0.08em; color:var(--text-muted); border-bottom:1px solid var(--border);
+}
+.cmp-table td {
+  padding:12px 16px; font-size:0.88rem; color:var(--text-secondary);
+  border-bottom:1px solid rgba(30,51,85,0.5); background:var(--bg-card);
+}
+.cmp-table tr:last-child td { border-bottom:none; }
+.cmp-table .verb-cell {
+  font-family:'DM Serif Display',serif; font-style:italic;
+  color:var(--text-primary); font-size:1rem;
+}
+
+@media (max-width: 600px) {
+  .top-bar { padding:12px 16px; }
+  .top-bar-title { font-size:1.05rem; }
+  .detail-container { padding:18px 16px 50px; }
+  .detail-verb-hero { font-size:1.9rem; }
+  .tree-container { padding:10px 8px 24px; }
+  .pattern-head { flex-direction:column; gap:6px; }
+  .special-card { flex-direction:column; align-items:flex-start; gap:6px; }
+  .breadcrumb { font-size:0.7rem; gap:5px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+import { html, render, useState, useEffect } from 'https://unpkg.com/htm/preact/standalone.module.js';
+
+const CENTER_COLOR = '#e8637a';
+
+const VERB_GROUPS = [
+  {
+    id:'quedar-group', color:'#34d399', angle:-90,
+    verbs: [
+      { id:'quedar', label:'quedar', isProno:false, coreDef:'To remain, be left, fit, arrange to meet, be located', note:null, patterns:[
+        { name:'To be left / remain (quantity)', def:'Indicates availability or leftovers — what\'s still there after something is used or gone.', tags:[{l:'Everyday',c:'#34d399'},{l:'Como gustar',c:'#4ECDC4'}], structure:'quedar + subject (thing remaining) · IO optional', examples:[{es:'No me queda leche.',en:'I don\'t have any milk left.'},{es:'¿Cuántas entradas quedan?',en:'How many tickets are left?'}] },
+        { name:'To fit or suit', def:'Describes how something looks or fits on someone. The clothing/item is the subject, the person is the indirect object.', tags:[{l:'Everyday',c:'#34d399'},{l:'Como gustar',c:'#4ECDC4'}], structure:'quedar + bien/mal/grande/chico + IO', examples:[{es:'Ese vestido te queda bien.',en:'That dress suits you well.'},{es:'Los zapatos me quedan grandes.',en:'The shoes are too big on me.'}] },
+        { name:'To arrange to meet', def:'Making social plans or agreeing on a time/place. Very common in Spain; in Argentina you\'re more likely to hear <em>verse, juntarse, encontrarse</em>.', tags:[{l:'Everyday',c:'#34d399'},{l:'More Spain',c:'#FF6B6B'}], structure:'quedar + en + place/time · quedar en + infinitive', examples:[{es:'¿A qué hora quedamos?',en:'What time shall we meet?'},{es:'Quedamos en vernos en la oficina.',en:'We agreed to meet at the office.'}] },
+        { name:'To be located', def:'A common alternative to <em>estar</em> for fixed locations.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quedar + en/cerca de/lejos de + place', examples:[{es:'El cine queda cerca de aquí.',en:'The cinema is located near here.'},{es:'La iglesia queda en la esquina de esas calles.',en:'The church is on the corner of those streets.'}] },
+        { name:'To be left as an outcome or result', def:'Often for final states or outcomes — competitions, situations, impressions.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quedar + adjective/adverb/position', examples:[{es:'Quedamos muy tristes con la noticia.',en:'We were really sad about the news.'},{es:'Quedamos terceros.',en:'We finished third.'},{es:'La pared quedó perfecta.',en:'The wall turned out perfect.'}] },
+        { name:'Quedar en + infinitive', def:'Specifically for making an agreement or settling on a plan.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quedar en + infinitive', examples:[{es:'¿En qué quedamos?',en:'So what did we agree on?'},{es:'Quedamos en no decirle nada.',en:'We agreed not to tell him anything.'}] },
+        { name:'Quedar por + infinitive', def:'Something still needs to be done — the task is pending.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quedar por + infinitive', examples:[{es:'Queda por resolver ese tema.',en:'That issue remains to be resolved.'},{es:'Quedan por pintar dos habitaciones.',en:'Two rooms are still left to paint.'}] },
+      ]},
+      { id:'quedarse', label:'quedarse', isProno:true, coreDef:'To stay, to keep, to become (change of state), to run out of', note:'<strong>Quedarse vs. ponerse</strong> for change of state: <em>ponerse</em> marks a temporary, reversible reaction (<em>se puso nervioso</em>). <em>Quedarse</em> emphasizes the aftermath or end result — the new state feels more lasting (<em>se quedó mudo</em>).', patterns:[
+        { name:'To stay / remain in a place', def:'The subject stays put — choosing not to leave.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quedarse + en + place', examples:[{es:'Me quedo en casa.',en:'I\'m staying home.'},{es:'Nos quedamos en el hotel todo el día.',en:'We stayed at the hotel all day.'}] },
+        { name:'To become / end up in a state', def:'Used with adjectives for transitions caused by an external event. Emphasizes the aftermath, unlike <em>ponerse</em> which is temporary.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quedarse + adjective', examples:[{es:'Se quedó mudo de la sorpresa.',en:'He was left speechless from surprise.'},{es:'Se quedó ciego.',en:'He went blind.'},{es:'Me quedé helado cuando me contó.',en:'I froze when he told me.'}] },
+        { name:'To keep something', def:'Retaining possession. Uses <em>quedarse con</em>.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quedarse con + thing', examples:[{es:'Me quedo con este libro.',en:'I\'ll keep this book.'},{es:'Quédate con el cambio.',en:'Keep the change.'}] },
+        { name:'To run out of something', def:'Uses <em>quedarse sin</em> — the thing is gone.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quedarse sin + noun', examples:[{es:'Nos quedamos sin gasolina.',en:'We ran out of gas.'},{es:'Me quedé sin batería.',en:'My battery died.'}] },
+        { name:'Quedarse en blanco', def:'To go blank — your mind empties.', tags:[{l:'Everyday',c:'#34d399'},{l:'Idiomatic',c:'#FF9F1C'}], structure:'quedarse en blanco', examples:[{es:'Me quedé en blanco en el examen.',en:'I went blank during the exam.'},{es:'Cuando me preguntó, me quedé en blanco.',en:'When he asked me, my mind went blank.'}] },
+        { name:'Quedarse corto', def:'To fall short, to underestimate.', tags:[{l:'Everyday',c:'#34d399'},{l:'Idiomatic',c:'#FF9F1C'}], structure:'quedarse corto (+ con/en)', examples:[{es:'Me quedé corto con la comida para la fiesta.',en:'I didn\'t make enough food for the party.'},{es:'Decir que es bueno es quedarse corto.',en:'Saying it\'s good is an understatement.'}] },
+        { name:'Quedarse dormido', def:'To fall asleep — often unintentional.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quedarse dormido/a', examples:[{es:'Se quedó dormido en el sofá.',en:'He fell asleep on the couch.'},{es:'Me quedé dormida y llegué tarde.',en:'I fell asleep and was late.'}] },
+      ]}
+    ]
+  },
+  {
+    id:'querer-group', color:'#f59e0b', angle:-30,
+    verbs: [
+      { id:'querer', label:'querer', isProno:false, coreDef:'To want, to love', note:'<strong>Preterite meaning shift:</strong> <em>quiso</em> = tried to do something; <em>no quiso</em> = refused. One of the key preterite meaning changes.', patterns:[
+        { name:'To want', def:'The core, most common meaning.', tags:[{l:'Everyday',c:'#34d399'}], structure:'querer + noun / querer + infinitive', examples:[{es:'Quiero un café.',en:'I want a coffee.'},{es:'No quiero salir esta noche.',en:'I don\'t want to go out tonight.'}] },
+        { name:'To love (people)', def:'Expressing love for people. Less intense than <em>amar</em> in romantic contexts, but the default "I love you" in everyday speech.', tags:[{l:'Everyday',c:'#34d399'}], structure:'querer + a + person', examples:[{es:'Te quiero mucho.',en:'I love you a lot.'},{es:'Quiero a mis abuelos.',en:'I love my grandparents.'}] },
+        { name:'Querer decir — to mean', def:'Ask or explain the meaning of something. Extremely common.', tags:[{l:'Everyday',c:'#34d399'},{l:'Idiomatic',c:'#FF9F1C'}], structure:'querer decir + clause/noun', examples:[{es:'¿Qué quiere decir esto?',en:'What does this mean?'},{es:'Eso no quiere decir que no me importe.',en:'That doesn\'t mean I don\'t care.'}] },
+        { name:'Preterite: tried to / refused', def:'<em>Quiso</em> = attempted/tried; <em>no quiso</em> = refused outright.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quiso + inf (tried) / no quiso + inf (refused)', examples:[{es:'Quiso abrir la puerta pero estaba trabada.',en:'He tried to open the door but it was stuck.'},{es:'No quiso venir a la fiesta.',en:'She refused to come to the party.'}] },
+        { name:'Sin querer — unintentionally', def:'By accident, without meaning to.', tags:[{l:'Everyday',c:'#34d399'},{l:'Idiomatic',c:'#FF9F1C'}], structure:'sin querer', examples:[{es:'Lo hice sin querer.',en:'I did it by accident.'},{es:'Sin querer borré todos los archivos.',en:'I accidentally deleted all the files.'}] },
+        { name:'Como quieras — as you wish', def:'Ranges from genuine flexibility to passive-aggressive depending on tone.', tags:[{l:'Everyday',c:'#34d399'},{l:'Idiomatic',c:'#FF9F1C'}], structure:'como + querer (subjunctive)', examples:[{es:'Bueno, como quieras.',en:'Fine, whatever you want.'},{es:'Hacé como quieras.',en:'Do as you like. (voseo)'}] },
+      ]},
+      { id:'quererse', label:'quererse', isProno:true, coreDef:'To love each other; to love oneself', note:null, patterns:[
+        { name:'Reciprocal — to love each other', def:'Two or more people loving one another.', tags:[{l:'Everyday',c:'#34d399'},{l:'Reciprocal',c:'#4ECDC4'}], structure:'quererse (el uno al otro)', examples:[{es:'Se quieren mucho.',en:'They love each other a lot.'},{es:'Nos queremos desde chicos.',en:'We\'ve loved each other since we were kids.'}] },
+        { name:'Reflexive — to love oneself', def:'Self-love, self-acceptance.', tags:[{l:'Everyday',c:'#34d399'},{l:'Reflexive',c:'#4ECDC4'}], structure:'quererse (a uno mismo)', examples:[{es:'Hay que quererse un poco más.',en:'You\'ve got to love yourself a bit more.'},{es:'Aprendí a quererme como soy.',en:'I learned to love myself as I am.'}] },
+      ]}
+    ]
+  },
+  {
+    id:'quemar-group', color:'#fb923c', angle:30,
+    verbs: [
+      { id:'quemar', label:'quemar', isProno:false, coreDef:'To burn (something)', note:null, patterns:[
+        { name:'To burn something (physical)', def:'Setting fire to or damaging with heat. Transitive — clear agent.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quemar + direct object', examples:[{es:'Quemó los papeles viejos.',en:'He burned the old papers.'},{es:'No quemes la basura acá.',en:'Don\'t burn the trash here.'}] },
+        { name:'To burn food', def:'Overcooking to the point of burning.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quemar + food item', examples:[{es:'Quemé la comida otra vez.',en:'I burned the food again.'},{es:'Cuidado que vas a quemar el arroz.',en:'Careful, you\'re going to burn the rice.'}] },
+        { name:'To burn out / exhaust someone', def:'Figurative — a job or situation draining your energy.', tags:[{l:'Colloquial',c:'#fbbf24'}], structure:'subject + quemar (+ a + person)', examples:[{es:'Este trabajo me quema.',en:'This job is burning me out.'},{es:'La situación ya lo quemó.',en:'The situation has already exhausted him.'}] },
+      ]},
+      { id:'quemarse', label:'quemarse', isProno:true, coreDef:'To get burned, to burn out, to burn (agentless)', note:null, patterns:[
+        { name:'To get burned (by heat)', def:'Accidentally burning yourself on something hot.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quemarse + con + heat source', examples:[{es:'Me quemé con el horno.',en:'I burned myself on the oven.'},{es:'¡Cuidado, no te quemes!',en:'Careful, don\'t burn yourself!'}] },
+        { name:'To get sunburned', def:'Very common summer vocabulary.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quemarse + en + place', examples:[{es:'Me quemé en la playa.',en:'I got sunburned at the beach.'},{es:'Se quemó la cara y los hombros.',en:'She burned her face and shoulders.'}] },
+        { name:'To burn out (person)', def:'Reaching your limit from overwork or stress.', tags:[{l:'Colloquial',c:'#fbbf24'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quemarse + context', examples:[{es:'Se quemó trabajando tanto.',en:'She burned out from working so much.'},{es:'Me estoy quemando con este proyecto.',en:'I\'m burning out on this project.'}] },
+        { name:'To burn (agentless — things)', def:'No one did it on purpose. Agent vanishes (Zone 2 SE).', tags:[{l:'Everyday',c:'#34d399'},{l:'Zone 2 SE',c:'#C084FC'}], structure:'se + quemar + subject (the thing)', examples:[{es:'Se quemó la comida.',en:'The food burned. (nobody\'s fault)'},{es:'Se quemaron los fusibles.',en:'The fuses blew.'},{es:'Se me quemó la tostada.',en:'My toast burned. (se me — happened to me)'}] },
+      ]}
+    ]
+  },
+  {
+    id:'quebrar-group', color:'#38bdf8', angle:90,
+    verbs: [
+      { id:'quebrar', label:'quebrar', isProno:false, coreDef:'To break (physical); to go bankrupt', note:'For physical breaking, <em>romper</em> is more universal and often preferred in Rioplatense. For bankruptcy, <em>quebrar</em> is standard everywhere — its more distinctive meaning.', patterns:[
+        { name:'To break (physical object)', def:'Breaking something by force. Common in broader Latin America; <em>romper</em> is more universal.', tags:[{l:'Everyday',c:'#34d399'},{l:'LatAm > Rioplatense',c:'#C7F464'}], structure:'quebrar + direct object', examples:[{es:'Quebró el vaso sin querer.',en:'He broke the glass accidentally.'},{es:'El nene quebró el juguete.',en:'The kid broke the toy.'}] },
+        { name:'To go bankrupt', def:'A business or person going broke. Standard everywhere.', tags:[{l:'Everyday',c:'#34d399'},{l:'Business',c:'#fbbf24'}], structure:'quebrar (intransitive)', examples:[{es:'La empresa quebró el año pasado.',en:'The company went bankrupt last year.'},{es:'Si sigue así, va a quebrar.',en:'If it keeps going like this, it\'ll go under.'}] },
+      ]},
+      { id:'quebrarse', label:'quebrarse', isProno:true, coreDef:'To break (body part); to break down emotionally; voice breaking', note:'In Rioplatense, <em>romperse</em> is also common for physical breaking. <em>Quebrarse</em> emotionally is used everywhere.', patterns:[
+        { name:'To break (body part)', def:'Breaking a bone. Common in LatAm; Rioplatense also uses <em>romperse</em>.', tags:[{l:'Everyday',c:'#34d399'},{l:'LatAm',c:'#C7F464'},{l:'Rioplatense: romperse',c:'#c084fc'}], structure:'quebrarse + body part', examples:[{es:'Se quebró la pierna jugando al fútbol.',en:'He broke his leg playing soccer.'},{es:'Me quebré el brazo de chico.',en:'I broke my arm as a kid.'}] },
+        { name:'To break down emotionally', def:'Losing composure — crying, emotional collapse.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'quebrarse (intransitive)', examples:[{es:'Se quebró al hablar de su madre.',en:'He broke down talking about his mother.'},{es:'Traté de ser fuerte pero me quebré.',en:'I tried to be strong but I broke down.'}] },
+        { name:'Voice breaking', def:'Voice cracking from emotion. Often uses <em>se le</em>.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'}], structure:'se + le/me/te + quebrar + la voz', examples:[{es:'Se le quebró la voz en el discurso.',en:'His voice broke during the speech.'},{es:'Se me quiebra la voz cada vez que hablo de eso.',en:'My voice cracks every time I talk about that.'}] },
+      ]}
+    ]
+  },
+  {
+    id:'quitar-group', color:'#a78bfa', angle:150,
+    verbs: [
+      { id:'quitar', label:'quitar', isProno:false, coreDef:'To remove, to take away, to take from someone', note:null, patterns:[
+        { name:'To remove / take away', def:'Physically removing something from a surface or location.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quitar + object + de + location', examples:[{es:'Quitá eso de la mesa.',en:'Take that off the table. (voseo)'},{es:'Quité las fotos de la pared.',en:'I took the photos off the wall.'}] },
+        { name:'To take from someone', def:'Taking something away from a person — can imply force, theft, or authority.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quitar + object + a + person', examples:[{es:'Le quitaron el celular.',en:'They took his phone away.'},{es:'No me quites la palabra.',en:'Don\'t cut me off.'}] },
+        { name:'To get rid of (stains, problems, pain)', def:'Eliminating something unwanted.', tags:[{l:'Everyday',c:'#34d399'}], structure:'quitar + thing', examples:[{es:'No puedo quitar la mancha.',en:'I can\'t get the stain out.'},{es:'Esa aspirina me quitó el dolor de cabeza.',en:'That aspirin got rid of my headache.'}] },
+      ]},
+      { id:'quitarse', label:'quitarse', isProno:true, coreDef:'To take off (clothing); to get out of the way; to get rid of a burden', note:'In Rioplatense, <em>sacarse</em> is the everyday preference for taking off clothing (<em>sacate la campera</em>). <em>Quitarse</em> is understood but sounds more neutral/formal. Similarly, for "get out of the way," a porteño says <em>¡correte!</em> rather than <em>¡quítate!</em>.', patterns:[
+        { name:'To take off (clothing)', def:'Removing an item of clothing.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'},{l:'Rioplatense: sacarse',c:'#c084fc'}], structure:'quitarse + garment', examples:[{es:'Se quitó la chaqueta al entrar.',en:'He took off his jacket when he came in.'},{es:'Quítate los zapatos.',en:'Take off your shoes.'}] },
+        { name:'To get out of the way', def:'Telling someone to move. In Argentina: <em>correte</em>.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal',c:'#4ECDC4'},{l:'Rioplatense: correte',c:'#c084fc'}], structure:'quitarse + de + location', examples:[{es:'¡Quítate de ahí!',en:'Get out of the way!'},{es:'Se quitó del medio justo a tiempo.',en:'He got out of the way just in time.'}] },
+        { name:'Quitarse algo de encima', def:'Figurative — freeing yourself from a burden.', tags:[{l:'Everyday',c:'#34d399'},{l:'Idiomatic',c:'#FF9F1C'}], structure:'quitarse + algo + de encima', examples:[{es:'Me quité ese problema de encima.',en:'I got that problem off my back.'},{es:'Por fin se quitó esa deuda de encima.',en:'He finally got that debt off his shoulders.'}] },
+      ]}
+    ]
+  },
+  {
+    id:'quejarse-group', color:'#4ECDC4', angle:210,
+    verbs: [
+      { id:'quejarse', label:'quejarse', isProno:true, isSolo:true, coreDef:'To complain, to groan/moan', note:'No non-pronominal form exists in modern Spanish. <em>Quejar</em> alone is archaic. Always <em>quejarse</em>.', patterns:[
+        { name:'To complain (about something)', def:'The main everyday meaning. Always followed by <em>de</em>.', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal only',c:'#4ECDC4'}], structure:'quejarse + de + noun/clause', examples:[{es:'Se queja de todo.',en:'He complains about everything.'},{es:'No me quejo — me fue bastante bien.',en:'I\'m not complaining — it went pretty well.'},{es:'Siempre se quejan del calor.',en:'They always complain about the heat.'}] },
+        { name:'To moan / groan (from pain)', def:'Physical expression of pain — less common than "complain."', tags:[{l:'Everyday',c:'#34d399'},{l:'Pronominal only',c:'#4ECDC4'}], structure:'quejarse + de + dolor/source', examples:[{es:'Se quejaba de un dolor en la espalda.',en:'He was moaning from a pain in his back.'},{es:'No dejaba de quejarse.',en:'He wouldn\'t stop groaning.'}] },
+      ]}
+    ]
+  }
+];
+
+const MEETING_VERBS = [
+  { verb:'Quedar', type:'Planned, social — emphasis on the arrangement', translation:'To arrange to meet', tags:[{l:'Everyday',c:'#34d399'},{l:'More Spain',c:'#FF6B6B'}], examples:[{es:'¿Quedamos a las cinco?',en:'Shall we meet at five?'},{es:'Quedamos en el bar de siempre.',en:'We\'re meeting at the usual bar.'}] },
+  { verb:'Verse', type:'Casual or social — seeing each other, meeting up', translation:'To see each other, meet up', tags:[{l:'Everyday',c:'#34d399'}], examples:[{es:'¿Nos vemos mañana?',en:'See you tomorrow?'},{es:'Hace mucho que no nos vemos.',en:'It\'s been ages since we\'ve seen each other.'}] },
+  { verb:'Encontrarse con', type:'Accidental or general — bumping into someone', translation:'To bump into, run into', tags:[{l:'Everyday',c:'#34d399'}], examples:[{es:'Me encontré con tu hermano en el super.',en:'I ran into your brother at the supermarket.'},{es:'Nos encontramos por casualidad.',en:'We bumped into each other by chance.'}] },
+  { verb:'Conocer', type:'First-time meeting. Preterite: conocí = met; imperfect: conocía = knew', translation:'To meet for the first time', tags:[{l:'Everyday',c:'#34d399'}], examples:[{es:'Conocí a mi esposa en la universidad.',en:'I met my wife at university.'},{es:'Mucho gusto, no nos conocemos.',en:'Nice to meet you, we haven\'t met.'}] },
+  { verb:'Reunirse', type:'Formal group — work, committees, organizations', translation:'To gather, hold a meeting', tags:[{l:'Formal',c:'#f59e0b'}], examples:[{es:'Nos reunimos todos los lunes.',en:'We meet every Monday.'},{es:'El directorio se reúne mañana.',en:'The board meets tomorrow.'}] },
+];
+
+const VERB_MAP = {};
+VERB_GROUPS.forEach(g => g.verbs.forEach(v => { VERB_MAP[v.id] = { ...v, groupColor: g.color }; }));
+
+let sessionPassword = '';
+
+async function callAPI(system, userMsg) {
+  const res = await fetch('/api/claude', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ password:sessionPassword, model:'claude-sonnet-4-20250514', max_tokens:1000, system, messages:[{role:'user',content:userMsg}] })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error||'API error');
+  const raw = data.content?.[0]?.text||'';
+  return JSON.parse(raw.replace(/```json|```/g,'').trim());
+}
+
+function Tag({ label, color }) {
+  return html`<span class="tag" style=${{ color, background:color+'18', border:'1px solid '+color+'40' }}>${label}</span>`;
+}
+
+function ExampleCard({ es, en }) {
+  return html`<div class="example-card"><div class="example-es">${es}</div><div class="example-en">${en}</div></div>`;
+}
+
+function ApiSection({ verbLabel, patternName, patternDef, structure }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [needsPw, setNeedsPw] = useState(false);
+  const [pwInput, setPwInput] = useState('');
+  const [pwErr, setPwErr] = useState('');
+  const [pwBusy, setPwBusy] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const doFetch = async () => {
+    setLoading(true); setError('');
+    try {
+      const result = await callAPI(
+        'You are a Spanish language tutor for an adult B2-level English-speaking learner interested in Rioplatense Spanish. Generate example sentences that are natural and varied. Use neutral Spanish with occasional Rioplatense flavor where natural.\n\nRespond ONLY with valid JSON — no markdown, no preamble. Format:\n{"examples":[{"es":"...","en":"..."},{"es":"...","en":"..."},{"es":"...","en":"..."},{"es":"...","en":"..."}],"nota":"A brief usage note in English (2-3 sentences) with practical tips about this pattern."}',
+        'Generate 4 natural example sentences for "'+verbLabel+'" in the pattern: "'+patternName+'" — '+(patternDef||'').replace(/<[^>]*>/g,'')+'\nStructure: '+(structure||'N/A')+'\nVary contexts, subjects, tenses. B2 level.'
+      );
+      setData(result);
+    } catch(e) {
+      if (e.message && e.message.includes('incorrect')) { sessionPassword=''; setNeedsPw(true); }
+      else setError('Could not load examples. Try again.');
+    }
+    setLoading(false);
+  };
+
+  const handleClick = () => {
+    if (data) { setOpen(!open); return; }
+    if (!sessionPassword) { setNeedsPw(true); return; }
+    setOpen(true); doFetch();
+  };
+
+  const submitPw = async () => {
+    setPwBusy(true); setPwErr('');
+    try {
+      const res = await fetch('/api/claude', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ password:pwInput, model:'claude-sonnet-4-20250514', max_tokens:10, messages:[{role:'user',content:'hi'}] })
+      });
+      if (res.ok) { sessionPassword=pwInput; setNeedsPw(false); setOpen(true); doFetch(); }
+      else { const d = await res.json(); setPwErr(d.error||'Contraseña incorrecta'); }
+    } catch { setPwErr('Error de conexión.'); }
+    setPwBusy(false);
+  };
+
+  return html`
+    <div>
+      <button class="mas-btn" onClick=${handleClick}>✦ Más ejemplos${data?(open?' ▾':' ▸'):''}</button>
+      ${needsPw?html`
+        <div class="pw-inline visible">
+          <div class="pw-inline-label">Contraseña requerida para generar ejemplos</div>
+          <div class="pw-inline-row">
+            <input class="text-input" type="password" placeholder="Contraseña" value=${pwInput} onInput=${e=>setPwInput(e.target.value)} onKeyDown=${e=>e.key==='Enter'&&pwInput&&submitPw()} disabled=${pwBusy}/>
+            <button class="btn btn-primary" style="padding:10px 20px" onClick=${submitPw} disabled=${!pwInput||pwBusy}>${pwBusy?'...':'OK'}</button>
+          </div>
+          ${pwErr?html`<div style="color:#f87171;font-size:0.78rem;margin-top:8px">${pwErr}</div>`:null}
+        </div>
+      `:null}
+      ${open&&!needsPw?html`
+        <div class="api-area visible">
+          ${loading?html`<div class="spinner-row"><div class="spinner"></div><span>Generando ejemplos…</span></div>`
+          :error?html`<div style="color:#f87171;font-size:0.82rem">${error}</div><button class="btn-ghost" style="font-size:0.8rem;padding:6px 14px;margin-top:6px" onClick=${doFetch}>Reintentar</button>`
+          :data?html`
+            ${data.examples.map((ex,i)=>html`<${ExampleCard} key=${i} es=${ex.es} en=${ex.en}/>`)}
+            ${data.nota?html`<div class="usage-note"><div class="usage-note-label">Nota de uso</div>${data.nota}</div>`:null}
+          `:null}
+        </div>
+      `:null}
+    </div>
+  `;
+}
+
+function PatternCard({ p, verbLabel }) {
+  return html`
+    <div class="pattern-card">
+      <div class="pattern-head">
+        <div class="pattern-name">${p.name}</div>
+        <div class="pattern-tags">${p.tags.map((t,i)=>html`<${Tag} key=${i} label=${t.l} color=${t.c}/>`)}</div>
+      </div>
+      <div class="pattern-def" dangerouslySetInnerHTML=${{__html:p.def}}/>
+      ${p.structure?html`<div class="pattern-structure">⟶ ${p.structure}</div>`:null}
+      ${p.examples.map((ex,i)=>html`<${ExampleCard} key=${i} es=${ex.es} en=${ex.en}/>`)}
+      <${ApiSection} verbLabel=${verbLabel} patternName=${p.name} patternDef=${p.def} structure=${p.structure}/>
+    </div>
+  `;
+}
+
+function TreeSVG({ onSelectVerb }) {
+  const CX=440, CY=430, SPOKE_R=195, FORK_LEN=125, FORK_SPREAD=30;
+  const NW=122, NH=38;
+  const deg2rad = d => d*Math.PI/180;
+
+  return html`
+    <svg viewBox="0 0 880 860" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow-center"><feGaussianBlur stdDeviation="10" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="glow-node"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      </defs>
+
+      <circle cx=${CX} cy=${CY} r="76" fill="none" stroke="rgba(232,99,122,0.08)" stroke-width="1"/>
+
+      ${VERB_GROUPS.map(group => {
+        const rad = deg2rad(group.angle);
+        const sx = CX + SPOKE_R * Math.cos(rad);
+        const sy = CY + SPOKE_R * Math.sin(rad);
+
+        if (group.verbs.length === 2) {
+          const a1 = deg2rad(group.angle - FORK_SPREAD);
+          const a2 = deg2rad(group.angle + FORK_SPREAD);
+          const n1x = sx + FORK_LEN*Math.cos(a1), n1y = sy + FORK_LEN*Math.sin(a1);
+          const n2x = sx + FORK_LEN*Math.cos(a2), n2y = sy + FORK_LEN*Math.sin(a2);
+          const v0 = group.verbs[0], v1 = group.verbs[1];
+
+          return html`<g key=${group.id}>
+            <line x1=${CX} y1=${CY} x2=${sx} y2=${sy} stroke=${group.color} stroke-width="1" stroke-opacity="0.25" stroke-dasharray="4 4"/>
+            <line x1=${sx} y1=${sy} x2=${n1x} y2=${n1y} stroke=${group.color} stroke-width="1" stroke-opacity="0.2"/>
+            <line x1=${sx} y1=${sy} x2=${n2x} y2=${n2y} stroke=${group.color} stroke-width="1" stroke-opacity="0.2"/>
+            <circle cx=${sx} cy=${sy} r="3" fill=${group.color} opacity="0.4"/>
+            <g class="verb-node" onClick=${()=>onSelectVerb(v0.id)} style="cursor:pointer">
+              <rect class="node-bg" x=${n1x-NW/2} y=${n1y-NH/2} width=${NW} height=${NH} rx="9" fill=${group.color} opacity="0.08"/>
+              <rect class="node-border" x=${n1x-NW/2} y=${n1y-NH/2} width=${NW} height=${NH} rx="9" fill="none" stroke=${group.color} stroke-width="1.2" stroke-opacity="0.6"/>
+              <text x=${n1x} y=${n1y+1} text-anchor="middle" dominant-baseline="central" fill=${group.color} font-family="'DM Serif Display',serif" font-size="13.5" font-style="italic">${v0.label}</text>
+            </g>
+            <g class="verb-node" onClick=${()=>onSelectVerb(v1.id)} style="cursor:pointer">
+              <rect class="node-bg" x=${n2x-NW/2} y=${n2y-NH/2} width=${NW} height=${NH} rx="9" fill=${group.color} opacity="0.08"/>
+              <rect class="node-border" x=${n2x-NW/2} y=${n2y-NH/2} width=${NW} height=${NH} rx="9" fill="none" stroke=${group.color} stroke-width="1.2" stroke-opacity="0.6"/>
+              <text x=${n2x} y=${n2y+1} text-anchor="middle" dominant-baseline="central" fill=${group.color} font-family="'DM Serif Display',serif" font-size="13.5" font-style="italic">${v1.label}</text>
+            </g>
+          </g>`;
+        } else {
+          const v = group.verbs[0];
+          return html`<g key=${group.id}>
+            <line x1=${CX} y1=${CY} x2=${sx} y2=${sy} stroke=${group.color} stroke-width="1" stroke-opacity="0.25" stroke-dasharray="4 4"/>
+            <g class="verb-node" onClick=${()=>onSelectVerb(v.id)} style="cursor:pointer">
+              <rect class="node-bg" x=${sx-NW/2} y=${sy-NH/2} width=${NW} height=${NH} rx="9" fill=${group.color} opacity="0.08"/>
+              <rect class="node-border" x=${sx-NW/2} y=${sy-NH/2} width=${NW} height=${NH} rx="9" fill="none" stroke=${group.color} stroke-width="1.2" stroke-opacity="0.6"/>
+              <text x=${sx} y=${sy-4} text-anchor="middle" fill=${group.color} font-family="'DM Serif Display',serif" font-size="13.5" font-style="italic">${v.label}</text>
+              <text x=${sx} y=${sy+13} text-anchor="middle" fill="#5a6f8e" font-family="Outfit,sans-serif" font-size="7.5" font-weight="600" letter-spacing="1.5">SOLO PRONOMINAL</text>
+            </g>
+          </g>`;
+        }
+      })}
+
+      <g>
+        <circle cx=${CX} cy=${CY} r="70" fill="rgba(232,99,122,0.04)" stroke="rgba(232,99,122,0.12)" stroke-width="1"/>
+        <circle cx=${CX} cy=${CY} r="58" fill="#0f1e38" stroke=${CENTER_COLOR} stroke-width="1.8" filter="url(#glow-center)"/>
+        <text x=${CX} y=${CY-6} text-anchor="middle" fill=${CENTER_COLOR} font-family="'DM Serif Display',serif" font-size="26" font-style="italic">Que-</text>
+        <text x=${CX} y=${CY+14} text-anchor="middle" fill="#5a6f8e" font-family="Outfit,sans-serif" font-size="7.5" letter-spacing="2">VERBOS</text>
+      </g>
+    </svg>
+  `;
+}
+
+function VerbDetail({ verbId, onGoMeeting }) {
+  const verb = VERB_MAP[verbId];
+  if (!verb) return null;
+  return html`
+    <div class="detail-container view-fade">
+      <div class="detail-header">
+        <div class="detail-verb-hero" style=${{color:verb.groupColor}}>${verb.label}</div>
+        <div class="detail-core-def">${verb.coreDef}</div>
+      </div>
+      ${verb.note?html`<div class="detail-note" dangerouslySetInnerHTML=${{__html:verb.note}}/>`:null}
+      ${verb.patterns.map((p,i)=>html`<${PatternCard} key=${i} p=${p} verbLabel=${verb.label}/>`)}
+      ${verbId==='quedar'?html`
+        <div class="special-card" onClick=${onGoMeeting}>
+          <div>
+            <div class="special-card-title">¿Quedar para verse? — Verbos de Encuentro</div>
+            <div class="special-card-desc">Compare quedar, verse, encontrarse, conocer, reunirse</div>
+          </div>
+          <span class="special-card-arrow">›</span>
+        </div>
+      `:null}
+    </div>
+  `;
+}
+
+function MeetingApiSection({ verb, type, translation }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [needsPw, setNeedsPw] = useState(false);
+  const [pwInput, setPwInput] = useState('');
+  const [pwErr, setPwErr] = useState('');
+  const [pwBusy, setPwBusy] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const doFetch = async () => {
+    setLoading(true); setError('');
+    try {
+      const result = await callAPI(
+        'You are a Spanish language tutor for a B2 English-speaking learner interested in Rioplatense Spanish.\n\nRespond ONLY with valid JSON:\n{"examples":[{"es":"...","en":"..."},{"es":"...","en":"..."},{"es":"...","en":"..."},{"es":"...","en":"..."}],"nota":"Brief usage note in English (2-3 sentences)."}',
+        'Generate 4 natural example sentences using "'+verb+'" for meeting people. Type: '+type+'. Translation: '+translation+'.\nVary contexts and tenses. B2 level.'
+      );
+      setData(result);
+    } catch(e) {
+      if (e.message&&e.message.includes('incorrect')) { sessionPassword=''; setNeedsPw(true); }
+      else setError('Could not load examples.');
+    }
+    setLoading(false);
+  };
+
+  const handleClick = () => {
+    if (data) { setOpen(!open); return; }
+    if (!sessionPassword) { setNeedsPw(true); return; }
+    setOpen(true); doFetch();
+  };
+
+  const submitPw = async () => {
+    setPwBusy(true); setPwErr('');
+    try {
+      const res = await fetch('/api/claude', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ password:pwInput, model:'claude-sonnet-4-20250514', max_tokens:10, messages:[{role:'user',content:'hi'}] })
+      });
+      if (res.ok) { sessionPassword=pwInput; setNeedsPw(false); setOpen(true); doFetch(); }
+      else { const d = await res.json(); setPwErr(d.error||'Contraseña incorrecta'); }
+    } catch { setPwErr('Error de conexión.'); }
+    setPwBusy(false);
+  };
+
+  return html`
+    <div>
+      <button class="mas-btn" onClick=${handleClick}>✦ Más ejemplos${data?(open?' ▾':' ▸'):''}</button>
+      ${needsPw?html`
+        <div class="pw-inline visible">
+          <div class="pw-inline-label">Contraseña requerida</div>
+          <div class="pw-inline-row">
+            <input class="text-input" type="password" placeholder="Contraseña" value=${pwInput} onInput=${e=>setPwInput(e.target.value)} onKeyDown=${e=>e.key==='Enter'&&pwInput&&submitPw()} disabled=${pwBusy}/>
+            <button class="btn btn-primary" style="padding:10px 20px" onClick=${submitPw} disabled=${!pwInput||pwBusy}>${pwBusy?'...':'OK'}</button>
+          </div>
+          ${pwErr?html`<div style="color:#f87171;font-size:0.78rem;margin-top:8px">${pwErr}</div>`:null}
+        </div>
+      `:null}
+      ${open&&!needsPw?html`
+        <div class="api-area visible">
+          ${loading?html`<div class="spinner-row"><div class="spinner"></div><span>Generando ejemplos…</span></div>`
+          :error?html`<div style="color:#f87171;font-size:0.82rem">${error}</div>`
+          :data?html`
+            ${data.examples.map((ex,i)=>html`<${ExampleCard} key=${i} es=${ex.es} en=${ex.en}/>`)}
+            ${data.nota?html`<div class="usage-note"><div class="usage-note-label">Nota de uso</div>${data.nota}</div>`:null}
+          `:null}
+        </div>
+      `:null}
+    </div>
+  `;
+}
+
+function MeetingVerbsView() {
+  return html`
+    <div class="detail-container view-fade">
+      <div class="detail-header">
+        <div class="detail-verb-hero" style=${{color:'#4ECDC4'}}>Verbos de Encuentro</div>
+        <div class="detail-core-def">¿Quedar, verse, encontrarse, conocer, reunirse?</div>
+      </div>
+      <div class="detail-note">Spanish has several verbs for "meeting" someone — and they're not interchangeable. Each one signals a different type of encounter.</div>
+      <table class="cmp-table">
+        <thead><tr><th>Verb</th><th>Type of Meeting</th><th>Translation</th></tr></thead>
+        <tbody>${MEETING_VERBS.map((mv,i)=>html`<tr key=${i}><td class="verb-cell">${mv.verb}</td><td>${mv.type.split('—')[0].trim()}</td><td>${mv.translation}</td></tr>`)}</tbody>
+      </table>
+      ${MEETING_VERBS.map((mv,i)=>html`
+        <div class="pattern-card" key=${i}>
+          <div class="pattern-head">
+            <div class="pattern-name">${mv.verb}</div>
+            <div class="pattern-tags">${mv.tags.map((t,j)=>html`<${Tag} key=${j} label=${t.l} color=${t.c}/>`)}</div>
+          </div>
+          <div class="pattern-def"><strong>${mv.translation}</strong> — ${mv.type}</div>
+          ${mv.examples.map((ex,j)=>html`<${ExampleCard} key=${j} es=${ex.es} en=${ex.en}/>`)}
+          <${MeetingApiSection} verb=${mv.verb} type=${mv.type} translation=${mv.translation}/>
+        </div>
+      `)}
+    </div>
+  `;
+}
+
+function App() {
+  const [view, setView] = useState('tree');
+  const [selVerb, setSelVerb] = useState(null);
+
+  const goTree = () => { setView('tree'); setSelVerb(null); };
+  const goVerb = (id) => { setSelVerb(id); setView('verb'); };
+  const goMeeting = () => { setView('meeting'); };
+
+  const verbData = selVerb ? VERB_MAP[selVerb] : null;
+
+  return html`
+    <div class="main">
+      <div class="top-bar">
+        <div style="display:flex;align-items:center;gap:16px">
+          <a href="index.html" style="color:var(--text-muted);font-size:0.78rem;text-decoration:none;transition:color 0.15s"
+            onMouseover=${e=>e.target.style.color='var(--accent)'}
+            onMouseout=${e=>e.target.style.color='var(--text-muted)'}>← Inicio</a>
+          <div class="top-bar-title">Verbos con Que-</div>
+        </div>
+        <div class="breadcrumb">
+          ${view==='tree'?html`<span style="color:var(--text-muted);font-size:0.78rem">haz clic en un verbo para explorar</span>`
+          :view==='verb'?html`
+            <span class="breadcrumb-link" onClick=${goTree}>árbol</span>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current" style=${{color:verbData?.groupColor}}>${verbData?.label}</span>
+          `:html`
+            <span class="breadcrumb-link" onClick=${goTree}>árbol</span>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-link" onClick=${()=>goVerb('quedar')}>quedar</span>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current" style=${{color:'#4ECDC4'}}>encuentro</span>
+          `}
+        </div>
+      </div>
+
+      ${view==='tree'?html`
+        <div class="tree-container view-fade">
+          <div class="tree-intro"><p>Haz clic en un verbo para ver todos sus patrones de uso.</p></div>
+          <div class="tree-svg-wrapper"><${TreeSVG} onSelectVerb=${goVerb}/></div>
+        </div>
+      `:view==='verb'?html`
+        <${VerbDetail} verbId=${selVerb} onGoMeeting=${goMeeting}/>
+      `:html`
+        <${MeetingVerbsView}/>
+      `}
+    </div>
+  `;
+}
+
+render(html`<${App}/>`, document.getElementById('root'));
+</script>
+</body>
+</html>

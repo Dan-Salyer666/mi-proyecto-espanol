@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Materiales de Referencia — Español</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a1628;
+  --bg-card: #111d35;
+  --bg-card-hover: #162544;
+  --bg-input: #0d1a2f;
+  --border: #1e3355;
+  --border-focus: #3b6cb5;
+  --text-primary: #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted: #5a6f8e;
+  --accent: #4a90d9;
+  --accent-glow: rgba(74,144,217,0.15);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;padding-bottom:4rem}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 0%,rgba(74,144,217,0.08) 0%,transparent 50%),radial-gradient(ellipse at 80% 100%,rgba(99,102,241,0.06) 0%,transparent 50%);pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;inset:0;opacity:.035;background-image:linear-gradient(30deg,#1e3355 12%,transparent 12.5%,transparent 87%,#1e3355 87.5%,#1e3355),linear-gradient(150deg,#1e3355 12%,transparent 12.5%,transparent 87%,#1e3355 87.5%,#1e3355),linear-gradient(30deg,#1e3355 12%,transparent 12.5%,transparent 87%,#1e3355 87.5%,#1e3355),linear-gradient(150deg,#1e3355 12%,transparent 12.5%,transparent 87%,#1e3355 87.5%,#1e3355),linear-gradient(60deg,#253d5e 25%,transparent 25.5%,transparent 75%,#253d5e 75%,#253d5e),linear-gradient(60deg,#253d5e 25%,transparent 25.5%,transparent 75%,#253d5e 75%,#253d5e);background-size:80px 140px;background-position:0 0,0 0,40px 70px,40px 70px,0 0,40px 70px;pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:0 1rem}
+
+/* TOP BAR */
+.top-bar{padding:1rem 0 0;display:flex;align-items:center}
+.back-link{color:var(--text-muted);text-decoration:none;font-size:.875rem;transition:color .2s}
+.back-link:hover{color:var(--accent)}
+
+/* HEADER */
+.page-header{text-align:center;padding:1.75rem 0 1.5rem}
+.page-header h1{font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.15;margin-bottom:.4rem}
+.page-header p{color:var(--text-secondary);font-size:.9rem}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:1.5rem}
+.search-icon{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none}
+#searchInput{width:100%;padding:.8rem 2.8rem .8rem 2.8rem;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;color:var(--text-primary);font-family:'Outfit',sans-serif;font-size:.95rem;outline:none;transition:border-color .2s}
+#searchInput:focus{border-color:var(--border-focus)}
+#searchInput::placeholder{color:var(--text-muted)}
+#searchClear{position:absolute;right:.8rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:.3rem;display:none;font-size:1rem;line-height:1;transition:color .2s}
+#searchClear:hover{color:var(--text-primary)}
+#noResults{display:none;text-align:center;padding:2rem;color:var(--text-muted);font-size:.9rem}
+
+/* RECURSOS CLAVE */
+.recursos-section{margin-bottom:1.5rem}
+.recursos-label{font-family:'DM Serif Display',serif;font-style:italic;font-size:.9rem;color:var(--text-muted);letter-spacing:.08em;margin-bottom:.7rem;padding-left:.1rem;text-transform:uppercase}
+.rec-row{display:flex;flex-wrap:wrap;gap:.55rem;margin-bottom:.6rem}
+.rec-btn{display:inline-flex;align-items:center;gap:.45rem;text-decoration:none;border-radius:10px;border:1px solid var(--border);font-family:'Outfit',sans-serif;transition:all .2s;white-space:nowrap}
+.rec-btn.primary{padding:.65rem 1.15rem;background:linear-gradient(135deg,#1a2d4f,#1e3355);border-color:#2a4a75;color:var(--text-primary);font-size:.9rem;font-weight:600}
+.rec-btn.primary:hover{border-color:var(--accent);color:var(--accent);background:linear-gradient(135deg,#1e3355,#1e3a5f)}
+.rec-btn.secondary{padding:.42rem .85rem;background:var(--bg-card);color:var(--text-secondary);font-size:.82rem;font-weight:500}
+.rec-btn.secondary:hover{border-color:#2a4a75;color:var(--accent)}
+
+/* MAIN SECTIONS */
+.main-section{margin-bottom:.65rem;border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.main-hdr{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;user-select:none;transition:background .2s;gap:.75rem}
+.main-hdr:hover{background:var(--bg-card-hover)}
+.main-hdr.open{border-bottom:1px solid var(--border)}
+.main-title{font-family:'DM Serif Display',serif;font-size:1.2rem;display:flex;align-items:center;gap:.55rem}
+.main-meta{font-size:.72rem;color:var(--text-muted);font-family:'Outfit',sans-serif;font-weight:400;margin-top:.05rem}
+.main-chevron{color:var(--text-muted);transition:transform .25s;flex-shrink:0}
+.main-hdr.open .main-chevron{transform:rotate(180deg)}
+.main-body{display:none;background:var(--bg-deep)}
+.main-body.open{display:block}
+
+/* CATEGORY DIVIDERS (within main section) */
+.cat-divider{padding:.9rem 1.25rem .4rem;display:flex;align-items:center;gap:.75rem}
+.cat-divider-label{font-family:'DM Serif Display',serif;font-style:italic;font-size:.95rem;color:var(--accent);opacity:.85}
+.cat-divider-line{flex:1;height:1px;background:var(--border)}
+
+/* SUB-SECTIONS (Level 2) */
+.sub-section{border-top:1px solid var(--border)}
+.sub-hdr{display:flex;align-items:center;justify-content:space-between;padding:.7rem 1.25rem .7rem 1.5rem;cursor:pointer;user-select:none;transition:background .15s;gap:.5rem;min-height:44px}
+.sub-hdr:hover{background:rgba(255,255,255,.025)}
+.sub-title{font-size:.9rem;font-weight:600;color:var(--text-secondary);display:flex;align-items:center;gap:.5rem;flex:1}
+.sub-count{font-size:.68rem;background:rgba(74,144,217,.12);color:var(--accent);border-radius:20px;padding:.08rem .45rem;font-weight:500;flex-shrink:0}
+.sub-chevron{color:var(--text-muted);transition:transform .2s;flex-shrink:0;width:14px;height:14px}
+.sub-hdr.open .sub-chevron{transform:rotate(90deg)}
+.sub-body{display:none;padding-bottom:.35rem}
+.sub-body.open{display:block}
+
+/* TOPIC LABELS */
+.topic-label{font-size:.68rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.09em;padding:.7rem 1.25rem .25rem 1.9rem}
+
+/* LINKS */
+.link-item{display:flex;align-items:center;gap:.55rem;padding:.5rem 1.25rem .5rem 1.9rem;text-decoration:none;color:var(--text-primary);font-size:.855rem;transition:background .15s;min-height:44px;line-height:1.3}
+.link-item:hover{background:rgba(74,144,217,.06);color:var(--accent)}
+.link-icon{flex-shrink:0;font-size:.8rem;opacity:.65;width:16px;text-align:center}
+.link-icon.dr{color:#34d399}
+.link-icon.yt{color:#f87171}
+.link-icon.wb{color:var(--accent)}
+.link-name{flex:1}
+.link-item.hidden{display:none!important}
+.sub-section.all-hidden{display:none!important}
+.cat-divider.all-hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top-bar">
+    <a href="index.html" class="back-link">← Inicio</a>
+  </div>
+
+  <div class="page-header">
+    <h1>Materiales de Referencia</h1>
+    <p>Recursos organizados para el aprendizaje del español</p>
+  </div>
+
+  <div class="search-wrap">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="searchInput" placeholder="Buscar recursos..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <button id="searchClear">✕</button>
+  </div>
+  <div id="noResults">No se encontraron resultados para "<span id="noQ"></span>"</div>
+
+  <!-- RECURSOS CLAVE -->
+  <div class="recursos-section">
+    <div class="recursos-label">Recursos Clave</div>
+    <div class="rec-row">
+      <a href="https://www.verbling.com/" target="_blank" rel="noopener" class="rec-btn primary">🎓 Verbling</a>
+      <a href="https://www.spanishdict.com/" target="_blank" rel="noopener" class="rec-btn primary">📖 SpanishDict</a>
+      <a href="https://www.deepl.com/en/translator" target="_blank" rel="noopener" class="rec-btn primary">🔄 DeepL</a>
+      <a href="https://dle.rae.es/" target="_blank" rel="noopener" class="rec-btn primary">📚 RAE Diccionario</a>
+      <a href="https://www.rae.es/dpd/" target="_blank" rel="noopener" class="rec-btn primary">📋 RAE Dudas</a>
+    </div>
+    <div class="rec-row">
+      <a href="https://www.google.com/webhp?hl=es" target="_blank" rel="noopener" class="rec-btn secondary">Google ES</a>
+      <a href="https://quizlet.com/create-set" target="_blank" rel="noopener" class="rec-btn secondary">Quizlet</a>
+      <a href="https://dictionary.reverso.net/english-spanish/" target="_blank" rel="noopener" class="rec-btn secondary">Reverso</a>
+      <a href="https://forvo.com/" target="_blank" rel="noopener" class="rec-btn secondary">Forvo</a>
+      <a href="https://translate.google.com/?sl=en&tl=es&op=translate" target="_blank" rel="noopener" class="rec-btn secondary">Google Translate</a>
+      <a href="https://www.wordreference.com/" target="_blank" rel="noopener" class="rec-btn secondary">WordReference</a>
+    </div>
+  </div>
+
+  <!-- MAIN SECTIONS (rendered by JS) -->
+  <div id="root"></div>
+
+</div>
+
+<script>
+const D='drive.google.com', Y='youtube.com', S='youtu.be';
+function icon(url){
+  if(url.includes(D)) return '<span class="link-icon dr">▣</span>';
+  if(url.includes(Y)||url.includes(S)) return '<span class="link-icon yt">▶</span>';
+  return '<span class="link-icon wb">◉</span>';
+}
+function li(name,url){
+  return `<a href="${url}" target="_blank" rel="noopener" class="link-item" data-s="${name.toLowerCase()}">${icon(url)}<span class="link-name">${name}</span></a>`;
+}
+function tl(label){return `<div class="topic-label">${label}</div>`;}
+
+const DATA=[
+  {
+    id:'archivos',title:'Mis Archivos',emoji:'📁',
+    categories:[
+      {
+        label:'Los Verbos',
+        subs:[
+          {
+            title:'Tiempos Verbales',
+            content:[
+              tl('Vista General'),
+              li('Resumen — todos los tiempos verbales','https://drive.google.com/file/d/1LgovJd9Rv4aduRtWIGaWBd_KvTpjGHJ6/view?usp=drive_link'),
+              li('Ejemplo de todos los tiempos (libro)','https://drive.google.com/file/d/1ZpzVO23YVVSY65BuLRIAjvOkasHR81Tr/view?usp=drive_link'),
+              li('Indicativo — resumen','https://drive.google.com/file/d/1jwBR2t7SbSU2ukdjEyuhBKcxrM4bahhw/view?usp=drive_link'),
+              tl('Presente'),
+              li('Regular formation','https://drive.google.com/file/d/1533zoowe3aU7pCYLUslVajszYMnUs6st/view?usp=drive_link'),
+              li('Presente 1','https://drive.google.com/file/d/1EzoGNAoupWueZs07ajq7N_pHjVz_IeXw/view?usp=drive_link'),
+              li('Presente 2','https://drive.google.com/file/d/1hueJmvvzJvrSu2I7fwNnUyAKbuDKpwau/view?usp=drive_link'),
+              li('Presente 3','https://drive.google.com/file/d/1xzDlwfknNf0hKelfuFZteKVGKsZ3_P6i/view?usp=drive_link'),
+              li('Regular tense irregulars','https://drive.google.com/file/d/1n62a6-qTK2BMGUGIWLJJ933NAFnLuVDx/view?usp=drive_link'),
+              li('Stem changing verbs','https://drive.google.com/file/d/1cf7eMCdhjjW69Q91LlkYCQCrsCJ3WSEN/view?usp=drive_link'),
+              tl('Pretérito'),
+              li('JUI Sandals & YO TV','https://drive.google.com/file/d/1Z441lkWUZV7rzbHGBor6E5ro_fpPDfAc/view?usp=drive_link'),
+              li('JUI Sandals verbs','https://drive.google.com/file/d/1oaZZuJz33V-6NcOWDzLh87GcYFa4S4Es/view?usp=drive_link'),
+              li('YO TV — irregular pretéritos','https://drive.google.com/file/d/1plSCP1dXun1hDEgiOOYZJYIyExJo4FuS/view?usp=drive_link'),
+              li('Regular formation','https://drive.google.com/file/d/1P2lyWhOuROom96tSuAvQY1xWIak1-IWQ/view?usp=drive_link'),
+              li('Trigger words for the preterite','https://drive.google.com/file/d/1B1MVosRt95VnopEnvfONG6Y2HhdZtKiD/view?usp=drive_link'),
+              li('Summary of the irregulars in the preterite','https://drive.google.com/file/d/123SN1lNnQTy0wE1u5hzMzFvCUwLJWGPD/view?usp=drive_link'),
+              li('Pretérito 1','https://drive.google.com/file/d/1btRuQE4EViM0mxhwYb4K3nLObiELVvsD/view?usp=drive_link'),
+              li('Pretérito 2','https://drive.google.com/file/d/1wMIOOXOhGgyi1LzwAuUS_fPxvoV-wYeC/view?usp=drive_link'),
+              li('Pretérito 3','https://drive.google.com/file/d/1PlfDf5Z3eRPY4kdmYVtSPtxXKWh9vFWX/view?usp=drive_link'),
+              tl('Imperfecto'),
+              li('Regular formation','https://drive.google.com/file/d/1QUInxouR_Rny9b4CaxwC3uAw7UqDAk2T/view?usp=drive_link'),
+              li('Irregulars','https://drive.google.com/file/d/1xcNfaerZMGVcPisU-6rsnxy-GYVj3oxE/view?usp=drive_link'),
+              tl('Subjuntivo'),
+              li('The Subjunctive world','https://drive.google.com/file/d/1IatpceKqy5FyeBmgcy0i1hSwI4Pc6aRM/view?usp=drive_link'),
+              li('WEIRDO — resumen','https://drive.google.com/file/d/1L8SdHf-Qce9QiIt9Z-cqpoPGFaqdSF-S/view?usp=drive_link'),
+              li('Present subjunctive — quick shot','https://drive.google.com/file/d/1iJ8EAY-dCY3-CA8uElebFpBtbGDyduTJ/view?usp=drive_link'),
+              li('Imperfect subjunctive — quick shot','https://drive.google.com/file/d/1tkfjM2nI2Vs13QdXs1DOWPpauJbcysa2/view?usp=drive_link'),
+              li('Subjunctive imperfect — quick shot','https://drive.google.com/file/d/1REQWmCRXOyHgICw3DneCFjFm0eB-WV4S/view?usp=drive_link'),
+              li('Subjuntivo 1 — summary sheet','https://drive.google.com/file/d/1KhIV_btt-JN3AT_nmGPQW6l9hkWiAOZy/view?usp=drive_link'),
+              li('Subjuntivo 2 — summary sheet','https://drive.google.com/file/d/1WY_1H7TSkJw5T_76OA0NVmPg0tCZyC8m/view?usp=drive_link'),
+              li('El modo subjuntivo','https://drive.google.com/file/d/1_KtQCYK0ENMV_ip0x5d32MVwAsHHwTPe/view?usp=drive_link'),
+              li('Summary of the irregulars','https://drive.google.com/file/d/1vnI8sZL00Dpl3Ikf19o712V8U_cFZqU0/view?usp=drive_link'),
+              li('6 Irregulars — DISHES','https://drive.google.com/file/d/12F82Tbils0uVCJi3j2Su6TwgDKfp8QLT/view?usp=drive_link'),
+              li('DISHES','https://drive.google.com/file/d/1RcObsRaHV6qqqlvftNKxT2cEdyGWJ-f4/view?usp=drive_link'),
+              li('Irregulares','https://drive.google.com/file/d/1lLTcRdqkuyZLOrnUwW3ZMB47hZqQp1Mb/view?usp=drive_link'),
+              tl('Condicional y Futuro'),
+              li('Irregular conditional','https://drive.google.com/file/d/109K0iY1hHace-G2cBiiu8-qWL9JFpYgX/view?usp=drive_link'),
+              li('The Dirty Dozen','https://drive.google.com/file/d/1AoOPubrGSRYXNXW6EaJHZiJr2517LCY-/view?usp=drive_link'),
+              li('Regular formation — conditional','https://drive.google.com/file/d/19m6T6kMSI_k7ijT8WXpR9OeJJ8IwX2qK/view?usp=drive_link'),
+              li('Uses of the conditional','https://drive.google.com/file/d/12VSLqkS2MB9STfeZ9V_88M_cwOhegwTv/view?usp=drive_link'),
+              li('Regular formation — conditional and future','https://drive.google.com/file/d/15aNKdcz4cnroNkMyJaQJ6UEj0tR2HJUA/view?usp=drive_link'),
+              li('Conditional — general','https://drive.google.com/file/d/1m2krg3LUClEymf6fwms5wdWZolHDU_Mz/view?usp=drive_link'),
+              li('Summary conditional 1','https://drive.google.com/file/d/1hi_6ZHsllneICMfObtf-6211dzXn-O6i/view?usp=drive_link'),
+              li('Summary conditional 2','https://drive.google.com/file/d/11hZ32vwM2eFqFp1DS7-cmjPv-VLYdUlk/view?usp=drive_link'),
+              tl('Imperativo'),
+              li('Summary of imperative mood','https://drive.google.com/file/d/1sibPnoqHgwW8xE5Oec5GBMOHifOqlxm0/view?usp=drive_link'),
+              li('Imperativo 1','https://drive.google.com/file/d/1_Sjml4IGD_guH2jEqjln7tVxd-Flt8CL/view?usp=drive_link'),
+              li('Imperativo finales','https://drive.google.com/file/d/1ihqONu0basyRjbt6VHZakuO6x4TXeUbi/view?usp=drive_link'),
+              li('Reglas de los imperativos','https://drive.google.com/file/d/1EVxagyBWOO799XY0bn_7VfF-NwAzT0tl/view?usp=drive_link'),
+              li('Regular imperatives','https://drive.google.com/file/d/14-4zoL0NxpGP7_vF4HraQjSN0wmrxsol/view?usp=drive_link'),
+              li('Irregular imperatives','https://drive.google.com/file/d/1CYOwD9TnODtigQQw-RVRSykH6ZQwp5zV/view?usp=drive_link'),
+              li('Summary of irregular imperatives','https://drive.google.com/file/d/1EvCtSMU1HGXqiZeDFadcgZ_UVuv6Uq-9/view?usp=drive_link'),
+              li('Tener phrases in the imperative','https://drive.google.com/file/d/10DbC13CBqjYESd8K_zCd4mxUzWH30rhm/view?usp=drive_link'),
+              li('To be phrases in the imperative','https://drive.google.com/file/d/1_2muUXWFuBx5ZqdGYUzdulwk2Sejskiq/view?usp=drive_link'),
+              tl('Tiempos Compuestos'),
+              li('Conditional perfect','https://drive.google.com/file/d/19kEgoRZawziA8VNrpc8N-OmFGm7iuGPa/view?usp=drive_link'),
+              li('Compound 1','https://drive.google.com/file/d/1Ctg1-xPLrX8VzKt2wcnOkqnKMOV2hjlv/view?usp=drive_link'),
+              li('Compound 2','https://drive.google.com/file/d/1t3IbfOih87U-pGsIJ3Xc62_VOFpWufEi/view?usp=drive_link'),
+              li('Pretérito perfecto','https://drive.google.com/file/d/1WkIHBOY-5eP2cSlAnmTjDVMzWK9e7CIr/view?usp=drive_link'),
+              li('Past perfect','https://drive.google.com/file/d/18MwriMWc0fLoIytaj7R0HkVY4IxeRmIv/view?usp=drive_link'),
+              tl('Tiempos Antiguos'),
+              li('Haber en futuro de subjuntivo','https://drive.google.com/file/d/153tuqivhJ7iFvf-GmHA7uGgkh9ncmvqO/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Mecánica Verbal',
+            content:[
+              tl('Construcciones Verbales'),
+              li('Perífrasis verbales','https://drive.google.com/file/d/1BrvsJoGe-yN9Jin0L82S63A0kypzbYpX/view?usp=drive_link'),
+              tl('Cambios de Significado'),
+              li('Meaning shifting at a glance','https://drive.google.com/file/d/1IcKUTNkrdIk0OTcSUttAG5t59G_zv2rq/view?usp=drive_link'),
+              li('Meaning shifting','https://drive.google.com/file/d/1AZU2nEqAJEMfEcPdiKxDpXFNf6uLmjaU/view?usp=drive_link'),
+              li('Preterite vs imperfect shifting','https://drive.google.com/file/d/13nxwtowYR5k7FOHPbQkqknRZfquP-Nlt/view?usp=drive_link'),
+              li('Summary — preterite and imperfect shifting','https://drive.google.com/file/d/17-BRbPO1s8xM9f5vdUt0zhQiWvkoxbkI/view?usp=drive_link'),
+              tl('Los Usos de SE'),
+              li('5 core uses of SE','https://drive.google.com/file/d/1vioVVX9JKNit249xJCPjtHz2H7vciD-O/view?usp=drive_link'),
+              li('8 uses of SE','https://drive.google.com/file/d/1xhp0ta3SACvfN1SI-g8huvMbK0yQk962/view?usp=drive_link'),
+              li('9 uses of SE — addendum','https://drive.google.com/file/d/1S9n62L3ML1lG3RlglKoZTQsQcB9vYB3u/view?usp=drive_link'),
+              li('Usos de SE — pasivo, reflexivo, impersonal, accidental','https://drive.google.com/file/d/16v1E6Pjc90rHDdZ0LQU-FtluMQU8L6Y3/view?usp=drive_link'),
+              li('Rule on passive SE vs impersonal SE','https://drive.google.com/file/d/1uqbDBqvVjC4pkG5bVuy-zApRUne5xDCG/view?usp=drive_link'),
+              li('Reading SE','https://drive.google.com/file/d/1kmjUDOYUx1MbBN9lVXEMZc02V4QpUaT5/view?usp=drive_link'),
+              li('Voz pasiva','https://drive.google.com/file/d/1cNvrkKrswGmtmjz4utcSq1c8RInINuez/view?usp=drive_link'),
+              li('Categories of pronominals','https://drive.google.com/file/d/1bBzkuaw7BKg6-GdIe7BUyGR0LW3Gsbz9/view?usp=drive_link'),
+              li('Impersonal verb structures','https://drive.google.com/file/d/195uWkfbktbewvZaUB970Npd-Y7AtB6o3/view?usp=drive_link'),
+              tl('Gerundios'),
+              li('Hay + gerundio','https://drive.google.com/file/d/1oceXVREvRGj2EVj6NJmvycJcpgI-yZL0/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Verbos Específicos',
+            content:[
+              tl('Ser, Estar y Hay'),
+              li('Hay — todas las formas','https://drive.google.com/file/d/1oceXVREvRGj2EVj6NJmvycJcpgI-yZL0/view?usp=drive_link'),
+              li('Ser, Estar y Hay 1','https://drive.google.com/file/d/1K4e_sYtLviwQZrTNwWtoSHtyEM6bvWSa/view?usp=drive_link'),
+              li('Ser, Estar y Hay 2','https://drive.google.com/file/d/1L9RNc-42DpCGcEKhZGLBbnAl1f3YoXvl/view?usp=drive_link'),
+              tl('Frases de Tener'),
+              li('Frases de Tener — resumen','https://drive.google.com/file/d/1E9_XRY371h-cGq63nFrCKdm-U7ozQT1k/view?usp=drive_link'),
+              li('Frases de Tener 2','https://drive.google.com/file/d/1_19zf9G7x3IWFWovh7cSFUltcsJpTbBL/view?usp=drive_link'),
+              li('Tener phrases — Verbaling','https://drive.google.com/file/d/1sHFD9NYQkc3xZ_mFV7-ah-y4oz0DfSB4/view?usp=drive_link'),
+              li('Tener phrases — types','https://drive.google.com/file/d/1UllDLJcNUAKrojzE55T-OqEs0JpzalC4/view?usp=drive_link'),
+              tl('Verbos como Gustar'),
+              li('Cómo se usa Gustar','https://drive.google.com/file/d/1LX4uVMOOYMppW0RzTVCLduPzrgXCQbBW/view?usp=drive_link'),
+              li('Verbos como gustar','https://drive.google.com/file/d/1vM5kNFA--hq-vFak84wVdYyWH-PM2997/view?usp=drive_link'),
+              li('Verbos como gustar 2','https://drive.google.com/file/d/1HkxQb53jGR8vDFEl5CO7KSHMa0os6h9b/view?usp=drive_link'),
+              li('Verbos como gustar 3','https://drive.google.com/file/d/1Z6jqJFgfMyQUCvz1Mg1Gsm6glE9fIaJ9/view?usp=drive_link'),
+              li('Costar y Faltar','https://drive.google.com/file/d/1SKQHe-TLyYx2H120Zsx07dkPl0hsLB-Y/view?usp=drive_link'),
+              tl('Quedar y Quedarse'),
+              li('Quedar y Quedarse — imagen','https://drive.google.com/file/d/17odBMlWLiu9cFod4npDxv7qcFWX6KE_D/view?usp=drive_link'),
+              li('Resumen de los usos del verbo Quedar','https://drive.google.com/file/d/1AbPhB2FVudDeVLsfN2eOVy0p5y3IA4zl/view?usp=drive_link'),
+              li('Resumen dos del verbo Quedar','https://drive.google.com/file/d/1nNWjt_bV3yyvjmtlZZsy7vaP6K6d3Kol/view?usp=drive_link'),
+              tl('Tratar'),
+              li('Tratar y tratarse de','https://drive.google.com/file/d/1FcdEQVbiggoqYk3zGLiY6ar0c4OLinm5/view?usp=drive_link'),
+              tl('De Poner'),
+              li('Dispuesto y disponible','https://drive.google.com/file/d/1C98GKv9bUVRUAmllehYj-p4uOpomZEhv/view?usp=drive_link'),
+              tl('Terminar y Empezar'),
+              li('Terminar y Empezar','https://drive.google.com/file/d/14X2wl_jomvTLiVbXiVXN793NkYWg0XJU/view?usp=drive_link'),
+              tl('Expresar Ideas'),
+              li('To look like','https://drive.google.com/file/d/1AD2QHZkfEClrfp8uVEGuGeb1Y6uQK7zI/view?usp=drive_link'),
+              li('Staying in a location','https://drive.google.com/file/d/1gWLxBbmhEew0hejG5srVh-_63oqsNpIp/view?usp=drive_link'),
+              li('Summary — 3 verbs of staying','https://drive.google.com/file/d/1S50Jqdk3epZ1pWnYgAUCnXYemexDygYa/view?usp=drive_link'),
+              li('Convey "Let\'s" in Spanish','https://drive.google.com/file/d/1SbGdD5xjlRDkCo_l3tRjNMA9OPGhMe5q/view?usp=drive_link'),
+              li('Expressing emotion','https://drive.google.com/file/d/1tabT7xGPsX0u_EbQMtgYpYsTRkxgAA_U/view?usp=drive_link'),
+              li('Using DAR to express emotional states','https://drive.google.com/file/d/1fn8-l-0kGiwmg6I0WcUu3Q55tkOzllud/view?usp=drive_link'),
+              tl('Verbos de Cambio'),
+              li('Summary of verbs of change','https://drive.google.com/file/d/1vd9R1GYqi8iKMj8HFmiOhQY-yc9Uk62G/view?usp=drive_link'),
+              li('List of verbs of change','https://drive.google.com/file/d/1SusQ-X3q0Bmw7q_NGTNIqKAVCyvTzT-v/view?usp=drive_link'),
+              tl('Borrowing y Lending'),
+              li('Borrowing and Lending 1','https://drive.google.com/file/d/1vmcpLJFreexqkiMAHVnx0ugAWe6Npsgi/view?usp=drive_link'),
+              li('Borrowing and Lending 2','https://drive.google.com/file/d/1bK3LasoS3j_DG9i_oRZh36rP4J1FSN-y/view?usp=drive_link'),
+            ]
+          },
+        ]
+      },
+      {
+        label:'Gramática',
+        subs:[
+          {
+            title:'Pronombres',
+            content:[
+              li('Summary — all pronouns and possessive adjectives','https://drive.google.com/file/d/1rLZI4TlzUSBBatC5AKMEJCl3WU1POc_H/view?usp=drive_link'),
+              li('IOP summary sheet','https://drive.google.com/file/d/1vI8xG0EPsuHIjUOFazjtiTWHCmKZgGLM/view?usp=drive_link'),
+              li('Redundant IOP and DOP','https://drive.google.com/file/d/11qp4irzEDeX_ieL2MB52wn7jpLW2bxvw/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Adjetivos Posesivos',
+            content:[
+              li('List of Spanish possessive adjectives (image)','https://preply.com/wp-content/uploads/2023/10/list-of-spanish-possessive-adjectives.jpg'),
+              li('Possessive adjectives (image)','https://spanishviaskype.com/wp-content/uploads/2021/08/possessive-adjectives-spanish.fw_.png'),
+              li('Possessive adjectives — Berlitz','https://www.berlitz.com/blog/possessive-adjectives-spanish'),
+              li('Possessive adjectives — BBC Bitesize','https://www.bbc.co.uk/bitesize/guides/zr742sg/revision/5'),
+            ]
+          },
+          {
+            title:'Adjetivos y Pronombres Demostrativos',
+            content:[
+              li('Demonstrative adjectives — summary','https://drive.google.com/file/d/17OiiuIRTs6euTQQU5PvNpqJfthzozlff/view?usp=drive_link'),
+              li('Summary of distance and possession','https://drive.google.com/file/d/1Q9n-p0Msx_roGQRZ8eB94X4JICCns5hk/view?usp=drive_link'),
+              li('Demonstrative adjectives','https://drive.google.com/file/d/1qrgaleLOCfUBVvNBTi6dJsm8Y5LBfxny/view?usp=drive_link'),
+              li('Demonstrative pronouns','https://drive.google.com/file/d/18t5iaRXIKfJPOb0xjAPRVZi_T_8ZPJbh/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Comparativos y Superlativos',
+            content:[
+              li('Usos de Tan','https://drive.google.com/file/d/1gCN4Cng46HYkVnNoiYA5pLpA2SYbASqI/view?usp=drive_link'),
+              li('Superlatives and irregular adjectives','https://drive.google.com/file/d/1D5LGR7hdFlkY1Kun4cMx6gTWsTQ6jUQF/view?usp=drive_link'),
+              li('Superlatives — general summary','https://drive.google.com/file/d/1A2AOOKilFeJVlom_3kE5TYozucfQL91V/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Adverbios',
+            content:[
+              li('Adverb formation — -mente','https://drive.google.com/file/d/1KFTG2s9UGgfyw7Nl8v47r9Ig2RZD3E1H/view?usp=drive_link'),
+              li('Adverbios de lugar','https://drive.google.com/file/d/17OiiuIRTs6euTQQU5PvNpqJfthzozlff/view?usp=drive_link'),
+              li('Ya, Todavía — Verbaling','https://drive.google.com/file/d/1F75shrF_1GXoe0aUQKomqQXrk7mVYSmx/view?usp=drive_link'),
+              li('Ya vs Todavía','https://drive.google.com/file/d/1ViZEOPvT1U-g9tgc8IUFtNVRDPSJSjJN/view?usp=drive_link'),
+              li('-Mente adverbios PDF','https://drive.google.com/file/d/1trEuMU8smaz2q3nuBLMKuA2AIltW8WLN/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Preposiciones',
+            content:[
+              tl('Por y Para'),
+              li('Por Para doc 1','https://drive.google.com/file/d/1B9cJ5GrX3RiFd-gixSFG9CGeBl2Z40V9/view?usp=drive_link'),
+              li('Por Para doc 2','https://drive.google.com/file/d/11BbdFgsYXXZ7jGHFvdmCe4rP7SiSRJK-/view?usp=drive_link'),
+              li('Para forward, Por backward','https://drive.google.com/file/d/1p2o0uHzlrNyvd_dmgbo1tbtZb0SvSL7K/view?usp=drive_link'),
+              li('Por and Para — example 1','https://drive.google.com/file/d/1SJtjG6DGhKzb0FufW5oDrb17gziJCUoe/view?usp=drive_link'),
+              li('Por and Para — mnemonic','https://drive.google.com/file/d/135qVMjwmjNk9I0jsy73vTIukVtANB2z-/view?usp=drive_link'),
+              li('Verbling — Por y Para PDF','https://www.verbling.com/document/pdf/-2072627723/2bb2d750-35f3-4a4c-a2d7-308fcea4c8d5/1500/1941/Copia_de_POR_-_PARA_1.doc.pdf'),
+              tl('General'),
+              li('Prepositions of place — cheat sheet','https://drive.google.com/file/d/1UrDAdMQ4o4fXtj9uUYiR9DcVQtEEN_4-/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Conjunciones',
+            content:[
+              li('Spanish connectors — most common','https://vamospanish.com/discover/spanish-connectors-list-of-the-most-common-ones'),
+              li('45 Spanish conjunctions — FluentU','https://www.fluentu.com/blog/spanish/spanish-conjunctions/'),
+            ]
+          },
+          {
+            title:'Interrogativos',
+            content:[
+              li('Forming questions in Spanish','https://drive.google.com/file/d/1EzVIOFRwT7uwTMudh0RFWH5GEhN9zEOz/view?usp=drive_link'),
+              li('"Qué" vs "cuál" — Mango','https://mangolanguages.com/resources/learn/grammar/spanish/que-vs-cual-what-is-the-difference/'),
+              li('How to use interrogatives — Mango','https://mangolanguages.com/resources/learn/grammar/spanish/how-to-use-interrogatives-in-spanish/'),
+            ]
+          },
+          {
+            title:'Sustantivos y Nominalización',
+            content:[
+              li('MIENTO ending nouns','https://drive.google.com/file/d/1ArtOExGTSNe4AYJmM-ia3QZdZr5t-e9LEyc/view?usp=drive_link'),
+              li('LO — nominalización','https://drive.google.com/file/d/1z_EWkJBa5-aWiQ3En3ZfdZr5t-e9LEyc/view?usp=drive_link'),
+              li('Using suffixes to modify words — FluentU','https://www.fluentu.com/blog/spanish/spanish-suffixes/'),
+            ]
+          },
+        ]
+      },
+      {
+        label:'Vocabulario',
+        subs:[
+          {
+            title:'Vocabulario General',
+            content:[
+              li('List adjectives','https://drive.google.com/file/d/1A9qvuIqt6KWcjFiAifIDyTbZ13YeV5ru/view?usp=drive_link'),
+              li('Compass points','https://drive.google.com/file/d/1-PWSATbjB6M6a3PtO98XJfSYBAxKk_bF/view?usp=drive_link'),
+              li('Somewhere / Anywhere','https://drive.google.com/file/d/1GSlRf49ZxMrHdeLb6cJXtreifJw4SqhU/view?usp=drive_link'),
+              li('Streets and Roads','https://drive.google.com/file/d/1-RXk6zYLA4kuiKZ03ysN3tlBdcjIWw-3/view?usp=drive_link'),
+              li('Vocab memory aid','https://drive.google.com/file/d/1CbWGp28JHduSjMna22LD1q1dI6wjtt9x/view?usp=drive_link'),
+              li('Palabras con C','https://drive.google.com/file/d/1nCHOl281vrexWn68JGCzjGcAk03vANjw/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Tiempo y Clima',
+            content:[
+              li('70 common Spanish weather terms — Lingoda','https://www.lingoda.com/blog/en/spanish-weather-terms/'),
+              li('Times and Dates in Spanish — Spanish411','https://spanish411.net/Spanish-Times-Dates.asp'),
+            ]
+          },
+          {
+            title:'Numerales',
+            content:[
+              li('Los ordinales','https://drive.google.com/file/d/1DwdtL1T3AVjuPrWSHgre5F4wIu_8Durd/view?usp=drive_link'),
+              li('Summary of cardinales and ordinales','https://drive.google.com/file/d/1ulnn1zbbvr6xUT91nbe67XbV4ekY23q6/view?usp=drive_link'),
+              li('Learn Numbers in Spanish 1-100 — Don Quijote','https://www.donquijote.org/spanish-language/numbers/'),
+            ]
+          },
+          {
+            title:'Expresiones e Interjecciones',
+            content:[
+              li('Lexicalized pronouns','https://drive.google.com/file/d/1P02KHTeunqEowkuCCHDFSz1c-IRAsKWr/view?usp=drive_link'),
+              li('Interjections','https://drive.google.com/file/d/17Bd3voRdRH23ps2xGRc1C3NFeZ60OtqW/view?usp=drive_link'),
+              li('Expulsion interjections','https://drive.google.com/file/d/1y-tBF5eqijjG4fN5N3SiGEaplNiyxuW0/view?usp=drive_link'),
+            ]
+          },
+          {
+            title:'Confusión y Palabras Tramposas',
+            content:[
+              li('Avoid English direct translations','https://drive.google.com/file/d/1NMGn6Fuh4YwfNrLVTvROwzlLDNwcRv9i/view?usp=drive_link'),
+              li('Errors to avoid 1','https://drive.google.com/file/d/1yizqN6_5lPT6caeeCwoQ3yzuP5Ruzbkw/view?usp=drive_link'),
+              li('Siento — ¿es Sentarse o Sentirse?','https://drive.google.com/file/d/1CTJ68iqoGimNsRKXwwRIhViNV5wSuD8-/view?usp=drive_link'),
+              li('Di — ¿es DAR o DECIR?','https://drive.google.com/file/d/1tqffFrreRPhgEAqNTvBmNJtuEHaZtQnZ/view?usp=drive_link'),
+              li('Easily confused words 1','https://drive.google.com/file/d/10t7QhRd4ygW-s9CdLrxA_QJaI0nNFyw1/view?usp=drive_link'),
+              li('Easily confused words 2','https://drive.google.com/file/d/1UVkxfpoxXcI-ZxHU4cbJpWTC23jnwTyQ/view?usp=drive_link'),
+            ]
+          },
+        ]
+      },
+    ]
+  },
+  {
+    id:'sitios',title:'Sitios de Aprendizaje',emoji:'🌐',
+    categories:[
+      {
+        label:null,
+        subs:[
+          {
+            title:'Gramática en Línea',
+            content:[
+              li('Scottish National Spanish Grammar PDF','https://education.gov.scot/media/puqlkbpi/modlang7-spanish-grammar.pdf'),
+              li('Sentence structure in Spanish — PowerPoint','https://www.slideserve.com/miyoko/sentence-structure-in-spanish-powerpoint-ppt-p'),
+              li('Spanish sentence structure — BaseLang','https://baselang.com/blog/basic-grammar/spanish-sentence-structure/'),
+              li('5 basic rules about Spanish word order','https://www.happyhourspanish.com/spanish-word-order/'),
+              li('Spanish word order diagram (pronouns)','https://www.happyhourspanish.com/wp-content/uploads/2015/12/Spanish-word-order-diagram-pronouns-negation-direct-indirect-object-pronoun-verb-conjugation.jpg'),
+              li('How to use relative pronouns — Spanish Academy','https://www.spanish.academy/blog/how-to-use-relative-pronouns-in-spanish/'),
+              li('Leísmo y leísmo de cortesía — Stack Exchange','https://spanish.stackexchange.com/questions/4177/le%C3%ADsmo-de-cortes%C3%ADa'),
+              li('How to use the Personal A — Spanish Academy','https://www.spanish.academy/blog/how-to-use-the-personal-a-in-spanish/'),
+              li('Nouns — BBC Bitesize','https://www.bbc.co.uk/bitesize/guides/zjpqnrd/revision/1'),
+              li('Gender in Spanish (image)','https://nopanicspanish.com/wp-content/uploads/2020/11/gender-in-spanish-1-890x1024.png'),
+              li('Diferencias entre hace, desde y desde hace — Lingolia','https://espanol.lingolia.com/es/vocabulario/palabras-confundibles/desde-hace'),
+              li('Using AL + infinitivo — ThoughtCo','https://www.thoughtco.com/using-al-followed-by-an-infinitive-3079461'),
+              li('Futuro de conjetura / especulación','https://www.espanolavanzado.com/gramatica-avanzada/391-futuro-especulacion'),
+              li('Spanish Accidental Reflexive — Lawless Spanish','https://www.lawlessspanish.com/grammar/verbs/accidental-reflexive/'),
+              li('Difference between impersonal SE and accidental SE — Mango','https://mangolanguages.com/resources/learn/grammar/spanish/what-is-the-difference-between-impersonal-se-and-accidental-se-in-spanish/'),
+              li('3 ways to express obligation — Coffee Break Languages','https://coffeebreaklanguages.com/2024/06/ways-to-express-obligation-in-spanish-deber-tener-que-and-hay-que/'),
+              li('Difference between gustar and caer bien/mal','https://getfluentspanish.com/posts/the-difference-between-gustar-and-caer-bien-mal'),
+              li('When to use the Spanish subjunctive — Mango','https://mangolanguages.com/resources/learn/grammar/spanish/when-to-use-the-spanish-subjunctive/'),
+              li('WEIRDO subjuntivo (image)','https://ecdn.teacherspayteachers.com/cdn-cgi/image/format=avif,quality=70,width=680/https://ecdn.teacherspayteachers.com/thumbitem/SubjunctiveMoodSubjuntivoUsesFlipcardReview-4016988-1680136580.jpg'),
+              li('Complete guide to all 18 Spanish verb tenses — Rosetta Stone','https://blog.rosettastone.com/your-complete-guide-to-all-18-spanish-verb-tenses-with-examples/'),
+              li('Spanish tense names and English equivalents — Kwiziq','https://spanish.kwiziq.com/spanish-tense-names'),
+              li('150+ Spanish stem-changing verbs — Spanish With Tati','https://spanishwithtati.com/stem-changing-verbs-list/'),
+              li('Infografía — verbos de cambio','https://thepacklanguageexperience.com/wp-content/uploads/2019/03/Infograf%C3%ADa-verbos-de-cambio-The-Pack-Language-Experience.jpg'),
+              li('Ultimate guide to Spanish verb conjugation (image)','https://i0.wp.com/chidolingo.com/wp-content/uploads/2023/03/The-Ultimate-Guide-to-Spanish-Verb-Conjugation-min-2048x1242.png'),
+              li('Ultimate guide to the present tense — BaseLang','https://baselang.com/blog/basic-grammar/ultimate-guide-present-tense-spanish/'),
+              li('Beginner\'s guide to Spanish conjugation — Spanish Academy','https://www.spanish.academy/blog/an-exclusive-beginners-guide-to-spanish-conjugation/'),
+              li('How to use the imperfect tense — Mango','https://mangolanguages.com/resources/learn/grammar/spanish/how-to-use-the-imperfect-tense-in-spanish/'),
+              li('Spanish imperfect past tense — Lingvist','https://lingvist.com/course/learn-spanish-online/resources/spanish-imperfect-past-tense/'),
+              li('Past tense Spanish — BaseLang','https://baselang.com/blog/basic-grammar/past-tense-spanish/'),
+              li('How to say "Let\'s" in Spanish — Viva Language','https://www.vivalanguageservices.co.uk/blog/how-to-say-lets-in-spanish/'),
+              li('How to say "Let\'s" in Spanish — ThoughtCo','https://www.thoughtco.com/request-action-by-group-including-yourself-3079152'),
+              li('How To Use the Spanish Preposition A — ThoughtCo','https://www.thoughtco.com/using-the-preposition-a-3079307'),
+              li('23 common Spanish prepositions — Spanish Academy','https://www.spanish.academy/blog/the-ultimate-guide-to-spanish-prepositions/'),
+              li('Preposition a + de + relative pronouns — Kwiziq','https://spanish.kwiziq.com/revision/grammar/using-preposition-a-and-de-el-que-la-que'),
+              li('Here and There: Acá vs Aquí vs Ahí — BaseLang','https://baselang.com/blog/basic-grammar/aca-vs-aqui-vs-ahi-vs-alli-vs-alla/'),
+              li('Afuera vs Fuera, Atrás vs Detrás — Real Fast Spanish','https://www.realfastspanish.com/vocabulary/afuera-vs-fuera-atras-vs-detras-spanish'),
+              li('The 100 most common Spanish adverbs — SpanishPod101','https://www.spanishpod101.com/blog/2020/10/19/spanish-adverbs/'),
+              li('How to use Ya, Todavía, and Aún','https://mylanguageclasses.in/how-to-use-ya-todavia-and-aun-in-spanish/'),
+              li('Comparatives and superlatives — Spanish Academy','https://www.spanish.academy/blog/spanish-grammar-comparatives-and-superlatives-in-spanish/'),
+              li('A simple guide to demonstrative adjectives — Tell Me In Spanish','https://www.tellmeinspanish.com/grammar/spanish-demonstrative-adjectives/'),
+              li('Demonstrative adjectives — BBC Bitesize','https://www.bbc.co.uk/bitesize/guides/zr742sg/revision/6'),
+              li('This, that, these and those — Lingoda','https://www.lingoda.com/blog/en/this-that-these-those-spanish/'),
+              li('Demonstrative adjectives and pronouns — SpanishDict','https://www.spanishdict.com/answers/277007/demonstrative-adjectives-and-pronouns'),
+              li('Spanish vocabulary and grammar lists by theme — Kwiziq','https://spanish.kwiziq.com/learn/theme'),
+              li('Spanish Proficiency Exercises — UT Austin','https://laits.utexas.edu/spe/index.html'),
+            ]
+          },
+          {
+            title:'Lectura',
+            content:[
+              li('Hola Qué Pasa — Learn Spanish!','https://holaquepasa.com/'),
+              li('Spanish Reading: Texts for Beginners — Lingua','https://lingua.com/spanish/reading/'),
+              li('Spanish Reading Practice — Kwiziq','https://spanish.kwiziq.com/learn/reading'),
+              li('Free Spanish Reading Practice — Fabulang (EN)','https://www.fabulang.com/en/es'),
+              li('Textos en español — Fabulang (ES)','https://www.fabulang.com/es/es'),
+              li('55 Resources for Spanish Reading Practice — FluentU','https://www.fluentu.com/blog/spanish/spanish-reading-practice/'),
+              li('Parallel texts at all levels — Lingolex','https://lingolex.com/content/global-parallel.htm'),
+              li('Spanish Reading Practice — 123 Teach Me','https://www.123teachme.com/learn_spanish/interpretive_reading_novice_02'),
+              li('Beginner Spanish Reading Texts — SpanishReading.online','https://spanishreading.online/spanish-reading-articles/beginner-spanish-reading/'),
+              li('Guide to Spanish Websites for Reading Practice — Readlang','https://blog.readlang.com/ultimate-guide-to-spanish-websites-for-beginners-to-practice-reading/'),
+              li('Vikidia — Wikipedia en español para niños','https://es.vikidia.org/wiki/Vikidia:Portada'),
+              li('Mutt and Jeff en Español — comics','https://syndication.andrewsmcmeel.com/comics/espanol/muttandjeffespanol'),
+              li('Comics para aprender español','https://superespanol.com/comics-en-espanol/'),
+              li('Textos para aprender español — Hablacultura','https://hablacultura.com/cultura-textos-aprender-espanol/'),
+              li('Ordering food naturally in Spanish — Deliberate Spanish','https://www.deliberatespanish.com/blog/ordering-food'),
+              li('1,000 most common Spanish words — Spanish Academy','https://www.spanish.academy/blog/1000-most-common-spanish-words-for-beginners/'),
+            ]
+          },
+          {
+            title:'Escucha',
+            content:[
+              li('Spanish Listening — native speakers','https://spanishlistening.org/'),
+              li('Comprensión auditiva — Lingolia','https://espanol.lingolia.com/es/comprension-auditiva'),
+              li('Música para aprender español','https://superespanol.com/musica-para-aprender-espanol/'),
+              li('Coffee Break TV — Video Library','https://coffeebreaktv.com/'),
+              li('Radio Ambulante — Latin American stories','https://radioambulante.org/en'),
+              li('Spanish Listening Comprehension — Lingua','https://lingua.com/spanish/listening/'),
+              li('Actividades de comprensión auditiva — DELE Ahora','https://deleahora.com/actividades/comprension-auditiva'),
+              li('Dreaming Spanish — Patagonia','https://www.dreamingspanish.com/watch?id=687bea4ef135aabf65ebedc5'),
+            ]
+          },
+          {
+            title:'Noticias en Español',
+            content:[
+              li('Univision — Noticias en vivo','https://www.univision.com/noticias'),
+              li('CNN en Español','https://cnnespanol.cnn.com/mexico'),
+              li('The New York Times en Español','https://www.nytimes.com/es/'),
+              li('Infobae América','https://www.infobae.com/america/'),
+            ]
+          },
+          {
+            title:'Canales de YouTube',
+            content:[
+              tl('Canales'),
+              li('Hola Spanish — YouTube','https://www.youtube.com/@HolaSpanish'),
+              li('How to Spanish Podcast — YouTube','https://www.youtube.com/@HowtoSpanishPodcast_Official'),
+              tl('Videos Seleccionados'),
+              li('100 Essential Spanish Conversations A1-A2 (slow dialogues)','https://www.youtube.com/watch?v=SqtFgAwtNSE'),
+              li('STOP Struggling with Spanish Listening — Slow Podcast','https://www.youtube.com/watch?v=lHQhx8dRHVc'),
+              li('Slow Spanish playlist','https://www.youtube.com/playlist?list=PLQGxDRfENoxKq86RU0IYqFIsMFgMRpVf-'),
+              li('The Smartest Way to Understand Fast Spanish','https://www.youtube.com/watch?v=DRsXXlkXe3I'),
+              li('Preposiciones de lugar — Señor Jordan','https://www.youtube.com/watch?v=f4g9Fyyczj8'),
+              li('How to Think in Spanish (stop translating)','https://www.youtube.com/watch?v=9P7eBFVG_t0'),
+              li('THIS Will CHANGE Your Spanish Pronunciation FOREVER','https://www.youtube.com/watch?v=WsB2LwGwzSY'),
+              li('Top 5 tips for Spanish pronunciation practice','https://www.youtube.com/watch?v=LxkCniBv4ac'),
+              li('Spanish Pronunciation Mistakes — English Speakers','https://www.youtube.com/watch?v=KlJbWJwdkhQ'),
+            ]
+          },
+          {
+            title:'Plataformas Generales',
+            content:[
+              li('Language Transfer — Complete Spanish','https://www.languagetransfer.org/courses#complete-spanish'),
+              li('Duolingo','https://www.duolingo.com/'),
+              li('Memrise','https://app.memrise.com/dashboard'),
+              li('LingQ — Learn Spanish Online','https://www.lingq.com/en/learn-spanish-online/'),
+              li('Lingolia — Learn and practise Spanish','https://espanol.lingolia.com/en/'),
+              li('Destinos — Annenberg Learner','https://www.learner.org/series/destinos-an-introduction-to-spanish/'),
+              li('Lawless Spanish — A1 Grammar','https://www.lawlessspanish.com/language-levels/a1-grammar/'),
+              li('123 Teach Me — Study Spanish Free','https://www.123teachme.com/'),
+              li('Study Spanish Free Online','https://studyspanish.com/'),
+              li('Homeschool Spanish Academy','https://www.spanish.academy/'),
+              li('Spanish411 — Lessons','https://spanish411.net/index.asp'),
+              li('Spanish Flashcards — Flashcardo','https://flashcardo.com/spanish-flashcards/'),
+              li('Linguriosa','https://linguriosa.com/'),
+            ]
+          },
+          {
+            title:'Conjugación y Verbos',
+            content:[
+              li('VerbMaster Spanish Verb App','https://www.verbmaster.co/'),
+              li('Conjuguemos — Student Registration','https://conjuguemos.com/auth/create_student'),
+              li('Spanish Tense Names — Kwiziq','https://spanish.kwiziq.com/spanish-tense-names'),
+            ]
+          },
+          {
+            title:'Pronunciación',
+            content:[
+              tl('General'),
+              li('Regular AR verb stress patterns','https://drive.google.com/file/d/1JuSufpiMz7DMWCPo_pVLgpUm6r_Ed2fW/view?usp=drive_link'),
+              li('The Confident Spanish Pronunciation Course — Breakthrough','https://breakthroughspanish.com/confident-spanish-pronunciation-course'),
+              li('Beginner\'s Guide to Spanish Syllables — Spanish Academy','https://www.spanish.academy/blog/a-beginners-guide-to-spanish-syllables/'),
+              li('Spanish Word Stress — SpanishDict','https://www.spanishdict.com/guide/spanish-word-stress'),
+              li('Spanish Pronunciation: The Ultimate Guide — Mimic Method','https://www.mimicmethod.com/spanish-pronunciation-ultimate-guide/'),
+              li('Diphthongs, Triphthongs, and Hiatus — Spanish Academy','https://www.spanish.academy/blog/diphthongs/'),
+              li('Spanish Diphthongs and Triphthongs — SpanishDict','https://www.spanishdict.com/guide/spanish-diphthongs'),
+              li('Spanish Diphthongs and Triphthongs — 123 Teach Me','https://www.123teachme.com/learn_spanish/diphthongs_and_triphthongs'),
+              tl('La R'),
+              li('How to Pronounce R and RR — Spanish Academy','https://www.spanish.academy/blog/how-to-pronounce-r-and-rr-in-spanish/'),
+              li('How to pronounce Spanish tapped /r/ — YouTube','https://www.youtube.com/watch?v=5pJ97xA6IDw'),
+              li('Spanish R: Pronunciation and Exercises — YouTube','https://www.youtube.com/watch?v=MjIcVr1BNUI'),
+              li('Rolling or Trilling the R — Children — YouTube','https://www.youtube.com/watch?v=0J_Qg1AzTX8'),
+              li('Learn to Roll your R\'s using Phonetics — YouTube','https://www.youtube.com/watch?v=kbnW3vojohQ'),
+              li('Pronounce the R like a Native Spanish Speaker — YouTube','https://www.youtube.com/watch?v=Avduv73Xblk'),
+              li('The Ultimate Guide to Rolling Your R\'s — YouTube','https://www.youtube.com/watch?v=6Bahjy9ujUU'),
+              li('How to Roll Your R\'s — More Tips — YouTube','https://www.youtube.com/watch?v=d3ER4p2CU9E'),
+              li('How To Actually Roll Your R\'s — YouTube','https://www.youtube.com/watch?v=UV4ttOyhEOk'),
+              li('How to Roll Your R\'s — You Already Know How! — YouTube','https://www.youtube.com/watch?v=9Sid6MQvTRQ'),
+              li('How to Roll Your R\'s Step-by-Step — YouTube','https://www.youtube.com/watch?v=WfMadRajLPg'),
+              li('Pronunciación de RR y R — YouTube','https://www.youtube.com/watch?v=F2aPTieKP_E'),
+              li('The best trilled [r] video yet! — YouTube','https://www.youtube.com/watch?v=joVgJUO74Mg'),
+              tl('La D'),
+              li('Quick Fix to Spanish Pronunciation — YouTube Shorts','https://www.youtube.com/shorts/zecuOAyBhrc'),
+              tl('El Alfabeto'),
+              li('Spanish Pronunciation — SpanishDict','https://www.spanishdict.com/pronunciation'),
+              li('Learn how to say letters and sounds in Spanish — YouTube','https://www.youtube.com/watch?v=hsLYD1Jyf3A'),
+              li('Spanish Alphabet Song — YouTube','https://www.youtube.com/watch?v=5MJbHmgaeDM'),
+              li('Alphabet','https://drive.google.com/file/d/1dY6sNIPnfQKDjLsvWrYopIleP-rYzQEO/view?usp=drive_link'),
+              li('Alphabet pronunciation','https://drive.google.com/file/d/1HF3i3cJM9TU4UK4x79szvL7NKO6k56AQ/view?usp=drive_link'),
+            ]
+          },
+        ]
+      },
+    ]
+  }
+];
+
+// ─── RENDER ────────────────────────────────────────────────
+function countLinks(subs){
+  return subs.reduce((n,s)=>n+s.content.filter(c=>c.includes('link-item')).length,0);
+}
+
+function renderSub(sub,mainId,subIdx){
+  const linkCount=sub.content.filter(c=>c.includes('link-item')).length;
+  const id=`sub-${mainId}-${subIdx}`;
+  return `
+<div class="sub-section" id="${id}">
+  <div class="sub-hdr" onclick="toggleSub(this,'${id}')">
+    <span class="sub-title">${sub.title} <span class="sub-count">${linkCount}</span></span>
+    <svg class="sub-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+  </div>
+  <div class="sub-body" id="body-${id}">${sub.content.join('')}</div>
+</div>`;
+}
+
+function renderSection(sec){
+  let html='';
+  let totalLinks=0;
+  sec.categories.forEach(cat=>{cat.subs.forEach(s=>{totalLinks+=s.content.filter(c=>c.includes('link-item')).length;});});
+
+  sec.categories.forEach((cat,ci)=>{
+    if(cat.label){
+      html+=`<div class="cat-divider" id="catdiv-${sec.id}-${ci}"><span class="cat-divider-label">${cat.label}</span><div class="cat-divider-line"></div></div>`;
+    }
+    cat.subs.forEach((sub,si)=>{
+      html+=renderSub(sub,`${sec.id}-${ci}`,si);
+    });
+  });
+
+  return `
+<div class="main-section" id="mainsec-${sec.id}">
+  <div class="main-hdr" onclick="toggleMain(this,'main-body-${sec.id}')">
+    <div>
+      <div class="main-title">${sec.emoji} ${sec.title}</div>
+      <div class="main-meta">${totalLinks} recursos</div>
+    </div>
+    <svg class="main-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+  </div>
+  <div class="main-body" id="main-body-${sec.id}">${html}</div>
+</div>`;
+}
+
+document.getElementById('root').innerHTML=DATA.map(renderSection).join('');
+
+// ─── ACCORDION ─────────────────────────────────────────────
+function toggleMain(hdr,bodyId){
+  const body=document.getElementById(bodyId);
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+}
+function toggleSub(hdr,id){
+  const body=document.getElementById('body-'+id);
+  const open=body.classList.toggle('open');
+  hdr.classList.toggle('open',open);
+}
+
+// ─── SEARCH ────────────────────────────────────────────────
+const inp=document.getElementById('searchInput');
+const clr=document.getElementById('searchClear');
+const noRes=document.getElementById('noResults');
+const noQ=document.getElementById('noQ');
+
+inp.addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  clr.style.display=q?'block':'none';
+
+  if(!q){
+    // restore all
+    document.querySelectorAll('.link-item').forEach(el=>el.classList.remove('hidden'));
+    document.querySelectorAll('.sub-section').forEach(el=>el.classList.remove('all-hidden'));
+    document.querySelectorAll('.cat-divider').forEach(el=>el.classList.remove('all-hidden'));
+    document.querySelectorAll('.main-body').forEach(el=>{el.classList.remove('open');});
+    document.querySelectorAll('.main-hdr').forEach(el=>el.classList.remove('open'));
+    noRes.style.display='none';
+    return;
+  }
+
+  let totalVisible=0;
+  // show all main bodies
+  document.querySelectorAll('.main-body').forEach(el=>el.classList.add('open'));
+  document.querySelectorAll('.main-hdr').forEach(el=>el.classList.add('open'));
+
+  // filter links
+  document.querySelectorAll('.link-item').forEach(el=>{
+    const match=el.dataset.s.includes(q);
+    el.classList.toggle('hidden',!match);
+    if(match)totalVisible++;
+  });
+
+  // hide sub-sections with no visible links
+  document.querySelectorAll('.sub-section').forEach(sub=>{
+    const visLinks=sub.querySelectorAll('.link-item:not(.hidden)').length;
+    if(visLinks===0){
+      sub.classList.add('all-hidden');
+    } else {
+      sub.classList.remove('all-hidden');
+      document.getElementById('body-'+sub.id).classList.add('open');
+      sub.querySelector('.sub-hdr').classList.add('open');
+    }
+  });
+
+  // hide cat-dividers where all subs are hidden
+  document.querySelectorAll('.cat-divider').forEach(div=>{
+    const id=div.id; // catdiv-secid-ci
+    const parts=id.split('-');
+    const secId=parts[1];
+    const ci=parts[2];
+    // check if all subs in this category are hidden
+    const siblings=document.querySelectorAll(`[id^="sub-${secId}-${ci}-"]`);
+    let hasVisible=false;
+    siblings.forEach(s=>{if(!s.classList.contains('all-hidden'))hasVisible=true;});
+    div.classList.toggle('all-hidden',!hasVisible);
+  });
+
+  noRes.style.display=totalVisible===0?'block':'none';
+  if(totalVisible===0)noQ.textContent=q;
+});
+
+clr.addEventListener('click',function(){
+  inp.value='';
+  inp.dispatchEvent(new Event('input'));
+  inp.focus();
+});
+</script>
+</body>
+</html>

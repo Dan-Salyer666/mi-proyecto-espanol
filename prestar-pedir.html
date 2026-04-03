@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prestar y Pedir Prestado</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep:       #0a1628;
+    /* Reduced opacity on standard card bg for more transparency initial state */
+    --bg-card:       rgba(10, 22, 40, 0.4); 
+    --bg-modal:      #0f192d;
+    --border:        #1e3355;
+    --border-focus:  #3b6cb5;
+    --text-primary:  #e2e8f0;
+    --text-secondary:#8a9bb8;
+    --text-muted:    #5a6f8e;
+    --accent:        #4a90d9;
+    --accent-red:    #e06c75;
+    --accent-green:  #98c379;
+    --accent-orange: #d19a66;
+    --accent-glow:   rgba(74,144,217,0.25);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-deep);
+    overflow-x: hidden;
+  }
+
+  .bg-photo {
+    position: fixed;
+    inset: 0;
+    background-image: url('alhambra-bg.webp');
+    background-size: cover;
+    background-position: center top;
+    filter: brightness(0.65); /* Adjusted brightness for better default show-through */
+    z-index: 0;
+  }
+
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 22, 40, 0.3); /* Adjusted overlay transparency */
+    z-index: 1;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    padding: 18px 32px;
+    border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+    background: rgba(10, 22, 40, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  #backLink {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-right: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  #backLink:hover { color: var(--accent); }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.45rem;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+  }
+
+  main {
+    position: relative;
+    z-index: 5;
+    padding: 40px 32px 80px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .intro-text {
+    text-align: center;
+    margin-bottom: 50px;
+    color: var(--text-primary);
+    font-size: 1.15rem;
+    font-weight: 300;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  }
+
+  /* ---- GRID & CARD ANIMATIONS ---- */
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 28px;
+    justify-items: center;
+  }
+
+  .category-card {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 170px; /* Compact height */
+    background: var(--bg-card); /* Frosted glass initial state */
+    border: 1px solid rgba(74, 144, 217, 0.2);
+    border-radius: 40px; /* Highly rounded rectangle */
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px); /* Clean default blur */
+    -webkit-backdrop-filter: blur(10px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+
+  /* Remove old pseudo-element initial pattern */
+  .category-card::before { display: none; }
+
+  .category-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.4), 0 0 20px var(--accent-glow);
+  }
+
+  /* Front and Back content layers */
+  .card-content-front, .card-content-back {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 30px;
+    text-align: center;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 1;
+  }
+
+  .card-content-front {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-content-back {
+    opacity: 0;
+    transform: translateY(15px);
+    /* NEW HOVER STATE: Apply pattern with dark linear gradient blend for text legibility */
+    background-image: linear-gradient(rgba(10, 22, 40, 0.7), rgba(10, 22, 40, 0.7)), url('Spain tile pattern.webp');
+    background-size: cover;
+    background-position: center;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .category-card:hover .card-content-front {
+    opacity: 0;
+    transform: translateY(-15px);
+  }
+
+  .category-card:hover .card-content-back {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+    opacity: 0.9;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+  }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  }
+
+  .card-desc {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    line-height: 1.4;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+  }
+
+  /* ---- MODAL STYLES ---- */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 12, 25, 0.85);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 50;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .modal-overlay.active {
+    display: flex;
+    opacity: 1;
+    animation: fadeIn 0.3s forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-content {
+    background: var(--bg-modal);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 850px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+  }
+
+  .modal-overlay.active .modal-content {
+    transform: translateY(0);
+  }
+
+  .modal-header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(15, 25, 45, 0.95);
+  }
+
+  .modal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem;
+    color: var(--text-primary);
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .close-btn:hover { color: var(--accent-red); }
+
+  .modal-body {
+    padding: 32px;
+    overflow-y: auto;
+    flex-grow: 1;
+  }
+
+  /* ---- INTERNAL CONTENT STYLES ---- */
+  h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+    margin: 1.5rem 0 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  h3:first-child { margin-top: 0; }
+
+  p { margin-bottom: 1rem; line-height: 1.6; color: var(--text-secondary); }
+
+  .verb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .verb-card {
+    background: rgba(17, 29, 53, 0.6);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent-red);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .verb-card.blue { border-top-color: var(--accent); }
+  .verb-card.green { border-top-color: var(--accent-green); }
+  .verb-card.orange { border-top-color: var(--accent-orange); }
+
+  .verb-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+  .verb-meaning {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+  .verb-desc { font-size: 0.95rem; margin-bottom: 16px; color: var(--text-secondary); line-height: 1.5;}
+
+  .example {
+    background: rgba(0,0,0,0.2);
+    border-left: 3px solid var(--accent-red);
+    padding: 10px 14px;
+    margin: 8px 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+  }
+  .example span { display: block; color: var(--text-muted); font-size: 0.85rem; font-style: italic; margin-top: 4px; }
+  .example.blue { border-left-color: var(--accent); }
+  .example.green { border-left-color: var(--accent-green); }
+  .example.orange { border-left-color: var(--accent-orange); }
+
+  .comparison-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  @media (max-width: 650px) { .comparison-box { grid-template-columns: 1fr; } }
+  
+  .comp-side {
+    background: rgba(17, 29, 53, 0.6);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .comp-side.left { border-top: 3px solid var(--accent-red); }
+  .comp-side.right { border-top: 3px solid var(--accent); }
+
+  .highlight-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 24px 0;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+  }
+  .highlight-box strong { color: var(--accent-orange); font-weight: 600; }
+
+  .note {
+    background: rgba(209, 154, 102, 0.1);
+    border-left: 3px solid var(--accent-orange);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    margin: 16px 0;
+    color: var(--text-secondary);
+  }
+
+  .table-wrapper { overflow-x: auto; margin: 16px 0; border-radius: 8px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+  th { background: rgba(0,0,0,0.4); color: var(--text-primary); padding: 12px 16px; font-weight: 600; }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+  .tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .tag.casual   { background: rgba(251, 191, 36, 0.15); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.3); }
+  .tag.neutral  { background: rgba(52, 211, 153, 0.15); color: #6ee7b7; border: 1px solid rgba(52, 211, 153, 0.3); }
+  .tag.formal   { background: rgba(96, 165, 250, 0.15); color: #93c5fd; border: 1px solid rgba(96, 165, 250, 0.3); }
+  .tag.regional { background: rgba(248, 113, 113, 0.15); color: #fca5a5; border: 1px solid rgba(248, 113, 113, 0.3); }
+
+  ul.clean { list-style: none; padding: 0; }
+  ul.clean li { margin: 8px 0; font-size: 0.95rem; display: flex; align-items: baseline; }
+  ul.clean li::before { content: "→"; color: var(--accent); font-weight: 700; margin-right: 10px; font-size: 1.1rem; }
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<header>
+  <span id="backLink" onclick="handleNavBack()">← Inicio</span>
+  <span class="page-title">Prestar y Pedir Prestado</span>
+</header>
+
+<main>
+  <p class="intro-text">Una referencia completa — desde el lenguaje informal hasta peticiones formales.</p>
+
+  <div class="grid-container" id="mainGrid">
+    
+    <div class="category-card" onclick="openModal('modal-core')">
+      <div class="card-content-front">
+        <div class="card-icon">📚</div>
+        <div class="card-title">Los Verbos Principales</div>
+      </div>
+      <div class="card-content-back">
+        <div class="card-desc">Prestar, pedir prestado, tomar prestado y dejar. Los fundamentos.</div>
+      </div>
+    </div>
+
+    <div class="category-card" onclick="openModal('modal-distinction')">
+      <div class="card-content-front">
+        <div class="card-icon">⚖️</div>
+        <div class="card-title">La Diferencia Clave</div>
+      </div>
+      <div class="card-content-back">
+        <div class="card-desc">¿Me prestas? vs. ¿Puedo pedir prestado? Cuándo usar cuál en la vida real.</div>
+      </div>
+    </div>
+
+    <div class="category-card" onclick="openModal('modal-register')">
+      <div class="card-content-front">
+        <div class="card-icon">🌡️</div>
+        <div class="card-title">Guía de Registro</div>
+      </div>
+      <div class="card-content-back">
+        <div class="card-desc">Tabla completa de expresiones desde el nivel ultra casual hasta el más formal.</div>
+      </div>
+    </div>
+
+    <div class="category-card" onclick="openModal('modal-grammar')">
+      <div class="card-content-front">
+        <div class="card-icon">🧩</div>
+        <div class="card-title">Reglas Gramaticales</div>
+      </div>
+      <div class="card-content-back">
+        <div class="card-desc">Acuerdo de género (prestado/a) y uso de los pronombres (me, te, le).</div>
+      </div>
+    </div>
+
+    <div class="category-card" onclick="openModal('modal-special')">
+      <div class="card-content-front">
+        <div class="card-icon">🔍</div>
+        <div class="card-title">Casos Especiales</div>
+      </div>
+      <div class="card-content-back">
+        <div class="card-desc">Préstamos de dinero, bibliotecas, devoluciones y variaciones regionales.</div>
+      </div>
+    </div>
+
+    <div class="category-card" onclick="openModal('modal-cheat')">
+      <div class="card-content-front">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Guía Rápida</div>
+      </div>
+      <div class="card-content-back">
+        <div class="card-desc">Hoja de trucos (Cheat sheet) para situaciones cotidianas comunes.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal-core" onclick="handleOverlayClick(event, 'modal-core')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Los Verbos Principales</div>
+      <button class="close-btn" onclick="closeModal('modal-core')">✕</button>
+    </div>
+    <div class="modal-body">
+      
+      <div class="verb-grid">
+        <div class="verb-card">
+          <div class="verb-title">prestar</div>
+          <div class="verb-meaning">to lend / to loan (lender's perspective)</div>
+          <div class="verb-desc">The most fundamental verb. The subject is always the <em>person giving</em> the item.</div>
+          <div class="example">¿Me prestas tu cargador?<span>Can you lend me your charger?</span></div>
+          <div class="example">Te presto el coche este fin de semana.<span>I'll lend you the car this weekend.</span></div>
+        </div>
+
+        <div class="verb-card blue">
+          <div class="verb-title">pedir prestado/a</div>
+          <div class="verb-meaning">to borrow (borrower's perspective)</div>
+          <div class="verb-desc">The most common way to say "to borrow." <strong>Prestado</strong> must agree in gender/number with the object.</div>
+          <div class="example blue">¿Puedo pedirte prestado el bolígrafo?<span>Can I borrow your pen?</span></div>
+          <div class="example blue">Le pedí prestada la bici a mi hermano.<span>I borrowed my brother's bike.</span></div>
+        </div>
+
+        <div class="verb-card green">
+          <div class="verb-title">tomar prestado/a</div>
+          <div class="verb-meaning">to borrow / to take as a loan</div>
+          <div class="verb-desc">Slightly more formal or written register. Implies taking/using the item rather than making a request. Common in LatAm.</div>
+          <div class="example green">Tomé prestado el libro de la biblioteca.<span>I borrowed the book from the library.</span></div>
+        </div>
+
+        <div class="verb-card orange">
+          <div class="verb-title">sacar prestado/a</div>
+          <div class="verb-meaning">to borrow / to take out on loan</div>
+          <div class="verb-desc">Most commonly used when borrowing from <strong>institutions</strong> — libraries, banks. Implies a formal checkout.</div>
+          <div class="example orange">Saqué prestados tres libros de la biblioteca.<span>I checked out three books from the library.</span></div>
+        </div>
+
+        <div class="verb-card blue">
+          <div class="verb-title">dejar</div>
+          <div class="verb-meaning">to let / to lend informally</div>
+          <div class="verb-desc">Very casual synonym for <em>prestar</em>. The most colloquial way to say "lend me." Common in Spain.</div>
+          <div class="example blue">¿Me dejas tu teléfono un momento?<span>Can I borrow your phone for a sec?</span></div>
+        </div>
+
+        <div class="verb-card green">
+          <div class="verb-title">fiarse / fiar</div>
+          <div class="verb-meaning">to give credit / to lend on trust</div>
+          <div class="verb-desc">Used for lending money/goods on trust, often in shops. <em>Me fías</em> = put it on my tab.</div>
+          <div class="example green">¿Me fías hasta el viernes?<span>Can you spot me until Friday?</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-distinction" onclick="handleOverlayClick(event, 'modal-distinction')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">¿Me prestas? vs. Pedir prestado</div>
+      <button class="close-btn" onclick="closeModal('modal-distinction')">✕</button>
+    </div>
+    <div class="modal-body">
+      
+      <div class="comparison-box">
+        <div class="comp-side left">
+          <h3 style="margin-top:0;">¿Me prestas…? / ¿Me dejas…?</h3>
+          <p>Direct request using <strong>prestar</strong> or <strong>dejar</strong> conjugated — you're asking the other person to perform the action of lending.</p>
+          <div class="example">¿Me prestas el coche?<span>Will you lend me the car?</span></div>
+          <div class="example">¿Me dejas tu chaqueta?<span>Can I borrow your jacket?</span></div>
+          <ul class="clean" style="margin-top: 16px;">
+            <li>More direct, more common in speech</li>
+            <li>Simpler and shorter</li>
+            <li>Very natural in everyday conversation</li>
+          </ul>
+        </div>
+        
+        <div class="comp-side right">
+          <h3 style="margin-top:0; color:var(--accent);">¿Puedo pedir prestado…?</h3>
+          <p>Indirect request framing the borrower as taking action — more polite in register, adds a layer of formality or care.</p>
+          <div class="example blue">¿Puedo pedirte prestado el coche?<span>May I borrow your car?</span></div>
+          <div class="example blue">¿Podría pedir prestada tu chaqueta?<span>Could I possibly borrow your jacket?</span></div>
+          <ul class="clean" style="margin-top: 16px;">
+            <li>More polite / formal</li>
+            <li>Common in writing</li>
+            <li>Slightly more cumbersome for casual speech</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <strong>Bottom line:</strong> In daily spoken Spanish, <em>¿me prestas…?</em> and <em>¿me dejas…?</em> are overwhelmingly more common than <em>¿puedo pedir prestado…?</em>. The latter sounds more careful or formal — you'd use it with a boss, a neighbor you don't know well, or in writing. Among friends and family, <em>¿me lo prestas?</em> or simply <em>¡déjame tu…!</em> is the norm.
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-register" onclick="handleOverlayClick(event, 'modal-register')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Guía de Registro</div>
+      <button class="close-btn" onclick="closeModal('modal-register')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>A full spectrum of how to ask, from hanging out with close friends to formal business environments.</p>
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Register</th>
+              <th>Spanish</th>
+              <th>English</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag casual">Ultra casual</span></td>
+              <td><em>¡Oye, dame tu móvil!</em></td>
+              <td>Hey, give me your phone!</td>
+              <td>Blunt. Among close friends only. Technically "give" not "lend".</td>
+            </tr>
+            <tr>
+              <td><span class="tag casual">Very casual</span></td>
+              <td><em>¿Me dejas el coche un momento?</em></td>
+              <td>Can I borrow the car a sec?</td>
+              <td>Everyday friend/family speech. <em>Dejar</em> = most casual lend.</td>
+            </tr>
+            <tr>
+              <td><span class="tag casual">Casual</span></td>
+              <td><em>¿Me prestas tu cargador?</em></td>
+              <td>Can you lend me your charger?</td>
+              <td>Standard casual. <em>Prestar</em> conjugated. No frills.</td>
+            </tr>
+            <tr>
+              <td><span class="tag neutral">Neutral</span></td>
+              <td><em>¿Podrías prestarme tu paraguas?</em></td>
+              <td>Could you lend me your umbrella?</td>
+              <td>Conditional makes it politer. Safe for acquaintances.</td>
+            </tr>
+            <tr>
+              <td><span class="tag neutral">Neutral</span></td>
+              <td><em>¿Me puedes prestar tu bolígrafo?</em></td>
+              <td>Can you lend me your pen?</td>
+              <td><em>Poder</em> + infinitive softens slightly.</td>
+            </tr>
+            <tr>
+              <td><span class="tag neutral">Neutral</span></td>
+              <td><em>¿Puedo pedirte prestado el libro?</em></td>
+              <td>More careful. Works with teachers, acquaintances.</td>
+              <td>Can I borrow your book?</td>
+            </tr>
+            <tr>
+              <td><span class="tag formal">Formal</span></td>
+              <td><em>¿Le importaría prestarme su pluma?</em></td>
+              <td>Very polite. Usted implied. Professional setting.</td>
+              <td>Would you mind lending me your pen?</td>
+            </tr>
+            <tr>
+              <td><span class="tag formal">Formal</span></td>
+              <td><em>¿Sería posible que me prestara…?</em></td>
+              <td>Would it be possible for you to lend me…?</td>
+              <td>Subjunctive. Written or high-register professional.</td>
+            </tr>
+            <tr>
+              <td><span class="tag formal">Very formal</span></td>
+              <td><em>Le solicito un préstamo de…</em></td>
+              <td>I am requesting a loan of…</td>
+              <td>Financial/legal context. <em>Préstamo</em> = the noun "loan".</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-grammar" onclick="handleOverlayClick(event, 'modal-grammar')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Reglas Gramaticales</div>
+      <button class="close-btn" onclick="closeModal('modal-grammar')">✕</button>
+    </div>
+    <div class="modal-body">
+      
+      <h3>Agreement Rules for <em>prestado</em></h3>
+      <p>When using <strong>pedir prestado</strong>, <strong>tomar prestado</strong>, or <strong>sacar prestado</strong>, the word <em>prestado</em> must agree in <strong>gender and number</strong> with the noun being borrowed — not with the person.</p>
+      
+      <div>
+        <div class="example">Pedí prestado <strong>el</strong> bolígrafo → <em>prestado</em> (masculine singular)</div>
+        <div class="example">Pedí prestada <strong>la</strong> bici → <em>prestada</em> (feminine singular)</div>
+        <div class="example">Pedí prestados <strong>los</strong> apuntes → <em>prestados</em> (masculine plural)</div>
+        <div class="example">Pedí prestadas <strong>las</strong> sillas → <em>prestadas</em> (feminine plural)</div>
+      </div>
+      <div class="note">This rule is often skipped in very casual speech (you'll hear natives say <em>pedí prestado las llaves</em>) but correct usage requires agreement.</div>
+
+      <h3>Indirect Object Pronouns (IOPs)</h3>
+      <p>The key to borrowing/lending sentences is the indirect object pronoun that appears before the verb. It answers <em>"to/from whom?"</em></p>
+      
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Pronoun</th><th>Means</th><th>Example</th><th>Translation</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>me</strong></td><td>to/from me</td><td><em>¿Me prestas…?</em></td><td>Will you lend me…?</td></tr>
+            <tr><td><strong>te</strong></td><td>to/from you</td><td><em>Te presto mi abrigo.</em></td><td>I'll lend you my coat.</td></tr>
+            <tr><td><strong>le</strong></td><td>to/from him/her/usted</td><td><em>Le presté el coche.</em></td><td>I lent him/her the car.</td></tr>
+            <tr><td><strong>nos</strong></td><td>to/from us</td><td><em>¿Nos prestas la tienda?</em></td><td>Will you lend us the tent?</td></tr>
+            <tr><td><strong>os</strong></td><td>to/from you all (Spain)</td><td><em>Os dejo las llaves.</em></td><td>I'll lend you all the keys.</td></tr>
+            <tr><td><strong>les</strong></td><td>to/from them</td><td><em>Les presté dinero.</em></td><td>I lent them money.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-special" onclick="handleOverlayClick(event, 'modal-special')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Casos Especiales y Matices</div>
+      <button class="close-btn" onclick="closeModal('modal-special')">✕</button>
+    </div>
+    <div class="modal-body">
+      
+      <h3>1. Borrowing Money</h3>
+      <p>Money has its own register of terms that go beyond simple <em>prestar</em>.</p>
+      <div class="example">¿Me puedes prestar 20 euros?<span>Can you lend me 20 euros? (casual)</span></div>
+      <div class="example green">¿Me haces un préstamo?<span>Can you give me a loan? (neutral/semi-formal)</span></div>
+      <div class="example orange">Solicité un crédito / préstamo al banco.<span>I applied for a loan from the bank. (formal/financial)</span></div>
+      <div class="example blue">¿Me fías hasta el lunes?<span>Can you spot me until Monday? (very casual)</span></div>
+
+      <h3>2. Returning What Was Borrowed</h3>
+      <p>Asking for things back uses <strong>devolver</strong> (to return/give back).</p>
+      <div class="example">¿Cuándo me devuelves el libro?<span>When are you giving back my book?</span></div>
+      <div class="example">Tengo que devolverte el dinero.<span>I have to pay you back the money.</span></div>
+      <div class="example green">¿Me lo puedes regresar?<span>Can you give it back to me? (regresar = return in LatAm)</span></div>
+
+      <h3>3. Regional Variations</h3>
+      <div class="example"><span class="tag regional">Spain</span> ¿Me lo dejas?<span>Most natural casual form in Spain.</span></div>
+      <div class="example"><span class="tag regional">LatAm</span> ¿Me lo prestas?<span>Standard natural form in Latin America.</span></div>
+      <div class="example"><span class="tag regional">LatAm</span> ¿Me lo regalas?<span>Literally "give it to me" but used loosely for lending.</span></div>
+      <div class="example"><span class="tag regional">Col/Ven</span> ¿Me lo facilitas?<span>Can you make it available to me? (polite)</span></div>
+
+      <h3>4. Common Fixed Expressions</h3>
+      <ul class="clean">
+        <li><em>Prestar atención</em> — to pay attention (NOT borrow attention)</li>
+        <li><em>Prestar servicio</em> — to provide/render a service</li>
+        <li><em>Prestar ayuda</em> — to offer/render help</li>
+        <li><em>Prestarse a algo</em> — to lend oneself to something / to be suitable for</li>
+        <li><em>Estar en préstamo</em> — to be on loan</li>
+      </ul>
+      <div class="note">⚠ <em>Prestar</em> in fixed phrases like <em>prestar atención</em> has nothing to do with borrowing.</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-cheat" onclick="handleOverlayClick(event, 'modal-cheat')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Guía Rápida (Cheat Sheet)</div>
+      <button class="close-btn" onclick="closeModal('modal-cheat')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Quick translations for the most common real-world borrowing scenarios.</p>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Situation</th><th>Best Phrase</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Asking a friend to lend you something</td><td><em>¿Me prestas tu…? / ¿Me dejas tu…?</em></td></tr>
+            <tr><td>Saying you'll lend something to someone</td><td><em>Te presto mi… / Te dejo mi…</em></td></tr>
+            <tr><td>Politely asking to borrow from acquaintance</td><td><em>¿Podrías prestarme tu…?</em></td></tr>
+            <tr><td>Formal borrowing request</td><td><em>¿Puedo pedir prestado/a su…?</em></td></tr>
+            <tr><td>Saying you borrowed something (past)</td><td><em>Le pedí prestado/a… a…</em></td></tr>
+            <tr><td>Borrowing from a library</td><td><em>Saqué… en préstamo</em></td></tr>
+            <tr><td>Asking for something back</td><td><em>¿Cuándo me lo devuelves?</em></td></tr>
+            <tr><td>Spotting money casually</td><td><em>¿Me fías?</em></td></tr>
+            <tr><td>Formal loan (bank/institution)</td><td><em>Solicité un préstamo</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentActiveModal = null;
+
+  function updateNav(state) {
+    const backBtn = document.getElementById('backLink');
+    if (state === 'grid') {
+      backBtn.textContent = '← Inicio';
+    } else if (state === 'modal') {
+      backBtn.textContent = '← Categorías';
+    }
+  }
+
+  function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden'; 
+      currentActiveModal = modalId;
+      updateNav('modal');
+    }
+  }
+
+  function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = ''; 
+      currentActiveModal = null;
+      updateNav('grid');
+    }
+  }
+
+  function handleNavBack() {
+    if (currentActiveModal) {
+      closeModal(currentActiveModal);
+    } else {
+      window.location.href = 'index.html'; 
+    }
+  }
+
+  function handleOverlayClick(event, modalId) {
+    if (event.target.id === modalId) {
+      closeModal(modalId);
+    }
+  }
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && currentActiveModal) {
+      closeModal(currentActiveModal);
+    }
+  });
+
+  updateNav('grid');
+</script>
+
+</body>
+</html>

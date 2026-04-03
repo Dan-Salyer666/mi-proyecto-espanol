@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Mi Proyecto de Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg-deep:       #0a1628;
+  --bg-card:       #111d35;
+  --bg-card-hover: #162544;
+  --bg-input:      #0d1a2f;
+  --border:        #1e3355;
+  --border-focus:  #3b6cb5;
+  --text-primary:  #e2e8f0;
+  --text-secondary:#8a9bb8;
+  --text-muted:    #5a6f8e;
+  --accent:        #4a90d9;
+  --accent-glow:   rgba(74,144,217,0.15);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Outfit',sans-serif;
+  background-color:var(--bg-deep);
+  color:var(--text-primary);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+body::before {
+  content:''; position:fixed; inset:0;
+  background: rgba(5, 12, 26, 0.45);
+  pointer-events:none; z-index:0;
+}
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image: url('Spain tile pattern.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: brightness(0.55);
+  opacity: 1;
+  pointer-events:none; z-index:0;
+}
+
+@keyframes fadeSlideIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn      { from{opacity:0} to{opacity:1} }
+
+.page {
+  position:relative; z-index:1;
+  max-width:780px; margin:0 auto;
+  padding:56px 24px 80px;
+  animation:fadeSlideIn 0.4s ease both;
+}
+
+/* ── HEADER ── */
+.site-header { text-align:center; margin-bottom:52px; }
+.site-eyebrow {
+  font-size:0.68rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:0.18em; color:var(--accent); margin-bottom:12px;
+}
+.site-title {
+  font-family:'DM Serif Display',serif; font-size:3rem; font-weight:400; font-style:italic;
+  background:linear-gradient(135deg,#e2e8f0 0%,#8ab4f0 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  line-height:1.15; margin-bottom:10px;
+}
+.site-subtitle {
+  color:var(--text-muted); font-size:0.85rem; font-weight:300; letter-spacing:0.03em;
+}
+
+/* ── HUB CARDS ── */
+.hub { margin-bottom:18px; border-radius:16px; overflow:hidden; }
+
+.hub-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:20px 24px; background:var(--bg-card);
+  border:1px solid var(--border); border-radius:16px;
+  cursor:pointer; transition:all 0.2s ease; user-select:none;
+}
+.hub.open .hub-header {
+  border-radius:16px 16px 0 0; border-bottom-color:transparent;
+}
+.hub-header:hover { background:var(--bg-card-hover); border-color:#2a4a75; }
+
+.hub-header-left { display:flex; align-items:center; gap:16px; }
+.hub-icon {
+  width:40px; height:40px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.25rem; flex-shrink:0;
+}
+.hub-title {
+  font-family:'DM Serif Display',serif; font-size:1.3rem;
+  font-weight:400; color:var(--text-primary);
+}
+.hub-desc {
+  color:var(--text-muted); font-size:0.78rem; font-weight:300;
+  margin-top:2px;
+}
+.hub-meta { display:flex; align-items:center; gap:10px; }
+.hub-count {
+  font-size:0.68rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:0.09em; color:var(--text-muted);
+  background:var(--bg-input); border:1px solid var(--border);
+  padding:3px 9px; border-radius:20px;
+}
+.hub-chevron {
+  color:var(--text-muted); font-size:0.75rem;
+  transition:transform 0.25s ease;
+}
+.hub.open .hub-chevron { transform:rotate(180deg); }
+
+/* ── HUB BODY ── */
+.hub-body {
+  background:var(--bg-card); border:1px solid var(--border);
+  border-top:none; border-radius:0 0 16px 16px;
+  overflow:hidden;
+  max-height:0; transition:max-height 0.35s ease;
+}
+.hub.open .hub-body { max-height:800px; }
+
+.hub-items { padding:8px 12px 16px; }
+
+/* ── SECTION within hub ── */
+.hub-section { margin-top:14px; }
+.hub-section-label {
+  font-size:0.63rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.12em; color:var(--text-muted);
+  padding:0 10px; margin-bottom:6px;
+  display:flex; align-items:center; gap:8px;
+}
+.hub-section-label::after {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+
+/* ── LINK ITEMS ── */
+.link-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:11px 14px; border-radius:10px; margin-bottom:4px;
+  cursor:pointer; transition:all 0.18s ease;
+  text-decoration:none; color:inherit;
+  border:1px solid transparent;
+}
+.link-item:hover {
+  background:var(--bg-card-hover); border-color:var(--border);
+}
+.link-item-left { display:flex; align-items:center; gap:11px; }
+.link-dot {
+  width:7px; height:7px; border-radius:50%; flex-shrink:0;
+}
+.link-title {
+  font-size:0.9rem; font-weight:500; color:var(--text-primary);
+}
+.link-sub {
+  font-size:0.75rem; color:var(--text-muted); font-weight:300;
+  margin-top:1px;
+}
+.link-right { display:flex; align-items:center; gap:7px; }
+.link-badge {
+  font-size:0.6rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.08em; padding:2px 7px; border-radius:4px;
+}
+.link-arrow { color:var(--text-muted); font-size:0.8rem; transition:transform 0.15s; }
+.link-item:hover .link-arrow { transform:translateX(3px); }
+
+/* ── COMING SOON ── */
+.coming-soon {
+  display:flex; align-items:center; gap:10px;
+  padding:14px 16px; border-radius:10px; margin:8px 2px;
+  background:rgba(74,144,217,0.04); border:1px dashed rgba(74,144,217,0.2);
+  color:var(--text-muted); font-size:0.8rem; font-weight:300; font-style:italic;
+}
+.coming-soon-icon { font-size:1rem; opacity:0.5; }
+
+/* ── FOOTER ── */
+.site-footer {
+  text-align:center; margin-top:56px;
+  color:var(--text-muted); font-size:0.72rem; font-weight:300;
+  letter-spacing:0.04em; opacity:0.6;
+}
+
+@media(max-width:600px){
+  .site-title { font-size:2.2rem; }
+  .page { padding:36px 16px 60px; }
+  .hub-header { padding:16px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="site-header">
+    <div class="site-eyebrow">Daniel's Spanish Journey</div>
+    <h1 class="site-title">Mi Proyecto de Español</h1>
+    <p class="site-subtitle">Gramática · Vocabulario · Ejercicios · Recursos</p>
+  </header>
+
+  <div class="hub" id="hub-quizzes">
+    <div class="hub-header" onclick="toggleHub('hub-quizzes')">
+      <div class="hub-header-left">
+        <div class="hub-icon" style="background:rgba(74,144,217,0.1);border:1px solid rgba(74,144,217,0.2)">✏️</div>
+        <div>
+          <div class="hub-title">Cuestionarios y Práctica</div>
+          <div class="hub-desc">Ejercicios interactivos · entrenamiento de verbos · comprensión lectora</div>
+        </div>
+      </div>
+      <div class="hub-meta">
+        <span class="hub-count">4 herramientas</span>
+        <span class="hub-chevron">▼</span>
+      </div>
+    </div>
+    <div class="hub-body">
+      <div class="hub-items">
+
+        <div class="hub-section">
+          <div class="hub-section-label">Interactivo — con IA</div>
+          <a class="link-item" href="traduccion-interactiva.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#4a90d9"></div>
+              <div>
+                <div class="link-title">Traducción Interactiva</div>
+                <div class="link-sub">Traduce oraciones al español · corrección automática por IA</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(74,144,217,0.1);color:#4a90d9;border:1px solid rgba(74,144,217,0.25)">🔒 contraseña</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <a class="link-item" href="comprension-lectora.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#4a90d9"></div>
+              <div>
+                <div class="link-title">Comprensión Lectora</div>
+                <div class="link-sub">Pasajes generados por IA · nivel · registro · modo historia · resaltado de SE</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(74,144,217,0.1);color:#4a90d9;border:1px solid rgba(74,144,217,0.25)">🔒 contraseña</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <a class="link-item" href="espanol-rioplatense.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#fb923c"></div>
+              <div>
+                <div class="link-title">Español Rioplatense</div>
+                <div class="link-sub">Voseo · imperativo · pronunciación · lunfardo · vesre · vocabulario argentino</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(74,144,217,0.1);color:#4a90d9;border:1px solid rgba(74,144,217,0.25)">🔒 contraseña</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="hub-section">
+          <div class="hub-section-label">Entrenamiento Independiente</div>
+          <a class="link-item" href="entrenador-de-verbos.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#34d399"></div>
+              <div>
+                <div class="link-title">Entrenador de Verbos</div>
+                <div class="link-sub">701 verbos · 4 modos de pregunta · seguimiento de progreso · pronunciación</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(52,211,153,0.1);color:#34d399;border:1px solid rgba(52,211,153,0.25)">701 verbos</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="hub-section">
+          <div class="hub-section-label">En construcción</div>
+          <div class="coming-soon"><span class="coming-soon-icon">🔧</span>Ejercicios de conjugación · Vocabulario · Conversación simulada</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="hub" id="hub-grammar">
+    <div class="hub-header" onclick="toggleHub('hub-grammar')">
+      <div class="hub-header-left">
+        <div class="hub-icon" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2)">📖</div>
+        <div>
+          <div class="hub-title">Gramática y Vocabulario</div>
+          <div class="hub-desc">Referencia interactiva · familias de palabras · gramática</div>
+        </div>
+      </div>
+      <div class="hub-meta">
+        <span class="hub-count">2 secciones</span>
+        <span class="hub-chevron">▼</span>
+      </div>
+    </div>
+    <div class="hub-body">
+      <div class="hub-items">
+
+        <div class="hub-section">
+          <div class="hub-section-label">Vocabulario — Familias de palabras</div>
+          <a class="link-item" href="poner.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#a78bfa"></div>
+              <div>
+                <div class="link-title">Familia de Poner</div>
+                <div class="link-sub">componer · disponer · imponer · suponer · y más · árbol interactivo</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">interactivo</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <a class="link-item" href="que-verbos.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#e8637a"></div>
+              <div>
+                <div class="link-title">Verbos con Que-</div>
+                <div class="link-sub">quedar · querer · quemar · quebrar · quitar · quejarse · patrones de uso</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(232,99,122,0.1);color:#e8637a;border:1px solid rgba(232,99,122,0.25)">interactivo</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <div class="coming-soon"><span class="coming-soon-icon">＋</span>Más familias de verbos · por añadir</div>
+        </div>
+
+        <div class="hub-section">
+          <div class="hub-section-label">Gramática — Páginas de referencia</div>
+          <a class="link-item" href="tema-del-movimiento.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#4a90d9"></div>
+              <div>
+                <div class="link-title">Tema del Movimiento</div>
+                <div class="link-sub">30 verbos de movimiento · 5 categorías · patrones de uso · ejemplos con IA</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(74,144,217,0.1);color:#4a90d9;border:1px solid rgba(74,144,217,0.25)">interactivo</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <a class="link-item" href="prestar-pedir.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#06b6d4"></div>
+              <div>
+                <div class="link-title">Prestar y Pedir Prestado</div>
+                <div class="link-sub">Diferencias entre prestar, dejar y pedir prestado · guía de registro · casos especiales</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(6,182,212,0.1);color:#06b6d4;border:1px solid rgba(6,182,212,0.25)">interactivo</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <a class="link-item" href="https://mis-materiales-espanol.netlify.app/gramatica.html" target="_blank" rel="noopener">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#8ab840"></div>
+              <div>
+                <div class="link-title">Gramática</div>
+                <div class="link-sub">Adverbios -mente · Pronombres IOP & DOP · Interrogativas</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(138,184,64,0.1);color:#8ab840;border:1px solid rgba(138,184,64,0.25)">estático</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <a class="link-item" href="https://mis-materiales-espanol.netlify.app/vocabulario.html" target="_blank" rel="noopener">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#fbbf24"></div>
+              <div>
+                <div class="link-title">Vocabulario</div>
+                <div class="link-sub">Lunfardo · Palabras tramposas · Tal · Préstamos · Verbos nominalizados</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)">estático</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+          <div class="coming-soon"><span class="coming-soon-icon">＋</span>Subjuntivo · Ser vs Estar · más por añadir</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="hub" id="hub-materials">
+    <div class="hub-header" onclick="toggleHub('hub-materials')">
+      <div class="hub-header-left">
+        <div class="hub-icon" style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2)">🗂️</div>
+        <div>
+          <div class="hub-title">Materiales de Referencia</div>
+          <div class="hub-desc">Marcadores organizados · diccionarios · recursos externos</div>
+        </div>
+      </div>
+      <div class="hub-meta">
+        <span class="hub-count">1 página</span>
+        <span class="hub-chevron">▼</span>
+      </div>
+    </div>
+    <div class="hub-body">
+      <div class="hub-items">
+
+        <div class="hub-section">
+          <div class="hub-section-label">Portal de Recursos</div>
+          <a class="link-item" href="materiales.html">
+            <div class="link-item-left">
+              <div class="link-dot" style="background:#fb923c"></div>
+              <div>
+                <div class="link-title">Materiales de Referencia</div>
+                <div class="link-sub">Diccionarios · archivos Drive · gramática · sitios de aprendizaje · con búsqueda</div>
+              </div>
+            </div>
+            <div class="link-right">
+              <span class="link-badge" style="background:rgba(251,146,60,0.1);color:#fb923c;border:1px solid rgba(251,146,60,0.25)">estático</span>
+              <span class="link-arrow">›</span>
+            </div>
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    mi proyecto de español &nbsp;·&nbsp; construido con Claude &nbsp;·&nbsp; en progreso continuo
+  </footer>
+
+</div>
+<script>
+function toggleHub(id) {
+  const hub = document.getElementById(id);
+  hub.classList.toggle('open');
+}
+// All hubs start collapsed — click to expand
+</script>
+</body>
+</html>

@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spanish Interactive Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg-deep: #0a1628;
+    --bg-card: #111d35;
+    --bg-card-hover: #162544;
+    --bg-input: #0d1a2f;
+    --border: #1e3355;
+    --border-focus: #3b6cb5;
+    --text-primary: #e2e8f0;
+    --text-secondary: #8a9bb8;
+    --text-muted: #5a6f8e;
+    --accent: #4a90d9;
+    --accent-glow: rgba(74, 144, 217, 0.15);
+    --green: #34d399;
+    --green-bg: rgba(52, 211, 153, 0.08);
+    --green-border: rgba(52, 211, 153, 0.3);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251, 191, 36, 0.08);
+    --yellow-border: rgba(251, 191, 36, 0.3);
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.08);
+    --red-border: rgba(248, 113, 113, 0.3);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 20% 0%, rgba(74, 144, 217, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, rgba(99, 102, 241, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0.035;
+    background-image:
+      linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+      linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+      linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+      linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+      linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e),
+      linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e);
+    background-size: 80px 140px;
+    background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #root { position: relative; z-index: 1; }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  .header { text-align: center; margin-bottom: 36px; }
+
+  .header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    background: linear-gradient(135deg, #e2e8f0 0%, #8ab4f0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 20px;
+    transition: border-color 0.3s ease;
+  }
+
+  .card:hover { border-color: #2a4a75; }
+
+  .card-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .topic-row { display: flex; gap: 10px; }
+
+  .text-input {
+    flex: 1;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .text-input::placeholder { color: var(--text-muted); }
+  .text-input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .btn {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(74, 144, 217, 0.25);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 4px 20px rgba(74, 144, 217, 0.4);
+    transform: translateY(-1px);
+  }
+  .btn-primary:disabled {
+    opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    font-family: 'Outfit', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 10px;
+  }
+  .btn-ghost:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+    color: #fff;
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 500;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 12px rgba(74, 144, 217, 0.25);
+    transition: all 0.2s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-submit:hover {
+    box-shadow: 0 4px 20px rgba(74, 144, 217, 0.4);
+    transform: translateY(-1px);
+  }
+  .btn-submit:disabled {
+    opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none;
+  }
+
+  /* CEFR Level Selector */
+  .level-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .level-btn {
+    flex: 1;
+    padding: 10px 8px;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .level-btn:hover {
+    border-color: var(--border-focus);
+    color: var(--text-secondary);
+    background: var(--bg-card-hover);
+  }
+
+  .level-btn.selected {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-glow);
+    box-shadow: 0 0 12px rgba(74, 144, 217, 0.15);
+  }
+
+  .level-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  /* Score Bar */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    margin-bottom: 20px;
+    padding: 14px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .score-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 500; }
+
+  .score-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .score-dot.green { background: var(--green); box-shadow: 0 0 8px rgba(52, 211, 153, 0.4); }
+  .score-dot.yellow { background: var(--yellow); box-shadow: 0 0 8px rgba(251, 191, 36, 0.4); }
+  .score-dot.red { background: var(--red); box-shadow: 0 0 8px rgba(248, 113, 113, 0.4); }
+
+  .score-total {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+  }
+
+  .active-topic {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+
+  .active-topic-label {
+    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 2px;
+  }
+
+  .active-topic-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.05rem; color: var(--text-primary);
+  }
+
+  .active-level-badge {
+    display: inline-block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid rgba(74, 144, 217, 0.3);
+    border-radius: 6px;
+    padding: 3px 8px;
+    margin-left: 10px;
+    vertical-align: middle;
+    letter-spacing: 0.05em;
+  }
+
+  .question-sentence {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.35rem; line-height: 1.5;
+    color: var(--text-primary); margin-bottom: 8px;
+  }
+
+  .question-hint {
+    font-size: 0.8rem; color: var(--text-muted);
+    font-weight: 300; font-style: italic; margin-bottom: 20px;
+  }
+
+  .answer-input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1rem; font-weight: 300;
+    outline: none; margin-bottom: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: none;
+  }
+  .answer-input:focus {
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+
+  .feedback {
+    border-radius: 12px; padding: 20px; margin-bottom: 16px;
+    border: 1px solid; animation: fadeSlideIn 0.3s ease;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .feedback.green { background: var(--green-bg); border-color: var(--green-border); }
+  .feedback.yellow { background: var(--yellow-bg); border-color: var(--yellow-border); }
+  .feedback.red { background: var(--red-bg); border-color: var(--red-border); }
+
+  .feedback-grade {
+    font-weight: 600; font-size: 0.85rem;
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;
+  }
+
+  .feedback.green .feedback-grade { color: var(--green); }
+  .feedback.yellow .feedback-grade { color: var(--yellow); }
+  .feedback.red .feedback-grade { color: var(--red); }
+
+  .feedback-text {
+    font-size: 0.92rem; line-height: 1.6;
+    color: var(--text-secondary); font-weight: 300;
+  }
+
+  .feedback-ideal {
+    margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.85rem; color: var(--text-muted);
+  }
+
+  .feedback-ideal strong { color: var(--text-secondary); font-weight: 500; }
+
+  .spinner-wrapper {
+    display: flex; align-items: center; justify-content: center;
+    gap: 10px; padding: 20px;
+    color: var(--text-muted); font-size: 0.9rem; font-weight: 300;
+  }
+
+  .spinner {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .log-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 12px;
+    cursor: pointer; transition: all 0.2s; user-select: none;
+  }
+
+  .log-toggle:hover { background: var(--bg-card-hover); }
+  .log-toggle.open { border-radius: 12px 12px 0 0; }
+
+  .log-toggle-left {
+    display: flex; align-items: center; gap: 10px;
+    font-size: 0.85rem; font-weight: 500; color: var(--text-secondary);
+  }
+
+  .log-chevron {
+    color: var(--text-muted); font-size: 0.75rem; transition: transform 0.2s;
+  }
+
+  .log-chevron.open { transform: rotate(180deg); }
+
+  .log-panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 400px; overflow-y: auto;
+  }
+
+  .log-panel::-webkit-scrollbar { width: 6px; }
+  .log-panel::-webkit-scrollbar-track { background: transparent; }
+  .log-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .log-entry {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 0.82rem;
+  }
+  .log-entry:last-child { border-bottom: none; }
+
+  .log-entry-q { color: var(--text-muted); font-weight: 300; margin-bottom: 4px; }
+  .log-entry-a { color: var(--text-secondary); font-weight: 400; margin-bottom: 2px; }
+  .log-entry-ideal { color: var(--text-muted); font-size: 0.78rem; font-weight: 300; }
+
+  .log-entry-grade {
+    font-weight: 600; font-size: 0.75rem;
+    text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px;
+  }
+  .log-entry-grade.green { color: var(--green); }
+  .log-entry-grade.yellow { color: var(--yellow); }
+  .log-entry-grade.red { color: var(--red); }
+
+  .log-entry-dot {
+    display: inline-block; width: 7px; height: 7px;
+    border-radius: 50%; margin-right: 5px; vertical-align: middle;
+  }
+  .log-entry-dot.green { background: var(--green); }
+  .log-entry-dot.yellow { background: var(--yellow); }
+  .log-entry-dot.red { background: var(--red); }
+
+  .your-answer-echo {
+    padding: 10px 14px; background: var(--bg-input);
+    border-radius: 8px; margin-bottom: 14px;
+    color: var(--text-secondary); font-size: 0.92rem;
+    font-weight: 300; font-style: italic;
+  }
+
+  .topic-description {
+    color: var(--text-secondary); font-size: 0.88rem;
+    font-weight: 300; margin-bottom: 16px; line-height: 1.5;
+  }
+
+  .topic-description em { color: var(--text-muted); }
+
+  .score-divider { color: var(--text-muted); font-size: 0.8rem; }
+
+  .error-msg {
+    background: var(--red-bg); border: 1px solid var(--red-border);
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 14px;
+    color: var(--red); font-size: 0.88rem; font-weight: 400;
+  }
+
+  /* Password screen */
+  .password-card {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .password-input-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .password-error {
+    color: var(--red);
+    font-size: 0.82rem;
+    font-weight: 400;
+    margin-top: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .container { padding: 24px 14px 60px; }
+    .header h1 { font-size: 1.7rem; }
+    .question-sentence { font-size: 1.15rem; }
+    .score-bar { gap: 16px; flex-wrap: wrap; }
+    .topic-row { flex-direction: column; }
+    .level-row { flex-wrap: wrap; }
+    .password-input-row { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="module">
+import { h, render } from 'https://esm.sh/preact@10.19.3';
+import { useState, useRef } from 'https://esm.sh/preact@10.19.3/hooks';
+import htm from 'https://esm.sh/htm@3.1.1';
+
+const html = htm.bind(h);
+
+// ── Stored password for API calls ──
+let sessionPassword = "";
+
+// ── API helper ──
+async function callClaude(systemPrompt, userMessage) {
+  const response = await fetch("/api/claude", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      system: systemPrompt,
+      messages: [{ role: "user", content: userMessage }],
+      password: sessionPassword,
+    }),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    const msg = typeof errData.error === "string"
+      ? errData.error
+      : errData.error?.message || "API error: " + response.status;
+    throw new Error(msg);
+  }
+
+  const data = await response.json();
+  return data.content?.map((b) => (b.type === "text" ? b.text : "")).join("") || "";
+}
+
+// ── Question Generator ──
+async function generateQuestion(topic, level, previousQuestions) {
+  const system = `You are a Spanish language exercise generator. You create ONE exercise sentence in English that a student must translate into Spanish. The exercise must focus on the grammar topic provided.
+
+CEFR LEVEL: ${level}
+- A2: Use simple, everyday vocabulary. Short sentences about daily routines, family, shopping, basic descriptions. Common verbs only.
+- B1: Use intermediate vocabulary. Sentences about travel, work, opinions, plans. Some compound sentences.
+- B2: Use upper-intermediate vocabulary. More complex scenarios, abstract topics, conditional situations, nuanced expressions.
+- C1: Use advanced vocabulary. Complex, natural sentences about politics, culture, professional topics. Idiomatic expressions welcome.
+- C2: Use sophisticated, near-native vocabulary. Literary, journalistic, or highly nuanced sentences. Rare words and complex structures.
+
+Adjust BOTH vocabulary difficulty AND sentence complexity to match the level above.
+
+IMPORTANT: Return ONLY valid JSON, no markdown, no backticks, no preamble. The format must be:
+{"sentence":"The English sentence here","hint":"A short hint about what grammar structure to use"}
+
+Make the sentences natural and varied. Do not repeat concepts from previous questions. Each sentence should test a different aspect or nuance of the grammar topic.`;
+
+  const prevList = previousQuestions.length > 0
+    ? "\n\nPrevious sentences already used (do NOT repeat similar patterns):\n" + previousQuestions.map((q, i) => (i + 1) + ". " + q).join("\n")
+    : "";
+
+  const raw = await callClaude(system, "Grammar topic: " + topic + "\nCEFR Level: " + level + prevList + "\n\nGenerate one new exercise sentence.");
+  try {
+    return JSON.parse(raw.replace(/```json|```/g, "").trim());
+  } catch {
+    return { sentence: raw.trim(), hint: "" };
+  }
+}
+
+// ── Grader ──
+async function gradeAnswer(topic, level, sentence, answer) {
+  const system = `You are a friendly, encouraging Spanish language grading assistant. You grade like a supportive native-speaker tutor, NOT like a rigid textbook.
+
+THE STUDENT IS AT CEFR LEVEL: ${level}. Adjust your expectations accordingly. At A2/B1, be more lenient. At C1/C2, you can expect more precision.
+
+CRITICAL GRADING RULES — YOU MUST FOLLOW ALL OF THESE:
+
+1. ACCEPT NATURAL SPANISH: Accept ANY answer that a native Spanish speaker would understand and consider natural. Spanish is flexible — there are MANY correct translations for any sentence.
+
+2. NEVER PENALIZE FOR:
+   - Dropped subject pronouns (Spanish is pro-drop — "hablo" = "yo hablo")
+   - Word order variations that are natural in Spanish
+   - Regional variations (pretérito indefinido vs perfecto, coche/carro/auto, computadora/ordenador, etc.)
+   - Vocabulary synonyms that convey the same meaning
+   - Capitalization (beginning of sentence, proper nouns, etc.) — NEVER mention capitalization
+
+3. THE IDEAL ANSWER MUST USE THE TESTED GRAMMAR STRUCTURE: The quiz topic is "${topic}". Your ideal answer MUST include and demonstrate this grammar structure. NEVER suggest an ideal answer that avoids or replaces the tested structure with a different one.
+
+4. DON'T PUNISH CORRECT USE OF THE TESTED STRUCTURE: If the student correctly uses the grammar structure being tested, that is the PRIMARY thing you are evaluating. Do not mark it red because a different phrasing without the structure might sound more natural.
+
+5. CONTEXT-SENSITIVE GRADING: Only errors directly related to the quiz topic ("${topic}") should be considered serious (red). Errors NOT related to the topic (spelling typos, accent marks) are minor (yellow) — UNLESS the topic itself is about spelling, accents, or orthography.
+
+6. WHEN IN DOUBT, GRADE MORE GENEROUSLY. Lean toward green.
+
+Return ONLY valid JSON, no markdown, no backticks:
+{
+  "grade": "green" | "yellow" | "red",
+  "explanation": "Brief, encouraging explanation. If correct, say what they did well. If wrong, explain kindly what the issue was.",
+  "ideal": "One ideal translation that MUST USE the grammar structure being tested (${topic})",
+  "notes": "Any minor notes on spelling/accents if applicable, or empty string. NEVER mention capitalization."
+}
+
+GRADES:
+- "green": The tested grammar structure is correctly used AND the sentence communicates the right meaning. Minor stylistic differences are fine.
+- "yellow": The tested grammar structure is correct, but there are minor errors outside the focus area (typos, accents, etc.)
+- "red": The tested grammar structure is genuinely wrong or missing — the student fundamentally misunderstood the concept. This should be RARE.`;
+
+  const raw = await callClaude(
+    system,
+    "Topic focus: " + topic + "\nCEFR Level: " + level + "\nEnglish sentence: " + sentence + "\nStudent's answer: " + answer + "\n\nGrade this translation."
+  );
+  try {
+    return JSON.parse(raw.replace(/```json|```/g, "").trim());
+  } catch {
+    return { grade: "yellow", explanation: raw.trim(), ideal: "", notes: "" };
+  }
+}
+
+// ── Constants ──
+const gradeLabels = { green: "Correct", yellow: "Minor Error", red: "Incorrect" };
+const cefrLevels = ["A2", "B1", "B2", "C1", "C2"];
+
+// ── App ──
+function App() {
+  // Auth state
+  const [authed, setAuthed] = useState(false);
+  const [authChecking, setAuthChecking] = useState(false);
+  const [authError, setAuthError] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
+
+  // Quiz state
+  const [phase, setPhase] = useState("setup");
+  const [topic, setTopic] = useState("");
+  const [level, setLevel] = useState("B1");
+  const [currentQ, setCurrentQ] = useState(null);
+  const [answer, setAnswer] = useState("");
+  const [feedback, setFeedback] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingMsg, setLoadingMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [log, setLog] = useState([]);
+  const [logOpen, setLogOpen] = useState(false);
+  const [scores, setScores] = useState({ green: 0, yellow: 0, red: 0 });
+  const answerRef = useRef(null);
+  const previousQs = useRef([]);
+
+  const totalAnswered = scores.green + scores.yellow + scores.red;
+  const totalCredit = scores.green + scores.yellow;
+
+  // ── Password Check ──
+  const verifyPassword = async () => {
+    setAuthChecking(true);
+    setAuthError("");
+    try {
+      const res = await fetch("/api/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: passwordInput }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        sessionPassword = passwordInput;
+        setAuthed(true);
+      } else {
+        setAuthError(data.error || "Incorrect password.");
+      }
+    } catch (e) {
+      setAuthError("Could not connect to server.");
+    }
+    setAuthChecking(false);
+  };
+
+  const handlePasswordKey = (e) => {
+    if (e.key === "Enter") { e.preventDefault(); verifyPassword(); }
+  };
+
+  // ── Quiz Functions ──
+  const loadNextQuestion = async () => {
+    setFeedback(null);
+    setAnswer("");
+    setErrorMsg("");
+    setLoading(true);
+    setLoadingMsg("Generating question...");
+    try {
+      const q = await generateQuestion(topic, level, previousQs.current);
+      previousQs.current.push(q.sentence);
+      setCurrentQ(q);
+    } catch (e) {
+      console.error(e);
+      const msg = (e && typeof e.message === "string") ? e.message : String(e);
+      setErrorMsg(msg || "Error generating question. Please try again.");
+      setCurrentQ(null);
+    }
+    setLoading(false);
+    setTimeout(() => answerRef.current?.focus(), 100);
+  };
+
+  const startSession = async () => {
+    if (!topic.trim()) return;
+    setPhase("active");
+    setFeedback(null);
+    setAnswer("");
+    setErrorMsg("");
+    setLoading(true);
+    setLoadingMsg("Generating question...");
+    try {
+      const q = await generateQuestion(topic.trim(), level, []);
+      previousQs.current.push(q.sentence);
+      setCurrentQ(q);
+    } catch (e) {
+      console.error(e);
+      const msg = (e && typeof e.message === "string") ? e.message : String(e);
+      setErrorMsg(msg || "Error generating question. Check that your API key is configured in Netlify.");
+      setCurrentQ(null);
+    }
+    setLoading(false);
+  };
+
+  const submitAnswer = async () => {
+    if (!answer.trim() || !currentQ) return;
+    setLoading(true);
+    setLoadingMsg("Grading...");
+    setErrorMsg("");
+    try {
+      const result = await gradeAnswer(topic, level, currentQ.sentence, answer);
+      setFeedback(result);
+      setScores((prev) => ({ ...prev, [result.grade]: prev[result.grade] + 1 }));
+      setLog((prev) => [
+        ...prev,
+        {
+          sentence: currentQ.sentence,
+          answer: answer,
+          grade: result.grade,
+          ideal: result.ideal,
+          explanation: result.explanation,
+        },
+      ]);
+    } catch (e) {
+      console.error(e);
+      const msg = (e && typeof e.message === "string") ? e.message : String(e);
+      setErrorMsg(msg || "Error grading. Please try again.");
+    }
+    setLoading(false);
+  };
+
+  const resetAll = () => {
+    setPhase("setup");
+    setTopic("");
+    setLevel("B1");
+    setCurrentQ(null);
+    setAnswer("");
+    setFeedback(null);
+    setErrorMsg("");
+    setLog([]);
+    setLogOpen(false);
+    setScores({ green: 0, yellow: 0, red: 0 });
+    previousQs.current = [];
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (!feedback && !loading) submitAnswer();
+    }
+  };
+
+  const handleTopicKeyDown = (e) => {
+    if (e.key === "Enter") { e.preventDefault(); startSession(); }
+  };
+
+  // ── PASSWORD SCREEN ──
+  if (!authed) {
+    return html`
+      <div class="container">
+        <div class="header">
+          <h1>Spanish Interactive Quiz</h1>
+          <p>AI-powered grammar exercises with instant feedback</p>
+        </div>
+        <div class="card password-card" style="animation: fadeSlideIn 0.3s ease">
+          <div class="card-label">Enter Password</div>
+          <div class="password-input-row">
+            <input
+              class="text-input"
+              type="password"
+              placeholder="Password"
+              value=${passwordInput}
+              onInput=${(e) => setPasswordInput(e.target.value)}
+              onKeyDown=${handlePasswordKey}
+              autofocus
+              disabled=${authChecking}
+            />
+            <button class="btn btn-primary" onClick=${verifyPassword} disabled=${!passwordInput || authChecking}>
+              ${authChecking ? "..." : "Enter"}
+            </button>
+          </div>
+          ${authError ? html`<div class="password-error">${authError}</div>` : null}
+        </div>
+      </div>
+    `;
+  }
+
+  // ── SETUP PHASE ──
+  if (phase === "setup") {
+    return html`
+      <div class="container">
+        <div class="header">
+          <h1>Spanish Interactive Quiz</h1>
+          <p>AI-powered grammar exercises with instant feedback</p>
+        </div>
+        <div class="card" style="animation: fadeSlideIn 0.3s ease">
+          <div class="card-label">Grammar Focus</div>
+          <p class="topic-description">
+            Enter the grammar topic you want to practice. For example: <em>present subjunctive vs indicative, pretérito vs imperfecto, use of tal, imperative mood, ser vs estar, por vs para...</em>
+          </p>
+          <div class="topic-row">
+            <input
+              class="text-input"
+              type="text"
+              placeholder="e.g. pretérito vs imperfecto"
+              value=${topic}
+              onInput=${(e) => setTopic(e.target.value)}
+              onKeyDown=${handleTopicKeyDown}
+              autofocus
+            />
+            <button class="btn btn-primary" onClick=${startSession} disabled=${!topic.trim()}>
+              Start
+            </button>
+          </div>
+
+          <div style="margin-top: 20px">
+            <div class="level-label">Difficulty Level</div>
+            <div class="level-row">
+              ${cefrLevels.map((lv) => html`
+                <button
+                  key=${lv}
+                  class="level-btn ${level === lv ? 'selected' : ''}"
+                  onClick=${() => setLevel(lv)}
+                >
+                  ${lv}
+                </button>
+              `)}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── ACTIVE PHASE ──
+  return html`
+    <div class="container">
+      <div class="header">
+        <h1>Spanish Interactive Quiz</h1>
+        <p>AI-powered grammar exercises with instant feedback</p>
+      </div>
+
+      <div class="active-topic">
+        <div>
+          <div class="active-topic-label">Practicing</div>
+          <div class="active-topic-value">
+            ${topic}
+            <span class="active-level-badge">${level}</span>
+          </div>
+        </div>
+        <button class="btn-ghost" onClick=${resetAll} style="font-size:0.8rem;padding:8px 16px">
+          Reset
+        </button>
+      </div>
+
+      <div class="score-bar">
+        <div class="score-item">
+          <span class="score-dot green"></span>
+          <span style="color:var(--green)">${scores.green}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-dot yellow"></span>
+          <span style="color:var(--yellow)">${scores.yellow}</span>
+        </div>
+        <div class="score-item">
+          <span class="score-dot red"></span>
+          <span style="color:var(--red)">${scores.red}</span>
+        </div>
+        <span class="score-divider">|</span>
+        <span class="score-total">${totalCredit}/${totalAnswered}</span>
+      </div>
+
+      <div class="card">
+        ${errorMsg ? html`
+          <div class="error-msg">${errorMsg}</div>
+          <button class="btn-submit" onClick=${loadNextQuestion}>
+            Try Again
+          </button>
+        ` : loading && !currentQ ? html`
+          <div class="spinner-wrapper">
+            <div class="spinner"></div>
+            ${loadingMsg}
+          </div>
+        ` : currentQ ? html`
+          <div class="card-label">Translate to Spanish</div>
+          <div class="question-sentence">${currentQ.sentence}</div>
+          ${currentQ.hint ? html`<div class="question-hint">${currentQ.hint}</div>` : null}
+
+          ${!feedback ? html`
+            <textarea
+              ref=${answerRef}
+              class="answer-input"
+              rows="2"
+              placeholder="Type your translation..."
+              value=${answer}
+              onInput=${(e) => setAnswer(e.target.value)}
+              onKeyDown=${handleKeyDown}
+              disabled=${loading}
+            ></textarea>
+            ${loading ? html`
+              <div class="spinner-wrapper">
+                <div class="spinner"></div>
+                ${loadingMsg}
+              </div>
+            ` : html`
+              <button class="btn-submit" onClick=${submitAnswer} disabled=${!answer.trim()}>
+                Submit Answer
+              </button>
+            `}
+          ` : html`
+            <div class="your-answer-echo">${answer}</div>
+
+            <div class="feedback ${feedback.grade}">
+              <div class="feedback-grade">${gradeLabels[feedback.grade]}</div>
+              <div class="feedback-text">${feedback.explanation}</div>
+              ${feedback.notes ? html`
+                <div class="feedback-text" style="margin-top:6px;font-size:0.85rem">${feedback.notes}</div>
+              ` : null}
+              ${feedback.ideal ? html`
+                <div class="feedback-ideal">
+                  <strong>Ideal: </strong>${feedback.ideal}
+                </div>
+              ` : null}
+            </div>
+
+            <button class="btn-submit" onClick=${loadNextQuestion}>
+              Next Question →
+            </button>
+          `}
+        ` : null}
+      </div>
+
+      ${log.length > 0 ? html`
+        <div>
+          <div
+            class="log-toggle ${logOpen ? 'open' : ''}"
+            onClick=${() => setLogOpen(!logOpen)}
+          >
+            <div class="log-toggle-left">
+              <span>Session Log</span>
+              <span style="color:var(--text-muted);font-weight:300">
+                (${totalCredit}/${totalAnswered} correct)
+              </span>
+            </div>
+            <span class="log-chevron ${logOpen ? 'open' : ''}">▼</span>
+          </div>
+          ${logOpen ? html`
+            <div class="log-panel">
+              ${log.map((entry, i) => html`
+                <div class="log-entry" key=${i}>
+                  <div class="log-entry-q">${i + 1}. ${entry.sentence}</div>
+                  <div class="log-entry-a">→ ${entry.answer}</div>
+                  ${entry.ideal ? html`
+                    <div class="log-entry-ideal">Ideal: ${entry.ideal}</div>
+                  ` : null}
+                  <div class="log-entry-grade ${entry.grade}">
+                    <span class="log-entry-dot ${entry.grade}"></span>
+                    ${gradeLabels[entry.grade]}
+                  </div>
+                </div>
+              `)}
+            </div>
+          ` : null}
+        </div>
+      ` : null}
+    </div>
+  `;
+}
+
+render(html`<${App} />`, document.getElementById('root'));
+</script>
+</body>
+</html>

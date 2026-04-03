@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tema del Movimiento</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep:       #0a1628;
+    --bg-card:       #111d35;
+    --bg-card-hover: #162544;
+    --bg-input:      #0d1a2f;
+    --border:        #1e3355;
+    --border-focus:  #3b6cb5;
+    --text-primary:  #e2e8f0;
+    --text-secondary:#8a9bb8;
+    --text-muted:    #5a6f8e;
+    --accent:        #4a90d9;
+    --accent-glow:   rgba(74,144,217,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    height: 100%;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-deep);
+    overflow-x: hidden;
+  }
+
+  .bg-photo {
+    position: fixed;
+    inset: 0;
+    background-image: url('granada-alhambra.webp');
+    background-size: cover;
+    background-position: center top;
+    filter: brightness(0.55);
+    z-index: 0;
+  }
+
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 22, 40, 0.45);
+    z-index: 1;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    padding: 18px 32px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10, 22, 40, 0.72);
+    backdrop-filter: blur(10px);
+  }
+
+  #backLink {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-right: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+    white-space: nowrap;
+    user-select: none;
+  }
+  #backLink:hover { color: var(--accent); }
+
+  .page-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.45rem;
+    color: var(--text-primary);
+    letter-spacing: 0.01em;
+  }
+
+  main {
+    position: relative;
+    z-index: 5;
+  }
+
+  /* ---- LEVELS ---- */
+  .level { display: none; }
+  .level.active { display: block; animation: fadeIn 0.4s ease forwards; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  #level1 {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 65px);
+    padding: 24px 16px 32px;
+  }
+  #level1.active { display: flex; }
+
+  #level2 {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 65px);
+    padding: 16px 16px 32px;
+  }
+  #level2.active { display: flex; }
+
+  /* FIX: Added width to the wrapper so the SVG expands to full size */
+  #level2-svg-wrap {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  #level2-title {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  #level3 {
+    padding: 40px 32px 60px;
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  .l1-hint {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* ---- SVG STYLES ---- */
+  .tree-link    { stroke: var(--border); stroke-width: 1.5; opacity: 0.6; }
+  .node-center-bg { fill: var(--bg-card); stroke: var(--accent); stroke-width: 2; }
+  .node-spoke-bg  { fill: var(--bg-card); stroke: var(--border); stroke-width: 1.5; cursor: pointer; }
+  .node-txt-main  { font-family: 'DM Serif Display', serif; fill: var(--text-primary); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+  .node-txt-sub   { font-family: 'Outfit', sans-serif; fill: var(--text-muted); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+  .node-txt-en    { font-family: 'Outfit', sans-serif; fill: var(--text-secondary); text-anchor: middle; dominant-baseline: middle; pointer-events: none; }
+
+  .spoke-node { cursor: pointer; }
+  .spoke-node:hover .node-spoke-bg { fill: var(--bg-card-hover); stroke: var(--accent); stroke-width: 2.5; }
+  .spoke-node:hover .node-txt-main { fill: var(--accent); transition: fill 0.2s; }
+
+  /* ---- LEVEL 3 DETAIL ---- */
+  .verb-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .verb-title-row { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .verb-title { font-family: 'DM Serif Display', serif; font-size: 2.5rem; color: var(--text-primary); }
+  .verb-en    { font-family: 'Outfit', sans-serif; font-size: 1rem; color: var(--text-secondary); font-style: italic; }
+
+  .patterns-label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .pattern-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin-bottom: 14px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .pattern-card:hover { border-color: #2a4a75; }
+
+  .register-badge {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(0,0,0,0.3);
+  }
+
+  .pattern-formula {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 7px;
+    padding-right: 100px;
+    line-height: 1.4;
+  }
+
+  .pattern-context {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.55;
+  }
+
+  .examples-list { list-style: none; margin-bottom: 14px; }
+
+  .example-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30,51,85,0.45);
+  }
+  .example-item:last-child { border-bottom: none; }
+
+  .example-es {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    line-height: 1.4;
+  }
+  .example-en {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.81rem;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .mas-btn {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.81rem;
+    color: var(--accent);
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mas-btn:hover { background: var(--accent-glow); border-color: var(--accent); }
+  .mas-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  .extra-examples {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(30,51,85,0.6);
+  }
+  .extra-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  /* ---- PASSWORD MODAL ---- */
+  .pw-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,12,25,0.78);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .pw-overlay.show { display: flex; }
+  .pw-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+    max-width: 360px;
+    width: 90%;
+  }
+  .pw-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .pw-box p {
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .pw-input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    outline: none;
+    margin-bottom: 10px;
+  }
+  .pw-input:focus { border-color: var(--border-focus); }
+  .pw-error { font-size: 0.78rem; color: #f87171; min-height: 18px; margin-bottom: 10px; }
+  .pw-go {
+    width: 100%;
+    background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+    border: none;
+    border-radius: 10px;
+    padding: 11px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .pw-go:hover { opacity: 0.88; }
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<header>
+  <span id="backLink">← Inicio</span>
+  <span class="page-title">Tema del Movimiento</span>
+</header>
+
+<main>
+
+  <div id="level1" class="level active">
+    <svg id="l1svg" viewBox="0 0 860 580" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;max-width:860px;overflow:visible">
+
+      <line class="tree-link" x1="430" y1="290" x2="430"   y2="95"/>
+      <line class="tree-link" x1="430" y1="290" x2="616"   y2="230"/>
+      <line class="tree-link" x1="430" y1="290" x2="545"   y2="448"/>
+      <line class="tree-link" x1="430" y1="290" x2="315"   y2="448"/>
+      <line class="tree-link" x1="430" y1="290" x2="244"   y2="230"/>
+
+      <g class="spoke-node" onclick="goToCategory('acto-fisico')">
+        <circle class="node-spoke-bg" cx="430" cy="95" r="65"/>
+        <text class="node-txt-main" x="430" y="84"  font-size="14">El Acto</text>
+        <text class="node-txt-main" x="430" y="101" font-size="14">Físico</text>
+        <text class="node-txt-sub"  x="430" y="119" font-size="9.5">The Physical Act</text>
+      </g>
+
+      <g class="spoke-node" onclick="goToCategory('ocio-paseo')">
+        <circle class="node-spoke-bg" cx="616" cy="230" r="65"/>
+        <text class="node-txt-main" x="616" y="219" font-size="14">El Ocio</text>
+        <text class="node-txt-main" x="616" y="237" font-size="14">y Paseo</text>
+        <text class="node-txt-sub"  x="616" y="256" font-size="9.5">Leisure &amp; Wandering</text>
+      </g>
+
+      <g class="spoke-node" onclick="goToCategory('desplazamiento')">
+        <circle class="node-spoke-bg" cx="545" cy="448" r="65"/>
+        <text class="node-txt-main" x="545" y="436" font-size="12.5">El Despla-</text>
+        <text class="node-txt-main" x="545" y="453" font-size="12.5">zamiento</text>
+        <text class="node-txt-sub"  x="545" y="471" font-size="9.5">Transit &amp; Distance</text>
+      </g>
+
+      <g class="spoke-node" onclick="goToCategory('salida')">
+        <circle class="node-spoke-bg" cx="315" cy="448" r="65"/>
+        <text class="node-txt-main" x="315" y="445" font-size="15">La Salida</text>
+        <text class="node-txt-sub"  x="315" y="465" font-size="8.5">Going Out &amp; Departing</text>
+      </g>
+
+      <g class="spoke-node" onclick="goToCategory('viaje')">
+        <circle class="node-spoke-bg" cx="244" cy="230" r="65"/>
+        <text class="node-txt-main" x="244" y="227" font-size="15">El Viaje</text>
+        <text class="node-txt-sub"  x="244" y="246" font-size="9.5">Travel &amp; Exploration</text>
+      </g>
+
+      <circle class="node-center-bg" cx="430" cy="290" r="76"/>
+      <text class="node-txt-main" x="430" y="279" font-size="13">Tema del</text>
+      <text class="node-txt-main" x="430" y="296" font-size="13">Movimiento</text>
+      <text class="node-txt-sub"  x="430" y="313" font-size="9.5">Movement Theme</text>
+    </svg>
+    <p class="l1-hint">Seleccioná una categoría para explorar sus verbos</p>
+  </div>
+
+  <div id="level2" class="level">
+    <div id="level2-title"></div>
+    <div id="level2-svg-wrap"></div>
+  </div>
+
+  <div id="level3" class="level">
+    <div id="verb-detail"></div>
+  </div>
+
+</main>
+
+<div class="pw-overlay" id="pwOverlay">
+  <div class="pw-box">
+    <h3>Acceso a ejemplos</h3>
+    <p>Ingresá la contraseña para generar ejemplos adicionales con IA.</p>
+    <input type="password" class="pw-input" id="pwInput" placeholder="Contraseña"
+           onkeydown="if(event.key==='Enter')submitPw()">
+    <div class="pw-error" id="pwErr"></div>
+    <button class="pw-go" onclick="submitPw()">Continuar</button>
+  </div>
+</div>
+
+<script>
+// ─── REGISTER BADGE COLORS ───────────────────────────────
+const REG_COLORS = {
+  EVERYDAY:   '#34d399',
+  STANDARD:   '#60a5fa',
+  FORMAL:     '#c084fc',
+  COLLOQUIAL: '#fbbf24',
+  LITERARY:   '#f472b6',
+  REGIONAL:   '#fb923c'
+};
+
+// ─── CATEGORIES ──────────────────────────────────────────
+const CATEGORIES = [
+  { id: 'acto-fisico',    es: 'El Acto Físico',    sub: 'The Physical Act',      centerLines: ['El Acto', 'Físico']         },
+  { id: 'ocio-paseo',     es: 'El Ocio y Paseo',   sub: 'Leisure & Wandering',   centerLines: ['El Ocio', 'y Paseo']        },
+  { id: 'desplazamiento', es: 'El Desplazamiento',  sub: 'Transit & Distance',    centerLines: ['El Despla-', 'zamiento']    },
+  { id: 'salida',         es: 'La Salida',          sub: 'Going Out & Departing', centerLines: ['La Salida']                 },
+  { id: 'viaje',          es: 'El Viaje',           sub: 'Travel & Exploration',  centerLines: ['El Viaje']                  }
+];
+
+// ─── VERB DATA ────────────────────────────────────────────
+const VERBS = {
+  'acto-fisico': [
+    {
+      id: 'caminar', es: 'Caminar', en: 'to walk',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'caminar + por/hasta/hacia + [lugar]',
+          contextNote: 'Walking toward, through, or as far as a place. The most neutral, everyday verb for walking on foot.',
+          examples: [
+            { es: 'Camino hasta la plaza todas las mañanas.', en: 'I walk to the plaza every morning.' },
+            { es: 'Caminamos por el parque después del trabajo.', en: 'We walk through the park after work.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'caminar + [distancia o tiempo]',
+          contextNote: 'Expressing how far or how long someone walks — distance or duration as object.',
+          examples: [
+            { es: 'Caminé dos kilómetros sin parar.', en: 'I walked two kilometers without stopping.' },
+            { es: 'Caminamos una hora para llegar al mirador.', en: 'We walked for an hour to reach the viewpoint.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'andar', es: 'Andar', en: 'to walk / go / work / be in a state',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'andar (intransitivo)',
+          contextNote: 'Getting around on foot — more colloquial than caminar. In Rioplatense, ¿cómo andás? is the standard greeting.',
+          examples: [
+            { es: 'Anduvimos por el centro toda la tarde.', en: 'We walked around downtown all afternoon.' },
+            { es: '¿Cómo andás? — Bien, acá andando.', en: 'How are you going? — Fine, just getting along.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'andar / no andar (funcionamiento)',
+          contextNote: 'Whether a machine, device, or system is working. Very common in spoken Spanish.',
+          examples: [
+            { es: 'El ascensor no anda hace tres días.', en: 'The elevator hasn\'t been working for three days.' },
+            { es: '¿Anda bien el auto?', en: 'Is the car running okay?' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'andar + [adjetivo o adverbio]',
+          contextNote: 'Describing someone\'s current state or mood — how they\'re doing at a given moment.',
+          examples: [
+            { es: 'Últimamente anda muy distraído.', en: 'Lately he\'s been very distracted.' },
+            { es: 'Ando cansada con tanto trabajo.', en: 'I\'m worn out with so much work.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'andar + gerundio',
+          contextNote: 'Being in the process of doing something — an ongoing or habitual action.',
+          examples: [
+            { es: 'Anda buscando trabajo desde hace meses.', en: 'He\'s been looking for work for months.' },
+            { es: '¿Qué andás haciendo?', en: 'What are you up to?' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'correr', es: 'Correr', en: 'to run / flow / run a risk',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'correr (intransitivo)',
+          contextNote: 'Running for speed, exercise, or urgency.',
+          examples: [
+            { es: 'Corro cinco kilómetros cada mañana.', en: 'I run five kilometers every morning.' },
+            { es: 'Tuvimos que correr para no perder el tren.', en: 'We had to run to not miss the train.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'correr un riesgo / correr peligro',
+          contextNote: 'To be exposed to risk or danger — a fixed idiomatic expression.',
+          examples: [
+            { es: 'Corremos el riesgo de llegar tarde.', en: 'We run the risk of arriving late.' },
+            { es: 'Los animales corren peligro en esa zona.', en: 'The animals are in danger in that area.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'correr (el tiempo)',
+          contextNote: 'Time passing quickly — often with el tiempo as subject.',
+          examples: [
+            { es: 'El tiempo corre y todavía no terminamos.', en: 'Time is running away and we still haven\'t finished.' },
+            { es: '¡Cómo corre el tiempo! Ya pasó un año.', en: 'How time flies! A whole year has gone by.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'trotar', es: 'Trotar', en: 'to jog',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'trotar (intransitivo)',
+          contextNote: 'Jogging at a moderate, sustained pace — lighter than correr, more rhythmic.',
+          examples: [
+            { es: 'Troto media hora por el parque antes del desayuno.', en: 'I jog for half an hour through the park before breakfast.' },
+            { es: 'Empezó a trotar para mejorar su resistencia.', en: 'She started jogging to build up her endurance.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'marchar', es: 'Marchar / Marcharse', en: 'to march / to leave with purpose',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'marchar (intransitivo)',
+          contextNote: 'Organized, purposeful walking — military, protest, or ceremony. Implies formation and shared purpose.',
+          examples: [
+            { es: 'Los soldados marcharon por la avenida principal.', en: 'The soldiers marched down the main avenue.' },
+            { es: 'Miles de personas marcharon en apoyo de los derechos laborales.', en: 'Thousands of people marched in support of labor rights.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'marcharse + de + [lugar]',
+          contextNote: 'Leaving a place with a sense of decision or finality — implies not staying.',
+          examples: [
+            { es: 'Se marchó de la reunión sin decir nada.', en: 'She left the meeting without saying anything.' },
+            { es: 'Nos marchamos temprano para evitar el tráfico.', en: 'We left early to avoid the traffic.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'avanzar', es: 'Avanzar', en: 'to move forward / make progress',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'avanzar + por/hacia/hasta + [lugar]',
+          contextNote: 'Moving forward through or toward a place — implies direction and momentum.',
+          examples: [
+            { es: 'El grupo avanzó lentamente por el sendero nevado.', en: 'The group advanced slowly along the snowy path.' },
+            { es: 'Las tropas avanzaron hacia la ciudad.', en: 'The troops moved toward the city.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'avanzar + en + [materia o proyecto]',
+          contextNote: 'Making progress in a subject, project, or plan — figurative use.',
+          examples: [
+            { es: 'Avanzo bien en el español — ya leo sin diccionario.', en: 'I\'m making good progress in Spanish — I already read without a dictionary.' },
+            { es: 'El proyecto avanza según lo previsto.', en: 'The project is moving forward as planned.' }
+          ]
+        }
+      ]
+    }
+  ],
+
+  'ocio-paseo': [
+    {
+      id: 'pasear', es: 'Pasear', en: 'to stroll / take a walk',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'pasear + por + [lugar]',
+          contextNote: 'Strolling through a place for leisure — relaxed, unhurried, no particular destination.',
+          examples: [
+            { es: 'Paseamos por la costanera hasta que oscureció.', en: 'We strolled along the waterfront until it got dark.' },
+            { es: 'Me gusta pasear por el barrio antiguo los domingos.', en: 'I like to stroll through the old neighborhood on Sundays.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'pasear + a + [persona o animal]',
+          contextNote: 'Taking someone or an animal for a walk — transitive use.',
+          examples: [
+            { es: 'Tengo que pasear al perro dos veces por día.', en: 'I have to walk the dog twice a day.' },
+            { es: 'Los domingos paseaba a su abuela por el parque.', en: 'On Sundays he would take his grandmother for a walk in the park.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'pasearse + por (pronominal)',
+          contextNote: 'Pacing back and forth, or parading — implies restlessness or showing off.',
+          examples: [
+            { es: 'Se paseaba por la sala mientras esperaba los resultados.', en: 'She paced around the room while waiting for the results.' },
+            { es: 'Se paseó por la fiesta como si fuera el dueño del lugar.', en: 'He walked around the party as if he owned the place.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'dar-un-paseo', es: 'Dar un paseo', en: 'to go for a walk',
+      displayLines: ['Dar un', 'paseo'],
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'dar un paseo + por/hasta + [lugar]',
+          contextNote: 'A deliberate, planned walk — more intentional than pasear. Suggests the walk itself is the purpose.',
+          examples: [
+            { es: '¿Damos un paseo por el río antes de comer?', en: 'Shall we go for a walk along the river before lunch?' },
+            { es: 'Dimos un paseo hasta el mercado y volvimos caminando.', en: 'We walked down to the market and came back on foot.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'dar-una-vuelta', es: 'Dar una vuelta', en: 'to go for a quick walk',
+      displayLines: ['Dar una', 'vuelta'],
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'dar una vuelta + por + [lugar]',
+          contextNote: 'A casual loop or quick outing — more spontaneous and informal than dar un paseo.',
+          examples: [
+            { es: 'Voy a dar una vuelta por el centro, ¿venís?', en: 'I\'m going for a quick walk around the center, are you coming?' },
+            { es: 'Dimos una vuelta por el barrio para ver el ambiente.', en: 'We did a loop around the neighborhood to take in the vibe.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'callejear', es: 'Callejear', en: 'to wander city streets',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'callejear + por + [lugar]',
+          contextNote: 'Wandering through city streets with no fixed destination — implies genuine exploration.',
+          examples: [
+            { es: 'Pasamos la tarde callejeando por San Telmo.', en: 'We spent the afternoon wandering the streets of San Telmo.' },
+            { es: 'Le encanta callejear por los barrios menos turísticos.', en: 'He loves wandering through the less touristy neighborhoods.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'vagar', es: 'Vagar', en: 'to roam / wander aimlessly',
+      patterns: [
+        {
+          register: 'LITERARY',
+          formula: 'vagar + por + [lugar]',
+          contextNote: 'Wandering with no purpose — carries a melancholic or poetic tone. More literary than callejear.',
+          examples: [
+            { es: 'Vagaba por las calles vacías sin saber adónde ir.', en: 'He wandered the empty streets not knowing where to go.' },
+            { es: 'El protagonista vaga por la ciudad buscando rastros del pasado.', en: 'The protagonist wanders the city looking for traces of the past.' }
+          ]
+        },
+        {
+          register: 'LITERARY',
+          formula: 'vagar (sujeto abstracto)',
+          contextNote: 'Thoughts, feelings, or the mind drifting — figurative use.',
+          examples: [
+            { es: 'Sus pensamientos vagaban entre el pasado y el presente.', en: 'Her thoughts drifted between the past and the present.' },
+            { es: 'La mirada le vagaba por el horizonte sin fijarse en nada.', en: 'His gaze drifted across the horizon without settling on anything.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'deambular', es: 'Deambular', en: 'to meander / wander slowly',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'deambular + por + [lugar]',
+          contextNote: 'Moving slowly and aimlessly — more neutral in tone than vagar, less poetic.',
+          examples: [
+            { es: 'Deambulaban por el museo sin ningún plan particular.', en: 'They wandered through the museum with no particular plan.' },
+            { es: 'Después del examen, deambuló por el campus sin rumbo.', en: 'After the exam, she wandered around campus with no direction.' }
+          ]
+        }
+      ]
+    }
+  ],
+
+  'desplazamiento': [
+    {
+      id: 'trasladarse', es: 'Trasladarse', en: 'to move / commute / transfer',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'trasladarse + a/desde + [lugar]',
+          contextNote: 'Moving from one place to another — commuting, relocating, or traveling to an event.',
+          examples: [
+            { es: 'Me traslado al trabajo en metro todos los días.', en: 'I commute to work by metro every day.' },
+            { es: 'La familia se trasladó desde Buenos Aires a Mendoza.', en: 'The family moved from Buenos Aires to Mendoza.' }
+          ]
+        },
+        {
+          register: 'FORMAL',
+          formula: 'trasladarse (grupo o institución)',
+          contextNote: 'Formal relocation of an organization, office, or group.',
+          examples: [
+            { es: 'La sede central se traslada al nuevo edificio el mes que viene.', en: 'The headquarters is relocating to the new building next month.' },
+            { es: 'El equipo se trasladó a la ciudad anfitriona con dos días de anticipación.', en: 'The team transferred to the host city two days in advance.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'recorrer', es: 'Recorrer', en: 'to traverse / cover / travel through',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'recorrer + [lugar]',
+          contextNote: 'Traveling through a place thoroughly — implies covering the full extent of it.',
+          examples: [
+            { es: 'Recorrimos toda la Patagonia en tres semanas.', en: 'We traveled through all of Patagonia in three weeks.' },
+            { es: 'El periodista recorrió los barrios más olvidados de la ciudad.', en: 'The journalist traveled through the most neglected neighborhoods in the city.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'recorrer + [distancia]',
+          contextNote: 'Covering a specific distance — works for people, vehicles, or even rivers.',
+          examples: [
+            { es: 'El tren recorre 500 kilómetros en menos de cuatro horas.', en: 'The train covers 500 kilometers in less than four hours.' },
+            { es: 'Recorrimos 30 kilómetros a pie en un solo día.', en: 'We covered 30 kilometers on foot in a single day.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'dirigirse', es: 'Dirigirse', en: 'to head toward / make one\'s way to',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'dirigirse + a/hacia + [lugar]',
+          contextNote: 'Moving with clear purpose toward a destination — more deliberate and formal than ir.',
+          examples: [
+            { es: 'Se dirigió hacia la salida sin mirar atrás.', en: 'She headed toward the exit without looking back.' },
+            { es: 'El grupo se dirigía al centro cuando empezó a llover.', en: 'The group was making its way downtown when it started to rain.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'cruzar', es: 'Cruzar', en: 'to cross',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'cruzar + [obstáculo o espacio]',
+          contextNote: 'Crossing a street, square, or open space — the most everyday sense.',
+          examples: [
+            { es: 'Esperamos el semáforo para cruzar la calle.', en: 'We waited for the light to cross the street.' },
+            { es: 'Cruzó la plaza corriendo bajo la lluvia.', en: 'She crossed the plaza running in the rain.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'cruzar + [frontera o límite]',
+          contextNote: 'Crossing a border, boundary, or significant threshold.',
+          examples: [
+            { es: 'Cruzamos la frontera con Argentina al amanecer.', en: 'We crossed the Argentine border at dawn.' },
+            { es: 'El río cruza los límites de tres provincias.', en: 'The river crosses the boundaries of three provinces.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'acudir', es: 'Acudir', en: 'to go to / come in response',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'acudir + a + [lugar/evento/llamado]',
+          contextNote: 'Going somewhere in response to a call, need, or expectation — implies being summoned or expected.',
+          examples: [
+            { es: 'Los bomberos acudieron al incendio en cuestión de minutos.', en: 'The firefighters responded to the fire within minutes.' },
+            { es: 'Acudí a la cita puntualmente.', en: 'I showed up to the appointment on time.' }
+          ]
+        },
+        {
+          register: 'FORMAL',
+          formula: 'acudir + a + [institución]',
+          contextNote: 'Going to an institution for formal assistance — implies an official or necessary visit.',
+          examples: [
+            { es: 'Para renovar el documento, hay que acudir a la oficina correspondiente.', en: 'To renew the document, you must go to the appropriate office.' },
+            { es: 'Acudió al médico apenas sintió los primeros síntomas.', en: 'She went to the doctor as soon as she felt the first symptoms.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'atravesar', es: 'Atravesar', en: 'to cross / pass through / go through',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'atravesar + [espacio o territorio]',
+          contextNote: 'Passing through a physical space from one side to the other — implies full transit.',
+          examples: [
+            { es: 'El tren atraviesa el desierto durante la noche.', en: 'The train crosses the desert during the night.' },
+            { es: 'Atravesamos el bosque siguiendo un sendero estrecho.', en: 'We crossed through the forest along a narrow path.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'atravesar + [período o situación difícil]',
+          contextNote: 'Going through a difficult period or situation — a very common figurative use.',
+          examples: [
+            { es: 'El país atraviesa una crisis económica severa.', en: 'The country is going through a severe economic crisis.' },
+            { es: 'Atravesé un momento muy difícil después del divorcio.', en: 'I went through a very difficult time after the divorce.' }
+          ]
+        }
+      ]
+    }
+  ],
+
+  'salida': [
+    {
+      id: 'salir', es: 'Salir', en: 'to leave / go out',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'salir + de + [lugar]',
+          contextNote: 'Leaving a specific place — the most common use.',
+          examples: [
+            { es: 'Salgo del trabajo a las seis.', en: 'I leave work at six.' },
+            { es: 'Salió de la habitación sin hacer ruido.', en: 'She left the room without making a sound.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'salir + a + [infinitivo]',
+          contextNote: 'Going out with a specific purpose — salir a correr, salir a comer.',
+          examples: [
+            { es: 'Voy a salir a comprar algo para comer.', en: 'I\'m going out to get something to eat.' },
+            { es: 'Salimos a dar una vuelta después de cenar.', en: 'We went out for a walk after dinner.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'salir (contexto social)',
+          contextNote: 'Going out socially — with friends, on a date, to enjoy the night.',
+          examples: [
+            { es: '¿Salimos el viernes por la noche?', en: 'Shall we go out Friday night?' },
+            { es: 'Hace tiempo que no salimos juntos.', en: 'It\'s been a while since we went out together.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'partir', es: 'Partir', en: 'to depart / set off',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'partir + de + [lugar] / hacia + [destino]',
+          contextNote: 'Departing from a place or setting off toward a destination — more formal than salir. Common for trains, expeditions, journeys.',
+          examples: [
+            { es: 'El tren parte de la estación central a las ocho.', en: 'The train departs from the central station at eight.' },
+            { es: 'Partieron hacia el norte con todo el equipo.', en: 'They set off toward the north with all their gear.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'marcharse', es: 'Marcharse', en: 'to leave with finality',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'marcharse + de + [lugar]',
+          contextNote: 'Leaving a place with a sense of decision or finality — often implies not coming back soon.',
+          examples: [
+            { es: 'Se marchó del país sin avisar a nadie.', en: 'He left the country without telling anyone.' },
+            { es: 'Nos marchamos de la fiesta cuando empezó a llover.', en: 'We left the party when it started to rain.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'irse', es: 'Irse', en: 'to go away / leave',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'irse + a + [destino]',
+          contextNote: 'Leaving toward a destination — emphasizes the departure itself more than the arrival.',
+          examples: [
+            { es: 'Se fue a vivir a Europa el año pasado.', en: 'He went to live in Europe last year.' },
+            { es: 'Nos fuimos al campo el fin de semana.', en: 'We went off to the countryside for the weekend.' }
+          ]
+        },
+        {
+          register: 'EVERYDAY',
+          formula: 'irse (salida inmediata)',
+          contextNote: 'Announcing you\'re leaving right now — very common in conversation.',
+          examples: [
+            { es: 'Bueno, me voy — hasta mañana.', en: 'Alright, I\'m heading off — see you tomorrow.' },
+            { es: '¿Ya te vas? Pero si acabás de llegar.', en: 'You\'re leaving already? But you just got here.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'escaparse', es: 'Escaparse', en: 'to slip away / get away',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'escaparse + de + [lugar o situación]',
+          contextNote: 'Getting away from a place or situation — can be literal escape or simply a welcome break.',
+          examples: [
+            { es: 'Por fin nos escapamos de la ciudad este fin de semana.', en: 'We finally got away from the city this weekend.' },
+            { es: 'Se escapó antes de que terminara la reunión.', en: 'She slipped away before the meeting was over.' }
+          ]
+        },
+        {
+          register: 'COLLOQUIAL',
+          formula: 'escaparse (ausencia breve)',
+          contextNote: 'Stepping away for a brief moment — popping out quickly.',
+          examples: [
+            { es: 'Me escapo un momento — vuelvo enseguida.', en: 'I\'ll slip out for a moment — I\'ll be right back.' },
+            { es: '¿Te podés escapar a tomar un café?', en: 'Can you slip away for a coffee?' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'retirarse', es: 'Retirarse', en: 'to withdraw / retire',
+      patterns: [
+        {
+          register: 'FORMAL',
+          formula: 'retirarse + de + [lugar o evento]',
+          contextNote: 'Withdrawing from a place or event — dignified, deliberate departure.',
+          examples: [
+            { es: 'El embajador se retiró de la ceremonia antes de que terminara.', en: 'The ambassador withdrew from the ceremony before it ended.' },
+            { es: 'Se retiró discretamente sin interrumpir la conversación.', en: 'She withdrew discreetly without interrupting the conversation.' }
+          ]
+        },
+        {
+          register: 'FORMAL',
+          formula: 'retirarse (vida profesional o pública)',
+          contextNote: 'Retiring from professional or public life.',
+          examples: [
+            { es: 'Se retiró del fútbol profesional a los treinta y cinco años.', en: 'He retired from professional football at thirty-five.' },
+            { es: 'La directora se retira después de veinte años al frente de la institución.', en: 'The director is retiring after twenty years leading the institution.' }
+          ]
+        }
+      ]
+    }
+  ],
+
+  'viaje': [
+    {
+      id: 'viajar', es: 'Viajar', en: 'to travel',
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'viajar + a/por + [lugar]',
+          contextNote: 'Traveling to or through a place — the most general travel verb.',
+          examples: [
+            { es: 'Siempre quise viajar por toda Sudamérica.', en: 'I always wanted to travel throughout all of South America.' },
+            { es: 'Viajamos a Portugal el verano pasado.', en: 'We traveled to Portugal last summer.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'viajar + en + [transporte]',
+          contextNote: 'Traveling by a specific means of transport.',
+          examples: [
+            { es: 'Prefiero viajar en tren cuando puedo.', en: 'I prefer to travel by train when I can.' },
+            { es: 'Viajamos en barco desde Buenos Aires hasta Montevideo.', en: 'We traveled by boat from Buenos Aires to Montevideo.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'explorar', es: 'Explorar', en: 'to explore',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'explorar + [lugar]',
+          contextNote: 'Actively discovering and investigating a place — implies curiosity and search.',
+          examples: [
+            { es: 'Pasamos el día explorando los mercados del casco antiguo.', en: 'We spent the day exploring the markets of the old quarter.' },
+            { es: 'Le encanta explorar lugares donde no hay turistas.', en: 'She loves exploring places where there are no tourists.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'aventurarse', es: 'Aventurarse', en: 'to venture / dare to go',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'aventurarse + por/hacia + [lugar]',
+          contextNote: 'Venturing into unfamiliar or challenging territory — implies risk or boldness.',
+          examples: [
+            { es: 'Se aventuraron por senderos que casi nadie conocía.', en: 'They ventured along trails that almost no one knew.' },
+            { es: 'No me animo a aventurarme por esa zona de noche.', en: 'I don\'t dare venture into that area at night.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'aventurarse + a + [infinitivo]',
+          contextNote: 'Daring to do something uncertain or risky.',
+          examples: [
+            { es: 'Se aventuró a hablar en español con los locales desde el primer día.', en: 'She dared to speak Spanish with the locals from the very first day.' },
+            { es: 'Me aventuré a probar el plato más extraño del menú.', en: 'I dared to try the strangest dish on the menu.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'peregrinar', es: 'Peregrinar', en: 'to make a pilgrimage / journey on foot',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'peregrinar + a/por + [lugar]',
+          contextNote: 'Making a pilgrimage to a sacred or significant place — physical journey con propósito.',
+          examples: [
+            { es: 'Miles de personas peregrinan cada año a Santiago de Compostela.', en: 'Thousands of people make the pilgrimage to Santiago de Compostela each year.' },
+            { es: 'Peregrinaron por el Camino Inca durante cinco días.', en: 'They journeyed along the Inca Trail for five days.' }
+          ]
+        },
+        {
+          register: 'LITERARY',
+          formula: 'peregrinar (uso figurado)',
+          contextNote: 'Wandering as a seeker — metaphorical, often with spiritual or existential weight.',
+          examples: [
+            { es: 'Pasó años peregrinando de ciudad en ciudad buscando su lugar en el mundo.', en: 'He spent years wandering from city to city looking for his place in the world.' },
+            { es: 'El alma peregrina por paisajes que ya no existen.', en: 'The soul wanders through landscapes that no longer exist.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'embarcarse', es: 'Embarcarse', en: 'to embark / set out on a journey',
+      patterns: [
+        {
+          register: 'STANDARD',
+          formula: 'embarcarse + en + [viaje o proyecto]',
+          contextNote: 'Embarking on a journey or project — often figurative, implies commitment and a point of no return.',
+          examples: [
+            { es: 'Se embarcó en un viaje sin regreso por el río Amazonas.', en: 'He embarked on a one-way journey down the Amazon River.' },
+            { es: 'Nos embarcamos en este proyecto sin saber bien adónde nos llevaría.', en: 'We embarked on this project not quite knowing where it would take us.' }
+          ]
+        },
+        {
+          register: 'STANDARD',
+          formula: 'embarcarse (uso literal)',
+          contextNote: 'Boarding a vessel — boat, ship, or ferry.',
+          examples: [
+            { es: 'Los pasajeros se embarcaron al amanecer.', en: 'The passengers boarded at dawn.' },
+            { es: 'Nos embarcamos en el ferry que une las dos islas.', en: 'We boarded the ferry connecting the two islands.' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'hacer-una-excursion', es: 'Hacer una excursión', en: 'to go on a day trip',
+      displayLines: ['Hacer una', 'excursión'],
+      patterns: [
+        {
+          register: 'EVERYDAY',
+          formula: 'hacer una excursión + a + [lugar]',
+          contextNote: 'Going on an organized or planned day trip — implies returning the same day, often with a group.',
+          examples: [
+            { es: 'Hicimos una excursión a las ruinas de Machu Picchu.', en: 'We went on an excursion to the ruins of Machu Picchu.' },
+            { es: '¿Hacemos una excursión a la sierra este fin de semana?', en: 'Shall we go on a day trip to the mountains this weekend?' }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+// ─── STATE ────────────────────────────────────────────────
+let currentLevel     = 1;
+let currentCategoryId = null;
+let sessionPassword  = null;
+let pwCallback       = null;
+
+// ─── NAVIGATION ──────────────────────────────────────────
+function showLevel(n) {
+  document.querySelectorAll('.level').forEach(el => el.classList.remove('active'));
+  document.getElementById('level' + n).classList.add('active');
+  currentLevel = n;
+  updateBackBtn();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateBackBtn() {
+  const btn = document.getElementById('backLink');
+  if (currentLevel === 1) {
+    btn.textContent = '← Inicio';
+    btn.onclick = () => { window.location.href = 'index.html'; };
+  } else if (currentLevel === 2) {
+    btn.textContent = '← Categorías';
+    btn.onclick = () => showLevel(1);
+  } else {
+    const cat = CATEGORIES.find(c => c.id === currentCategoryId);
+    btn.textContent = '← ' + (cat ? cat.es : 'Verbos');
+    btn.onclick = () => showLevel(2);
+  }
+}
+
+function goToCategory(catId) {
+  currentCategoryId = catId;
+  renderLevel2(catId);
+  showLevel(2);
+}
+
+function goToVerb(verbId) {
+  const verb = (VERBS[currentCategoryId] || []).find(v => v.id === verbId);
+  if (!verb) return;
+  renderLevel3(verb);
+  showLevel(3);
+}
+
+// ─── LEVEL 2 RENDERER ────────────────────────────────────
+function renderLevel2(catId) {
+  const cat   = CATEGORIES.find(c => c.id === catId);
+  const verbs = VERBS[catId] || [];
+  if (!cat) return;
+
+  document.getElementById('level2-title').textContent = cat.es;
+
+  const cx = 430, cy = 290, r = 190;
+  // Hexagon: 6 nodes starting at top (270°), clockwise every 60°
+  const angles = [270, 330, 30, 90, 150, 210];
+  const pos = angles.map(deg => ({
+    x: cx + r * Math.cos(deg * Math.PI / 180),
+    y: cy + r * Math.sin(deg * Math.PI / 180)
+  }));
+
+  let linesHtml = '', nodesHtml = '';
+
+  verbs.forEach((verb, i) => {
+    const p = pos[i];
+    linesHtml += `<line class="tree-link" x1="${cx}" y1="${cy}" x2="${p.x.toFixed(1)}" y2="${p.y.toFixed(1)}"/>`;
+
+    const lines = verb.displayLines || [verb.es];
+    const enShort = verb.en.length > 24 ? verb.en.slice(0, 22) + '…' : verb.en;
+
+    let txtHtml = '';
+    if (lines.length === 1) {
+      const fs = lines[0].length > 12 ? 11 : 13;
+      txtHtml = `
+        <text class="node-txt-main" x="${p.x.toFixed(1)}" y="${(p.y - 9).toFixed(1)}" font-size="${fs}">${lines[0]}</text>
+        <text class="node-txt-en"   x="${p.x.toFixed(1)}" y="${(p.y + 9).toFixed(1)}" font-size="9">${enShort}</text>`;
+    } else {
+      const lh = 15;
+      const startY = p.y - (lines.length - 1) * lh / 2 - 9;
+      lines.forEach((line, li) => {
+        const fs = line.length > 10 ? 10.5 : 12;
+        txtHtml += `<text class="node-txt-main" x="${p.x.toFixed(1)}" y="${(startY + li * lh).toFixed(1)}" font-size="${fs}">${line}</text>`;
+      });
+      txtHtml += `<text class="node-txt-en" x="${p.x.toFixed(1)}" y="${(p.y + 14).toFixed(1)}" font-size="8.5">${enShort}</text>`;
+    }
+
+    nodesHtml += `
+      <g class="spoke-node" onclick="goToVerb('${verb.id}')">
+        <circle class="node-spoke-bg" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="62"/>
+        ${txtHtml}
+      </g>`;
+  });
+
+  // Center node
+  const cLines = cat.centerLines;
+  const lh = 17;
+  const startY = cy - (cLines.length - 1) * lh / 2 - 8;
+  let centerTxt = cLines.map((line, i) =>
+    `<text class="node-txt-main" x="${cx}" y="${(startY + i * lh).toFixed(1)}" font-size="13">${line}</text>`
+  ).join('');
+  centerTxt += `<text class="node-txt-sub" x="${cx}" y="${(cy + 22 + (cLines.length - 1) * 5).toFixed(1)}" font-size="9.5">${cat.sub}</text>`;
+
+  document.getElementById('level2-svg-wrap').innerHTML = `
+    <svg viewBox="0 0 860 580" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:860px;overflow:visible">
+      ${linesHtml}
+      ${nodesHtml}
+      <circle class="node-center-bg" cx="${cx}" cy="${cy}" r="72"/>
+      ${centerTxt}
+    </svg>`;
+}
+
+// ─── LEVEL 3 RENDERER ────────────────────────────────────
+function renderLevel3(verb) {
+  const cards = verb.patterns.map((p, i) => buildCard(p, verb.id, i)).join('');
+  document.getElementById('verb-detail').innerHTML = `
+    <div class="verb-header">
+      <div class="verb-title-row">
+        <div class="verb-title">${verb.es}</div>
+        <div class="verb-en">${verb.en}</div>
+      </div>
+    </div>
+    <div class="patterns-label">Patrones y Usos</div>
+    ${cards}`;
+}
+
+function buildCard(pattern, verbId, idx) {
+  const color = REG_COLORS[pattern.register] || '#8a9bb8';
+  const exItems = pattern.examples.map(ex => `
+    <li class="example-item">
+      <div class="example-es">${ex.es}</div>
+      <div class="example-en">${ex.en}</div>
+    </li>`).join('');
+
+  return `
+    <div class="pattern-card">
+      <span class="register-badge" style="color:${color};border:1px solid ${color}44">${pattern.register}</span>
+      <div class="pattern-formula">${pattern.formula}</div>
+      <div class="pattern-context">${pattern.contextNote}</div>
+      <ul class="examples-list">${exItems}</ul>
+      <button class="mas-btn" id="mbtn-${verbId}-${idx}"
+              onclick="handleMas('${verbId}', ${idx})">✦ Más ejemplos</button>
+      <div class="extra-examples" id="extra-${verbId}-${idx}" style="display:none"></div>
+    </div>`;
+}
+
+// ─── API / PASSWORD ──────────────────────────────────────
+function handleMas(verbId, idx) {
+  const doFetch = () => fetchExamples(verbId, idx);
+  if (!sessionPassword) { showPw(doFetch); }
+  else { doFetch(); }
+}
+
+async function fetchExamples(verbId, idx) {
+  const verb    = (VERBS[currentCategoryId] || []).find(v => v.id === verbId);
+  const pattern = verb && verb.patterns[idx];
+  if (!verb || !pattern) return;
+
+  const btn   = document.getElementById(`mbtn-${verbId}-${idx}`);
+  const extra = document.getElementById(`extra-${verbId}-${idx}`);
+
+  btn.disabled    = true;
+  btn.textContent = 'Cargando…';
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password: sessionPassword,
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 600,
+        system: 'You are a Spanish language teaching assistant. Generate exactly 2 additional natural, varied example sentences for the verb usage pattern described. Return ONLY a raw JSON array with 2 objects, each with "es" (Spanish sentence) and "en" (English translation). No preamble, no markdown, no backticks.',
+        messages: [{
+          role: 'user',
+          content: `Verb: ${verb.es}\nPattern: ${pattern.formula}\nRegister: ${pattern.register}\nContext: ${pattern.contextNote}\n\nProvide 2 more natural example sentences at B2 level. Vary the tense and subject.`
+        }]
+      })
+    });
+
+    const data = await res.json();
+
+    if (!data.content) {
+      // Likely wrong password
+      sessionPassword = null;
+      btn.disabled = false;
+      btn.textContent = '✦ Más ejemplos';
+      showPw(() => fetchExamples(verbId, idx));
+      return;
+    }
+
+    const raw  = data.content[0].text.replace(/```json|```/g, '').trim();
+    const exs  = JSON.parse(raw);
+
+    extra.style.display = 'block';
+    extra.innerHTML = `<div class="extra-label">Más ejemplos</div>` +
+      exs.map(ex => `
+        <div class="example-item">
+          <div class="example-es">${ex.es}</div>
+          <div class="example-en">${ex.en}</div>
+        </div>`).join('');
+
+    btn.style.display = 'none';
+
+  } catch (err) {
+    console.error(err);
+    btn.disabled    = false;
+    btn.textContent = '✦ Más ejemplos';
+  }
+}
+
+function showPw(cb) {
+  pwCallback = cb;
+  document.getElementById('pwErr').textContent = '';
+  document.getElementById('pwInput').value = '';
+  document.getElementById('pwOverlay').classList.add('show');
+  setTimeout(() => document.getElementById('pwInput').focus(), 100);
+}
+
+function submitPw() {
+  const val = document.getElementById('pwInput').value.trim();
+  if (!val) { document.getElementById('pwErr').textContent = 'Ingresá una contraseña.'; return; }
+  sessionPassword = val;
+  document.getElementById('pwOverlay').classList.remove('show');
+  if (pwCallback) { pwCallback(); pwCallback = null; }
+}
+
+document.getElementById('pwOverlay').addEventListener('click', function(e) {
+  if (e.target === this) { this.classList.remove('show'); pwCallback = null; }
+});
+
+// Init back button
+updateBackBtn();
+</script>
+</body>
+</html>

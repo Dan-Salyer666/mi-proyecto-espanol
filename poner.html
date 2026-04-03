@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Familia de Poner — Spanish Vocab Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg-deep:       #0a1628;
+  --bg-card:       #111d35;
+  --bg-card-hover: #162544;
+  --bg-input:      #0d1a2f;
+  --border:        #1e3355;
+  --border-focus:  #3b6cb5;
+  --text-primary:  #e2e8f0;
+  --text-secondary:#8a9bb8;
+  --text-muted:    #5a6f8e;
+  --accent:        #4a90d9;
+  --accent-glow:   rgba(74,144,217,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:''; position:fixed; top:0; left:0; right:0; bottom:0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(74,144,217,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.06) 0%, transparent 50%);
+  pointer-events:none; z-index:0;
+}
+body::after {
+  content:''; position:fixed; top:0; left:0; right:0; bottom:0;
+  opacity:0.035;
+  background-image:
+    linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
+    linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e),
+    linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e);
+  background-size:80px 140px;
+  background-position:0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+  pointer-events:none; z-index:0;
+}
+
+#root { position:relative; z-index:1; min-height:100vh; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeSlideIn { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn      { from { opacity:0; } to { opacity:1; } }
+@keyframes slideUp     { from { opacity:0; transform:translateY(48px); } to { opacity:1; transform:translateY(0); } }
+@keyframes spin        { to { transform:rotate(360deg); } }
+@keyframes pulse       { 0%,100% { opacity:0.4; } 50% { opacity:0.8; } }
+
+.view-fade { animation: fadeSlideIn 0.3s ease both; }
+
+/* ── BUTTONS ── */
+.btn {
+  font-family:'Outfit',sans-serif; font-weight:500; font-size:0.9rem;
+  border:none; border-radius:10px; padding:12px 22px;
+  cursor:pointer; transition:all 0.2s ease; letter-spacing:0.02em;
+}
+.btn-primary {
+  background:linear-gradient(135deg,#3b6cb5,#4a90d9); color:#fff;
+  box-shadow:0 2px 12px rgba(74,144,217,0.25);
+}
+.btn-primary:hover { box-shadow:0 4px 20px rgba(74,144,217,0.4); transform:translateY(-1px); }
+.btn-primary:disabled { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
+.btn-ghost {
+  background:transparent; color:var(--text-secondary); border:1px solid var(--border);
+  cursor:pointer; transition:all 0.2s; border-radius:10px;
+  font-family:'Outfit',sans-serif; font-size:0.85rem; padding:9px 18px; font-weight:400;
+}
+.btn-ghost:hover { background:var(--bg-card-hover); color:var(--text-primary); border-color:var(--border-focus); }
+
+/* ── PASSWORD SCREEN ── */
+.pw-container {
+  max-width:420px; margin:0 auto; padding:80px 20px;
+  display:flex; flex-direction:column; align-items:center;
+  animation:fadeSlideIn 0.35s ease both;
+}
+.pw-eyebrow {
+  font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.14em;
+  color:var(--accent); margin-bottom:10px; text-align:center;
+}
+.pw-title {
+  font-family:'DM Serif Display',serif; font-size:2.4rem; font-weight:400; font-style:italic;
+  background:linear-gradient(135deg,#e2e8f0 0%,#8ab4f0 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  text-align:center; margin-bottom:6px; line-height:1.2;
+}
+.pw-subtitle { color:var(--text-muted); font-size:0.82rem; margin-bottom:36px; text-align:center; font-weight:300; }
+.pw-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:14px;
+  padding:28px; width:100%;
+}
+.pw-label { font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent); margin-bottom:14px; }
+.pw-row { display:flex; gap:10px; }
+.text-input {
+  flex:1; background:var(--bg-input); border:1px solid var(--border);
+  border-radius:10px; padding:12px 16px; color:var(--text-primary);
+  font-family:'Outfit',sans-serif; font-size:0.95rem; font-weight:300; outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.text-input::placeholder { color:var(--text-muted); }
+.text-input:focus { border-color:var(--border-focus); box-shadow:0 0 0 3px var(--accent-glow); }
+.pw-error { color:#f87171; font-size:0.8rem; margin-top:10px; }
+
+/* ── LAYOUT ── */
+.main { min-height:100vh; display:flex; flex-direction:column; }
+
+.top-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:15px 28px; border-bottom:1px solid var(--border);
+  background:rgba(10,22,40,0.85); backdrop-filter:blur(10px);
+  position:sticky; top:0; z-index:20;
+}
+.top-bar-title {
+  font-family:'DM Serif Display',serif; font-size:1.25rem; font-style:italic;
+  background:linear-gradient(135deg,#e2e8f0 0%,#8ab4f0 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.breadcrumb { display:flex; align-items:center; gap:8px; font-size:0.78rem; }
+.breadcrumb-link { color:var(--accent); cursor:pointer; transition:opacity 0.15s; }
+.breadcrumb-link:hover { opacity:0.8; text-decoration:underline; }
+.breadcrumb-sep { color:var(--text-muted); opacity:0.5; }
+.breadcrumb-current { color:var(--text-secondary); font-weight:500; }
+
+/* ── TREE VIEW ── */
+.tree-container {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  padding:16px 16px 32px;
+}
+.tree-intro {
+  text-align:center; margin-bottom:10px; max-width:520px;
+}
+.tree-intro p { color:var(--text-muted); font-size:0.8rem; font-weight:300; }
+.tree-svg-wrapper { width:100%; max-width:800px; }
+.tree-svg-wrapper svg { width:100%; height:auto; display:block; }
+
+/* SVG interaction */
+.family-node { cursor:pointer; }
+.family-node .node-bg { transition:opacity 0.2s; }
+.family-node .node-border { transition:stroke-opacity 0.2s, filter 0.2s; }
+.family-node .node-label { transition:fill-opacity 0.2s; }
+.family-node:hover .node-bg { opacity:0.18 !important; }
+.family-node:hover .node-border { stroke-opacity:1 !important; }
+.center-node { cursor:pointer; }
+.center-node:hover circle { filter:brightness(1.2); }
+
+/* ── FAMILY VIEW ── */
+.family-container {
+  padding:28px 28px 60px; max-width:980px; margin:0 auto; width:100%;
+}
+.family-header { margin-bottom:30px; }
+.family-verb-hero {
+  font-family:'DM Serif Display',serif; font-size:2.4rem; font-weight:400;
+  margin-bottom:5px; line-height:1.1;
+}
+.family-description { color:var(--text-muted); font-size:0.88rem; font-weight:300; }
+.family-word-count {
+  display:inline-block; font-size:0.65rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:0.1em; padding:3px 9px; border-radius:20px;
+  background:var(--bg-input); border:1px solid var(--border);
+  color:var(--text-muted); margin-top:8px;
+}
+
+.type-section { margin-bottom:30px; }
+.type-section-header {
+  display:flex; align-items:center; gap:10px; margin-bottom:13px;
+}
+.type-section-label {
+  font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.13em;
+  white-space:nowrap;
+}
+.type-section-line { flex:1; height:1px; background:var(--border); }
+
+.words-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(270px,1fr)); gap:11px;
+}
+.word-card {
+  background:var(--bg-card); border:1px solid var(--border); border-radius:12px;
+  padding:15px 17px; cursor:pointer; transition:all 0.2s ease;
+  display:flex; flex-direction:column; gap:7px;
+}
+.word-card:hover {
+  border-color:var(--border-focus); background:var(--bg-card-hover);
+  transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,0.35);
+}
+.word-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; }
+.word-text { font-family:'DM Serif Display',serif; font-size:1.1rem; font-style:italic; line-height:1.3; }
+.word-meaning { color:var(--text-secondary); font-size:0.8rem; line-height:1.45; font-weight:300; }
+.word-click-hint { font-size:0.68rem; color:var(--text-muted); margin-top:2px; opacity:0; transition:opacity 0.2s; }
+.word-card:hover .word-click-hint { opacity:1; }
+
+/* ── BADGES ── */
+.badge {
+  font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em;
+  padding:2px 7px; border-radius:4px; white-space:nowrap; flex-shrink:0;
+}
+.badges-row { display:flex; gap:5px; flex-wrap:wrap; flex-shrink:0; }
+
+/* ── WORD DETAIL MODAL ── */
+.modal-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px);
+  z-index:100; display:flex; align-items:flex-end; justify-content:center;
+  animation:fadeIn 0.2s ease both;
+}
+.modal-panel {
+  background:var(--bg-card); border:1px solid var(--border); border-top:1px solid #2a4a75;
+  border-radius:20px 20px 0 0; width:100%; max-width:740px;
+  max-height:84vh; overflow-y:auto;
+  animation:slideUp 0.28s cubic-bezier(0.16,1,0.3,1) both;
+  padding:24px 32px 52px;
+}
+.modal-handle {
+  width:44px; height:4px; border-radius:2px; background:var(--border);
+  margin:0 auto 22px; cursor:pointer; transition:background 0.2s;
+}
+.modal-handle:hover { background:var(--border-focus); }
+
+.modal-word {
+  font-family:'DM Serif Display',serif; font-size:2.4rem; font-weight:400; font-style:italic;
+  line-height:1.15; margin-bottom:10px;
+}
+.modal-badges { display:flex; gap:7px; margin-bottom:14px; flex-wrap:wrap; }
+.modal-meaning {
+  color:var(--text-secondary); font-size:0.95rem; font-weight:300;
+  line-height:1.55; margin-bottom:22px; padding-bottom:22px; border-bottom:1px solid var(--border);
+}
+.modal-section-label {
+  font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.12em;
+  color:var(--accent); margin-bottom:13px;
+}
+
+/* Examples */
+.example-card {
+  background:var(--bg-input); border:1px solid var(--border); border-radius:10px;
+  padding:15px 17px; margin-bottom:9px; transition:border-color 0.15s;
+}
+.example-card:hover { border-color:#2a4a75; }
+.example-spanish {
+  font-family:'DM Serif Display',serif; font-size:1.05rem; font-style:italic;
+  color:var(--text-primary); margin-bottom:5px; line-height:1.4;
+}
+.example-english { color:var(--text-secondary); font-size:0.82rem; font-weight:300; line-height:1.4; }
+.example-context {
+  display:inline-block; font-size:0.58rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.09em; padding:2px 7px; border-radius:4px;
+  background:var(--accent-glow); color:var(--accent); margin-top:7px;
+  border:1px solid rgba(74,144,217,0.2);
+}
+.usage-note {
+  background:rgba(74,144,217,0.05); border:1px solid rgba(74,144,217,0.18);
+  border-radius:10px; padding:14px 17px; margin-top:14px;
+  color:var(--text-secondary); font-size:0.83rem; line-height:1.55; font-weight:300;
+}
+.usage-note-label {
+  font-size:0.63rem; font-weight:700; text-transform:uppercase; letter-spacing:0.11em;
+  color:var(--accent); margin-bottom:6px;
+}
+
+/* Spinner */
+.spinner {
+  width:22px; height:22px; border:2px solid var(--border);
+  border-top-color:var(--accent); border-radius:50%; animation:spin 0.75s linear infinite; flex-shrink:0;
+}
+.spinner-wrapper {
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  color:var(--text-muted); font-size:0.83rem; padding:28px;
+}
+
+@media (max-width: 600px) {
+  .top-bar { padding:12px 16px; }
+  .family-container { padding:18px 16px 50px; }
+  .modal-panel { padding:20px 18px 44px; max-height:90vh; }
+  .modal-word { font-size:1.9rem; }
+  .tree-container { padding:10px 8px 24px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="module">
+import { html, render, useState, useEffect, useRef } from 'https://unpkg.com/htm/preact/standalone.module.js';
+
+// ══════════════════════════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════════════════════════
+
+const BASE_FAMILY = {
+  id: 'poner', verb: 'poner', treeLabel: 'poner', isBase: true,
+  color: '#4a90d9',
+  description: 'The base verb — the root from which all other families spring',
+  words: [
+    { id:'poner-v',       word:'poner',               type:'verb',      meaning:'to put, place, set',                               register:'everyday' },
+    { id:'ponerse',       word:'ponerse',              type:'verb',      meaning:'to put on (clothing); to become (an emotion/state)', register:'everyday' },
+    { id:'llevar-puesto', word:'llevar puesto',        type:'phrase',    meaning:'to be wearing (an item of clothing)',               register:'everyday' },
+    { id:'puesto-n',      word:'puesto',               type:'noun',      meaning:'job, post, position; market stall',                 register:'everyday' },
+    { id:'puesta',        word:'puesta',               type:'noun',      meaning:'setting (puesta de sol); staging (puesta en escena)', register:'standard' },
+    { id:'puesto-a',      word:'puesto/a',             type:'adjective', meaning:'placed; dressed (bien puesto = well turned out)',   register:'everyday' },
+    { id:'ponente',       word:'ponente',              type:'noun',      meaning:'conference speaker, presenter',                     register:'formal' },
+    { id:'ponencia',      word:'ponencia',             type:'noun',      meaning:'conference paper, formal presentation',             register:'formal' },
+  ]
+};
+
+const FAMILIES = [
+  {
+    id:'componer', verb:'componer', treeLabel:'componer',
+    color:'#34d399',
+    description:'to compose; to fix or repair',
+    words:[
+      { id:'componer-v',     word:'componer',       type:'verb',      meaning:'to compose (music/text); to fix, repair',              register:'standard' },
+      { id:'compositor',     word:'compositor/a',   type:'noun',      meaning:'musical composer',                                     register:'standard' },
+      { id:'composicion',    word:'composición',    type:'noun',      meaning:'composition — music, writing, or structure',           register:'standard' },
+      { id:'compuesto-a',    word:'compuesto/a',    type:'adjective', meaning:'compound; composite; made up of parts',               register:'standard' },
+      { id:'compostura',     word:'compostura',     type:'noun',      meaning:'composure, self-restraint; repair, mending',          register:'standard' },
+      { id:'descomponer',    word:'descomponer',    type:'verb',      meaning:'to decompose; to break down; to upset (a stomach)',   register:'everyday' },
+      { id:'descompuesto',   word:'descompuesto/a', type:'adjective', meaning:'broken; decomposed; upset (as in: estómago descompuesto)', register:'everyday' },
+      { id:'descomposicion', word:'descomposición', type:'noun',      meaning:'decomposition; mechanical breakdown',                  register:'standard' },
+      { id:'recomponer',     word:'recomponer',     type:'verb',      meaning:'to recompose; to patch back together',                 register:'standard' },
+    ]
+  },
+  {
+    id:'disponer', verb:'disponer', treeLabel:'disponer',
+    color:'#38bdf8',
+    description:'to arrange; to have available',
+    words:[
+      { id:'disponer-v',     word:'disponer',       type:'verb',      meaning:'to arrange, order; to have at one\'s disposal',       register:'standard' },
+      { id:'disponer-de',    word:'disponer de',    type:'phrase',    meaning:'to have (time, money, resources) available',           register:'everyday' },
+      { id:'dispuesto',      word:'dispuesto/a',    type:'adjective', meaning:'willing, ready; arranged, laid out',                  register:'everyday' },
+      { id:'disponible',     word:'disponible',     type:'adjective', meaning:'available — person, resource, or time slot',          register:'everyday' },
+      { id:'disponibilidad', word:'disponibilidad', type:'noun',      meaning:'availability; readiness',                             register:'standard' },
+      { id:'disposicion',    word:'disposición',    type:'noun',      meaning:'disposition; arrangement; legal provision or clause', register:'standard' },
+      { id:'dispositivo',    word:'dispositivo',    type:'noun',      meaning:'device, gadget, mechanism (tech usage now ubiquitous)', register:'everyday' },
+      { id:'predisponer',    word:'predisponer',    type:'verb',      meaning:'to predispose toward something',                      register:'standard' },
+      { id:'predispuesto',   word:'predispuesto/a', type:'adjective', meaning:'predisposed, naturally inclined toward',              register:'standard' },
+      { id:'predisposicion', word:'predisposición', type:'noun',      meaning:'predisposition, natural tendency',                    register:'standard' },
+    ]
+  },
+  {
+    id:'exponer', verb:'exponer', treeLabel:'exponer',
+    color:'#f59e0b',
+    description:'to expose; to exhibit; to explain',
+    words:[
+      { id:'exponer-v',    word:'exponer',      type:'verb',      meaning:'to expose (to risk); to exhibit art; to present or explain', register:'standard' },
+      { id:'exposicion',   word:'exposición',   type:'noun',      meaning:'exhibition, art show; exposure; detailed explanation',       register:'standard' },
+      { id:'expuesto',     word:'expuesto/a',   type:'adjective', meaning:'exposed, at risk; on public display',                        register:'standard' },
+      { id:'exponente',    word:'exponente',    type:'noun',      meaning:'exponent (math); leading example or representative',         register:'standard' },
+      { id:'exponencial',  word:'exponencial',  type:'adjective', meaning:'exponential — both mathematical and colloquial (rapid growth)', register:'standard' },
+    ]
+  },
+  {
+    id:'imponer', verb:'imponer', treeLabel:'imponer',
+    color:'#f87171',
+    description:'to impose; to command respect',
+    words:[
+      { id:'imponer-v',   word:'imponer',    type:'verb',      meaning:'to impose (a rule, tax, condition); to command respect',     register:'standard' },
+      { id:'imposicion',  word:'imposición', type:'noun',      meaning:'imposition; the act of imposing something on someone',       register:'standard' },
+      { id:'impuesto',    word:'impuesto',   type:'noun',      meaning:'tax — income tax, VAT, any government levy',                 register:'everyday' },
+      { id:'impuesto-a',  word:'impuesto/a', type:'adjective', meaning:'imposed, forced upon someone',                              register:'standard' },
+      { id:'imponente',   word:'imponente',  type:'adjective', meaning:'imposing, impressive, awe-inspiring',                       register:'everyday' },
+    ]
+  },
+  {
+    id:'oponer', verb:'oponer', treeLabel:'oponer',
+    color:'#a78bfa',
+    description:'to oppose; to set one thing against another',
+    words:[
+      { id:'oponer-v',      word:'oponer(se)',   type:'verb',      meaning:'to oppose; to be opposed to something',                   register:'standard' },
+      { id:'oponente',      word:'oponente',     type:'noun',      meaning:'opponent, opposing party',                                register:'standard' },
+      { id:'oposicion',     word:'oposición',    type:'noun',      meaning:'opposition; competitive civil-service exam (Spain)',      register:'everyday' },
+      { id:'opuesto',       word:'opuesto/a',    type:'adjective', meaning:'opposite; opposed, contrary',                            register:'everyday' },
+      { id:'opositor',      word:'opositor/a',   type:'noun',      meaning:'opponent; person sitting a civil-service exam (Spain)',  register:'standard' },
+      { id:'oposiciones',   word:'oposiciones',  type:'noun',      meaning:'competitive public-sector exams — Spain-specific usage', register:'standard' },
+    ]
+  },
+  {
+    id:'proponer', verb:'proponer', treeLabel:'proponer',
+    color:'#4ade80',
+    description:'to propose; to suggest',
+    words:[
+      { id:'proponer-v',   word:'proponer',    type:'verb', meaning:'to propose, suggest; to put forward an idea',             register:'everyday' },
+      { id:'propuesta',    word:'propuesta',   type:'noun', meaning:'proposal, suggestion; bid, offer',                        register:'everyday' },
+      { id:'proposicion',  word:'proposición', type:'noun', meaning:'proposition; formal proposal (more abstract than propuesta)', register:'standard' },
+    ]
+  },
+  {
+    id:'reponer', verb:'reponer', treeLabel:'reponer',
+    color:'#fb923c',
+    description:'to replace; to restock; to recover',
+    words:[
+      { id:'reponer-v',    word:'reponer',      type:'verb',      meaning:'to replace, restock; to rerun a TV show',              register:'standard' },
+      { id:'reponerse',    word:'reponerse',    type:'verb',      meaning:'to recover from illness or hardship',                  register:'standard' },
+      { id:'reposicion',   word:'reposición',   type:'noun',      meaning:'replacement, restocking; TV rerun',                   register:'standard' },
+      { id:'repuesto-n',   word:'repuesto',     type:'noun',      meaning:'spare part (car, appliance, machine)',                register:'standard' },
+      { id:'de-repuesto',  word:'de repuesto',  type:'phrase',    meaning:'spare — as in rueda de repuesto (spare tire)',        register:'everyday' },
+      { id:'repuesto-a',   word:'repuesto/a',   type:'adjective', meaning:'recovered, back on one\'s feet after illness',        register:'standard' },
+    ]
+  },
+  {
+    id:'suponer', verb:'suponer', treeLabel:'suponer',
+    color:'#e879f9',
+    description:'to suppose; to assume; to entail',
+    words:[
+      { id:'suponer-v',    word:'suponer',               type:'verb',      meaning:'to suppose, assume; to entail, involve',             register:'everyday' },
+      { id:'supuesto',     word:'supuesto/a',             type:'adjective', meaning:'supposed, alleged, so-called',                       register:'everyday' },
+      { id:'por-supuesto', word:'por supuesto',           type:'phrase',    meaning:'of course, certainly — extremely high frequency',    register:'everyday' },
+      { id:'supuestamente',word:'supuestamente',          type:'adverb',    meaning:'supposedly, allegedly',                              register:'standard' },
+      { id:'suposicion',   word:'suposición',             type:'noun',      meaning:'supposition, assumption',                            register:'standard' },
+      { id:'en-supuesto',  word:'en el supuesto de que',  type:'phrase',    meaning:'assuming that, in the event that',                   register:'formal' },
+    ]
+  },
+  {
+    id:'posponer', verb:'posponer', treeLabel:'posponer',
+    color:'#67e8f9',
+    description:'to postpone; to defer',
+    words:[
+      { id:'posponer-v',   word:'posponer',    type:'verb', meaning:'to postpone, put off, defer',                           register:'standard' },
+      { id:'posposicion',  word:'posposición', type:'noun', meaning:'postponement; postposition (grammar term)',              register:'standard' },
+    ]
+  },
+  {
+    id:'sobreponer', verb:'sobre/superponer', treeLabel:'sobreponer',
+    color:'#fbbf24',
+    description:'to superimpose; to overcome hardship',
+    words:[
+      { id:'sobreponerse', word:'sobreponerse',  type:'verb', meaning:'to overcome hardship, to pull through adversity',      register:'standard' },
+      { id:'sobreponer-v', word:'sobreponer',    type:'verb', meaning:'to superimpose, lay one image or thing over another',  register:'standard' },
+      { id:'superponer-v', word:'superponer',    type:'verb', meaning:'to superimpose, overlap (more technical register)',    register:'standard' },
+      { id:'superposicion',word:'superposición', type:'noun', meaning:'superimposition, overlap of two things',               register:'standard' },
+    ]
+  },
+  {
+    id:'contraponer', verb:'contraponer', treeLabel:'contraponer',
+    color:'#818cf8',
+    description:'to contrast; to set against',
+    words:[
+      { id:'contraponer-v',     word:'contraponer',        type:'verb',      meaning:'to contrast, set one thing against another',  register:'formal' },
+      { id:'contrapuesto',      word:'contrapuesto/a',     type:'adjective', meaning:'contrasted, set in opposition',               register:'formal' },
+      { id:'en-contraposicion', word:'en contraposición a', type:'phrase',   meaning:'in contrast to, as opposed to',               register:'standard' },
+    ]
+  },
+  {
+    id:'interponer', verb:'interponer', treeLabel:'interponer',
+    color:'#fb7185',
+    description:'to interpose; to lodge (legal)',
+    words:[
+      { id:'interponer-v',       word:'interponer',          type:'verb',   meaning:'to interpose; to lodge a complaint or appeal',   register:'formal' },
+      { id:'interponer-recurso', word:'interponer un recurso', type:'phrase',meaning:'to file an appeal — standard legal usage',       register:'legal' },
+      { id:'interposicion',      word:'interposición',        type:'noun',  meaning:'interposition; the lodging of a formal complaint', register:'formal' },
+    ]
+  },
+  {
+    id:'deponer', verb:'deponer', treeLabel:'deponer',
+    color:'#94a3b8',
+    description:'to depose; to testify; to lay down',
+    words:[
+      { id:'deponer-v',  word:'deponer',    type:'verb',      meaning:'to depose a leader; to testify under oath; to lay down arms', register:'formal' },
+      { id:'deposicion', word:'deposición', type:'noun',      meaning:'deposition (legal); bowel movement (clinical/medical)',       register:'formal' },
+      { id:'depuesto',   word:'depuesto/a', type:'adjective', meaning:'deposed, removed from power',                                 register:'formal' },
+    ]
+  },
+  {
+    id:'anteponer', verb:'ante/trans/yuxtaponer', treeLabel:'anteponer+',
+    color:'#c084fc',
+    description:'to prioritize; to transpose; to juxtapose',
+    words:[
+      { id:'anteponer-v',  word:'anteponer',    type:'verb', meaning:'to place before; to prioritize one thing over another',           register:'literary' },
+      { id:'anteposicion', word:'anteposición', type:'noun', meaning:'placing before; grammatical preposing',                           register:'literary' },
+      { id:'transponer-v', word:'transponer',   type:'verb', meaning:'to transpose (music, mathematics)',                               register:'technical' },
+      { id:'transposicion',word:'transposición',type:'noun', meaning:'transposition — music, math, or grammar',                         register:'technical' },
+      { id:'yuxtaponer-v', word:'yuxtaponer',   type:'verb', meaning:'to juxtapose, place side by side',                                register:'literary' },
+      { id:'yuxtaposicion',word:'yuxtaposición',type:'noun', meaning:'juxtaposition — common in academic and literary writing',         register:'standard' },
+    ]
+  },
+];
+
+const REGISTER_CFG = {
+  everyday:  { label:'everyday',   color:'#34d399', bg:'rgba(52,211,153,0.1)' },
+  standard:  { label:'standard',   color:'#4a90d9', bg:'rgba(74,144,217,0.1)' },
+  formal:    { label:'formal',     color:'#f59e0b', bg:'rgba(245,158,11,0.1)' },
+  literary:  { label:'literary',   color:'#a78bfa', bg:'rgba(167,139,250,0.1)' },
+  technical: { label:'technical',  color:'#94a3b8', bg:'rgba(148,163,184,0.1)' },
+  legal:     { label:'legal',      color:'#f87171', bg:'rgba(248,113,113,0.1)' },
+  medical:   { label:'medical',    color:'#f87171', bg:'rgba(248,113,113,0.1)' },
+};
+
+const TYPE_CFG = {
+  verb:      { label:'verb',    color:'#4a90d9' },
+  noun:      { label:'noun',    color:'#34d399' },
+  adjective: { label:'adj',     color:'#a78bfa' },
+  adverb:    { label:'adverb',  color:'#f59e0b' },
+  phrase:    { label:'phrase',  color:'#fb923c' },
+};
+
+// ══════════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════════════════
+
+function groupByType(words) {
+  const order = ['verb','noun','adjective','adverb','phrase'];
+  const map = {};
+  words.forEach(w => { if (!map[w.type]) map[w.type]=[]; map[w.type].push(w); });
+  return order.filter(t=>map[t]).map(t=>({ type:t, words:map[t] }));
+}
+
+function Badge({ color, bg, label }) {
+  return html`<span class="badge" style=${{ color, background:bg, border:`1px solid ${color}40` }}>${label}</span>`;
+}
+function RegBadge({ register }) {
+  const c = REGISTER_CFG[register]||REGISTER_CFG.standard;
+  return html`<${Badge} color=${c.color} bg=${c.bg} label=${c.label}/>`;
+}
+function TypeBadge({ type }) {
+  const c = TYPE_CFG[type]||{label:type,color:'#8a9bb8'};
+  return html`<${Badge} color=${c.color} bg="${c.color}18" label=${c.label}/>`;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// TREE SVG
+// ══════════════════════════════════════════════════════════════════════════════
+
+function TreeSVG({ onSelectFamily, onSelectBase }) {
+  const CX=390, CY=390, R=265, N=FAMILIES.length;
+
+  const pos = (i) => {
+    const a = -Math.PI/2 + (i/N)*2*Math.PI;
+    return { x: CX + R*Math.cos(a), y: CY + R*Math.sin(a), a };
+  };
+
+  const W=114, H=40;
+
+  return html`
+    <svg viewBox="0 0 780 780" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="glow-center">
+          <feGaussianBlur stdDeviation="10" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="glow-ring">
+          <feGaussianBlur stdDeviation="5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      ${FAMILIES.map((fam,i) => {
+        const {x,y,a} = pos(i);
+        const lx1 = CX + 62*Math.cos(a), ly1 = CY + 62*Math.sin(a);
+        const lx2 = x - (W/2+2)*Math.cos(Math.atan2(y-CY, x-CX));
+        const ly2 = y - (H/2+2)*Math.sin(Math.atan2(y-CY, x-CX));
+        return html`
+          <g class="family-node" onClick=${()=>onSelectFamily(fam)} key=${fam.id}>
+            <line x1=${lx1} y1=${ly1} x2=${x} y2=${y}
+              stroke=${fam.color} stroke-width="1" stroke-opacity="0.22" stroke-dasharray="4 4"/>
+            <rect class="node-bg" x=${x-W/2} y=${y-H/2} width=${W} height=${H} rx="9"
+              fill=${fam.color} opacity="0.08"/>
+            <rect class="node-border" x=${x-W/2} y=${y-H/2} width=${W} height=${H} rx="9"
+              fill="none" stroke=${fam.color} stroke-width="1.2" stroke-opacity="0.6"/>
+            <text x=${x} y=${y-4} text-anchor="middle"
+              fill=${fam.color} font-family="Outfit,sans-serif" font-size="11" font-weight="600"
+              class="node-label">
+              ${fam.treeLabel}
+            </text>
+            <text x=${x} y=${y+12} text-anchor="middle"
+              fill="#5a6f8e" font-family="Outfit,sans-serif" font-size="8.5">
+              ${fam.words.length} word${fam.words.length!==1?'s':''}
+            </text>
+          </g>
+        `;
+      })}
+
+      <!-- Outer decorative ring -->
+      <circle cx=${CX} cy=${CY} r="76" fill="none" stroke="rgba(74,144,217,0.08)" stroke-width="1"/>
+
+      <!-- Center PONER node -->
+      <g class="center-node" onClick=${onSelectBase} style="cursor:pointer">
+        <circle cx=${CX} cy=${CY} r="70" fill="rgba(74,144,217,0.04)" stroke="rgba(74,144,217,0.12)" stroke-width="1"/>
+        <circle cx=${CX} cy=${CY} r="58" fill="#0f1e38" stroke="#4a90d9" stroke-width="1.8" filter="url(#glow-ring)"/>
+        <text x=${CX} y=${CY-7} text-anchor="middle"
+          fill="#e2e8f0" font-family="'DM Serif Display',serif" font-size="24" font-style="italic">
+          poner
+        </text>
+        <text x=${CX} y=${CY+14} text-anchor="middle"
+          fill="#5a6f8e" font-family="Outfit,sans-serif" font-size="8" letter-spacing="2.5">
+          BASE VERB
+        </text>
+      </g>
+    </svg>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// FAMILY VIEW
+// ══════════════════════════════════════════════════════════════════════════════
+
+function FamilyView({ family, onSelectWord }) {
+  const groups = groupByType(family.words);
+  return html`
+    <div class="family-container view-fade">
+      <div class="family-header">
+        <div class="family-verb-hero" style=${{color:family.color}}>${family.verb}</div>
+        <div class="family-description">${family.description}</div>
+        <span class="family-word-count">${family.words.length} words in this family</span>
+      </div>
+
+      ${groups.map(({type,words}) => {
+        const tc = TYPE_CFG[type]||{label:type,color:'#8a9bb8'};
+        return html`
+          <div class="type-section" key=${type}>
+            <div class="type-section-header">
+              <div class="type-section-label" style=${{color:tc.color}}>${tc.label}s</div>
+              <div class="type-section-line" style=${{background:`${tc.color}28`}}></div>
+            </div>
+            <div class="words-grid">
+              ${words.map(w => html`
+                <div class="word-card" key=${w.id} onClick=${()=>onSelectWord(w)}>
+                  <div class="word-card-top">
+                    <div class="word-text">${w.word}</div>
+                    <div class="badges-row">
+                      <${RegBadge} register=${w.register}/>
+                    </div>
+                  </div>
+                  <div class="word-meaning">${w.meaning}</div>
+                  <div class="word-click-hint">click for examples →</div>
+                </div>
+              `)}
+            </div>
+          </div>
+        `;
+      })}
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// WORD MODAL
+// ══════════════════════════════════════════════════════════════════════════════
+
+// Module-level password store — persists for the browser session
+let sessionPassword = '';
+
+function WordModal({ word, family, onClose }) {
+  const [examples,   setExamples]   = useState(null);
+  const [loading,    setLoading]    = useState(false);
+  const [error,      setError]      = useState('');
+  const [needsPw,    setNeedsPw]    = useState(!sessionPassword);
+  const [pwInput,    setPwInput]    = useState('');
+  const [pwError,    setPwError]    = useState('');
+  const [pwChecking, setPwChecking] = useState(false);
+
+  const fetchExamples = async (pw) => {
+    setLoading(true); setError('');
+    try {
+      const res = await fetch('/api/claude', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          password: pw,
+          model:'claude-sonnet-4-20250514',
+          max_tokens:900,
+          system:`You are a Spanish language teacher for an adult B2-level learner. Provide 3 example sentences showing real-world usage of a Spanish word or phrase. Respond ONLY with valid JSON — no markdown, no preamble, no explanation outside the JSON. Exact format:
+{"examples":[{"spanish":"...","english":"...","context":"..."},{"spanish":"...","english":"...","context":"..."},{"spanish":"...","english":"...","context":"..."}],"note":"One concise sentence: the single most important usage tip for this word."}
+The context field is a short label like: everyday speech, formal writing, figurative, medical, legal, Rioplatense, etc. Make examples varied and natural — avoid textbook sentences.`,
+          messages:[{ role:'user', content:`Word: "${word.word}"\nType: ${word.type}\nMeaning: ${word.meaning}\nRegister: ${word.register}\nDerives from: poner\n\nProvide 3 natural, varied example sentences.` }]
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error||'API error');
+      const raw = data.content?.[0]?.text||'';
+      const clean = raw.replace(/```json|```/g,'').trim();
+      setExamples(JSON.parse(clean));
+    } catch(e) {
+      setError('Could not load examples. ' + (e.message||''));
+    }
+    setLoading(false);
+  };
+
+  const submitPw = async () => {
+    setPwChecking(true); setPwError('');
+    try {
+      const res = await fetch('/api/claude', {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ password:pwInput, model:'claude-sonnet-4-20250514', max_tokens:10, messages:[{role:'user',content:'hi'}] })
+      });
+      if (res.ok) {
+        sessionPassword = pwInput;
+        setNeedsPw(false);
+        fetchExamples(pwInput);
+      } else {
+        const d = await res.json();
+        setPwError(d.error||'Contraseña incorrecta');
+      }
+    } catch { setPwError('Error de conexión. Inténtalo de nuevo.'); }
+    setPwChecking(false);
+  };
+
+  useEffect(() => {
+    if (sessionPassword) fetchExamples(sessionPassword);
+  }, [word.id]);
+
+  const onOverlay = (e) => { if(e.target===e.currentTarget) onClose(); };
+
+  return html`
+    <div class="modal-overlay" onClick=${onOverlay}>
+      <div class="modal-panel">
+        <div class="modal-handle" onClick=${onClose}></div>
+
+        <div class="modal-word" style=${{color:family.color}}>${word.word}</div>
+
+        <div class="modal-badges">
+          <${TypeBadge} type=${word.type}/>
+          <${RegBadge} register=${word.register}/>
+          <${Badge} color=${family.color} bg="${family.color}18" label="${family.verb} family"/>
+        </div>
+
+        <div class="modal-meaning">${word.meaning}</div>
+
+        <div class="modal-section-label">Ejemplos de uso</div>
+
+        ${needsPw ? html`
+          <div style="background:var(--bg-input);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:8px">
+            <div style="font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:10px">
+              Contraseña requerida para generar ejemplos
+            </div>
+            <div style="display:flex;gap:8px">
+              <input class="text-input" type="password" placeholder="Contraseña"
+                value=${pwInput} onInput=${e=>setPwInput(e.target.value)}
+                onKeyDown=${e=>e.key==='Enter'&&pwInput&&submitPw()}
+                autofocus disabled=${pwChecking}/>
+              <button class="btn btn-primary" onClick=${submitPw} disabled=${!pwInput||pwChecking}>
+                ${pwChecking?'...':'OK'}
+              </button>
+            </div>
+            ${pwError?html`<div style="color:#f87171;font-size:0.78rem;margin-top:8px">${pwError}</div>`:null}
+          </div>
+        ` : loading ? html`
+          <div class="spinner-wrapper">
+            <div class="spinner"></div>
+            <span>Generando ejemplos...</span>
+          </div>
+        ` : error ? html`
+          <div style="color:#f87171;font-size:0.82rem;margin-bottom:12px">${error}</div>
+          <button class="btn-ghost" onClick=${()=>fetchExamples(sessionPassword)}>Reintentar</button>
+        ` : examples ? html`
+          ${examples.examples.map((ex,i) => html`
+            <div class="example-card" key=${i}>
+              <div class="example-spanish">${ex.spanish}</div>
+              <div class="example-english">${ex.english}</div>
+              ${ex.context ? html`<div class="example-context">${ex.context}</div>` : null}
+            </div>
+          `)}
+          ${examples.note ? html`
+            <div class="usage-note">
+              <div class="usage-note-label">Nota de uso</div>
+              ${examples.note}
+            </div>
+          ` : null}
+        ` : null}
+
+        <button class="btn-ghost" style="margin-top:24px;width:100%" onClick=${onClose}>
+          ← Volver a ${family.verb}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════════════════════════════════════
+// APP
+// ══════════════════════════════════════════════════════════════════════════════
+
+function App() {
+  const [view,      setView]      = useState('tree');
+  const [selFamily, setSelFamily] = useState(null);
+  const [selWord,   setSelWord]   = useState(null);
+
+  const goFamily = (fam) => { setSelFamily(fam); setView('family'); setSelWord(null); };
+  const goTree   = ()    => { setView('tree'); setSelFamily(null); setSelWord(null); };
+
+  return html`
+    <div class="main">
+      <div class="top-bar">
+        <div style="display:flex;align-items:center;gap:16px">
+          <a href="index.html" style="color:var(--text-muted);font-size:0.78rem;text-decoration:none;transition:color 0.15s"
+            onMouseover=${e=>e.target.style.color='var(--accent)'}
+            onMouseout=${e=>e.target.style.color='var(--text-muted)'}>
+            ← Inicio
+          </a>
+          <div class="top-bar-title">Familia de Poner</div>
+        </div>
+        <div class="breadcrumb">
+          ${view==='tree' ? html`<span style="color:var(--text-muted);font-size:0.78rem">haz clic en una rama para explorar</span>`
+          : html`
+            <span class="breadcrumb-link" onClick=${goTree}>árbol</span>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current" style=${{color:selFamily?.color}}>${selFamily?.verb}</span>
+          `}
+        </div>
+      </div>
+
+      ${view==='tree' ? html`
+        <div class="tree-container view-fade">
+          <div class="tree-intro">
+            <p>Haz clic en una rama para ver las palabras de esa familia — o en <em>poner</em> en el centro para el verbo base.</p>
+          </div>
+          <div class="tree-svg-wrapper">
+            <${TreeSVG} onSelectFamily=${goFamily} onSelectBase=${()=>goFamily(BASE_FAMILY)}/>
+          </div>
+        </div>
+      ` : html`
+        <${FamilyView} family=${selFamily} onSelectWord=${setSelWord}/>
+      `}
+
+      ${selWord && selFamily ? html`
+        <${WordModal} word=${selWord} family=${selFamily} onClose=${()=>setSelWord(null)}/>
+      ` : null}
+    </div>
+  `;
+}
+
+render(html`<${App}/>`, document.getElementById('root'));
+</script>
+</body>
+</html>

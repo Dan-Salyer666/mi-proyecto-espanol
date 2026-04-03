@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Español Rioplatense</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a1628;
+  --bg-card: #111d35;
+  --bg-card-hover: #162544;
+  --bg-input: #0d1a2f;
+  --border: #1e3355;
+  --border-focus: #3b6cb5;
+  --text-primary: #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted: #5a6f8e;
+  --accent: #4a90d9;
+  --accent-glow: rgba(74, 144, 217, 0.15);
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --red: #f87171;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background: Toledo photo ── */
+.bg-photo {
+  position: fixed;
+  inset: 0;
+  background: url('assets/toledo-pic.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.45);
+  z-index: 0;
+}
+
+/* ── Layout ── */
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 8px 0 20px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.page-header .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* ── Unlock Bar ── */
+.unlock-bar {
+  text-align: center;
+  margin: 12px 0 8px;
+}
+.unlock-btn {
+  background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.unlock-btn:hover { opacity: 0.9; }
+.unlock-btn:active { transform: scale(0.98); }
+.unlock-confirmed {
+  display: inline-block;
+  color: var(--green);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 10px 0;
+}
+
+/* ── Tab Bar ── */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 28px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 12px 18px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Tab Content ── */
+.tab-content { display: none; }
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Section Headers ── */
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 32px 0 12px;
+}
+.section-title:first-child { margin-top: 0; }
+
+.section-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  margin: 24px 0 10px;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.card-sm {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+}
+
+/* ── Tables ── */
+.conj-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 8px;
+  font-size: 0.95rem;
+}
+.conj-table th {
+  text-align: left;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.conj-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+  vertical-align: top;
+}
+.conj-table tr:last-child td { border-bottom: none; }
+.conj-table .verb-es {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  color: var(--accent);
+}
+.conj-table .verb-std { color: var(--text-secondary); }
+
+/* ── Prose blocks ── */
+.prose {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.prose strong { color: var(--text-primary); font-weight: 600; }
+.prose em { color: var(--accent); font-style: italic; }
+
+/* ── Callout boxes ── */
+.callout {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-glow);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+.callout-warn {
+  border-left-color: var(--yellow);
+  background: rgba(251, 191, 36, 0.08);
+}
+.callout-info {
+  border-left-color: var(--text-muted);
+  background: rgba(90, 111, 142, 0.08);
+}
+
+/* ── Bullet lists (used sparingly) ── */
+.point-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 14px;
+}
+.point-list li {
+  padding: 4px 0 4px 20px;
+  position: relative;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.point-list li::before {
+  content: '›';
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.point-list li em { color: var(--accent); font-style: italic; }
+.point-list li strong { color: var(--text-primary); }
+
+/* ── Example pairs (es + en) ── */
+.example-pair {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-pair:last-child { border-bottom: none; }
+.example-es {
+  font-size: 0.93rem;
+  color: var(--text-primary);
+  font-style: italic;
+}
+.example-es .hl { color: var(--accent); font-weight: 600; }
+.example-en {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Speaker button ── */
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  vertical-align: middle;
+  margin-left: 6px;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ── Phonetic tooltip ── */
+.phonetic-hint {
+  cursor: help;
+  border-bottom: 1px dotted var(--text-muted);
+  position: relative;
+}
+.phonetic-hint:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  color: var(--accent);
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* ── API / Más ejemplos button ── */
+.btn-mas {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+}
+.btn-mas:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ── Primary action button ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.93rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* ── Placeholder for future tab content ── */
+.placeholder-msg {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.placeholder-msg .icon { font-size: 2rem; margin-bottom: 12px; }
+
+/* ── Lunfardo Word Grid ── */
+.lunf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.lunf-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 90px;
+}
+.lunf-card:hover { border-color: #2a4a75; }
+.lunf-card.flipped { border-color: var(--accent); background: var(--bg-card-hover); }
+.lunf-word {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.lunf-def { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+.lunf-ex { font-size: 0.85rem; color: var(--text-primary); font-style: italic; margin-top: 8px; line-height: 1.5; }
+.lunf-ex-en { font-size: 0.82rem; color: var(--text-muted); margin-top: 2px; }
+.lunf-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; line-height: 1.5; }
+.lunf-hint { font-size: 0.78rem; color: var(--text-muted); margin-top: 8px; opacity: 0.6; }
+
+/* ── Voseo Quiz ── */
+.vq-mode-btn {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  transition: all 0.15s;
+}
+.vq-mode-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  color: var(--accent);
+}
+.vq-text-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 8px;
+}
+.vq-text-input:focus { border-color: var(--border-focus); }
+.accent-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.accent-row button {
+  padding: 4px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.accent-row button:hover { border-color: var(--accent); color: var(--accent); }
+.vq-result-box {
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+.vq-result-box.correct { background: rgba(52, 211, 153, 0.1); border-left: 3px solid var(--green); }
+.vq-result-box.partial { background: rgba(251, 191, 36, 0.1); border-left: 3px solid var(--yellow); }
+.vq-result-box.incorrect { background: rgba(248, 113, 113, 0.1); border-left: 3px solid var(--red); }
+.vq-score-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--border);
+  margin: 12px 0;
+  overflow: hidden;
+}
+.vq-score-fill { height: 100%; border-radius: 4px; transition: width 0.5s; }
+
+/* ── Lunfardo Quiz ── */
+.lq-word-bank {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.lq-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--accent);
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.lq-chip:hover { border-color: var(--accent); background: var(--accent-glow); }
+.lq-chip.selected { opacity: 0.35; pointer-events: none; }
+.lq-chip.used { border-color: var(--accent); background: var(--accent-glow); opacity: 0.5; }
+
+.lq-sentence-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.lq-sentence-row:last-child { border-bottom: none; }
+.lq-num { color: var(--text-muted); font-size: 0.82rem; min-width: 22px; }
+
+.lq-blank {
+  display: inline-block;
+  min-width: 120px;
+  padding: 4px 10px;
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  color: var(--accent);
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.lq-blank:hover { border-color: var(--accent); }
+.lq-blank.filled { border-style: solid; border-color: var(--accent); background: var(--accent-glow); }
+.lq-blank.correct-answer { border-color: var(--green); background: rgba(52,211,153,0.1); color: var(--green); }
+.lq-blank.wrong-answer { border-color: var(--red); background: rgba(248,113,113,0.1); color: var(--red); text-decoration: line-through; }
+
+.lq-result-row {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
+.lq-result-row:last-child { border-bottom: none; }
+.lq-correction {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* ── Password Prompt ── */
+.pw-prompt {
+  margin: 14px 0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.pw-prompt input {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+}
+.pw-prompt input:focus { border-color: var(--border-focus); }
+
+/* ── Vocabulario Items ── */
+.vocab-item {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+}
+.vocab-item:last-child { border-bottom: none; }
+.vocab-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  font-style: italic;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.vocab-en {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+.vocab-ex { margin-left: 4px; }
+.vocab-note {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ── Vesre Flip Cards ── */
+.vesre-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.vesre-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.vesre-card:hover { border-color: #2a4a75; }
+.vesre-card.flipped { border-color: var(--accent); background: var(--bg-card-hover); }
+.vesre-card.common { border-color: rgba(52, 211, 153, 0.4); background: rgba(52, 211, 153, 0.06); }
+.vesre-card.common .vesre-front { color: var(--green); }
+.vesre-card.common.flipped { border-color: var(--green); background: rgba(52, 211, 153, 0.1); }
+.vesre-front {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.2rem;
+  color: var(--accent);
+  font-style: italic;
+}
+.vesre-back-word {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.vesre-back-def {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-header h1 { font-size: 1.7rem; }
+  .tab-btn { padding: 10px 14px; font-size: 0.83rem; }
+  .card { padding: 18px 16px; }
+  .conj-table { font-size: 0.88rem; }
+  .conj-table th, .conj-table td { padding: 8px; }
+  .section-title { font-size: 1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <!-- Header -->
+  <a href="index.html" class="back-link">← Inicio</a>
+
+  <header class="page-header">
+    <h1>Español Rioplatense</h1>
+    <p class="subtitle">Una guía del español de Argentina y Uruguay — voseo, pronunciación, lunfardo y más. Los rasgos que hacen único al español rioplatense.</p>
+  </header>
+
+  <!-- Unlock Button for API Features -->
+  <div class="unlock-bar" id="unlock-bar">
+    <button class="unlock-btn" id="unlock-btn" onclick="showUnlockPrompt()">
+      🔑 Para ver los ejemplos o los cuestionarios, hacé clic aquí
+    </button>
+  </div>
+  <div class="unlock-bar unlocked" id="unlock-success" style="display:none">
+    <span class="unlock-confirmed">✓ Desbloqueado — ejemplos y cuestionarios disponibles</span>
+  </div>
+
+  <!-- Tab Bar -->
+  <nav class="tab-bar" role="tablist">
+    <button class="tab-btn active" data-tab="voseo" role="tab">El Voseo</button>
+    <button class="tab-btn" data-tab="imperativo" role="tab">El Imperativo</button>
+    <button class="tab-btn" data-tab="pronunciacion" role="tab">La Pronunciación</button>
+    <button class="tab-btn" data-tab="lunfardo" role="tab">Lunfardo y Vesre</button>
+    <button class="tab-btn" data-tab="vocabulario" role="tab">Vocabulario Argentino</button>
+  </nav>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 1: EL VOSEO                        -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="tab-content active" id="tab-voseo">
+
+    <!-- Section: Origin of Voseo -->
+    <h2 class="section-title">¿De dónde viene el voseo?</h2>
+
+    <div class="card">
+      <p class="prose">El voseo no es una invención nueva — viene directamente del <strong>vosotros</strong> de España. Mirá cómo se formó:</p>
+
+      <table class="conj-table">
+        <thead><tr><th>Infinitivo</th><th>Vosotros</th><th>→ Voseo</th></tr></thead>
+        <tbody>
+          <tr><td>hablar</td><td class="verb-std">habláis</td><td class="verb-es">hablás</td></tr>
+          <tr><td>comer</td><td class="verb-std">coméis</td><td class="verb-es">comés</td></tr>
+          <tr><td>vivir</td><td class="verb-std">vivís</td><td class="verb-es">vivís</td></tr>
+        </tbody>
+      </table>
+
+      <p class="prose" style="margin-top:14px">El voseo se desarrolló por dos razones. Primero, por <strong>simplicidad</strong>: la interacción más común del día a día es entre dos personas, y el vos ofrece una forma directa e íntima para ese intercambio. Segundo, como un acto de <strong>rebeldía contra España</strong>: al eliminar el vosotros y reemplazar el tú por el vos, los rioplatenses se distanciaron lingüísticamente de la metrópoli colonial. Con un solo cambio lograron las dos cosas — una forma más práctica para la conversación cotidiana y una identidad propia.</p>
+    </div>
+
+    <!-- Section A: The Swap -->
+    <h2 class="section-title">El Cambio: Tú → Vos</h2>
+
+    <div class="card">
+      <p class="prose">En Argentina y Uruguay, <strong>vos</strong> reemplaza a <em>tú</em> como pronombre informal de segunda persona singular. Es el cambio más visible del español rioplatense y lo vas a escuchar en cada conversación.</p>
+
+      <div class="section-subtitle">Lo que cambia</div>
+      <ul class="point-list">
+        <li><strong>Pronombre sujeto:</strong> tú → <em>vos</em></li>
+        <li><strong>Después de preposición:</strong> para ti → <em>para vos</em>, contigo → <em>con vos</em></li>
+        <li><strong>Posesivos:</strong> no cambian — siguen siendo <em>tu</em> / <em>tus</em></li>
+      </ul>
+
+      <div class="callout">
+        <strong>¿Y vosotros?</strong> No existe en el Río de la Plata. <em>Ustedes</em> es la única forma plural en todos los registros, tanto informal como formal.
+      </div>
+    </div>
+
+    <!-- Section B: Present Indicative Formation -->
+    <h2 class="section-title">Presente de Indicativo</h2>
+
+    <div class="card">
+      <p class="prose">La regla es simple: quitá la <strong>-r</strong> del infinitivo y agregá el acento en la última vocal. La terminación depende de la conjugación: <em>-ás</em>, <em>-és</em>, <em>-ís</em>.</p>
+
+      <table class="conj-table">
+        <thead>
+          <tr><th>Infinitivo</th><th>Forma con tú</th><th>Forma con vos</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>hablar</td><td class="verb-std">hablas</td><td class="verb-es">hablás</td></tr>
+          <tr><td>comer</td><td class="verb-std">comes</td><td class="verb-es">comés</td></tr>
+          <tr><td>vivir</td><td class="verb-std">vives</td><td class="verb-es">vivís</td></tr>
+          <tr><td>pensar</td><td class="verb-std">piensas</td><td class="verb-es">pensás</td></tr>
+          <tr><td>poder</td><td class="verb-std">puedes</td><td class="verb-es">podés</td></tr>
+          <tr><td>dormir</td><td class="verb-std">duermes</td><td class="verb-es">dormís</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout-warn callout">
+        <strong>Ojo con los cambios de raíz:</strong> Con vos, los verbos con cambio de raíz <strong>no</strong> aplican el cambio. Es <em>vos pensás</em> (no "piensás"), <em>vos podés</em> (no "podéis"), <em>vos dormís</em> (no "duermís"). Error muy común entre estudiantes.
+      </div>
+
+      <div class="callout callout-info">
+        <strong>Patrón útil — los verbos en -ir son los que más cambian:</strong> Mirá el cambio relativo desde las formas con tú. Los verbos en <em>-ar</em> solo agregan acento: habl<strong>a</strong>s → habl<strong>á</strong>s. Los verbos en <em>-er</em> también: com<strong>e</strong>s → com<strong>é</strong>s. Pero los verbos en <em>-ir</em> cambian la vocal misma: viv<strong>e</strong>s → viv<strong>í</strong>s. En español estándar, los verbos en -er y -ir comparten las mismas terminaciones en presente. El voseo es lo que los separa.<br><br>Sumale la cancelación de los cambios de raíz (du<strong>e</strong>rmes → dorm<strong>í</strong>s, si<strong>e</strong>ntes → sent<strong>í</strong>s) y los verbos en -ir son los que requieren el ajuste mental más grande para un estudiante que viene del español estándar.
+      </div>
+    </div>
+
+    <!-- Irregulars -->
+    <div class="card-sm">
+      <div class="section-subtitle" style="margin-top:0">Irregulares importantes</div>
+      <table class="conj-table">
+        <thead><tr><th>Verbo</th><th>Forma con tú</th><th>Forma con vos</th><th>Nota</th></tr></thead>
+        <tbody>
+          <tr><td>ser</td><td class="verb-std">eres</td><td class="verb-es">sos</td><td style="color:var(--text-muted);font-size:0.85rem">Forma única — no sigue la regla</td></tr>
+          <tr><td>ir</td><td class="verb-std">vas</td><td class="verb-es">vas</td><td style="color:var(--text-muted);font-size:0.85rem">Igual que con tú</td></tr>
+          <tr><td>haber</td><td class="verb-std">has</td><td class="verb-es">has</td><td style="color:var(--text-muted);font-size:0.85rem">Igual que con tú</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section C: Usted -->
+    <h2 class="section-title">¿Y usted?</h2>
+
+    <div class="card">
+      <p class="prose"><em>Vos</em> ha conquistado casi todo el territorio de <em>usted</em> en la vida cotidiana argentina. Pero usted no está muerto — sobrevive en ciertos contextos:</p>
+      <ul class="point-list">
+        <li>Tribunales y contextos legales</li>
+        <li>Dirigirse a desconocidos mayores (algunos hablantes)</li>
+        <li>Contextos institucionales muy formales</li>
+        <li>Correspondencia escrita formal</li>
+      </ul>
+      <p class="prose">En la práctica, la mayoría de los argentinos usan <em>vos</em> incluso en situaciones donde otros dialectos usarían <em>usted</em>. Varía según el hablante, la edad y la región.</p>
+    </div>
+
+    <!-- Section D: Simple Past Preference -->
+    <h2 class="section-title">Preferencia por el Pretérito Indefinido</h2>
+
+    <div class="card">
+      <p class="prose">El español rioplatense favorece fuertemente el <strong>pretérito indefinido</strong> sobre el <strong>pretérito perfecto</strong>. Donde un español diría "Hoy he comido pasta," un argentino dice:</p>
+
+      <div class="example-pair">
+        <div class="example-es">"Hoy <span class="hl">comí</span> pasta."</div>
+        <div class="example-en">Today I ate pasta. (not "he comido")</div>
+      </div>
+      <div class="example-pair">
+        <div class="example-es">"¿Ya <span class="hl">terminaste</span>?"</div>
+        <div class="example-en">Did you finish already? (not "has terminado")</div>
+      </div>
+      <div class="example-pair">
+        <div class="example-es">"Este año <span class="hl">viajé</span> a Mendoza."</div>
+        <div class="example-en">This year I traveled to Mendoza. (not "he viajado")</div>
+      </div>
+
+      <p class="prose" style="margin-top:14px">Ambas formas son gramaticalmente correctas. Es una preferencia de uso, no una regla.</p>
+    </div>
+
+    <!-- Más ejemplos button (API - wired up later) -->
+    <button class="btn-mas" onclick="handleMasEjemplos('voseo')">✦ Más ejemplos del voseo en contexto</button>
+    <div id="mas-voseo-output"></div>
+
+    <!-- Quiz: Conversión al Voseo -->
+    <div class="card" style="margin-top:32px" id="voseo-quiz-area">
+      <div class="section-subtitle" style="margin-top:0">Practicar: Conversión al Voseo</div>
+      <p class="prose">Reescribí oraciones de tú a vos. Elegí el modo y empezá.</p>
+
+      <!-- Mode selector + start -->
+      <div id="vq-setup">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:14px 0">
+          <button class="vq-mode-btn active" data-mode="mixto" onclick="setVqMode(this)">Mixto</button>
+          <button class="vq-mode-btn" data-mode="indicativo" onclick="setVqMode(this)">Solo indicativo</button>
+          <button class="vq-mode-btn" data-mode="imperativo" onclick="setVqMode(this)">Solo imperativo</button>
+        </div>
+        <button class="btn-primary" onclick="startVoseoQuiz()">Empezar</button>
+      </div>
+
+      <!-- Loading -->
+      <div id="vq-loading" style="display:none">
+        <p class="prose" style="text-align:center;padding:30px 0">Generando oraciones...</p>
+      </div>
+
+      <!-- Question area -->
+      <div id="vq-question" style="display:none">
+        <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:6px" id="vq-counter"></div>
+        <div style="font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--text-primary);margin-bottom:14px;line-height:1.5" id="vq-sentence"></div>
+        <input type="text" id="vq-input" class="vq-text-input" placeholder="Escribí la oración con vos..." autocomplete="off" />
+        <div class="accent-row">
+          <button onclick="insertChar('á')">á</button>
+          <button onclick="insertChar('é')">é</button>
+          <button onclick="insertChar('í')">í</button>
+          <button onclick="insertChar('ó')">ó</button>
+          <button onclick="insertChar('ú')">ú</button>
+          <button onclick="insertChar('ñ')">ñ</button>
+          <button onclick="insertChar('¿')">¿</button>
+          <button onclick="insertChar('?')">?</button>
+          <button onclick="insertChar('¡')">¡</button>
+        </div>
+        <button class="btn-primary" onclick="submitVqAnswer()" id="vq-submit-btn">Verificar</button>
+      </div>
+
+      <!-- Feedback area -->
+      <div id="vq-feedback" style="display:none">
+        <div id="vq-feedback-content"></div>
+        <button class="btn-primary" onclick="nextVqQuestion()" id="vq-next-btn">Siguiente →</button>
+      </div>
+
+      <!-- Score summary -->
+      <div id="vq-summary" style="display:none">
+        <div id="vq-summary-content"></div>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button class="btn-primary" onclick="startVoseoQuiz()">Intentar de nuevo</button>
+          <button class="btn-mas" onclick="resetVqToSetup()">Volver</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 2: EL IMPERATIVO (placeholder)      -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="tab-content" id="tab-imperativo">
+
+    <!-- Section A: Formation Rule -->
+    <h2 class="section-title">Formación del Imperativo con Vos</h2>
+
+    <div class="card">
+      <p class="prose">La regla es directa: quitá la <strong>-r</strong> del infinitivo y acentuá la última vocal. A diferencia del imperativo con tú, que tiene muchas formas irregulares, el imperativo con vos es casi completamente regular.</p>
+
+      <table class="conj-table">
+        <thead><tr><th>Infinitivo</th><th>Tú afirmativo</th><th>Vos afirmativo</th><th>Negativo (ambos)</th></tr></thead>
+        <tbody>
+          <tr><td>hablar</td><td class="verb-std">habla</td><td class="verb-es">hablá</td><td class="verb-std">no hables</td></tr>
+          <tr><td>comer</td><td class="verb-std">come</td><td class="verb-es">comé</td><td class="verb-std">no comas</td></tr>
+          <tr><td>venir</td><td class="verb-std">ven</td><td class="verb-es">vení</td><td class="verb-std">no vengas</td></tr>
+          <tr><td>decir</td><td class="verb-std">di</td><td class="verb-es">decí</td><td class="verb-std">no digas</td></tr>
+          <tr><td>poner</td><td class="verb-std">pon</td><td class="verb-es">poné</td><td class="verb-std">no pongas</td></tr>
+          <tr><td>salir</td><td class="verb-std">sal</td><td class="verb-es">salí</td><td class="verb-std">no salgas</td></tr>
+          <tr><td>hacer</td><td class="verb-std">haz</td><td class="verb-es">hacé</td><td class="verb-std">no hagas</td></tr>
+          <tr><td>tener</td><td class="verb-std">ten</td><td class="verb-es">tené</td><td class="verb-std">no tengas</td></tr>
+          <tr><td>ir</td><td class="verb-std">ve</td><td class="verb-es">andá *</td><td class="verb-std">no vayas</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>* Caso especial — ir:</strong> El imperativo de <em>ir</em> con vos es <em>andá</em>, no "í." En teoría "í" existe, pero nadie lo usa. En la práctica, <em>andar</em> reemplaza a <em>ir</em> en el imperativo: <em>Andá al supermercado.</em> Es uno de los huecos más comunes para estudiantes.
+      </div>
+
+      <div class="callout callout-info">
+        <strong>Dato clave:</strong> Notá algo interesante — los verbos que son muy irregulares en el imperativo con tú (ven, di, pon, sal, haz, ten) se vuelven <strong>perfectamente regulares</strong> con vos. Solo aplicás la regla estándar: quitá la -r, acentuá la vocal final. Esto es una simplificación real del voseo.
+      </div>
+    </div>
+
+    <!-- Section B: Accent Placement Matters -->
+    <h2 class="section-title">La Posición del Acento Importa</h2>
+
+    <div class="card">
+      <p class="prose">El acento escrito no es decorativo — cambia qué palabra estás diciendo:</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0">
+        <div class="card-sm" style="margin:0;text-align:center">
+          <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--accent);margin-bottom:4px">hablá</div>
+          <div style="font-size:0.85rem;color:var(--text-secondary)">Imperativo con vos</div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px">"¡Hablá más despacio!"</div>
+        </div>
+        <div class="card-sm" style="margin:0;text-align:center">
+          <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text-secondary);margin-bottom:4px">habla</div>
+          <div style="font-size:0.85rem;color:var(--text-secondary)">Imperativo con tú / 3ª persona</div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px">"Habla con ella." / "Él habla rápido."</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 8px">
+        <div class="card-sm" style="margin:0;text-align:center">
+          <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--accent);margin-bottom:4px">mirá</div>
+          <div style="font-size:0.85rem;color:var(--text-secondary)">Imperativo con vos</div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px">"¡Mirá eso!"</div>
+        </div>
+        <div class="card-sm" style="margin:0;text-align:center">
+          <div style="font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text-secondary);margin-bottom:4px">mira</div>
+          <div style="font-size:0.85rem;color:var(--text-secondary)">Imperativo con tú / 3ª persona</div>
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px">"Mira esto." / "Ella mira la tele."</div>
+        </div>
+      </div>
+
+      <div class="callout-warn callout">
+        <strong>El acento escrito no es opcional</strong> — cambia cuál palabra estás usando. Sin acento puede ser el imperativo con tú o el presente indicativo de tercera persona. Con acento es exclusivamente el imperativo con vos.
+      </div>
+    </div>
+
+    <!-- Section C: Reflexive Imperatives -->
+    <h2 class="section-title">Imperativos Reflexivos</h2>
+
+    <div class="card">
+      <p class="prose">El pronombre sigue siendo <strong>te</strong> — lo que cambia es la forma del verbo:</p>
+
+      <table class="conj-table">
+        <thead><tr><th>Infinitivo</th><th>Tú afirmativo</th><th>Vos afirmativo</th><th>Negativo (ambos)</th></tr></thead>
+        <tbody>
+          <tr><td>sentarse</td><td class="verb-std">siéntate</td><td class="verb-es">sentate</td><td class="verb-std">no te sientes</td></tr>
+          <tr><td>callarse</td><td class="verb-std">cállate</td><td class="verb-es">callate</td><td class="verb-std">no te calles</td></tr>
+          <tr><td>irse</td><td class="verb-std">vete</td><td class="verb-es">andate</td><td class="verb-std">no te vayas</td></tr>
+          <tr><td>vestirse</td><td class="verb-std">vístete</td><td class="verb-es">vestite</td><td class="verb-std">no te vistas</td></tr>
+          <tr><td>apurarse</td><td class="verb-std">apúrate</td><td class="verb-es">apurate</td><td class="verb-std">no te apures</td></tr>
+        </tbody>
+      </table>
+
+      <p class="prose" style="margin-top:14px">Notá que con vos, el acento a veces desaparece de la forma escrita. <em>Sentate</em>, <em>callate</em>, <em>apurate</em> — son todas palabras graves terminadas en vocal, así que no llevan tilde. El acento prosódico sigue ahí, pero no se escribe.</p>
+    </div>
+
+    <!-- Section D: Negative Imperatives -->
+    <h2 class="section-title">Imperativos Negativos</h2>
+
+    <div class="card">
+      <p class="prose">Esta es la parte que sorprende a muchos estudiantes: para los imperativos negativos, <strong>el español argentino vuelve completamente a las formas del subjuntivo estándar de tú</strong>. No hay formas especiales de vos para el negativo.</p>
+
+      <table class="conj-table">
+        <thead><tr><th>Afirmativo con vos</th><th>Negativo con vos</th><th>Forma del subjuntivo</th></tr></thead>
+        <tbody>
+          <tr><td class="verb-es">hablá</td><td class="verb-std">no hables</td><td style="color:var(--text-muted);font-size:0.85rem">= subjuntivo estándar de tú</td></tr>
+          <tr><td class="verb-es">comé</td><td class="verb-std">no comas</td><td style="color:var(--text-muted);font-size:0.85rem">= subjuntivo estándar de tú</td></tr>
+          <tr><td class="verb-es">vení</td><td class="verb-std">no vengas</td><td style="color:var(--text-muted);font-size:0.85rem">= subjuntivo estándar de tú</td></tr>
+          <tr><td class="verb-es">hacé</td><td class="verb-std">no hagas</td><td style="color:var(--text-muted);font-size:0.85rem">= subjuntivo estándar de tú</td></tr>
+          <tr><td class="verb-es">decí</td><td class="verb-std">no digas</td><td style="color:var(--text-muted);font-size:0.85rem">= subjuntivo estándar de tú</td></tr>
+          <tr><td class="verb-es">andá</td><td class="verb-std">no vayas</td><td style="color:var(--text-muted);font-size:0.85rem">= subjuntivo estándar de tú</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout">
+        <strong>¿Por qué importa esto?</strong> Porque significa que el voseo solo cambia el imperativo <strong>afirmativo</strong>. En cuanto agregás "no," volvés al subjuntivo que ya conocés del español estándar. Si ya sabés conjugar el subjuntivo presente, ya sabés formar los imperativos negativos argentinos. No hay nada nuevo que aprender acá.
+      </div>
+
+      <p class="prose">Ejemplos en contexto:</p>
+      <div class="example-pair">
+        <div class="example-es">"<span class="hl">Hablá</span> más despacio." → "¡<span class="hl">No hables</span> tan rápido!"</div>
+        <div class="example-en">"Speak slower." → "Don't talk so fast!"</div>
+      </div>
+      <div class="example-pair">
+        <div class="example-es">"<span class="hl">Vení</span> acá." → "¡<span class="hl">No vengas</span> todavía!"</div>
+        <div class="example-en">"Come here." → "Don't come yet!"</div>
+      </div>
+      <div class="example-pair">
+        <div class="example-es">"<span class="hl">Sentate</span>." → "¡<span class="hl">No te sientes</span> ahí!"</div>
+        <div class="example-en">"Sit down." → "Don't sit there!"</div>
+      </div>
+
+      <div class="callout callout-info">
+        <strong>Nota:</strong> Existen formas alternativas del subjuntivo con vos (hablés, comás, vengás) documentadas en gramáticas y en algunos dialectos regionales. Pero en el español estándar de Buenos Aires — que es lo que refleja SpanishDict y la RAE — el imperativo negativo usa las formas del subjuntivo estándar. Eso es lo que vas a escuchar y lo que deberías usar.
+      </div>
+    </div>
+
+    <!-- Más ejemplos button -->
+    <button class="btn-mas" onclick="handleMasEjemplos('imperativo')">✦ Más ejemplos del imperativo en contexto</button>
+    <div id="mas-imperativo-output"></div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 3: LA PRONUNCIACIÓN (placeholder)   -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="tab-content" id="tab-pronunciacion">
+
+    <!-- Section A: Yeísmo Rehilado -->
+    <h2 class="section-title">Yeísmo Rehilado — El Sonido "SH"</h2>
+
+    <div class="card">
+      <p class="prose">El rasgo más reconocible del acento porteño: las letras <strong>LL</strong> y <strong>Y</strong> se pronuncian como la <em>"sh"</em> del inglés (como en "shoe") o a veces como <em>"zh"</em> (como en "measure"). Esto se llama <strong>yeísmo rehilado</strong> o <strong>sheísmo</strong>.</p>
+
+      <p class="prose">La variación depende del hablante y la región — Buenos Aires tiende más hacia "sh," otras zonas se inclinan hacia "zh." Ambas son normales.</p>
+
+      <table class="conj-table">
+        <thead><tr><th>Escrito</th><th>Pronunciación estándar</th><th>Pronunciación rioplatense</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>calle</strong></td>
+            <td class="verb-std"><span class="phonetic-hint" title="KAH-yeh">KAH-yeh</span></td>
+            <td class="verb-es"><span class="phonetic-hint" title="KAH-sheh">KAH-sheh</span></td>
+            <td><button class="speak-btn" onclick="speak('calle')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>lluvia</strong></td>
+            <td class="verb-std"><span class="phonetic-hint" title="YOO-vya">YOO-vya</span></td>
+            <td class="verb-es"><span class="phonetic-hint" title="SHOO-vya">SHOO-vya</span></td>
+            <td><button class="speak-btn" onclick="speak('lluvia')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>yo</strong></td>
+            <td class="verb-std"><span class="phonetic-hint" title="yoh">yoh</span></td>
+            <td class="verb-es"><span class="phonetic-hint" title="shoh">shoh</span></td>
+            <td><button class="speak-btn" onclick="speak('yo')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>playa</strong></td>
+            <td class="verb-std"><span class="phonetic-hint" title="PLAH-yah">PLAH-yah</span></td>
+            <td class="verb-es"><span class="phonetic-hint" title="PLAH-shah">PLAH-shah</span></td>
+            <td><button class="speak-btn" onclick="speak('playa')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>pollo</strong></td>
+            <td class="verb-std"><span class="phonetic-hint" title="POH-yoh">POH-yoh</span></td>
+            <td class="verb-es"><span class="phonetic-hint" title="POH-shoh">POH-shoh</span></td>
+            <td><button class="speak-btn" onclick="speak('pollo')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>ella</strong></td>
+            <td class="verb-std"><span class="phonetic-hint" title="EH-yah">EH-yah</span></td>
+            <td class="verb-es"><span class="phonetic-hint" title="EH-shah">EH-shah</span></td>
+            <td><button class="speak-btn" onclick="speak('ella')">🔊</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout-warn callout">
+        <strong>La CH no cambia:</strong> Solo LL e Y se ven afectadas. La <em>ch</em> sigue siendo "ch" normal. Así que <em>che</em> es "che," <em>chico</em> es "chico," y <em>chamuyar</em> empieza con "ch" regular — luego la Y de <em>chamuyo</em> sí suena "sh": <em>chamúsho</em>.
+      </div>
+    </div>
+
+    <!-- Section B: Aspiración de la S -->
+    <h2 class="section-title">Aspiración de la S</h2>
+
+    <div class="card">
+      <p class="prose">La <strong>S</strong> al final de sílaba o palabra se suaviza a un sonido de <em>"h"</em> aspirada, o directamente se pierde. No es un error — es un rasgo natural del habla rioplatense que vas a escuchar constantemente.</p>
+
+      <table class="conj-table">
+        <thead><tr><th>Escrito</th><th>Lo que escuchás</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>los mismos</strong></td>
+            <td class="verb-es"><span class="phonetic-hint" title="loh mihmoh">loh mihmoh</span></td>
+            <td><button class="speak-btn" onclick="speak('los mismos')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>estamos</strong></td>
+            <td class="verb-es"><span class="phonetic-hint" title="ehtamoh">ehtamoh</span></td>
+            <td><button class="speak-btn" onclick="speak('estamos')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>más o menos</strong></td>
+            <td class="verb-es"><span class="phonetic-hint" title="máh o menoh">máh o menoh</span></td>
+            <td><button class="speak-btn" onclick="speak('más o menos')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>buenos días</strong></td>
+            <td class="verb-es"><span class="phonetic-hint" title="buenoh díah">buenoh díah</span></td>
+            <td><button class="speak-btn" onclick="speak('buenos días')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>¿cómo estás?</strong></td>
+            <td class="verb-es"><span class="phonetic-hint" title="cómo ehtáh">cómo ehtáh</span></td>
+            <td><button class="speak-btn" onclick="speak('¿cómo estás?')">🔊</button></td>
+          </tr>
+          <tr>
+            <td><strong>las estrellas</strong></td>
+            <td class="verb-es"><span class="phonetic-hint" title="lah ehtréshas">lah ehtréshas</span></td>
+            <td><button class="speak-btn" onclick="speak('las estrellas')">🔊</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="prose" style="margin-top:14px">Notá que <em>las estrellas</em> combina los dos rasgos: la S aspirada (<em>lah</em>, <em>ehtré-</em>) y el yeísmo rehilado (<em>-shas</em>). Cuando escuchás hablar a un porteño, estos dos fenómenos se superponen todo el tiempo.</p>
+    </div>
+
+    <!-- Section C: Intonation -->
+    <h2 class="section-title">Entonación y Melodía</h2>
+
+    <div class="card">
+      <p class="prose">El español porteño tiene una <strong>entonación cantarina</strong> — un patrón de subida y bajada influido por el italiano que otros hispanohablantes reconocen al instante. Es probablemente lo primero que notás al escuchar hablar a un argentino, incluso antes de identificar el sheísmo o el voseo.</p>
+
+      <p class="prose">Esto es difícil de enseñar con texto. Se absorbe escuchando, no memorizando reglas. Los botones de audio en esta página ayudan, pero para entrenar el oído realmente, lo mejor es exponerte a conversaciones naturales — podcasts, series, entrevistas argentinas.</p>
+
+      <div class="callout callout-info">
+        <strong>¿De dónde viene?</strong> La entonación rioplatense refleja las olas de inmigración italiana de fines del siglo XIX y principios del XX. Buenos Aires recibió millones de inmigrantes italianos, y su patrón melódico dejó una huella permanente en el habla local. No es coincidencia que el lunfardo también tenga una fuerte base italiana.
+      </div>
+    </div>
+
+    <!-- Combined listening exercise -->
+    <h2 class="section-title">Práctica de Escucha</h2>
+
+    <div class="card">
+      <p class="prose">Escuchá estos ejemplos que combinan los tres rasgos (sheísmo + aspiración de S + entonación). Tocá el botón para escuchar cada frase:</p>
+
+      <div class="example-pair" style="display:flex;align-items:center;gap:8px">
+        <button class="speak-btn" onclick="speak('Yo me llamo Yamila y vivo en la calle Yrigoyen.')">🔊</button>
+        <div>
+          <div class="example-es">"<span class="hl">Yo</span> me <span class="hl">ll</span>amo <span class="hl">Y</span>amila y vivo en la ca<span class="hl">ll</span>e <span class="hl">Y</span>rigoyen."</div>
+          <div class="example-en">My name is Yamila and I live on Yrigoyen Street. (5 instancias de sheísmo)</div>
+        </div>
+      </div>
+      <div class="example-pair" style="display:flex;align-items:center;gap:8px">
+        <button class="speak-btn" onclick="speak('Los chicos están jugando en la plaza y las chicas están tomando helado.')">🔊</button>
+        <div>
+          <div class="example-es">"Lo<span class="hl">s</span> chico<span class="hl">s</span> e<span class="hl">s</span>tán jugando en la plaza y la<span class="hl">s</span> chica<span class="hl">s</span> e<span class="hl">s</span>tán tomando helado."</div>
+          <div class="example-en">The boys are playing in the plaza and the girls are eating ice cream. (6 eses aspiradas)</div>
+        </div>
+      </div>
+      <div class="example-pair" style="display:flex;align-items:center;gap:8px">
+        <button class="speak-btn" onclick="speak('¿Vos ya llegaste? Nosotros estamos esperándote en la esquina de Callao y Corrientes.')">🔊</button>
+        <div>
+          <div class="example-es">"¿Vo<span class="hl">s</span> ya <span class="hl">ll</span>ega<span class="hl">s</span>te? No<span class="hl">s</span>otro<span class="hl">s</span> e<span class="hl">s</span>tamo<span class="hl">s</span> e<span class="hl">s</span>perándote en la e<span class="hl">s</span>quina de Ca<span class="hl">ll</span>ao y Corriente<span class="hl">s</span>."</div>
+          <div class="example-en">Did you already arrive? We're waiting for you on the corner of Callao and Corrientes. (todo junto)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Más ejemplos button -->
+    <button class="btn-mas" onclick="handleMasEjemplos('pronunciacion')">✦ Generar un párrafo para practicar pronunciación</button>
+    <div id="mas-pronunciacion-output"></div>
+
+    <!-- Browser note -->
+    <div class="card-sm" style="margin-top:24px;text-align:center">
+      <p style="font-size:0.85rem;color:var(--text-muted);margin:0">🖥️ La pronunciación argentina se reproduce mejor en <strong style="color:var(--text-secondary)">Google Chrome (escritorio)</strong>. En otros navegadores o en dispositivos móviles, la voz puede sonar más neutra.</p>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 4: LUNFARDO Y VESRE (placeholder)   -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="tab-content" id="tab-lunfardo">
+
+    <!-- Section A: What Is Lunfardo? -->
+    <h2 class="section-title">¿Qué es el Lunfardo?</h2>
+
+    <div class="card">
+      <p class="prose">El lunfardo nació en Buenos Aires a finales del siglo XIX, en el crisol de inmigrantes italianos, portugueses, africanos e indígenas que formaron los barrios populares de la ciudad. Originalmente era jerga de las clases bajas — un código informal que se popularizó a través de las letras de tango.</p>
+      <p class="prose">Hoy el lunfardo está tan integrado en el habla cotidiana argentina que muchos hablantes no se dan cuenta de que ciertas palabras son lunfardo. <strong>No es un idioma separado</strong> — es vocabulario que se monta sobre la gramática del español estándar. Si sabés conjugar verbos en español, sabés usar lunfardo.</p>
+
+      <div class="callout callout-info">
+        <strong>Dato:</strong> Ocho palabras de origen lunfardo han sido aceptadas oficialmente por la Real Academia Española (RAE): <em>che, boludo, pibe, bondi, laburar, chamuyo, trucho</em> y <em>quilombo</em>.
+      </div>
+    </div>
+
+    <!-- Section B: High-Frequency Lunfardo -->
+    <h2 class="section-title">Lunfardo Esencial</h2>
+
+    <div class="lunf-grid" id="lunf-grid"></div>
+
+    <!-- Section C: El Vesre -->
+    <h2 class="section-title">El Vesre — Hablar al Revés</h2>
+
+    <div class="card">
+      <p class="prose">Un juego de palabras único del lunfardo: <strong>invertir las sílabas</strong> de una palabra para crear otra. La palabra <em>vesre</em> es en sí misma el vesre de <em>revés</em> (al revés). A veces el significado se mantiene, a veces cambia.</p>
+      <p class="prose">No todas las formas son inversiones perfectas sílaba por sílaba. Con el tiempo, los argentinos ajustaron los sonidos para que fluyan mejor en la conversación. Algunas formas como <em>bolonqui</em> o <em>lompas</em> son bastante irregulares.</p>
+
+      <div class="callout">
+        <strong>Las más comunes en la calle:</strong> <em>feca</em> (café), <em>garpar</em> (pagar), <em>zapi</em> (pizza), <em>jermu</em> (mujer/esposa), <em>sope</em> (peso) y <em>telo</em> (hotel*). Las demás son reconocibles pero bastante menos frecuentes en el habla diaria.<br><br>
+        <span style="font-size:0.85rem;color:var(--text-muted)">* Un <em>telo</em> no es un hotel común — es un albergue transitorio, alquilado por horas para encuentros románticos.</span>
+      </div>
+
+      <div class="callout callout-warn">
+        <strong>¿Se usa todavía?</strong> En el Buenos Aires moderno, el vesre ya no es tan común como antes. Las generaciones más jóvenes lo usan mucho menos — es un poco como hablar con jerga de los años 70 en inglés. También tiene una connotación de <strong>clase social</strong>: el vesre tiende a sonar más popular o callejero, y usarlo en ciertos contextos puede marcar un registro bajo. Dicho esto, algunas palabras han sobrevivido y se usan con naturalidad en todos los niveles: <em>feca, zapi, garpar, jermu</em> y <em>sope</em> son las más vivas. Las tarjetas verdes abajo marcan las que siguen vigentes en el habla cotidiana.
+      </div>
+
+      <div class="callout callout-info">
+        <strong>El género no cambia:</strong> Las palabras en vesre conservan el género de la palabra original. <em>Rioba</em> sigue siendo masculino porque <em>barrio</em> es masculino (<em>el rioba</em>, no <em>la rioba</em>). Lo mismo con <em>jermu</em> (femenino, como <em>mujer</em>), <em>rope</em> (masculino, como <em>perro</em>), etc.
+      </div>
+    </div>
+
+    <!-- Vesre Flip Cards -->
+    <div class="section-subtitle">Tarjetas de Vesre — tocá para ver la palabra original</div>
+    <div class="vesre-grid" id="vesre-grid"></div>
+    <div style="text-align:center;margin:16px 0 24px">
+      <button class="btn-mas" onclick="shuffleVesre()">🔀 Barajar</button>
+    </div>
+
+    <!-- Quiz: Lunfardo en Contexto -->
+    <div class="card" style="margin-top:16px" id="lunf-quiz-area">
+      <div class="section-subtitle" style="margin-top:0">Practicar: Lunfardo en Contexto</div>
+      <p class="prose">Completá 10 oraciones con la palabra lunfardo correcta. Se genera un nuevo set con cada intento.</p>
+
+      <!-- Start button -->
+      <div id="lq-setup">
+        <button class="btn-primary" onclick="startLunfQuiz()">Empezar</button>
+      </div>
+
+      <!-- Loading -->
+      <div id="lq-loading" style="display:none">
+        <p class="prose" style="text-align:center;padding:30px 0">Generando oraciones...</p>
+      </div>
+
+      <!-- Quiz area: word bank + sentences -->
+      <div id="lq-quiz" style="display:none">
+        <div class="section-subtitle">Banco de palabras</div>
+        <div class="lq-word-bank" id="lq-bank"></div>
+
+        <div class="section-subtitle" style="margin-top:20px">Oraciones</div>
+        <div id="lq-sentences"></div>
+
+        <button class="btn-primary" onclick="submitLunfQuiz()" id="lq-submit-btn" style="margin-top:16px">Corregir</button>
+      </div>
+
+      <!-- Graded results -->
+      <div id="lq-results" style="display:none">
+        <div id="lq-results-content"></div>
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button class="btn-primary" onclick="startLunfQuiz()">Intentar de nuevo</button>
+          <button class="btn-mas" onclick="resetLqToSetup()">Volver</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════════ -->
+  <!-- TAB 5: VOCABULARIO ARGENTINO (placeholder) -->
+  <!-- ═══════════════════════════════════════ -->
+  <section class="tab-content" id="tab-vocabulario">
+
+    <h2 class="section-title">Palabras que No Son Lunfardo — Pero Sí Son Argentinas</h2>
+
+    <div class="card" style="margin-bottom:28px">
+      <p class="prose">Estas palabras y expresiones no vienen del lunfardo, pero son distintivamente argentinas — o se usan de manera diferente en Argentina comparado con otros países hispanohablantes. Si viajás a Buenos Aires, las vas a escuchar desde el primer día.</p>
+    </div>
+
+    <!-- Everyday Expressions -->
+    <h2 class="section-title">Expresiones Cotidianas</h2>
+
+    <div class="card">
+      <div class="vocab-item">
+        <div class="vocab-es">¿Cómo andás? <button class="speak-btn" onclick="speak('¿Cómo andás?')">🔊</button></div>
+        <div class="vocab-en">How are you? (replaces ¿Cómo estás? in casual speech)</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"<span class="hl">¿Cómo andás?</span> Tanto tiempo sin verte." <button class="speak-btn" onclick="event.stopPropagation();speak('¿Cómo andás? Tanto tiempo sin verte.')">🔊</button></div>
+            <div class="example-en">"How are you? It's been a while."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Dale <button class="speak-btn" onclick="speak('Dale')">🔊</button></div>
+        <div class="vocab-en">OK / sure / go ahead / come on — extremadamente versátil</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"¿Vamos al cine?" — "<span class="hl">Dale.</span>" <button class="speak-btn" onclick="event.stopPropagation();speak('¿Vamos al cine?" — "Dale.')">🔊</button></div>
+            <div class="example-en">"Want to go to the movies?" — "Sure."</div>
+          </div>
+          <div class="example-pair">
+            <div class="example-es">"<span class="hl">Dale</span>, apurate que llegamos tarde." <button class="speak-btn" onclick="event.stopPropagation();speak('Dale, apurate que llegamos tarde.')">🔊</button></div>
+            <div class="example-en">"Come on, hurry up, we're going to be late."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Bárbaro <button class="speak-btn" onclick="speak('Bárbaro')">🔊</button></div>
+        <div class="vocab-en">Great / fantastic / brilliant</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"¿Cómo te fue?" — "<span class="hl">¡Bárbaro!</span>" <button class="speak-btn" onclick="event.stopPropagation();speak('¿Cómo te fue?" — "¡Bárbaro!')">🔊</button></div>
+            <div class="example-en">"How did it go?" — "Great!"</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">De diez <button class="speak-btn" onclick="speak('De diez')">🔊</button></div>
+        <div class="vocab-en">A ten out of ten / perfect / excellent</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"La comida estuvo <span class="hl">de diez</span>." <button class="speak-btn" onclick="event.stopPropagation();speak('La comida estuvo de diez.')">🔊</button></div>
+            <div class="example-en">"The food was absolutely perfect."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">A lo de <button class="speak-btn" onclick="speak('A lo de')">🔊</button></div>
+        <div class="vocab-en">At / to someone's place (replaces "a la casa de")</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Vamos <span class="hl">a lo de</span> Marcos." <button class="speak-btn" onclick="event.stopPropagation();speak('Vamos a lo de Marcos.')">🔊</button></div>
+            <div class="example-en">"Let's go to Marcos's place."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Food & Drink -->
+    <h2 class="section-title">Comida y Bebida</h2>
+
+    <div class="card">
+      <div class="vocab-item">
+        <div class="vocab-es">Facturas <button class="speak-btn" onclick="speak('Facturas')">🔊</button></div>
+        <div class="vocab-en">Pastries from the bakery (medialunas, vigilantes, cañoncitos...)</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Fui a comprar unas <span class="hl">facturas</span> a la panadería." <button class="speak-btn" onclick="event.stopPropagation();speak('Fui a comprar unas facturas a la panadería.')">🔊</button></div>
+            <div class="example-en">"I went to buy some pastries at the bakery."</div>
+          </div>
+        </div>
+        <div class="vocab-note">También significa "invoices" en contextos formales — el contexto siempre aclara.</div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Medialuna <button class="speak-btn" onclick="speak('Medialuna')">🔊</button></div>
+        <div class="vocab-en">Croissant (sweeter and smaller than a French croissant)</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Un café con leche y dos <span class="hl">medialunas</span>, por favor." <button class="speak-btn" onclick="event.stopPropagation();speak('Un café con leche y dos medialunas, por favor.')">🔊</button></div>
+            <div class="example-en">"A café con leche and two croissants, please."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Asado <button class="speak-btn" onclick="speak('Asado')">🔊</button></div>
+        <div class="vocab-en">Barbecue — but much more than a meal; it's a social ritual</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"El domingo hacemos <span class="hl">asado</span> en lo de mi viejo." <button class="speak-btn" onclick="event.stopPropagation();speak('El domingo hacemos asado en lo de mi viejo.')">🔊</button></div>
+            <div class="example-en">"Sunday we're doing a barbecue at my dad's place."</div>
+          </div>
+        </div>
+        <div class="vocab-note">Una institución cultural argentina. Incluye achuras (offal), morcilla (blood sausage), chorizo, y distintos cortes de carne.</div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Mate <button class="speak-btn" onclick="speak('Mate')">🔊</button></div>
+        <div class="vocab-en">The drink (yerba mate infusion) and the social ritual of sharing it</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"¿Querés unos <span class="hl">mates</span>?" <button class="speak-btn" onclick="event.stopPropagation();speak('¿Querés unos mates?')">🔊</button></div>
+            <div class="example-en">"Want some mate?"</div>
+          </div>
+        </div>
+        <div class="vocab-note">Se comparte en ronda. Rechazar un mate puede ser descortés. "Gracias" cuando devolvés el mate significa que no querés más.</div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Fernet con coca <button class="speak-btn" onclick="speak('Fernet con coca')">🔊</button></div>
+        <div class="vocab-en">Fernet-Branca mixed with Coca-Cola — the national cocktail</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"¿Tomamos un <span class="hl">fernet</span>?" <button class="speak-btn" onclick="event.stopPropagation();speak('¿Tomamos un fernet?')">🔊</button></div>
+            <div class="example-en">"Want to have a fernet?"</div>
+          </div>
+        </div>
+        <div class="vocab-note">Argentina consume más del 75% del Fernet-Branca producido en el mundo. Especialmente popular en Córdoba.</div>
+      </div>
+    </div>
+
+    <!-- Transportation & Places -->
+    <h2 class="section-title">Transporte y Lugares</h2>
+
+    <div class="card">
+      <div class="vocab-item">
+        <div class="vocab-es">Colectivo <button class="speak-btn" onclick="speak('Colectivo')">🔊</button></div>
+        <div class="vocab-en">City bus (what most of Latin America calls "autobús")</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Tomé el <span class="hl">colectivo</span> hasta el centro." <button class="speak-btn" onclick="event.stopPropagation();speak('Tomé el colectivo hasta el centro.')">🔊</button></div>
+            <div class="example-en">"I took the bus downtown."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Subte <button class="speak-btn" onclick="speak('Subte')">🔊</button></div>
+        <div class="vocab-en">Subway / metro (short for "subterráneo")</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Es más rápido ir en <span class="hl">subte</span>." <button class="speak-btn" onclick="event.stopPropagation();speak('Es más rápido ir en subte.')">🔊</button></div>
+            <div class="example-en">"It's faster to go by subway."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Vereda <button class="speak-btn" onclick="speak('Vereda')">🔊</button></div>
+        <div class="vocab-en">Sidewalk (not "acera" as in Spain)</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Hay mesas en la <span class="hl">vereda</span> del café." <button class="speak-btn" onclick="event.stopPropagation();speak('Hay mesas en la vereda del café.')">🔊</button></div>
+            <div class="example-en">"There are tables on the café's sidewalk."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Departamento <button class="speak-btn" onclick="speak('Departamento')">🔊</button></div>
+        <div class="vocab-en">Apartment (not "apartamento")</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Alquilo un <span class="hl">departamento</span> en Palermo." <button class="speak-btn" onclick="event.stopPropagation();speak('Alquilo un departamento en Palermo.')">🔊</button></div>
+            <div class="example-en">"I rent an apartment in Palermo."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Cuadra <button class="speak-btn" onclick="speak('Cuadra')">🔊</button></div>
+        <div class="vocab-en">City block (unit of distance)</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Queda a tres <span class="hl">cuadras</span> de acá." <button class="speak-btn" onclick="event.stopPropagation();speak('Queda a tres cuadras de acá.')">🔊</button></div>
+            <div class="example-en">"It's three blocks from here."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Boliche <button class="speak-btn" onclick="speak('Boliche')">🔊</button></div>
+        <div class="vocab-en">Nightclub / late-night dance club</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"¿Vamos al <span class="hl">boliche</span> esta noche?" <button class="speak-btn" onclick="event.stopPropagation();speak('¿Vamos al boliche esta noche?')">🔊</button></div>
+            <div class="example-en">"Are we going out tonight?"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intensifiers -->
+    <h2 class="section-title">Intensificadores y Modificadores</h2>
+
+    <div class="card">
+      <div class="vocab-item">
+        <div class="vocab-es">Re <button class="speak-btn" onclick="speak('Re')">🔊</button></div>
+        <div class="vocab-en">Very / really / super (prefix intensifier — replaces "muy")</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Estoy <span class="hl">re</span> cansado." <button class="speak-btn" onclick="event.stopPropagation();speak('Estoy re cansado.')">🔊</button></div>
+            <div class="example-en">"I'm super tired."</div>
+          </div>
+          <div class="example-pair">
+            <div class="example-es">"La película estuvo <span class="hl">re</span> buena." <button class="speak-btn" onclick="event.stopPropagation();speak('La película estuvo re buena.')">🔊</button></div>
+            <div class="example-en">"The movie was really good."</div>
+          </div>
+          <div class="example-pair">
+            <div class="example-es">"Es <span class="hl">re</span> caro ese restaurante." <button class="speak-btn" onclick="event.stopPropagation();speak('Es re caro ese restaurante.')">🔊</button></div>
+            <div class="example-en">"That restaurant is really expensive."</div>
+          </div>
+        </div>
+        <div class="vocab-note">Probablemente el intensificador más usado en Argentina. Funciona con casi cualquier adjetivo y reemplaza por completo a "muy" en el habla cotidiana.</div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Mil <button class="speak-btn" onclick="speak('Mil')">🔊</button></div>
+        <div class="vocab-en">A thousand / tons of (intensifier)</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Tengo <span class="hl">mil</span> cosas que hacer." <button class="speak-btn" onclick="event.stopPropagation();speak('Tengo mil cosas que hacer.')">🔊</button></div>
+            <div class="example-en">"I have a thousand things to do."</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Terrible <button class="speak-btn" onclick="speak('Terrible')">🔊</button></div>
+        <div class="vocab-en">Used as a positive intensifier, not necessarily negative</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"<span class="hl">Terrible</span> película, tenés que verla." <button class="speak-btn" onclick="event.stopPropagation();speak('Terrible película, tenés que verla.')">🔊</button></div>
+            <div class="example-en">"Amazing movie, you have to see it."</div>
+          </div>
+          <div class="example-pair">
+            <div class="example-es">"Hace un <span class="hl">terrible</span> frío." <button class="speak-btn" onclick="event.stopPropagation();speak('Hace un terrible frío.')">🔊</button></div>
+            <div class="example-en">"It's incredibly cold."</div>
+          </div>
+        </div>
+        <div class="vocab-note">El tono y contexto determinan si es positivo o negativo. Funciona como "tremendo" en otros dialectos.</div>
+      </div>
+
+      <div class="vocab-item">
+        <div class="vocab-es">Alto/a <button class="speak-btn" onclick="speak('Alto/a')">🔊</button></div>
+        <div class="vocab-en">Big / impressive / serious (intensifier, informal)</div>
+        <div class="vocab-ex">
+          <div class="example-pair">
+            <div class="example-es">"Se armó <span class="hl">alto</span> quilombo." <button class="speak-btn" onclick="event.stopPropagation();speak('Se armó alto quilombo.')">🔊</button></div>
+            <div class="example-en">"A huge mess broke out."</div>
+          </div>
+          <div class="example-pair">
+            <div class="example-es">"Me comí un <span class="hl">alto</span> guiso." <button class="speak-btn" onclick="event.stopPropagation();speak('Me comí un alto guiso.')">🔊</button></div>
+            <div class="example-en">"I had an amazing stew."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Más ejemplos button -->
+    <button class="btn-mas" onclick="handleMasEjemplos('vocabulario')">✦ Más ejemplos de vocabulario argentino en contexto</button>
+    <div id="mas-vocabulario-output"></div>
+
+  </section>
+
+</div><!-- /page-wrap -->
+
+<script>
+// ── Tab System with Hash Routing ──
+const tabs = document.querySelectorAll('.tab-btn');
+const contents = document.querySelectorAll('.tab-content');
+const validTabs = ['voseo','imperativo','pronunciacion','lunfardo','vocabulario'];
+
+function switchTab(tabId) {
+  if (!validTabs.includes(tabId)) tabId = 'voseo';
+  tabs.forEach(t => t.classList.toggle('active', t.dataset.tab === tabId));
+  contents.forEach(c => c.classList.toggle('active', c.id === 'tab-' + tabId));
+  history.replaceState(null, '', '#' + tabId);
+}
+
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+});
+
+// Load from hash on page load
+const initialTab = location.hash.replace('#','');
+if (validTabs.includes(initialTab)) switchTab(initialTab);
+
+// Handle back/forward
+window.addEventListener('hashchange', () => {
+  const t = location.hash.replace('#','');
+  if (validTabs.includes(t)) switchTab(t);
+});
+
+// ── TTS Helper — Robust Argentine Voice Loading ──
+let arVoice = null;
+let voicesReady = false;
+
+function findArgentineVoice() {
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return null;
+
+  // Priority 1: Google's Argentine voice by name
+  const googleAR = voices.find(v =>
+    v.name.toLowerCase().includes('argentina') ||
+    v.name.toLowerCase().includes('español de argentina')
+  );
+  if (googleAR) return googleAR;
+
+  // Priority 2: Any voice with es-AR lang tag
+  const langAR = voices.find(v => v.lang === 'es-AR');
+  if (langAR) return langAR;
+
+  // Priority 3: Latin American Spanish (es-419, es-MX, es-US)
+  const latam = voices.find(v =>
+    v.lang === 'es-419' || v.lang === 'es-MX' || v.lang === 'es-US'
+  );
+  if (latam) return latam;
+
+  // Priority 4: Any Spanish voice
+  return voices.find(v => v.lang.startsWith('es'));
+}
+
+function initVoices() {
+  const found = findArgentineVoice();
+  if (found) {
+    arVoice = found;
+    voicesReady = true;
+    console.log('TTS voice loaded:', arVoice.name, '(' + arVoice.lang + ')');
+  }
+}
+
+// Chrome loads voices async — listen for the event
+speechSynthesis.addEventListener('voiceschanged', initVoices);
+// Also try immediately (some browsers have voices ready synchronously)
+initVoices();
+
+// Promise that resolves once voices are available
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    // If not ready, poll briefly (covers edge cases where event already fired)
+    let attempts = 0;
+    const interval = setInterval(() => {
+      initVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) {
+        clearInterval(interval);
+        resolve();
+      }
+    }, 100);
+  });
+}
+
+async function speak(text) {
+  if (speechSynthesis.speaking) speechSynthesis.cancel();
+
+  // Wait for voices if they haven't loaded yet (first click scenario)
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (arVoice) {
+    u.voice = arVoice;
+    u.lang = arVoice.lang; // Match the voice's actual lang tag for best results
+  } else {
+    u.lang = 'es-AR';
+  }
+  u.rate = 0.9;
+  speechSynthesis.speak(u);
+}
+
+// ── Lazy Password (shared across all API calls) ──
+let sessionPassword = null;
+
+// ── Lunfardo Word Data ──
+const lunfardoWords = [
+  { word:"Che", def:"Hey / dude — interjección para llamar la atención", ex:"Che, ¿sabés dónde queda el banco?", exEn:"Hey, do you know where the bank is?", note:"La palabra más argentina que existe. Se usa constantemente." },
+  { word:"Boludo / Boluda", def:"Idiota / amigo (depende del contexto)", ex:"¡Boludo, no te vi! ¿Cómo andás?", exEn:"Dude, I didn't see you! How's it going?", note:"Entre amigos es cariñoso. Con desconocidos es ofensivo." },
+  { word:"Pibe / Piba", def:"Chico/a, muchacho/a, joven", ex:"Ese pibe juega muy bien al fútbol.", exEn:"That kid plays great soccer.", note:"Del italiano. Uso universal en Argentina." },
+  { word:"Mina", def:"Mujer / chica (informal)", ex:"Esa mina es muy copada.", exEn:"That woman is really cool.", note:"Informal pero no despectivo. Uso cotidiano." },
+  { word:"Quilombo", def:"Lío / caos / desastre", ex:"Se armó un quilombo después del partido.", exEn:"A huge mess broke out after the game.", note:"Del kimbundu (Angola). Una de las palabras más usadas." },
+  { word:"Laburo / Laburar", def:"Trabajo / trabajar", ex:"Tengo mucho laburo esta semana.", exEn:"I have a lot of work this week.", note:"Del italiano 'lavoro'. Reemplaza a 'trabajo' en el habla informal." },
+  { word:"Morfar", def:"Comer", ex:"¿Fuiste a morfar algo?", exEn:"Did you go eat something?", note:"Lunfardo clásico. Muy casual, muy argentino." },
+  { word:"Guita", def:"Dinero / plata", ex:"No tengo guita para salir.", exEn:"I don't have money to go out.", note:"Sinónimo informal de 'plata' (que ya es informal para 'dinero')." },
+  { word:"Bondi", def:"Colectivo / autobús", ex:"Perdí el bondi y llegué tarde al laburo.", exEn:"I missed the bus and was late to work.", note:"Aceptado por la RAE. Uso cotidiano en Buenos Aires." },
+  { word:"Birra", def:"Cerveza", ex:"¿Vamos por unas birras?", exEn:"Want to go grab some beers?", note:"Del italiano 'birra'. Informal pero universal." },
+  { word:"Fiaca", def:"Pereza / desgana", ex:"Hoy tengo una fiaca terrible.", exEn:"I'm feeling incredibly lazy today.", note:"'Me da fiaca' = I can't be bothered." },
+  { word:"Chamuyar / Chamuyo", def:"Verbo: coquetear, mentir, manipular. Sustantivo: la charla misma", ex:"No me chamuyes, sé que llegaste tarde.", exEn:"Don't BS me, I know you were late.", note:"Tres significados según contexto: flirteo, mentira, o persuasión." },
+  { word:"Trucho / Trucha", def:"Falso / pirata / trucho", ex:"Me vendieron un celular trucho.", exEn:"They sold me a fake phone.", note:"Aceptado por la RAE. Aplica a objetos, documentos, personas." },
+  { word:"Garrón", def:"Mala suerte / situación molesta", ex:"¡Qué garrón que llueva hoy!", exEn:"What a drag that it's raining today!", note:"'Qué garrón' es una oración completa que vas a usar siempre." },
+  { word:"Piola", def:"Copado / inteligente / tranquilo", ex:"Es un tipo muy piola.", exEn:"He's a really cool, easygoing guy.", note:"Más sutil que 'copado' — implica inteligencia o buen criterio." },
+  { word:"Bardo", def:"Lío / problema / quilombo", ex:"Dejate de bardear.", exEn:"Stop causing trouble.", note:"'Bardear' = causar problemas. Similar a quilombo pero más leve." },
+  { word:"Bancarse", def:"Aguantar / soportar / tolerar", ex:"No me banco más este calor.", exEn:"I can't stand this heat anymore.", note:"Reflexivo: 'bancársela' = aguantarla uno mismo." },
+  { word:"Afanar", def:"Robar / también: trabajar duro", ex:"Me afanaron la billetera en el subte.", exEn:"My wallet got stolen on the subway.", note:"Dos significados opuestos. El contexto aclara todo." },
+  { word:"Re", def:"Muy / súper (prefijo intensificador)", ex:"Estoy re cansado. La película estuvo re buena.", exEn:"I'm super tired. The movie was really good.", note:"Reemplaza a 'muy'. Funciona con casi cualquier adjetivo." },
+  { word:"Dar bola", def:"Prestar atención / mostrar interés", ex:"No me da bola cuando le hablo.", exEn:"She ignores me when I talk to her.", note:"'No dar bola' = ignorar. Se complementa con chamuyar." },
+  { word:"Zafar", def:"Escaparse de algo / safarse", ex:"Zafé de la reunión.", exEn:"I got out of the meeting.", note:"Implica evitar algo desagradable por poco." },
+  { word:"Macana", def:"Problema / error (también: ¡genial!)", ex:"¡Qué macana que no pudiste venir!", exEn:"What a bummer you couldn't come!", note:"Depende de la entonación: puede ser lamento o elogio." },
+  { word:"Copado / Copada", def:"Genial / buenísimo / re bueno", ex:"¡Qué lugar tan copado!", exEn:"What a cool place!", note:"Muy versátil. Aplica a personas, lugares, cosas, situaciones." },
+  { word:"Mangar / Manguear / Mango", def:"Mangar: pedir o robar. Manguear: pedir prestado. Mango: un peso (moneda)", ex:"No tengo un mango. / Le mangueé un pucho.", exEn:"I don't have a dime. / I bummed a cigarette off him.", note:"Familia completa: mangar (pedir/robar), manguear (pedir prestado, muy común), mango (un peso — 'no tengo un mango' = estoy sin plata)." },
+  { word:"Buena onda", def:"Buena energía / buena vibra / simpático", ex:"Tiene muy buena onda.", exEn:"She has great energy / she's really friendly.", note:"'Mala onda' = mala vibra. 'Qué buena onda' = qué copado." },
+];
+
+// ── Lunfardo Grid Rendering ──
+const lunfFlipped = {};
+
+function renderLunfardo() {
+  const grid = document.getElementById('lunf-grid');
+  grid.innerHTML = '';
+  lunfardoWords.forEach((w, i) => {
+    const card = document.createElement('div');
+    card.className = 'lunf-card' + (lunfFlipped[i] ? ' flipped' : '');
+
+    if (!lunfFlipped[i]) {
+      card.innerHTML =
+        '<div class="lunf-word">' + w.word + '</div>' +
+        '<div class="lunf-def">' + w.def + '</div>' +
+        '<div class="lunf-hint">Tocá para ver ejemplo →</div>';
+    } else {
+      card.innerHTML =
+        '<div class="lunf-word" style="font-size:0.95rem;margin-bottom:6px">' + w.word + ' <button class="speak-btn" onclick="event.stopPropagation();speak(\'' + w.word.replace(/'/g, "\\'").replace(/ \/ /g, '') + '\')">🔊</button></div>' +
+        '<div class="lunf-ex">"' + w.ex + '" <button class="speak-btn" onclick="event.stopPropagation();speak(\'' + w.ex.replace(/'/g, "\\'") + '\')">🔊</button></div>' +
+        '<div class="lunf-ex-en">"' + w.exEn + '"</div>' +
+        '<div class="lunf-note">💡 ' + w.note + '</div>';
+    }
+    card.onclick = () => { lunfFlipped[i] = !lunfFlipped[i]; renderLunfardo(); };
+    grid.appendChild(card);
+  });
+}
+
+// ── Vesre Data (from Daniel's verified research) ──
+let vesreWords = [
+  { vesre:"Feca", origin:"Café", def:"Coffee", common:true },
+  { vesre:"Garpar", origin:"Pagar", def:"To pay", common:true },
+  { vesre:"Jermu", origin:"Mujer", def:"Wife", common:true },
+  { vesre:"Telo", origin:"Hotel", def:"Love hotel (by-the-hour)", common:false },
+  { vesre:"Dorima", origin:"Marido", def:"Husband", common:false },
+  { vesre:"Gomía", origin:"Amigo", def:"Friend", common:false },
+  { vesre:"Tordo", origin:"Doctor", def:"Doctor", common:false },
+  { vesre:"Troesma", origin:"Maestro", def:"Master / expert", common:false },
+  { vesre:"Yorugua", origin:"Uruguayo", def:"Uruguayan", common:false },
+  { vesre:"Choborra", origin:"Borracho", def:"Drunk", common:false },
+  { vesre:"Dobolu", origin:"Boludo", def:"Fool / dude", common:false },
+  { vesre:"Sope", origin:"Peso", def:"Argentine peso", common:true },
+  { vesre:"Rioba", origin:"Barrio", def:"Neighborhood", common:false },
+  { vesre:"Lompas", origin:"Pantalones", def:"Pants", common:false },
+  { vesre:"Zapi", origin:"Pizza", def:"Pizza", common:true },
+  { vesre:"Ñoba", origin:"Baño", def:"Bathroom", common:false },
+  { vesre:"Lleca", origin:"Calle", def:"Street", common:false },
+  { vesre:"Rope", origin:"Perro", def:"Dog", common:false },
+  { vesre:"Bolonqui", origin:"Quilombo", def:"Mess / chaos (softer)", common:false },
+  { vesre:"Ofri", origin:"Frío", def:"Cold", common:false },
+  { vesre:"Lorca", origin:"Calor", def:"Heat", common:false },
+  { vesre:"Zabeca", origin:"Cabeza", def:"Head", common:false },
+];
+
+const vesreFlipped = {};
+
+function renderVesre() {
+  const grid = document.getElementById('vesre-grid');
+  grid.innerHTML = '';
+  vesreWords.forEach((w, i) => {
+    const card = document.createElement('div');
+    const cls = 'vesre-card' + (w.common ? ' common' : '') + (vesreFlipped[i] ? ' flipped' : '');
+    card.className = cls;
+    if (!vesreFlipped[i]) {
+      card.innerHTML = '<div class="vesre-front">' + w.vesre + ' <button class="speak-btn" onclick="event.stopPropagation();speak(\'' + w.vesre.replace(/'/g, "\\'") + '\')">🔊</button></div>';
+    } else {
+      card.innerHTML =
+        '<div class="vesre-back-word">' + w.origin + ' <button class="speak-btn" onclick="event.stopPropagation();speak(\'' + w.origin.replace(/'/g, "\\'") + '\')">🔊</button></div>' +
+        '<div class="vesre-back-def">' + w.def + '</div>';
+    }
+    card.onclick = () => { vesreFlipped[i] = !vesreFlipped[i]; renderVesre(); };
+    grid.appendChild(card);
+  });
+}
+
+function shuffleVesre() {
+  for (let i = vesreWords.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [vesreWords[i], vesreWords[j]] = [vesreWords[j], vesreWords[i]];
+  }
+  Object.keys(vesreFlipped).forEach(k => delete vesreFlipped[k]);
+  renderVesre();
+}
+
+// ── Voseo Quiz Engine ──
+let vqMode = 'mixto';
+let vqSentences = [];
+let vqIndex = 0;
+let vqScores = [];
+
+function setVqMode(btn) {
+  document.querySelectorAll('.vq-mode-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  vqMode = btn.dataset.mode;
+}
+
+function resetVqToSetup() {
+  ['vq-setup','vq-loading','vq-question','vq-feedback','vq-summary'].forEach(id => {
+    document.getElementById(id).style.display = id === 'vq-setup' ? 'block' : 'none';
+  });
+}
+
+function insertChar(ch) {
+  const inp = document.getElementById('vq-input');
+  if (!inp) return;
+  const start = inp.selectionStart, end = inp.selectionEnd;
+  inp.value = inp.value.slice(0, start) + ch + inp.value.slice(end);
+  inp.selectionStart = inp.selectionEnd = start + ch.length;
+  inp.focus();
+}
+
+// ── Unlock System (single button at top) ──
+function showUnlockPrompt() {
+  const pw = prompt('Contraseña del sitio:');
+  if (!pw || !pw.trim()) return;
+  sessionPassword = pw.trim();
+  document.getElementById('unlock-bar').style.display = 'none';
+  document.getElementById('unlock-success').style.display = 'block';
+}
+
+function requireUnlock() {
+  if (sessionPassword) return true;
+  alert('Primero desbloqueá el acceso con el botón de contraseña en la parte superior de la página.');
+  return false;
+}
+
+// ── API Call Helper ──
+async function callAPI(system, userMsg) {
+  if (!sessionPassword) {
+    throw new Error('No desbloqueado — usá el botón de arriba');
+  }
+  const res = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      password: sessionPassword,
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1500,
+      system: system,
+      messages: [{ role: 'user', content: userMsg }]
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error);
+  let text = data.content?.[0]?.text || data.content;
+  if (typeof text === 'string') text = text.replace(/```json|```/g, '').trim();
+  return text;
+}
+
+// ── Start Quiz ──
+async function startVoseoQuiz() {
+  if (!requireUnlock()) return;
+  vqSentences = [];
+  vqIndex = 0;
+  vqScores = [];
+
+  document.getElementById('vq-setup').style.display = 'none';
+  document.getElementById('vq-summary').style.display = 'none';
+  document.getElementById('vq-loading').style.display = 'block';
+
+  const modeDesc = vqMode === 'indicativo' ? 'present indicative only' :
+                   vqMode === 'imperativo' ? 'affirmative imperative only' :
+                   'a mix of present indicative and affirmative imperative';
+
+  const system = `You generate Spanish sentences for a voseo conversion exercise. Output ONLY a JSON array of 10 short sentences using tú. Requirements:
+- ${modeDesc}
+- Short sentences (1 clause, max 10 words each)
+- Mix of: regular verbs, stem-changers, reflexives, verbs with preposition objects (para ti, contigo)
+- For imperatives: affirmative only, no negative
+- Do NOT use ser, ir, or haber (their vos forms are identical to tú)
+- B2 vocabulary, everyday register
+- Natural conversational Spanish
+Return ONLY: ["sentence1", "sentence2", ...]`;
+
+  try {
+    const raw = await callAPI(system, 'Generate 10 sentences for voseo conversion practice. Mode: ' + vqMode);
+    vqSentences = JSON.parse(raw);
+    if (!Array.isArray(vqSentences) || vqSentences.length < 1) throw new Error('Bad format');
+    document.getElementById('vq-loading').style.display = 'none';
+    showVqQuestion();
+  } catch (e) {
+    document.getElementById('vq-loading').innerHTML =
+      '<p class="prose" style="color:var(--red);text-align:center">Error: ' + e.message + '</p>' +
+      '<button class="btn-mas" onclick="resetVqToSetup()" style="margin:12px auto;display:block">Volver</button>';
+  }
+}
+
+function showVqQuestion() {
+  document.getElementById('vq-question').style.display = 'block';
+  document.getElementById('vq-feedback').style.display = 'none';
+  document.getElementById('vq-counter').textContent = (vqIndex + 1) + ' / ' + vqSentences.length;
+  document.getElementById('vq-sentence').textContent = vqSentences[vqIndex];
+  document.getElementById('vq-input').value = '';
+  document.getElementById('vq-input').focus();
+  document.getElementById('vq-submit-btn').disabled = false;
+}
+
+async function submitVqAnswer() {
+  const answer = document.getElementById('vq-input').value.trim();
+  if (!answer) return;
+  document.getElementById('vq-submit-btn').disabled = true;
+
+  const system = `You grade a voseo conversion exercise. The student rewrote a tú sentence using vos.
+Grade ONLY on: verb conjugation (the vos form), pronoun swaps (tú→vos, ti→vos, contigo→con vos).
+DO NOT penalize for missing or incorrect punctuation — ignore ¿, !, periods, commas, capitalization, and accent marks on non-verb words. The ONLY thing that matters is whether the student used the correct vos verb form and pronouns.
+Return ONLY JSON: {"grade":"correct"|"partial"|"incorrect","corrected":"full correct vos sentence","explanation":"brief explanation in Spanish of what changed and what the student got right/wrong"}`;
+
+  const userMsg = 'Original (tú): ' + vqSentences[vqIndex] + '\nStudent answer (vos): ' + answer;
+
+  try {
+    const raw = await callAPI(system, userMsg);
+    const result = JSON.parse(raw);
+    vqScores.push(result.grade);
+    showVqFeedback(result, answer);
+  } catch (e) {
+    vqScores.push('incorrect');
+    showVqFeedback({ grade:'incorrect', corrected:'(error al evaluar)', explanation:'No se pudo evaluar la respuesta. ' + e.message }, answer);
+  }
+}
+
+function showVqFeedback(result, userAnswer) {
+  document.getElementById('vq-question').style.display = 'none';
+  document.getElementById('vq-feedback').style.display = 'block';
+
+  const gradeClass = result.grade === 'correct' ? 'correct' : result.grade === 'partial' ? 'partial' : 'incorrect';
+  const gradeLabel = result.grade === 'correct' ? '✓ Correcto' : result.grade === 'partial' ? '~ Parcialmente correcto' : '✗ Incorrecto';
+  const gradeColor = result.grade === 'correct' ? 'var(--green)' : result.grade === 'partial' ? 'var(--yellow)' : 'var(--red)';
+
+  const isLast = vqIndex >= vqSentences.length - 1;
+
+  document.getElementById('vq-feedback-content').innerHTML =
+    '<div style="font-weight:600;color:' + gradeColor + ';margin-bottom:10px">' + gradeLabel + '</div>' +
+    '<div class="vq-result-box ' + gradeClass + '">' +
+      '<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px">Tu respuesta:</div>' +
+      '<div style="font-size:0.95rem;color:var(--text-secondary);margin-bottom:10px">' + userAnswer + '</div>' +
+      '<div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px">Respuesta correcta:</div>' +
+      '<div style="font-size:1.05rem;color:var(--text-primary);font-family:\'DM Serif Display\',serif;font-style:italic">' +
+        result.corrected +
+        ' <button class="speak-btn" onclick="speak(\'' + result.corrected.replace(/'/g, "\\'") + '\')">🔊</button>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:0.9rem;color:var(--text-secondary);line-height:1.6">' + result.explanation + '</div>';
+
+  document.getElementById('vq-next-btn').textContent = isLast ? 'Ver resultado' : 'Siguiente →';
+}
+
+function nextVqQuestion() {
+  vqIndex++;
+  if (vqIndex >= vqSentences.length) {
+    showVqSummary();
+  } else {
+    showVqQuestion();
+  }
+}
+
+function showVqSummary() {
+  document.getElementById('vq-feedback').style.display = 'none';
+  document.getElementById('vq-summary').style.display = 'block';
+
+  const correct = vqScores.filter(s => s === 'correct').length;
+  const partial = vqScores.filter(s => s === 'partial').length;
+  const total = vqScores.length;
+  const pct = Math.round(((correct + partial * 0.5) / total) * 100);
+  const color = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
+
+  document.getElementById('vq-summary-content').innerHTML =
+    '<div style="text-align:center">' +
+      '<div style="font-family:\'DM Serif Display\',serif;font-size:2rem;color:' + color + '">' + correct + ' / ' + total + '</div>' +
+      '<div style="font-size:0.88rem;color:var(--text-secondary);margin-top:4px">' +
+        correct + ' correctas' + (partial ? ', ' + partial + ' parciales' : '') +
+      '</div>' +
+      '<div class="vq-score-bar"><div class="vq-score-fill" style="width:' + pct + '%;background:' + color + '"></div></div>' +
+    '</div>';
+}
+
+// Allow Enter key to submit
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('vq-question')?.style.display === 'block') {
+    submitVqAnswer();
+  }
+});
+
+// ── Lunfardo Quiz Engine ──
+let lqData = null; // {words:[], sentences:[]}
+let lqAnswers = {}; // index -> word
+let lqSelectedChip = null;
+
+function resetLqToSetup() {
+  ['lq-setup','lq-loading','lq-quiz','lq-results'].forEach(id => {
+    document.getElementById(id).style.display = id === 'lq-setup' ? 'block' : 'none';
+  });
+}
+
+async function startLunfQuiz() {
+  if (!requireUnlock()) return;
+  lqData = null;
+  lqAnswers = {};
+  lqSelectedChip = null;
+
+  document.getElementById('lq-setup').style.display = 'none';
+  document.getElementById('lq-results').style.display = 'none';
+  document.getElementById('lq-loading').style.display = 'block';
+
+  const system = `You create a lunfardo fill-in-the-blank quiz. Generate 10 Argentine lunfardo/vesre/regional vocabulary words and 10 sentences where each word fits exactly one blank. Each word must fit exactly one sentence — no ambiguity.
+
+Requirements:
+- Mix of lunfardo, vesre, and general Argentine vocabulary
+- Sentences provide clear context clues so a B2 learner can figure out the answer from context
+- Include 1-2 vesre words per set
+- Each sentence uses _____ to mark the blank
+- B2 grammar level, everyday register
+
+Return ONLY JSON:
+{"words":["word1","word2",...], "sentences":["sentence with _____","..."], "answers":["word1","word2",...]}
+where answers[i] is the correct word for sentences[i].`;
+
+  try {
+    const raw = await callAPI(system, 'Generate a 10-question lunfardo fill-in-the-blank quiz.');
+    lqData = JSON.parse(raw);
+    if (!lqData.words || !lqData.sentences || !lqData.answers) throw new Error('Bad format');
+    document.getElementById('lq-loading').style.display = 'none';
+    renderLunfQuiz();
+  } catch (e) {
+    document.getElementById('lq-loading').innerHTML =
+      '<p class="prose" style="color:var(--red);text-align:center">Error: ' + e.message + '</p>' +
+      '<button class="btn-mas" onclick="resetLqToSetup()" style="margin:12px auto;display:block">Volver</button>';
+  }
+}
+
+function renderLunfQuiz() {
+  document.getElementById('lq-quiz').style.display = 'block';
+
+  // Render word bank (shuffled)
+  const shuffled = [...lqData.words].sort(() => Math.random() - 0.5);
+  const bank = document.getElementById('lq-bank');
+  bank.innerHTML = '';
+  shuffled.forEach(w => {
+    const chip = document.createElement('span');
+    chip.className = 'lq-chip';
+    chip.textContent = w;
+    chip.onclick = () => selectChip(chip, w);
+    bank.appendChild(chip);
+  });
+
+  // Render sentences
+  const container = document.getElementById('lq-sentences');
+  container.innerHTML = '';
+  lqData.sentences.forEach((s, i) => {
+    const row = document.createElement('div');
+    row.className = 'lq-sentence-row';
+
+    const num = document.createElement('span');
+    num.className = 'lq-num';
+    num.textContent = (i + 1) + '.';
+    row.appendChild(num);
+
+    // Split sentence on _____
+    const parts = s.split('_____');
+    const textNode1 = document.createTextNode(parts[0] || '');
+    row.appendChild(textNode1);
+
+    const blank = document.createElement('span');
+    blank.className = 'lq-blank';
+    blank.id = 'lq-blank-' + i;
+    blank.textContent = '\u00A0\u00A0\u00A0';
+    blank.onclick = () => fillBlank(i);
+    row.appendChild(blank);
+
+    if (parts[1]) {
+      const textNode2 = document.createTextNode(parts[1]);
+      row.appendChild(textNode2);
+    }
+
+    container.appendChild(row);
+  });
+
+  document.getElementById('lq-submit-btn').disabled = false;
+}
+
+function selectChip(chip, word) {
+  // Deselect previous
+  document.querySelectorAll('.lq-chip').forEach(c => c.classList.remove('selected'));
+  chip.classList.add('selected');
+  lqSelectedChip = word;
+}
+
+function fillBlank(index) {
+  if (!lqSelectedChip) return;
+
+  // If this blank already had a word, free that chip
+  if (lqAnswers[index]) {
+    const oldWord = lqAnswers[index];
+    document.querySelectorAll('.lq-chip').forEach(c => {
+      if (c.textContent === oldWord && c.classList.contains('used')) c.classList.remove('used');
+    });
+  }
+
+  // Place word
+  lqAnswers[index] = lqSelectedChip;
+  const blank = document.getElementById('lq-blank-' + index);
+  blank.textContent = lqSelectedChip;
+  blank.classList.add('filled');
+
+  // Mark chip as used
+  document.querySelectorAll('.lq-chip').forEach(c => {
+    if (c.textContent === lqSelectedChip && c.classList.contains('selected')) {
+      c.classList.remove('selected');
+      c.classList.add('used');
+    }
+  });
+
+  lqSelectedChip = null;
+}
+
+async function submitLunfQuiz() {
+  // Check all blanks filled
+  const filled = Object.keys(lqAnswers).length;
+  if (filled < lqData.sentences.length) {
+    alert('Completá todas las oraciones antes de corregir.');
+    return;
+  }
+
+  document.getElementById('lq-submit-btn').disabled = true;
+  document.getElementById('lq-quiz').style.display = 'none';
+  document.getElementById('lq-results').style.display = 'block';
+
+  // Grade locally using the answer key
+  let correct = 0;
+  let html = '';
+
+  lqData.sentences.forEach((s, i) => {
+    const userWord = lqAnswers[i] || '';
+    const correctWord = lqData.answers[i];
+    const isCorrect = userWord.toLowerCase().trim() === correctWord.toLowerCase().trim();
+    if (isCorrect) correct++;
+
+    const filledSentence = s.replace('_____', '<strong style="color:' + (isCorrect ? 'var(--green)' : 'var(--red)') + '">' + correctWord + '</strong>');
+    const icon = isCorrect ? '<span style="color:var(--green)">✓</span>' : '<span style="color:var(--red)">✗</span>';
+
+    html += '<div class="lq-result-row">' +
+      '<div>' + icon + ' ' + filledSentence +
+        ' <button class="speak-btn" onclick="speak(\'' + s.replace('_____', correctWord).replace(/'/g, "\\'") + '\')">🔊</button>' +
+      '</div>';
+
+    if (!isCorrect) {
+      html += '<div class="lq-correction">Tu respuesta: ' + userWord + ' → Correcta: ' + correctWord + '</div>';
+    }
+    html += '</div>';
+  });
+
+  const pct = Math.round((correct / lqData.sentences.length) * 100);
+  const color = pct >= 80 ? 'var(--green)' : pct >= 50 ? 'var(--yellow)' : 'var(--red)';
+
+  document.getElementById('lq-results-content').innerHTML =
+    '<div style="text-align:center;margin-bottom:18px">' +
+      '<div style="font-family:\'DM Serif Display\',serif;font-size:2rem;color:' + color + '">' + correct + ' / ' + lqData.sentences.length + '</div>' +
+      '<div class="vq-score-bar"><div class="vq-score-fill" style="width:' + pct + '%;background:' + color + '"></div></div>' +
+    '</div>' + html;
+}
+
+// ── Más Ejemplos (API-powered example generators) ──
+async function handleMasEjemplos(section) {
+  if (!requireUnlock()) return;
+  const outputId = 'mas-' + section + '-output';
+  const output = document.getElementById(outputId);
+  if (!output) return;
+
+  output.innerHTML = '<p class="prose" style="text-align:center;color:var(--text-muted)">Generando ejemplos...</p>';
+
+  const prompts = {
+    voseo: {
+      system: 'You generate example sentences showing vos usage in natural Argentine conversation. Return ONLY JSON: [{"es":"Spanish sentence","en":"English translation"},...]',
+      user: 'Generate 3 natural conversational examples using vos (mix of indicative and imperative). B2 level, everyday register. Diverse verbs.'
+    },
+    imperativo: {
+      system: 'You generate example sentences showing vos imperatives in natural context. Return ONLY JSON: [{"es":"Spanish sentence","en":"English translation"},...]',
+      user: 'Generate 3 examples of vos imperatives used naturally — commands, suggestions, directions. Mix regular and irregular verbs. B2 level.'
+    },
+    pronunciacion: {
+      system: 'You generate a short Spanish paragraph (4-5 sentences) loaded with LL, Y, and word-final S sounds for Argentine pronunciation practice. Return ONLY JSON: {"es":"paragraph in Spanish","en":"English translation"}',
+      user: 'Generate a paragraph about everyday life in Buenos Aires. Pack it with words containing LL, Y, and trailing S for sheísmo and s-aspiration practice. B2 level, conversational.'
+    },
+    vocabulario: {
+      system: 'You generate example sentences showing distinctly Argentine vocabulary in natural context. Return ONLY JSON: [{"es":"Spanish sentence","en":"English translation"},...]',
+      user: 'Generate 3 natural sentences using Argentine regional vocabulary (not lunfardo — words like dale, bárbaro, colectivo, vereda, etc.). B2 level, everyday situations.'
+    }
+  };
+
+  const p = prompts[section];
+  if (!p) { output.innerHTML = ''; return; }
+
+  try {
+    const raw = await callAPI(p.system, p.user);
+    const data = JSON.parse(raw);
+
+    if (section === 'pronunciacion') {
+      // Single paragraph with speaker
+      output.innerHTML =
+        '<div class="card" style="margin-top:14px">' +
+          '<div style="display:flex;align-items:flex-start;gap:10px">' +
+            '<button class="speak-btn" onclick="speak(\'' + data.es.replace(/'/g, "\\'") + '\')" style="margin-top:2px;flex-shrink:0">🔊</button>' +
+            '<div>' +
+              '<div class="example-es" style="font-size:1rem;line-height:1.7">' + data.es + '</div>' +
+              '<div class="example-en" style="margin-top:8px;line-height:1.5">' + data.en + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    } else {
+      // Array of example pairs
+      let html = '<div class="card" style="margin-top:14px">';
+      data.forEach(ex => {
+        html += '<div class="example-pair" style="display:flex;align-items:flex-start;gap:8px">' +
+          '<button class="speak-btn" onclick="speak(\'' + ex.es.replace(/'/g, "\\'") + '\')" style="margin-top:2px;flex-shrink:0">🔊</button>' +
+          '<div>' +
+            '<div class="example-es">' + ex.es + '</div>' +
+            '<div class="example-en">' + ex.en + '</div>' +
+          '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+      output.innerHTML = html;
+    }
+  } catch (e) {
+    output.innerHTML = '<p class="prose" style="color:var(--red)">Error: ' + e.message + '</p>';
+  }
+}
+
+// ── Init grids on load ──
+renderLunfardo();
+renderVesre();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condicionales — Tipo 3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a1628;
+  --bg-card: #111d35;
+  --bg-card-hover: #162544;
+  --bg-input: #0d1a2f;
+  --border: #1e3355;
+  --border-focus: #3b6cb5;
+  --text-primary: #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted: #5a6f8e;
+  --accent: #4a90d9;
+  --accent-glow: rgba(74, 144, 217, 0.15);
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --red: #f87171;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('assets/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.45);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.back-link {
+  display: inline-block; color: var(--text-muted); text-decoration: none;
+  font-size: 0.9rem; padding: 20px 0 8px; transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header { text-align: center; padding: 8px 0 10px; }
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.1rem; font-weight: 400; margin-bottom: 6px;
+}
+.page-header .type-badge {
+  display: inline-block; font-size: 0.72rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 6px;
+  background: rgba(248, 113, 113, 0.15); color: var(--red);
+  margin-bottom: 10px;
+}
+.page-header .subtitle {
+  font-size: 1rem; color: var(--text-secondary); font-weight: 300;
+  max-width: 620px; margin: 0 auto;
+}
+
+.card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px 28px; margin-top: 20px;
+}
+.card h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem; font-weight: 400; margin-bottom: 12px;
+}
+.card p {
+  font-size: 0.92rem; color: var(--text-secondary);
+  line-height: 1.65; margin-bottom: 8px;
+}
+.card p strong { color: var(--text-primary); font-weight: 500; }
+
+.formula {
+  font-size: 0.88rem; color: var(--red); font-weight: 500;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+  border-radius: 8px; padding: 8px 14px;
+  display: inline-block; margin: 6px 0 14px;
+}
+.formula-alt {
+  font-size: 0.82rem; color: var(--text-muted);
+  margin: -6px 0 14px; padding-left: 2px;
+}
+
+.examples { list-style: none; padding: 0; margin: 0 0 4px; }
+.examples li { padding: 10px 0; border-bottom: 1px solid rgba(30, 51, 85, 0.5); }
+.examples li:last-child { border-bottom: none; }
+.ex-es {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: 1.02rem; color: var(--text-primary); line-height: 1.5;
+}
+.ex-en { font-size: 0.82rem; color: var(--text-muted); margin-top: 3px; }
+.ex-note { font-size: 0.8rem; color: var(--red); margin-top: 3px; font-style: italic; }
+
+.variant-section { margin-top: 24px; }
+.variant-section:first-child { margin-top: 0; }
+.variant-label {
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 600;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  color: var(--red); margin-bottom: 4px;
+}
+
+/* ── Tables ── */
+.conj-table-wrap { overflow-x: auto; margin: 12px 0 8px; }
+.conj-table {
+  width: 100%; border-collapse: collapse; font-size: 0.85rem; min-width: 360px;
+}
+.conj-table th {
+  text-align: left; font-weight: 600; color: var(--red);
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  font-size: 0.78rem; letter-spacing: 0.03em; text-transform: uppercase;
+}
+.conj-table td {
+  padding: 7px 12px; border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+  color: var(--text-secondary);
+}
+.conj-table td:first-child { color: var(--text-primary); font-weight: 500; }
+.conj-table tr:last-child td { border-bottom: none; }
+
+/* ── Timeline ── */
+.timeline-wrap {
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  margin: 8px -8px 0; padding: 0 8px;
+}
+.timeline-wrap svg { display: block; width: 100%; min-width: 580px; height: auto; }
+
+/* ── API section ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+  color: #fff; border: none; border-radius: 10px; padding: 10px 20px;
+  font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; }
+.btn-ghost {
+  background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border); border-radius: 10px; padding: 10px 20px;
+  font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: #2a4a75; color: var(--text-primary); }
+
+.pw-inline { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.pw-inline input {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 14px; color: var(--text-primary);
+  font-family: 'Outfit', sans-serif; font-size: 0.88rem; outline: none; width: 180px;
+}
+.pw-inline input:focus { border-color: var(--border-focus); }
+.pw-error { font-size: 0.82rem; color: var(--red); }
+
+.ai-examples {
+  margin-top: 14px; padding: 16px 20px;
+  background: rgba(248, 113, 113, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.15);
+  border-radius: 10px;
+}
+.ai-examples .var-label {
+  font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--red); margin-bottom: 2px;
+}
+.ai-examples .ai-ex-es {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: 1rem; color: var(--text-primary); line-height: 1.5;
+}
+.ai-examples .ai-ex-en { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px; }
+.ai-examples .ai-ex-en:last-child { margin-bottom: 0; }
+
+.loading-spinner {
+  display: inline-block; width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff;
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-header { animation: fadeSlideIn 0.5s ease both; }
+.card:nth-of-type(1) { animation: fadeSlideIn 0.5s ease 0.06s both; }
+.card:nth-of-type(2) { animation: fadeSlideIn 0.5s ease 0.12s both; }
+.card:nth-of-type(3) { animation: fadeSlideIn 0.5s ease 0.18s both; }
+.card:nth-of-type(4) { animation: fadeSlideIn 0.5s ease 0.24s both; }
+.card:nth-of-type(5) { animation: fadeSlideIn 0.5s ease 0.30s both; }
+.card:nth-of-type(6) { animation: fadeSlideIn 0.5s ease 0.36s both; }
+
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 1.65rem; }
+  .card { padding: 20px 18px; }
+  .card h2 { font-size: 1.15rem; }
+  .pw-inline { flex-direction: column; align-items: stretch; }
+  .pw-inline input { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <a href="oraciones-condicionales.html" class="back-link">← Oraciones Condicionales</a>
+
+  <div class="page-header">
+    <div class="type-badge">Tipo 3</div>
+    <h1>Condición imposible</h1>
+    <div class="subtitle">La condición no se cumplió y ya no se puede cambiar. Territorio del arrepentimiento y la especulación.</div>
+  </div>
+
+  <!-- ── INTRO ── -->
+  <div class="card">
+    <h2>El concepto</h2>
+    <p>El Tipo 3 es el más complejo. Hablamos de un <strong>evento pasado que no ocurrió</strong> y consecuencias que tampoco ocurrieron. No se puede volver atrás — es el territorio del arrepentimiento, el reproche, y la especulación contrafáctica.</p>
+    <div class="formula">Si + pluscuamperfecto del subjuntivo → condicional compuesto</div>
+    <div class="formula-alt">o → pluscuamperfecto del subjuntivo (ambas formas significan lo mismo)</div>
+    <p>En Argentina se prefiere fuertemente la forma doble con <strong>hubiera...hubiera</strong> en vez de <strong>hubiera...habría</strong>.</p>
+  </div>
+
+  <!-- ── TIMELINE SVG ── -->
+  <div class="card">
+    <h2>Línea de tiempo</h2>
+    <div class="timeline-wrap">
+      <svg viewBox="0 0 720 310" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <defs>
+          <marker id="arrowR" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="none" stroke="#e2e8f0" stroke-width="1.2"/>
+          </marker>
+        </defs>
+
+        <!-- Column shading — ends before legend -->
+        <rect x="130" y="38" width="180" height="182" rx="6" fill="rgba(99,102,241,0.04)" />
+        <rect x="310" y="38" width="190" height="182" rx="6" fill="rgba(74,144,217,0.08)" />
+        <rect x="500" y="38" width="200" height="182" rx="6" fill="rgba(99,102,241,0.04)" />
+
+        <!-- Column headers -->
+        <text x="65" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">VARIANTE</text>
+        <text x="220" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">PASADO</text>
+        <text x="405" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">PRESENTE</text>
+        <text x="600" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">FUTURO</text>
+        <line x1="130" y1="40" x2="700" y2="40" stroke="#1e3355" stroke-width="1"/>
+
+        <!-- ═══ ROW 1: Standard — both red (both irreal past) ═══ -->
+        <text x="16" y="72" font-family="Outfit,sans-serif" font-size="11" font-weight="500" fill="#8a9bb8">Estándar</text>
+        <rect x="145" y="56" rx="12" ry="12" width="70" height="26" fill="rgba(248,113,113,0.12)" stroke="#f87171" stroke-width="1.5"/>
+        <text x="180" y="73" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#f87171" text-anchor="middle">Si</text>
+        <rect x="235" y="56" rx="12" ry="12" width="70" height="26" fill="rgba(248,113,113,0.12)" stroke="#f87171" stroke-width="1.5"/>
+        <text x="270" y="73" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#f87171" text-anchor="middle">C</text>
+        <line x1="215" y1="69" x2="235" y2="69" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowR)"/>
+
+        <line x1="16" y1="96" x2="700" y2="96" stroke="#1e3355" stroke-width="0.7" stroke-dasharray="4 4"/>
+
+        <!-- ═══ ROW 2: 3A — Si red (irreal past) → C green (real present) ═══ -->
+        <text x="16" y="125" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">Mixto 3A</text>
+        <text x="16" y="138" font-family="Outfit,sans-serif" font-size="9" fill="#5a6f8e">pasado → presente</text>
+        <rect x="145" y="116" rx="12" ry="12" width="70" height="26" fill="rgba(248,113,113,0.12)" stroke="#f87171" stroke-width="1.5"/>
+        <text x="180" y="133" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#f87171" text-anchor="middle">Si</text>
+        <rect x="325" y="116" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="360" y="133" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <line x1="215" y1="129" x2="325" y2="129" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowR)"/>
+
+        <line x1="16" y1="156" x2="700" y2="156" stroke="#1e3355" stroke-width="0.7" stroke-dasharray="4 4"/>
+
+        <!-- ═══ ROW 3: 3B — Si green (real past trait) → C red (irreal present) ═══ -->
+        <text x="16" y="185" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">Mixto 3B</text>
+        <text x="16" y="198" font-family="Outfit,sans-serif" font-size="9" fill="#5a6f8e">presente → pasado</text>
+        <rect x="145" y="176" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="180" y="193" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">Si</text>
+        <rect x="325" y="176" rx="12" ry="12" width="70" height="26" fill="rgba(248,113,113,0.12)" stroke="#f87171" stroke-width="1.5"/>
+        <text x="360" y="193" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#f87171" text-anchor="middle">C</text>
+        <line x1="215" y1="189" x2="325" y2="189" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowR)"/>
+
+        <!-- Legend — below shading -->
+        <rect x="145" y="248" rx="4" ry="4" width="16" height="16" fill="rgba(248,113,113,0.12)" stroke="#f87171" stroke-width="1"/>
+        <text x="169" y="260" font-family="Outfit,sans-serif" font-size="10" fill="#5a6f8e">= rojo: irreal (no ocurrió / no es cierto)</text>
+        <rect x="420" y="248" rx="4" ry="4" width="16" height="16" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1"/>
+        <text x="444" y="260" font-family="Outfit,sans-serif" font-size="10" fill="#5a6f8e">= verde: real (consecuencia / estado real)</text>
+        <text x="145" y="290" font-family="Outfit,sans-serif" font-size="10" fill="#5a6f8e">3A: pasado irreal → presente real · 3B: rasgo real → consecuencia irreal</text>
+      </svg>
+    </div>
+    <p style="font-size:0.78rem; color:var(--text-muted); margin-top:8px;">En 3A la consecuencia irreal salta al presente real · En 3B la causa real está en el presente pero la consecuencia irreal fue en el pasado</p>
+  </div>
+
+  <!-- ── STANDARD CASE ── -->
+  <div class="card">
+    <h2>Caso estándar</h2>
+    <p>Ambas partes están en el pasado. Algo no pasó → algo más tampoco pasó.</p>
+    <ul class="examples">
+      <li>
+        <div class="ex-es">Si hubieras estudiado más, habrías aprobado el examen.</div>
+        <div class="ex-en">If you had studied more, you would have passed the exam.</div>
+      </li>
+      <li>
+        <div class="ex-es">Si hubieras estudiado más, hubieras aprobado el examen.</div>
+        <div class="ex-en">Same meaning — Argentine preferred form (hubiera...hubiera).</div>
+      </li>
+      <li>
+        <div class="ex-es">Si no hubiera llovido, hubiéramos ido a la playa.</div>
+        <div class="ex-en">If it hadn't rained, we would have gone to the beach.</div>
+      </li>
+      <li>
+        <div class="ex-es">Si me hubieras avisado antes, hubiera podido cambiar el turno.</div>
+        <div class="ex-en">If you had told me earlier, I could have changed the appointment.</div>
+      </li>
+      <li>
+        <div class="ex-es">Si hubiera sabido que estabas acá, te hubiera invitado a cenar.</div>
+        <div class="ex-en">If I had known you were here, I would have invited you to dinner.</div>
+      </li>
+      <li>
+        <div class="ex-es">Si no te hubieras quedado dormido, no hubieras llegado tarde.</div>
+        <div class="ex-en">If you hadn't overslept, you wouldn't have arrived late.</div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ── MIXED VARIANTS ── -->
+  <div class="card">
+    <h2>Variantes mixtas</h2>
+
+    <div class="variant-section">
+      <div class="variant-label">3A · Pasado irreal → consecuencia presente</div>
+      <p>La acción que no ocurrió en el pasado tiene una consecuencia que se siente <strong>ahora</strong>.</p>
+      <div class="formula">Si + pluscuamperfecto subjuntivo → condicional simple</div>
+      <ul class="examples">
+        <li>
+          <div class="ex-es">Si hubiera aceptado ese trabajo, ahora viviría en Buenos Aires.</div>
+          <div class="ex-en">If I had accepted that job, I'd be living in Buenos Aires now.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si no hubieras vendido el auto, hoy no tendrías que tomar el colectivo.</div>
+          <div class="ex-en">If you hadn't sold the car, today you wouldn't have to take the bus.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si hubiera estudiado medicina, ahora ganaría mucho más.</div>
+          <div class="ex-en">If I had studied medicine, I'd earn a lot more now.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si nos hubiéramos conocido antes, seríamos mejores amigos.</div>
+          <div class="ex-en">If we had met earlier, we'd be better friends.</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="variant-section">
+      <div class="variant-label">3B · Presente irreal → consecuencia pasada</div>
+      <p>Un estado presente permanente (personalidad, actitud, circunstancia) causó un evento en el <strong>pasado</strong>.</p>
+      <div class="formula">Si + imperfecto subjuntivo → pluscuamperfecto subjuntivo / condicional compuesto</div>
+      <ul class="examples">
+        <li>
+          <div class="ex-es">Si fueras más organizado, no hubieras perdido las llaves ayer.</div>
+          <div class="ex-en">If you were more organized, you wouldn't have lost your keys yesterday.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si no tuviera tanto miedo a volar, habría ido al casamiento de mi primo.</div>
+          <div class="ex-en">If I weren't so afraid of flying, I would have gone to my cousin's wedding.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si me importara su opinión, le hubiera preguntado antes de decidir.</div>
+          <div class="ex-en">If I cared about their opinion, I would have asked them before deciding.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si fuera más paciente, no habría reaccionado así anoche.</div>
+          <div class="ex-en">If I were more patient, I wouldn't have reacted like that last night.</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── PARTICIPIOS IRREGULARES ── -->
+  <div class="card">
+    <h2>Participios pasados irregulares</h2>
+    <p>Estos participios son clave para formar el pluscuamperfecto (hubiera + participio).</p>
+    <div class="conj-table-wrap">
+      <table class="conj-table">
+        <thead><tr><th>Infinitivo</th><th>Participio</th></tr></thead>
+        <tbody>
+          <tr><td>ver</td><td>visto</td></tr>
+          <tr><td>hacer</td><td>hecho</td></tr>
+          <tr><td>poner</td><td>puesto</td></tr>
+          <tr><td>decir</td><td>dicho</td></tr>
+          <tr><td>volver</td><td>vuelto</td></tr>
+          <tr><td>morir</td><td>muerto</td></tr>
+          <tr><td>escribir</td><td>escrito</td></tr>
+          <tr><td>romper</td><td>roto</td></tr>
+          <tr><td>abrir</td><td>abierto</td></tr>
+          <tr><td>-cribir</td><td>-cripto (AR) / -crito (ES)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── MÁS EJEMPLOS ── -->
+  <div class="card" id="api-section">
+    <h2>Más ejemplos</h2>
+    <p>Genera nuevos ejemplos — elegí la variante o dejá que se elija al azar.</p>
+    <div id="api-mount"></div>
+  </div>
+
+</div>
+
+<script type="module">
+import { html, render, useState } from 'https://unpkg.com/htm/preact/standalone.module.js';
+
+let sessionPassword = '';
+
+const VARIANTS = [
+  { id: 'estandar', label: 'Estándar', desc: 'both Si and C in the past, nothing happened', formula: 'Si + pluscuamperfecto subjuntivo → condicional compuesto o pluscuamperfecto subjuntivo' },
+  { id: '3a', label: 'Mixto 3A — pasado → presente', desc: 'past missed action has a present consequence the speaker is still living with', formula: 'Si + pluscuamperfecto subjuntivo → condicional simple' },
+  { id: '3b', label: 'Mixto 3B — presente → pasado', desc: 'ongoing present state (personality, attitude) caused a past event', formula: 'Si + imperfecto subjuntivo → pluscuamperfecto subjuntivo / condicional compuesto' },
+];
+
+function MasEjemplos() {
+  const [examples, setExamples] = useState(null);
+  const [variant, setVariant]   = useState(null);
+  const [selVar, setSelVar]     = useState('random');
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
+  const [needsPw, setNeedsPw]   = useState(!sessionPassword);
+  const [pwInput, setPwInput]   = useState('');
+  const [pwError, setPwError]   = useState('');
+  const [pwChecking, setPwChecking] = useState(false);
+
+  const fetchExamples = async (pw) => {
+    const v = selVar === 'random' ? VARIANTS[Math.floor(Math.random() * VARIANTS.length)] : VARIANTS.find(x => x.id === selVar);
+    setVariant(v);
+    setLoading(true); setError(''); setExamples(null);
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: pw,
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 800,
+          system: `You are a Spanish language teacher for an adult B2-level learner who uses Rioplatense Spanish. Generate 3-4 example sentences showing Type 3 conditionals (condiciones imposibles — past counterfactual). Respond ONLY with valid JSON — no markdown, no preamble. Format:
+{"examples":[{"spanish":"...","english":"..."}],"variant":"${v.id}","variant_label":"${v.label}"}
+Use natural Argentine Spanish (vos, hubiera preferred over habría for result clauses). Match the specific variant: ${v.desc}. Formula: ${v.formula}. Vary subjects and situations.`,
+          messages: [{ role: 'user', content: `Generate 3-4 examples of Type 3 conditional, variant: "${v.label}" — ${v.desc}.` }]
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      const raw = data.content?.[0]?.text || '';
+      setExamples(JSON.parse(raw.replace(/```json|```/g, '').trim()));
+    } catch (e) { setError('No se pudieron cargar los ejemplos. ' + (e.message || '')); }
+    setLoading(false);
+  };
+
+  const submitPw = async () => {
+    setPwChecking(true); setPwError('');
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwInput, model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
+      });
+      if (res.ok) { sessionPassword = pwInput; setNeedsPw(false); fetchExamples(pwInput); }
+      else { const d = await res.json(); setPwError(d.error || 'Contraseña incorrecta'); }
+    } catch { setPwError('Error de conexión.'); }
+    setPwChecking(false);
+  };
+
+  if (needsPw) {
+    return html`
+      <div class="pw-inline">
+        <input type="password" placeholder="Contraseña" value=${pwInput}
+          onInput=${e => setPwInput(e.target.value)}
+          onKeyDown=${e => e.key === 'Enter' && pwInput && submitPw()} />
+        <button class="btn-primary" onClick=${submitPw} disabled=${!pwInput || pwChecking}>
+          ${pwChecking ? html`<span class="loading-spinner"></span>` : 'Entrar'}
+        </button>
+      </div>
+      ${pwError && html`<div class="pw-error" style="margin-top:8px">${pwError}</div>`}
+    `;
+  }
+
+  return html`
+    <div>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px">
+        <select style="background:var(--bg-input); border:1px solid var(--border); border-radius:8px; padding:9px 12px; color:var(--text-primary); font-family:Outfit,sans-serif; font-size:0.88rem; outline:none"
+          value=${selVar} onChange=${e => setSelVar(e.target.value)}>
+          <option value="random">Al azar</option>
+          ${VARIANTS.map(v => html`<option value=${v.id}>${v.label}</option>`)}
+        </select>
+        <button class="btn-primary" onClick=${() => fetchExamples(sessionPassword)} disabled=${loading}>
+          ${loading ? html`<span class="loading-spinner"></span> Generando…` : 'Generar ejemplos'}
+        </button>
+      </div>
+      ${error && html`
+        <div style="margin-top:12px; color:var(--red); font-size:0.88rem">${error}</div>
+        <button class="btn-ghost" style="margin-top:8px" onClick=${() => fetchExamples(sessionPassword)}>Reintentar</button>
+      `}
+      ${examples && variant && html`
+        <div class="ai-examples">
+          <div class="var-label">${variant.label}</div>
+          ${examples.examples.map(ex => html`
+            <div class="ai-ex-es">${ex.spanish}</div>
+            <div class="ai-ex-en">${ex.english}</div>
+          `)}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+render(html`<${MasEjemplos} />`, document.getElementById('api-mount'));
+</script>
+
+</body>
+</html>

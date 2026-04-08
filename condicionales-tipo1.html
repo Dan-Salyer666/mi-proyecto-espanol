@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condicionales — Tipo 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a1628;
+  --bg-card: #111d35;
+  --bg-card-hover: #162544;
+  --bg-input: #0d1a2f;
+  --border: #1e3355;
+  --border-focus: #3b6cb5;
+  --text-primary: #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted: #5a6f8e;
+  --accent: #4a90d9;
+  --accent-glow: rgba(74, 144, 217, 0.15);
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --red: #f87171;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('assets/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.45);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 8px 0 10px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.1rem;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+.page-header .type-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border-radius: 6px;
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--green);
+  margin-bottom: 10px;
+}
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-top: 20px;
+}
+.card h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--green);
+  margin: 20px 0 8px;
+}
+.card h3:first-child { margin-top: 0; }
+
+.card p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+.card p strong { color: var(--text-primary); font-weight: 500; }
+
+.formula {
+  font-size: 0.88rem;
+  color: var(--accent);
+  font-weight: 500;
+  background: rgba(74, 144, 217, 0.08);
+  border: 1px solid rgba(74, 144, 217, 0.2);
+  border-radius: 8px;
+  padding: 8px 14px;
+  display: inline-block;
+  margin: 6px 0 14px;
+}
+
+/* ── Example sentences ── */
+.examples {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 4px;
+}
+.examples li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+}
+.examples li:last-child { border-bottom: none; }
+.ex-es {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.ex-en {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+.ex-note {
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-top: 3px;
+  font-style: italic;
+}
+
+/* ── Variant dividers ── */
+.variant-section { margin-top: 24px; }
+.variant-section:first-child { margin-top: 0; }
+.variant-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 4px;
+}
+
+/* ── Timeline SVG ── */
+.timeline-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 8px -8px 0;
+  padding: 0 8px;
+}
+.timeline-wrap svg {
+  display: block;
+  width: 100%;
+  min-width: 580px;
+  height: auto;
+}
+
+/* ── API section ── */
+#api-section {
+  margin-top: 24px;
+}
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: #2a4a75; color: var(--text-primary); }
+
+.pw-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+.pw-inline input {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 14px;
+  color: var(--text-primary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  outline: none;
+  width: 180px;
+}
+.pw-inline input:focus { border-color: var(--border-focus); }
+.pw-error { font-size: 0.82rem; color: var(--red); }
+
+.ai-examples {
+  margin-top: 14px;
+  padding: 16px 20px;
+  background: rgba(74, 144, 217, 0.06);
+  border: 1px solid rgba(74, 144, 217, 0.15);
+  border-radius: 10px;
+}
+.ai-examples .var-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+.ai-examples .ai-ex-es {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.ai-examples .ai-ex-en {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.ai-examples .ai-ex-en:last-child { margin-bottom: 0; }
+
+.loading-spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Animations ── */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-header { animation: fadeSlideIn 0.5s ease both; }
+.card:nth-of-type(1) { animation: fadeSlideIn 0.5s ease 0.08s both; }
+.card:nth-of-type(2) { animation: fadeSlideIn 0.5s ease 0.16s both; }
+.card:nth-of-type(3) { animation: fadeSlideIn 0.5s ease 0.24s both; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 1.65rem; }
+  .card { padding: 20px 18px; }
+  .card h2 { font-size: 1.15rem; }
+  .pw-inline { flex-direction: column; align-items: stretch; }
+  .pw-inline input { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <a href="oraciones-condicionales.html" class="back-link">← Oraciones Condicionales</a>
+
+  <div class="page-header">
+    <div class="type-badge">Tipo 1</div>
+    <h1>Condición abierta</h1>
+    <div class="subtitle">El hablante no sabe si la condición se va a cumplir. Ambas partes usan el indicativo.</div>
+  </div>
+
+  <!-- ── INTRO CARD ── -->
+  <div class="card">
+    <h2>El concepto</h2>
+    <p>El Tipo 1 es más amplio de lo que muchos aprendices creen. No es solamente «presente → futuro» — incluye hábitos, órdenes, referencias al pasado, y más. Lo que unifica todos los casos es que <strong>el hablante trata la condición como posible o real</strong>, y por lo tanto usa el indicativo en ambas cláusulas.</p>
+    <p>La regla: si la condición es abierta (el hablante no sabe el resultado), todo queda en <strong>indicativo</strong>.</p>
+  </div>
+
+  <!-- ── TIMELINE SVG ── -->
+  <div class="card">
+    <h2>Línea de tiempo</h2>
+    <div class="timeline-wrap">
+      <svg viewBox="0 0 720 400" xmlns="http://www.w3.org/2000/svg" fill="none">
+        <defs>
+          <marker id="arrowG" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <path d="M0,0 L8,3 L0,6" fill="none" stroke="#e2e8f0" stroke-width="1.2"/>
+          </marker>
+        </defs>
+
+        <!-- Column shading: Pasado, Presente, Futuro — ends before legend -->
+        <rect x="130" y="38" width="180" height="310" rx="6" fill="rgba(99,102,241,0.04)" />
+        <rect x="310" y="38" width="190" height="310" rx="6" fill="rgba(74,144,217,0.08)" />
+        <rect x="500" y="38" width="200" height="310" rx="6" fill="rgba(99,102,241,0.04)" />
+
+        <!-- Column headers -->
+        <text x="65" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">VARIANTE</text>
+        <text x="220" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">PASADO</text>
+        <text x="405" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">PRESENTE</text>
+        <text x="600" y="28" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#5a6f8e" text-anchor="middle">FUTURO</text>
+        <line x1="130" y1="40" x2="700" y2="40" stroke="#1e3355" stroke-width="1"/>
+
+        <!-- ═══ ROW 1: Futuro ═══ -->
+        <text x="16" y="72" font-family="Outfit,sans-serif" font-size="11" font-weight="500" fill="#8a9bb8">Futuro</text>
+        <rect x="325" y="56" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="360" y="73" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">Si</text>
+        <rect x="515" y="56" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="550" y="73" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <line x1="395" y1="69" x2="515" y2="69" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+        <line x1="16" y1="94" x2="700" y2="94" stroke="#1e3355" stroke-width="0.7" stroke-dasharray="4 4"/>
+
+        <!-- ═══ ROW 2: Hábito ═══ -->
+        <text x="16" y="122" font-family="Outfit,sans-serif" font-size="11" font-weight="500" fill="#8a9bb8">Hábito</text>
+        <rect x="325" y="106" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="360" y="123" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">Si</text>
+        <rect x="415" y="106" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="450" y="123" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <line x1="395" y1="119" x2="415" y2="119" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+        <line x1="16" y1="144" x2="700" y2="144" stroke="#1e3355" stroke-width="0.7" stroke-dasharray="4 4"/>
+
+        <!-- ═══ ROW 3: Orden (dual) ═══ -->
+        <text x="16" y="171" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">Orden /</text>
+        <text x="16" y="184" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">consejo</text>
+        <rect x="325" y="160" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="360" y="177" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">Si</text>
+        <rect x="415" y="160" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="450" y="177" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <line x1="395" y1="173" x2="415" y2="173" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowG)"/>
+        <rect x="515" y="160" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="550" y="177" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <path d="M395,180 L395,200 L515,200 L515,186" stroke="#e2e8f0" stroke-width="1.5" fill="none" marker-end="url(#arrowG)"/>
+
+        <line x1="16" y1="216" x2="700" y2="216" stroke="#1e3355" stroke-width="0.7" stroke-dasharray="4 4"/>
+
+        <!-- ═══ ROW 4: Pasado puntual (dual) ═══ -->
+        <text x="16" y="243" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">Pasado</text>
+        <text x="16" y="256" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">puntual</text>
+        <rect x="145" y="232" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="180" y="249" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">Si</text>
+        <rect x="325" y="232" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="360" y="249" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <line x1="215" y1="245" x2="325" y2="245" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowG)"/>
+        <rect x="515" y="232" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="550" y="249" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <path d="M215,252 L215,272 L515,272 L515,258" stroke="#e2e8f0" stroke-width="1.5" fill="none" marker-end="url(#arrowG)"/>
+
+        <line x1="16" y1="290" x2="700" y2="290" stroke="#1e3355" stroke-width="0.7" stroke-dasharray="4 4"/>
+
+        <!-- ═══ ROW 5: Pasado habitual ═══ -->
+        <text x="16" y="318" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">Pasado</text>
+        <text x="16" y="331" font-family="Outfit,sans-serif" font-size="10.5" font-weight="500" fill="#8a9bb8">habitual</text>
+        <rect x="145" y="306" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="180" y="323" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">Si</text>
+        <rect x="235" y="306" rx="12" ry="12" width="70" height="26" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="270" y="323" font-family="Outfit,sans-serif" font-size="11" font-weight="600" fill="#34d399" text-anchor="middle">C</text>
+        <line x1="215" y1="319" x2="235" y2="319" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowG)"/>
+
+        <!-- Legend — below shading -->
+        <line x1="145" y1="380" x2="180" y2="380" stroke="#e2e8f0" stroke-width="1.5" marker-end="url(#arrowG)"/>
+        <text x="190" y="384" font-family="Outfit,sans-serif" font-size="10" fill="#5a6f8e">= indicativo (condición posible)</text>
+        <rect x="420" y="372" rx="4" ry="4" width="16" height="16" fill="rgba(52,211,153,0.15)" stroke="#34d399" stroke-width="1"/>
+        <text x="444" y="384" font-family="Outfit,sans-serif" font-size="10" fill="#5a6f8e">= verde: real o posible</text>
+      </svg>
+    </div>
+    <p style="font-size:0.78rem; color:var(--text-muted); margin-top:8px;">C = consecuencia · En las filas con dos flechas, ambas consecuencias son posibles</p>
+  </div>
+
+  <!-- ── FIVE VARIANTS ── -->
+  <div class="card">
+    <h2>Las cinco variantes</h2>
+
+    <!-- Variant 1 -->
+    <div class="variant-section">
+      <div class="variant-label">1 · Futuro</div>
+      <div class="formula">Si + presente → futuro</div>
+      <p>La más conocida: la condición es sobre algo que puede o no pasar.</p>
+      <ul class="examples">
+        <li>
+          <div class="ex-es">Si viene mañana, trataré de verla.</div>
+          <div class="ex-en">If she comes tomorrow, I'll try to see her.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si llueve esta tarde, no vamos a salir.</div>
+          <div class="ex-en">If it rains this afternoon, we're not going to go out.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si terminás el trabajo temprano, te voy a llamar.</div>
+          <div class="ex-en">If you finish work early, I'm going to call you.</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Variant 2 -->
+    <div class="variant-section">
+      <div class="variant-label">2 · Hábito / ley general</div>
+      <div class="formula">Si + presente → presente</div>
+      <p>Verdades universales y patrones repetidos. Funciona como «siempre que» o «cada vez que».</p>
+      <ul class="examples">
+        <li>
+          <div class="ex-es">Si tiro un papel, se cae.</div>
+          <div class="ex-en">If I drop a piece of paper, it falls.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si no dormís bien, al día siguiente estás destruido.</div>
+          <div class="ex-en">If you don't sleep well, the next day you're wrecked.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si calentás agua a 100 grados, hierve.</div>
+          <div class="ex-en">If you heat water to 100 degrees, it boils.</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Variant 3 -->
+    <div class="variant-section">
+      <div class="variant-label">3 · Orden / consejo</div>
+      <div class="formula">Si + presente → imperativo</div>
+      <p>La consecuencia es una instrucción o recomendación. También puede caer en el futuro.</p>
+      <ul class="examples">
+        <li>
+          <div class="ex-es">Si viene Claudio, hacele la comida.</div>
+          <div class="ex-en">If Claudio comes, make him food.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si te llama tu mamá, decile que no estoy.</div>
+          <div class="ex-en">If your mom calls, tell her I'm not here.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si tenés hambre, agarrá algo de la heladera.</div>
+          <div class="ex-en">If you're hungry, grab something from the fridge.</div>
+        </li>
+        <li>
+          <div class="ex-es">Si viene, vamos a necesitar más comida.</div>
+          <div class="ex-en">If he comes, we're going to need more food.</div>
+          <div class="ex-note">La consecuencia cae en el futuro en vez del imperativo</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Variant 4 -->
+    <div class="variant-section">
+      <div class="variant-label">4 · Pasado puntual</div>
+      <div class="formula">Si + pretérito perfecto → futuro / presente</div>
+      <p>La cláusula Si usa un tiempo pasado, pero el hablante no sabe si ocurrió — la condición sigue siendo abierta. Todo indicativo.</p>
+      <ul class="examples">
+        <li>
+          <div class="ex-es">Si Pablo me trajo la plata, voy a poder pagar las cuentas.</div>
+          <div class="ex-en">If Pablo brought me the money, I'll be able to pay the bills.</div>
+          <div class="ex-note">El hablante no sabe si Pablo trajo la plata o no</div>
+        </li>
+        <li>
+          <div class="ex-es">Si me acordé de traerlo, ya mismo te lo doy.</div>
+          <div class="ex-en">If I remembered to bring it, I'll give it to you right now.</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Variant 5 -->
+    <div class="variant-section">
+      <div class="variant-label">5 · Pasado habitual</div>
+      <div class="formula">Si + imperfecto → imperfecto</div>
+      <p>Un patrón repetido en el pasado. Funciona como «siempre que» o «cada vez que» pero en el pasado.</p>
+      <ul class="examples">
+        <li>
+          <div class="ex-es">Si tenía plata, la gastaba.</div>
+          <div class="ex-en">If I had money, I'd spend it. (habitual — every time)</div>
+        </li>
+        <li>
+          <div class="ex-es">Si tenía miedo, llamaba a mi mamá.</div>
+          <div class="ex-en">If I was scared, I'd call my mom. (habitual — every time)</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ── MÁS EJEMPLOS — API ── -->
+  <div class="card" id="api-section">
+    <h2>Más ejemplos</h2>
+    <p>Genera nuevos ejemplos de una variante al azar con IA.</p>
+    <div id="api-mount"></div>
+  </div>
+
+</div>
+
+<!-- Preact + htm -->
+<script type="module">
+import { html, render, useState, useEffect } from 'https://unpkg.com/htm/preact/standalone.module.js';
+
+let sessionPassword = '';
+
+const VARIANTS = [
+  { id: 'futuro', label: 'Futuro', formula: 'Si + presente → futuro' },
+  { id: 'habito', label: 'Hábito / ley general', formula: 'Si + presente → presente' },
+  { id: 'orden', label: 'Orden / consejo', formula: 'Si + presente → imperativo' },
+  { id: 'pasado_puntual', label: 'Pasado puntual', formula: 'Si + pretérito perfecto → futuro/presente' },
+  { id: 'pasado_habitual', label: 'Pasado habitual', formula: 'Si + imperfecto → imperfecto' },
+];
+
+function MasEjemplos() {
+  const [examples, setExamples] = useState(null);
+  const [variant, setVariant]   = useState(null);
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState('');
+  const [needsPw, setNeedsPw]   = useState(!sessionPassword);
+  const [pwInput, setPwInput]   = useState('');
+  const [pwError, setPwError]   = useState('');
+  const [pwChecking, setPwChecking] = useState(false);
+
+  const fetchExamples = async (pw) => {
+    const v = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+    setVariant(v);
+    setLoading(true);
+    setError('');
+    setExamples(null);
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: pw,
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 800,
+          system: `You are a Spanish language teacher for an adult B2-level learner who uses Rioplatense Spanish. Generate 3-4 example sentences showing Type 1 conditionals (condiciones abiertas — indicativo). Respond ONLY with valid JSON — no markdown, no preamble. Format:
+{"examples":[{"spanish":"...","english":"..."}],"variant":"${v.id}","variant_label":"${v.label}"}
+Use natural, everyday Argentine Spanish (vos, voseo imperatives). Vary the subjects and situations. The sentences must match the specific variant requested.`,
+          messages: [{ role: 'user', content: `Generate 3-4 examples of Type 1 conditional, variant: "${v.label}" (${v.formula}). Make them natural and varied.` }]
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      const raw = data.content?.[0]?.text || '';
+      const clean = raw.replace(/```json|```/g, '').trim();
+      setExamples(JSON.parse(clean));
+    } catch (e) {
+      setError('No se pudieron cargar los ejemplos. ' + (e.message || ''));
+    }
+    setLoading(false);
+  };
+
+  const submitPw = async () => {
+    setPwChecking(true);
+    setPwError('');
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pwInput, model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
+      });
+      if (res.ok) {
+        sessionPassword = pwInput;
+        setNeedsPw(false);
+        fetchExamples(pwInput);
+      } else {
+        const d = await res.json();
+        setPwError(d.error || 'Contraseña incorrecta');
+      }
+    } catch { setPwError('Error de conexión.'); }
+    setPwChecking(false);
+  };
+
+  if (needsPw) {
+    return html`
+      <div class="pw-inline">
+        <input type="password" placeholder="Contraseña"
+          value=${pwInput}
+          onInput=${e => setPwInput(e.target.value)}
+          onKeyDown=${e => e.key === 'Enter' && pwInput && submitPw()} />
+        <button class="btn-primary" onClick=${submitPw} disabled=${!pwInput || pwChecking}>
+          ${pwChecking ? html`<span class="loading-spinner"></span>` : 'Entrar'}
+        </button>
+      </div>
+      ${pwError && html`<div class="pw-error" style="margin-top:8px">${pwError}</div>`}
+    `;
+  }
+
+  return html`
+    <div>
+      <button class="btn-primary" onClick=${() => fetchExamples(sessionPassword)} disabled=${loading}>
+        ${loading ? html`<span class="loading-spinner"></span> Generando…` : 'Generar ejemplos'}
+      </button>
+
+      ${error && html`
+        <div style="margin-top:12px; color:var(--red); font-size:0.88rem">${error}</div>
+        <button class="btn-ghost" style="margin-top:8px" onClick=${() => fetchExamples(sessionPassword)}>Reintentar</button>
+      `}
+
+      ${examples && variant && html`
+        <div class="ai-examples">
+          <div class="var-label">${variant.label} — ${variant.formula}</div>
+          ${examples.examples.map(ex => html`
+            <div class="ai-ex-es">${ex.spanish}</div>
+            <div class="ai-ex-en">${ex.english}</div>
+          `)}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+render(html`<${MasEjemplos} />`, document.getElementById('api-mount'));
+</script>
+
+</body>
+</html>

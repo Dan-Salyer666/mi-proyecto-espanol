@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oraciones Condicionales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a1628;
+  --bg-card: #111d35;
+  --bg-card-hover: #162544;
+  --bg-input: #0d1a2f;
+  --border: #1e3355;
+  --border-focus: #3b6cb5;
+  --text-primary: #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted: #5a6f8e;
+  --accent: #4a90d9;
+  --accent-glow: rgba(74, 144, 217, 0.15);
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --red: #f87171;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background: Alhambra garden photo ── */
+.bg-photo {
+  position: fixed;
+  inset: 0;
+  background: url('assets/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.45);
+  z-index: 0;
+}
+
+/* ── Layout ── */
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 8px 0 10px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-weight: 300;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* ── Intro ── */
+.intro-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin: 20px 0 28px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.intro-card p + p { margin-top: 12px; }
+.intro-card strong { color: var(--text-primary); font-weight: 500; }
+
+/* ── Spectrum bar ── */
+.spectrum {
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 18px 0 6px;
+  height: 36px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.spectrum-seg {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0a1628;
+}
+.spectrum-seg:first-child { border-radius: 10px 0 0 10px; }
+.spectrum-seg:last-child  { border-radius: 0 10px 10px 0; }
+.spectrum-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding: 0 4px;
+}
+
+/* ── Type cards ── */
+.type-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.type-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px;
+  transition: border-color 0.25s, transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.type-card:hover {
+  border-color: #2a4a75;
+  transform: translateY(-2px);
+}
+.type-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+}
+.type-card.t1::before { background: var(--green); }
+.type-card.t2::before { background: var(--yellow); }
+.type-card.t3::before { background: var(--red); }
+
+.type-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.t1 .type-badge { background: rgba(52, 211, 153, 0.15); color: var(--green); }
+.t2 .type-badge { background: rgba(251, 191, 36, 0.15); color: var(--yellow); }
+.t3 .type-badge { background: rgba(248, 113, 113, 0.15); color: var(--red); }
+
+.type-card h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-weight: 400;
+  margin-bottom: 6px;
+}
+.type-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.type-formula {
+  font-size: 0.85rem;
+  color: var(--accent);
+  font-weight: 500;
+  font-family: 'Outfit', sans-serif;
+  margin-bottom: 12px;
+}
+.type-example {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  opacity: 0.85;
+  line-height: 1.5;
+}
+.type-arrow {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  transition: color 0.2s, transform 0.2s;
+}
+.type-card:hover .type-arrow {
+  color: var(--accent);
+  transform: translateY(-50%) translateX(3px);
+}
+
+/* ── Practice card ── */
+.practice-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 28px;
+  transition: border-color 0.25s, transform 0.2s;
+  position: relative;
+}
+.practice-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.practice-card h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin-bottom: 4px;
+}
+.practice-card .card-sub {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+}
+.practice-card .badge-pw {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 2px 8px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.practice-card .type-arrow {
+  color: var(--text-muted);
+}
+.practice-card:hover .type-arrow {
+  color: var(--accent);
+}
+
+/* ── Animations ── */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-header  { animation: fadeSlideIn 0.5s ease both; }
+.intro-card   { animation: fadeSlideIn 0.5s ease 0.08s both; }
+.type-card:nth-child(1) { animation: fadeSlideIn 0.5s ease 0.16s both; }
+.type-card:nth-child(2) { animation: fadeSlideIn 0.5s ease 0.24s both; }
+.type-card:nth-child(3) { animation: fadeSlideIn 0.5s ease 0.32s both; }
+.practice-card { animation: fadeSlideIn 0.5s ease 0.40s both; }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 1.7rem; }
+  .type-card, .intro-card, .practice-card { padding: 20px 20px; }
+  .type-card h2 { font-size: 1.2rem; }
+  .type-arrow { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <a href="index.html" class="back-link">← Inicio</a>
+
+  <div class="page-header">
+    <h1>Oraciones Condicionales</h1>
+    <div class="subtitle">Las tres estructuras de «si» — del mundo real al mundo hipotético</div>
+  </div>
+
+  <div class="intro-card">
+    <p>El español tiene tres tipos de oraciones condicionales, cada uno expresando un grado diferente de <strong>realidad</strong>. La clave está en el modo verbal: el <strong>indicativo</strong> señala que la condición es posible o real, el <strong>subjuntivo</strong> señala que es irreal, y el <strong>condicional</strong> expresa lo que pasaría en ese mundo hipotético.</p>
+
+    <div class="spectrum">
+      <div class="spectrum-seg" style="background: var(--green);">Posible</div>
+      <div class="spectrum-seg" style="background: var(--yellow);">Improbable</div>
+      <div class="spectrum-seg" style="background: var(--red);">Imposible</div>
+    </div>
+    <div class="spectrum-labels">
+      <span>Indicativo — mundo real</span>
+      <span>Subjuntivo — mundo irreal</span>
+    </div>
+  </div>
+
+  <div class="type-cards">
+
+    <a href="condicionales-tipo1.html" class="type-card t1">
+      <div class="type-badge">Tipo 1</div>
+      <h2>Condición abierta</h2>
+      <div class="type-desc">La condición es posible — el hablante no sabe si se va a cumplir o no. Todo en indicativo.</div>
+      <div class="type-formula">Si + presente → futuro / presente / imperativo</div>
+      <div class="type-example">Si viene mañana, trataré de verla.</div>
+      <span class="type-arrow">→</span>
+    </a>
+
+    <a href="condicionales-tipo2.html" class="type-card t2">
+      <div class="type-badge">Tipo 2</div>
+      <h2>Condición irreal o improbable</h2>
+      <div class="type-desc">La condición no es cierta ahora, o es muy poco probable en el futuro. Entramos al subjuntivo.</div>
+      <div class="type-formula">Si + imperfecto del subjuntivo → condicional simple</div>
+      <div class="type-example">Si tuviera más plata, me mudaría a un departamento más grande.</div>
+      <span class="type-arrow">→</span>
+    </a>
+
+    <a href="condicionales-tipo3.html" class="type-card t3">
+      <div class="type-badge">Tipo 3</div>
+      <h2>Condición imposible</h2>
+      <div class="type-desc">La condición no se cumplió y ya no se puede cambiar. Territorio del arrepentimiento y la especulación.</div>
+      <div class="type-formula">Si + pluscuamperfecto del subjuntivo → condicional compuesto</div>
+      <div class="type-example">Si hubieras estudiado más, habrías aprobado el examen.</div>
+      <span class="type-arrow">→</span>
+    </a>
+
+  </div>
+
+  <a href="condicionales-practica.html" class="practice-card">
+    <h2>Práctica <span class="badge-pw">requiere contraseña</span></h2>
+    <div class="card-sub">Dos modos: emparejar cláusulas y completar conjugaciones — ejercicios generados por IA</div>
+    <span class="type-arrow">→</span>
+  </a>
+
+</div>
+
+</body>
+</html>

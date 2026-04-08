@@ -443,7 +443,7 @@ body {
           <div class="ex-en">If it rains this afternoon, we're not going to go out.</div>
         </li>
         <li>
-          <div class="ex-es">Si terminás el trabajo temprano, te voy a llamar.</div>
+          <div class="ex-es">Si terminas el trabajo temprano, te voy a llamar.</div>
           <div class="ex-en">If you finish work early, I'm going to call you.</div>
         </li>
       </ul>
@@ -460,11 +460,11 @@ body {
           <div class="ex-en">If I drop a piece of paper, it falls.</div>
         </li>
         <li>
-          <div class="ex-es">Si no dormís bien, al día siguiente estás destruido.</div>
+          <div class="ex-es">Si no duermes bien, al día siguiente estás destruido.</div>
           <div class="ex-en">If you don't sleep well, the next day you're wrecked.</div>
         </li>
         <li>
-          <div class="ex-es">Si calentás agua a 100 grados, hierve.</div>
+          <div class="ex-es">Si calientas agua a 100 grados, hierve.</div>
           <div class="ex-en">If you heat water to 100 degrees, it boils.</div>
         </li>
       </ul>
@@ -477,15 +477,15 @@ body {
       <p>La consecuencia es una instrucción o recomendación. También puede caer en el futuro.</p>
       <ul class="examples">
         <li>
-          <div class="ex-es">Si viene Claudio, hacele la comida.</div>
+          <div class="ex-es">Si viene Claudio, hazle la comida.</div>
           <div class="ex-en">If Claudio comes, make him food.</div>
         </li>
         <li>
-          <div class="ex-es">Si te llama tu mamá, decile que no estoy.</div>
+          <div class="ex-es">Si te llama tu mamá, dile que no estoy.</div>
           <div class="ex-en">If your mom calls, tell her I'm not here.</div>
         </li>
         <li>
-          <div class="ex-es">Si tenés hambre, agarrá algo de la heladera.</div>
+          <div class="ex-es">Si tienes hambre, agarra algo de la nevera.</div>
           <div class="ex-en">If you're hungry, grab something from the fridge.</div>
         </li>
         <li>
@@ -503,9 +503,9 @@ body {
       <p>La cláusula Si usa un tiempo pasado, pero el hablante no sabe si ocurrió — la condición sigue siendo abierta. Todo indicativo.</p>
       <ul class="examples">
         <li>
-          <div class="ex-es">Si Pablo me trajo la plata, voy a poder pagar las cuentas.</div>
+          <div class="ex-es">Si Pablo me trajo el dinero, voy a poder pagar las cuentas.</div>
           <div class="ex-en">If Pablo brought me the money, I'll be able to pay the bills.</div>
-          <div class="ex-note">El hablante no sabe si Pablo trajo la plata o no</div>
+          <div class="ex-note">El hablante no sabe si Pablo trajo el dinero o no</div>
         </li>
         <li>
           <div class="ex-es">Si me acordé de traerlo, ya mismo te lo doy.</div>
@@ -521,7 +521,7 @@ body {
       <p>Un patrón repetido en el pasado. Funciona como «siempre que» o «cada vez que» pero en el pasado.</p>
       <ul class="examples">
         <li>
-          <div class="ex-es">Si tenía plata, la gastaba.</div>
+          <div class="ex-es">Si tenía dinero, lo gastaba.</div>
           <div class="ex-en">If I had money, I'd spend it. (habitual — every time)</div>
         </li>
         <li>
@@ -543,9 +543,13 @@ body {
 
 <!-- Preact + htm -->
 <script type="module">
-import { html, render, useState, useEffect } from 'https://unpkg.com/htm/preact/standalone.module.js';
+import { html, render, useState } from 'https://unpkg.com/htm/preact/standalone.module.js';
 
 let sessionPassword = '';
+const getDialect = () => localStorage.getItem('spanish_dialect') || 'neutral';
+const dialectPrompt = () => getDialect() === 'rioplatense'
+  ? 'Use Argentine Rioplatense Spanish with vos forms and voseo imperatives.'
+  : 'Use neutral Spanish with tú forms. Do not use voseo.';
 
 const VARIANTS = [
   { id: 'futuro', label: 'Futuro', formula: 'Si + presente → futuro' },
@@ -558,6 +562,7 @@ const VARIANTS = [
 function MasEjemplos() {
   const [examples, setExamples] = useState(null);
   const [variant, setVariant]   = useState(null);
+  const [selVar, setSelVar]     = useState('random');
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
   const [needsPw, setNeedsPw]   = useState(!sessionPassword);
@@ -566,53 +571,36 @@ function MasEjemplos() {
   const [pwChecking, setPwChecking] = useState(false);
 
   const fetchExamples = async (pw) => {
-    const v = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+    const v = selVar === 'random' ? VARIANTS[Math.floor(Math.random() * VARIANTS.length)] : VARIANTS.find(x => x.id === selVar);
     setVariant(v);
-    setLoading(true);
-    setError('');
-    setExamples(null);
+    setLoading(true); setError(''); setExamples(null);
     try {
       const res = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          password: pw,
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 800,
-          system: `You are a Spanish language teacher for an adult B2-level learner who uses Rioplatense Spanish. Generate 3-4 example sentences showing Type 1 conditionals (condiciones abiertas — indicativo). Respond ONLY with valid JSON — no markdown, no preamble. Format:
+          password: pw, model: 'claude-sonnet-4-20250514', max_tokens: 800,
+          system: `You are a Spanish language teacher for an adult B2-level learner. Generate 3-4 example sentences showing Type 1 conditionals (condiciones abiertas — indicativo). ${dialectPrompt()} Respond ONLY with valid JSON — no markdown, no preamble. Format:
 {"examples":[{"spanish":"...","english":"..."}],"variant":"${v.id}","variant_label":"${v.label}"}
-Use natural, everyday Argentine Spanish (vos, voseo imperatives). Vary the subjects and situations. The sentences must match the specific variant requested.`,
-          messages: [{ role: 'user', content: `Generate 3-4 examples of Type 1 conditional, variant: "${v.label}" (${v.formula}). Make them natural and varied.` }]
+Vary the subjects and situations. The sentences must match the specific variant requested.`,
+          messages: [{ role: 'user', content: `Generate 3-4 examples of Type 1 conditional, variant: "${v.label}" (${v.formula}).` }]
         })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'API error');
-      const raw = data.content?.[0]?.text || '';
-      const clean = raw.replace(/```json|```/g, '').trim();
-      setExamples(JSON.parse(clean));
-    } catch (e) {
-      setError('No se pudieron cargar los ejemplos. ' + (e.message || ''));
-    }
+      setExamples(JSON.parse((data.content?.[0]?.text || '').replace(/```json|```/g, '').trim()));
+    } catch (e) { setError('No se pudieron cargar los ejemplos. ' + (e.message || '')); }
     setLoading(false);
   };
 
   const submitPw = async () => {
-    setPwChecking(true);
-    setPwError('');
+    setPwChecking(true); setPwError('');
     try {
       const res = await fetch('/api/claude', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: pwInput, model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
       });
-      if (res.ok) {
-        sessionPassword = pwInput;
-        setNeedsPw(false);
-        fetchExamples(pwInput);
-      } else {
-        const d = await res.json();
-        setPwError(d.error || 'Contraseña incorrecta');
-      }
+      if (res.ok) { sessionPassword = pwInput; setNeedsPw(false); fetchExamples(pwInput); }
+      else { const d = await res.json(); setPwError(d.error || 'Contraseña incorrecta'); }
     } catch { setPwError('Error de conexión.'); }
     setPwChecking(false);
   };
@@ -620,8 +608,7 @@ Use natural, everyday Argentine Spanish (vos, voseo imperatives). Vary the subje
   if (needsPw) {
     return html`
       <div class="pw-inline">
-        <input type="password" placeholder="Contraseña"
-          value=${pwInput}
+        <input type="password" placeholder="Contraseña" value=${pwInput}
           onInput=${e => setPwInput(e.target.value)}
           onKeyDown=${e => e.key === 'Enter' && pwInput && submitPw()} />
         <button class="btn-primary" onClick=${submitPw} disabled=${!pwInput || pwChecking}>
@@ -634,15 +621,20 @@ Use natural, everyday Argentine Spanish (vos, voseo imperatives). Vary the subje
 
   return html`
     <div>
-      <button class="btn-primary" onClick=${() => fetchExamples(sessionPassword)} disabled=${loading}>
-        ${loading ? html`<span class="loading-spinner"></span> Generando…` : 'Generar ejemplos'}
-      </button>
-
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px">
+        <select style="background:var(--bg-input); border:1px solid var(--border); border-radius:8px; padding:9px 12px; color:var(--text-primary); font-family:Outfit,sans-serif; font-size:0.88rem; outline:none"
+          value=${selVar} onChange=${e => setSelVar(e.target.value)}>
+          <option value="random">Al azar</option>
+          ${VARIANTS.map(v => html`<option value=${v.id}>${v.label}</option>`)}
+        </select>
+        <button class="btn-primary" onClick=${() => fetchExamples(sessionPassword)} disabled=${loading}>
+          ${loading ? html`<span class="loading-spinner"></span> Generando…` : 'Generar ejemplos'}
+        </button>
+      </div>
       ${error && html`
         <div style="margin-top:12px; color:var(--red); font-size:0.88rem">${error}</div>
         <button class="btn-ghost" style="margin-top:8px" onClick=${() => fetchExamples(sessionPassword)}>Reintentar</button>
       `}
-
       ${examples && variant && html`
         <div class="ai-examples">
           <div class="var-label">${variant.label} — ${variant.formula}</div>

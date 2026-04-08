@@ -392,19 +392,19 @@ body {
       <p>La condición no es cierta ahora. El hablante lo sabe.</p>
       <ul class="examples">
         <li>
-          <div class="ex-es">Si Juan estuviera acá hoy, saldría a pasear con él.</div>
+          <div class="ex-es">Si Juan estuviera aquí hoy, saldría a pasear con él.</div>
           <div class="ex-en">If Juan were here today, I'd go for a walk with him.</div>
-          <div class="ex-note">Juan no está acá</div>
+          <div class="ex-note">Juan no está aquí</div>
         </li>
         <li>
-          <div class="ex-es">Si tuviera más plata, me mudaría a un departamento más grande.</div>
+          <div class="ex-es">Si tuviera más dinero, me mudaría a un apartamento más grande.</div>
           <div class="ex-en">If I had more money, I'd move to a bigger apartment.</div>
-          <div class="ex-note">No tengo más plata</div>
+          <div class="ex-note">No tengo más dinero</div>
         </li>
         <li>
-          <div class="ex-es">Si fuera vos, aceptaría el trabajo.</div>
+          <div class="ex-es">Si yo fuera tú, aceptaría el trabajo.</div>
           <div class="ex-en">If I were you, I'd accept the job.</div>
-          <div class="ex-note">Consejo suavizado — no soy vos</div>
+          <div class="ex-note">Consejo suavizado — no soy tú</div>
         </li>
       </ul>
     </div>
@@ -488,6 +488,10 @@ body {
 import { html, render, useState, useEffect } from 'https://unpkg.com/htm/preact/standalone.module.js';
 
 let sessionPassword = '';
+const getDialect = () => localStorage.getItem('spanish_dialect') || 'neutral';
+const dialectPrompt = () => getDialect() === 'rioplatense'
+  ? 'Use Argentine Rioplatense Spanish with vos forms and voseo imperatives.'
+  : 'Use neutral Spanish with tú forms. Do not use voseo.';
 
 const VARIANTS = [
   { id: 'presente', label: 'Presente irreal', desc: 'la condición no es cierta ahora' },
@@ -498,6 +502,7 @@ const VARIANTS = [
 function MasEjemplos() {
   const [examples, setExamples] = useState(null);
   const [variant, setVariant]   = useState(null);
+  const [selVar, setSelVar]     = useState('random');
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
   const [needsPw, setNeedsPw]   = useState(!sessionPassword);
@@ -506,7 +511,7 @@ function MasEjemplos() {
   const [pwChecking, setPwChecking] = useState(false);
 
   const fetchExamples = async (pw) => {
-    const v = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+    const v = selVar === 'random' ? VARIANTS[Math.floor(Math.random() * VARIANTS.length)] : VARIANTS.find(x => x.id === selVar);
     setVariant(v);
     setLoading(true); setError(''); setExamples(null);
     try {
@@ -516,9 +521,9 @@ function MasEjemplos() {
           password: pw,
           model: 'claude-sonnet-4-20250514',
           max_tokens: 800,
-          system: `You are a Spanish language teacher for an adult B2-level learner who uses Rioplatense Spanish. Generate 3-4 example sentences showing Type 2 conditionals (condiciones irreales — subjuntivo). Respond ONLY with valid JSON — no markdown, no preamble. Format:
+          system: `You are a Spanish language teacher for an adult B2-level learner. Generate 3-4 example sentences showing Type 2 conditionals (condiciones irreales — subjuntivo). ${dialectPrompt()} Respond ONLY with valid JSON — no markdown, no preamble. Format:
 {"examples":[{"spanish":"...","english":"..."}],"variant":"${v.id}","variant_label":"${v.label}"}
-Use natural, everyday Argentine Spanish (vos forms). The sentences must match the specific variant: ${v.desc}. Use imperfecto del subjuntivo (-ra form preferred) in the Si clause and condicional simple in the consequence. Vary subjects and situations.`,
+The sentences must match the specific variant: ${v.desc}. Use imperfecto del subjuntivo (-ra form preferred) in the Si clause and condicional simple in the consequence. Vary subjects and situations.`,
           messages: [{ role: 'user', content: `Generate 3-4 examples of Type 2 conditional, variant: "${v.label}" — ${v.desc}.` }]
         })
       });
@@ -559,9 +564,16 @@ Use natural, everyday Argentine Spanish (vos forms). The sentences must match th
 
   return html`
     <div>
-      <button class="btn-primary" onClick=${() => fetchExamples(sessionPassword)} disabled=${loading}>
-        ${loading ? html`<span class="loading-spinner"></span> Generando…` : 'Generar ejemplos'}
-      </button>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px">
+        <select style="background:var(--bg-input); border:1px solid var(--border); border-radius:8px; padding:9px 12px; color:var(--text-primary); font-family:Outfit,sans-serif; font-size:0.88rem; outline:none"
+          value=${selVar} onChange=${e => setSelVar(e.target.value)}>
+          <option value="random">Al azar</option>
+          ${VARIANTS.map(v => html`<option value=${v.id}>${v.label}</option>`)}
+        </select>
+        <button class="btn-primary" onClick=${() => fetchExamples(sessionPassword)} disabled=${loading}>
+          ${loading ? html`<span class="loading-spinner"></span> Generando…` : 'Generar ejemplos'}
+        </button>
+      </div>
       ${error && html`
         <div style="margin-top:12px; color:var(--red); font-size:0.88rem">${error}</div>
         <button class="btn-ghost" style="margin-top:8px" onClick=${() => fetchExamples(sessionPassword)}>Reintentar</button>

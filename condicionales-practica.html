@@ -205,6 +205,10 @@ body {
 import { html, render, useState, useRef, useEffect } from 'https://unpkg.com/htm/preact/standalone.module.js';
 
 let sessionPassword = '';
+const getDialect = () => localStorage.getItem('spanish_dialect') || 'neutral';
+const dialectPrompt = () => getDialect() === 'rioplatense'
+  ? 'Use Argentine Rioplatense Spanish with vos forms and voseo imperatives.'
+  : 'Use neutral Spanish with tú forms. Do not use voseo.';
 
 // ─── Password Gate ───
 function PasswordGate({ onAuth }) {
@@ -243,14 +247,15 @@ function PasswordGate({ onAuth }) {
 }
 
 // ─── MATCHING QUIZ ───
-const MATCH_SYSTEM = `You are a Spanish language teacher creating a matching exercise for conditional sentences (oraciones condicionales). Generate exactly 9 "si" clause + consequence pairs mixing all three conditional types.
+const getMatchSystem = () => `You are a Spanish language teacher creating a matching exercise for conditional sentences (oraciones condicionales). Generate exactly 9 "si" clause + consequence pairs mixing all three conditional types.
 
 CRITICAL RULES:
 - Each Si clause must UNAMBIGUOUSLY match exactly ONE consequence
 - Use subject/person agreement as a disambiguation tool
 - Use logical/semantic context to prevent multiple valid pairings
-- Vary persons: yo, vos, él/ella, nosotros across the 9 pairs
-- B2 vocabulary, everyday register, Argentine Spanish (vos)
+- Vary persons across the 9 pairs
+- B2 vocabulary, everyday register. ${dialectPrompt()}
+- Do not use anglicisms (e.g. no "delivery", "shopping", etc.)
 - Include 1-2 trickier variants (pasado puntual, mixed 3A/3B)
 - Roughly 3 of each type but can vary
 
@@ -277,7 +282,7 @@ function MatchingQuiz() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           password: sessionPassword, model: 'claude-sonnet-4-20250514', max_tokens: 1500,
-          system: MATCH_SYSTEM,
+          system: getMatchSystem(),
           messages: [{ role: 'user', content: 'Generate 9 conditional matching pairs. Mix all three types.' }]
         })
       });
@@ -293,8 +298,6 @@ function MatchingQuiz() {
     } catch (e) { setError('No se pudo generar el ejercicio. ' + (e.message || '')); }
     setLoading(false);
   };
-
-  useEffect(() => { generate(); }, []);
 
   const tapSi = (item) => {
     if (graded) return;
@@ -333,7 +336,12 @@ function MatchingQuiz() {
 
   const score = results.filter(r => r.correct).length;
 
-  if (!pairs && !loading && !error) return null;
+  if (!pairs && !loading && !error) return html`
+    <div style="text-align:center; padding:30px 0">
+      <p style="color:var(--text-secondary); font-size:0.92rem; margin-bottom:16px">Emparejá 9 cláusulas Si con sus consecuencias. Mezcla de los tres tipos.</p>
+      <button class="btn-primary" onClick=${generate}>Comenzar</button>
+    </div>
+  `;
 
   return html`
     <div>
@@ -401,14 +409,15 @@ function MatchingQuiz() {
 }
 
 // ─── FILL IN THE BLANK ───
-const FIB_SYSTEM = `You are a Spanish language teacher creating a fill-in-the-blank conjugation exercise for conditional sentences. Generate exactly 10 sentences mixing all three conditional types.
+const getFibSystem = () => `You are a Spanish language teacher creating a fill-in-the-blank conjugation exercise for conditional sentences. Generate exactly 10 sentences mixing all three conditional types.
 
 Rules:
 - Each sentence has exactly TWO blanks (the two verbs to conjugate)
 - Provide the infinitive for each blank
 - Include irregular verbs (tener→tuviera, poder→pudiera, haber→hubiera, etc.)
-- Context must make the intended type clear
-- B2 vocabulary, everyday register, Argentine Spanish (vos)
+- CRITICAL: Each sentence MUST include enough context to make the conditional type UNAMBIGUOUS. Add a brief situational phrase so the learner knows whether the condition is open (Type 1), irreal (Type 2), or impossible past (Type 3). For example: "Si mañana..." (open future), "Si yo fuera rico..." (clearly irreal now), "Si ayer..." (past counterfactual).
+- B2 vocabulary, everyday register. ${dialectPrompt()}
+- Do not use anglicisms (e.g. no "delivery", "shopping", etc.)
 - Accept both -ra and -se forms for subjunctive
 - Accept both habría and hubiera for Type 3 results
 
@@ -433,7 +442,7 @@ function FibQuiz() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           password: sessionPassword, model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-          system: FIB_SYSTEM,
+          system: getFibSystem(),
           messages: [{ role: 'user', content: 'Generate 10 fill-in-the-blank conditional sentences. Mix all three types, include irregulars.' }]
         })
       });
@@ -445,8 +454,6 @@ function FibQuiz() {
     } catch (e) { setError('No se pudo generar el ejercicio. ' + (e.message || '')); }
     setLoading(false);
   };
-
-  useEffect(() => { generate(); }, []);
 
   const setAns = (i, field, val) => setAnswers(a => ({ ...a, [`${i}_${field}`]: val }));
 
@@ -488,9 +495,18 @@ function FibQuiz() {
 
   return html`
     <div>
+      ${!sentences && !loading && !error && html`
+        <div style="text-align:center; padding:30px 0">
+          <p style="color:var(--text-secondary); font-size:0.92rem; margin-bottom:16px">10 oraciones condicionales — conjuga los dos verbos de cada oración.</p>
+          <button class="btn-primary" onClick=${generate}>Comenzar</button>
+        </div>
+      `}
+
+      ${(sentences || loading || error) && html`
       <div class="accent-row">
         ${['á','é','í','ó','ú','ñ'].map(c => html`<button class="accent-btn" onClick=${() => insertAccent(c)}>${c}</button>`)}
       </div>
+      `}
 
       ${loading && html`<div style="text-align:center; padding:40px 0"><span class="loading-spinner" style="width:28px;height:28px"></span><div style="margin-top:12px; color:var(--text-secondary); font-size:0.9rem">Generando ejercicio…</div></div>`}
       ${error && html`<div style="color:var(--red); font-size:0.9rem; margin-bottom:12px">${error}</div><button class="btn-ghost" onClick=${generate}>Reintentar</button>`}

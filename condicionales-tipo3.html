@@ -327,7 +327,7 @@ body {
         <div class="ex-en">If you had told me earlier, I could have changed the appointment.</div>
       </li>
       <li>
-        <div class="ex-es">Si hubiera sabido que estabas acá, te hubiera invitado a cenar.</div>
+        <div class="ex-es">Si hubiera sabido que estabas aquí, te hubiera invitado a cenar.</div>
         <div class="ex-en">If I had known you were here, I would have invited you to dinner.</div>
       </li>
       <li>
@@ -351,7 +351,7 @@ body {
           <div class="ex-en">If I had accepted that job, I'd be living in Buenos Aires now.</div>
         </li>
         <li>
-          <div class="ex-es">Si no hubieras vendido el auto, hoy no tendrías que tomar el colectivo.</div>
+          <div class="ex-es">Si no hubieras vendido el auto, hoy no tendrías que tomar el autobús.</div>
           <div class="ex-en">If you hadn't sold the car, today you wouldn't have to take the bus.</div>
         </li>
         <li>
@@ -416,7 +416,7 @@ body {
   <!-- ── MÁS EJEMPLOS ── -->
   <div class="card" id="api-section">
     <h2>Más ejemplos</h2>
-    <p>Genera nuevos ejemplos — elegí la variante o dejá que se elija al azar.</p>
+    <p>Genera nuevos ejemplos — elige la variante o deja que se elija al azar.</p>
     <div id="api-mount"></div>
   </div>
 
@@ -426,6 +426,10 @@ body {
 import { html, render, useState } from 'https://unpkg.com/htm/preact/standalone.module.js';
 
 let sessionPassword = '';
+const getDialect = () => localStorage.getItem('spanish_dialect') || 'neutral';
+const dialectPrompt = () => getDialect() === 'rioplatense'
+  ? 'Use Argentine Rioplatense Spanish with vos forms. Prefer hubiera over habría for result clauses.'
+  : 'Use neutral Spanish with tú forms. Do not use voseo.';
 
 const VARIANTS = [
   { id: 'estandar', label: 'Estándar', desc: 'both Si and C in the past, nothing happened', formula: 'Si + pluscuamperfecto subjuntivo → condicional compuesto o pluscuamperfecto subjuntivo' },
@@ -455,9 +459,9 @@ function MasEjemplos() {
           password: pw,
           model: 'claude-sonnet-4-20250514',
           max_tokens: 800,
-          system: `You are a Spanish language teacher for an adult B2-level learner who uses Rioplatense Spanish. Generate 3-4 example sentences showing Type 3 conditionals (condiciones imposibles — past counterfactual). Respond ONLY with valid JSON — no markdown, no preamble. Format:
+          system: `You are a Spanish language teacher for an adult B2-level learner. Generate 3-4 example sentences showing Type 3 conditionals (condiciones imposibles — past counterfactual). ${dialectPrompt()} Respond ONLY with valid JSON — no markdown, no preamble. Format:
 {"examples":[{"spanish":"...","english":"..."}],"variant":"${v.id}","variant_label":"${v.label}"}
-Use natural Argentine Spanish (vos, hubiera preferred over habría for result clauses). Match the specific variant: ${v.desc}. Formula: ${v.formula}. Vary subjects and situations.`,
+Match the specific variant: ${v.desc}. Formula: ${v.formula}. Vary subjects and situations.`,
           messages: [{ role: 'user', content: `Generate 3-4 examples of Type 3 conditional, variant: "${v.label}" — ${v.desc}.` }]
         })
       });

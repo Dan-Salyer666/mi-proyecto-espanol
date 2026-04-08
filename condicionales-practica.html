@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Condicionales — Práctica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #0a1628;
+  --bg-card: #111d35;
+  --bg-card-hover: #162544;
+  --bg-input: #0d1a2f;
+  --border: #1e3355;
+  --border-focus: #3b6cb5;
+  --text-primary: #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted: #5a6f8e;
+  --accent: #4a90d9;
+  --accent-glow: rgba(74, 144, 217, 0.15);
+  --green: #34d399;
+  --yellow: #fbbf24;
+  --red: #f87171;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+.bg-photo { position: fixed; inset: 0; background: url('assets/alhambra_garden.webp') center/cover no-repeat; filter: brightness(0.55); z-index: 0; }
+.bg-overlay { position: fixed; inset: 0; background: rgba(10, 22, 40, 0.45); z-index: 0; }
+.page-wrap { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 0 20px 80px; }
+.back-link { display: inline-block; color: var(--text-muted); text-decoration: none; font-size: 0.9rem; padding: 20px 0 8px; transition: color 0.2s; }
+.back-link:hover { color: var(--accent); }
+.page-header { text-align: center; padding: 8px 0 10px; }
+.page-header h1 { font-family: 'DM Serif Display', serif; font-size: 2.1rem; font-weight: 400; margin-bottom: 6px; }
+.page-header .subtitle { font-size: 1rem; color: var(--text-secondary); font-weight: 300; }
+#app {}
+
+/* ── Shared ── */
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-top: 20px; }
+.card h2 { font-family: 'DM Serif Display', serif; font-size: 1.3rem; font-weight: 400; margin-bottom: 12px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, #3b6cb5, #4a90d9); color: #fff; border: none; border-radius: 10px;
+  padding: 10px 20px; font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: opacity 0.2s, transform 0.15s;
+}
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; }
+.btn-ghost {
+  background: transparent; color: var(--text-secondary); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 20px; font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 500;
+  cursor: pointer; transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: #2a4a75; color: var(--text-primary); }
+.loading-spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Password ── */
+.pw-inline { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pw-inline input {
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px;
+  padding: 9px 14px; color: var(--text-primary); font-family: 'Outfit', sans-serif; font-size: 0.88rem; outline: none; width: 200px;
+}
+.pw-inline input:focus { border-color: var(--border-focus); }
+.pw-error { font-size: 0.82rem; color: var(--red); margin-top: 6px; }
+
+/* ── Mode toggle ── */
+.mode-toggle { display: flex; gap: 0; margin-bottom: 20px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.mode-btn {
+  flex: 1; padding: 10px 16px; text-align: center; font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem; font-weight: 500; cursor: pointer; border: none;
+  background: transparent; color: var(--text-muted); transition: all 0.2s;
+}
+.mode-btn.active { background: rgba(74, 144, 217, 0.15); color: var(--accent); }
+.mode-btn:not(.active):hover { color: var(--text-secondary); }
+
+/* ── Matching: badges ── */
+.match-pools { display: flex; gap: 16px; margin-bottom: 16px; }
+.pool { flex: 1; min-height: 80px; }
+.pool-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 8px; }
+.badge {
+  display: block; width: 100%; padding: 10px 14px; margin-bottom: 8px;
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'DM Serif Display', serif; font-style: italic; font-size: 0.92rem;
+  color: var(--text-primary); cursor: pointer; transition: border-color 0.2s, background 0.2s;
+  text-align: left; line-height: 1.4;
+}
+.badge:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+.badge.selected { border-color: var(--accent); background: rgba(74, 144, 217, 0.12); }
+.badge.correct { border-color: var(--green); background: rgba(52, 211, 153, 0.08); }
+.badge.incorrect { border-color: var(--red); background: rgba(248, 113, 113, 0.08); }
+
+.pairs-area { margin-bottom: 16px; }
+.pair-row {
+  display: flex; gap: 8px; align-items: stretch; margin-bottom: 8px;
+  padding: 8px 12px; background: rgba(74, 144, 217, 0.04); border: 1px solid rgba(74, 144, 217, 0.12);
+  border-radius: 10px; cursor: pointer; transition: opacity 0.2s;
+}
+.pair-row:hover { opacity: 0.8; }
+.pair-row .pair-si, .pair-row .pair-c {
+  flex: 1; font-family: 'DM Serif Display', serif; font-style: italic; font-size: 0.9rem; line-height: 1.4;
+}
+.pair-row .pair-si { color: var(--accent); }
+.pair-row .pair-c { color: var(--text-secondary); }
+.pair-row .pair-num {
+  font-family: 'Outfit', sans-serif; font-size: 0.75rem; font-weight: 600;
+  color: var(--text-muted); min-width: 20px; display: flex; align-items: center;
+}
+.pair-row.correct { border-color: var(--green); background: rgba(52, 211, 153, 0.06); }
+.pair-row.incorrect { border-color: var(--red); background: rgba(248, 113, 113, 0.06); }
+
+.pair-explain {
+  font-size: 0.82rem; color: var(--text-secondary); padding: 4px 12px 8px 40px;
+  margin-top: -4px; margin-bottom: 8px;
+}
+.pair-type-tag {
+  display: inline-block; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;
+  padding: 2px 7px; border-radius: 4px; margin-right: 6px;
+}
+.tag-t1 { background: rgba(52,211,153,0.15); color: var(--green); }
+.tag-t2 { background: rgba(251,191,36,0.15); color: var(--yellow); }
+.tag-t3 { background: rgba(248,113,113,0.15); color: var(--red); }
+
+/* ── Fill-in-the-blank ── */
+.fib-sentence {
+  padding: 16px 0; border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+}
+.fib-sentence:last-child { border-bottom: none; }
+.fib-num { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+.fib-text {
+  font-family: 'DM Serif Display', serif; font-style: italic; font-size: 1rem;
+  color: var(--text-primary); line-height: 1.8;
+}
+.fib-input {
+  display: inline-block; background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: 6px; padding: 4px 10px; font-family: 'Outfit', sans-serif; font-size: 0.88rem;
+  color: var(--text-primary); outline: none; width: 160px; margin: 0 4px;
+  transition: border-color 0.2s;
+}
+.fib-input:focus { border-color: var(--border-focus); }
+.fib-input.correct { border-color: var(--green); background: rgba(52, 211, 153, 0.06); }
+.fib-input.partial { border-color: var(--yellow); background: rgba(251, 191, 36, 0.06); }
+.fib-input.incorrect { border-color: var(--red); background: rgba(248, 113, 113, 0.06); }
+.fib-inf { font-size: 0.82rem; color: var(--accent); font-style: normal; }
+.fib-correct-text { font-size: 0.82rem; color: var(--green); margin-top: 4px; }
+.fib-explain { font-size: 0.82rem; color: var(--text-secondary); margin-top: 2px; }
+
+/* ── Accent buttons ── */
+.accent-row { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.accent-btn {
+  background: transparent; border: 1px solid var(--border); border-radius: 6px;
+  padding: 5px 10px; font-family: 'Outfit', sans-serif; font-size: 0.9rem;
+  color: var(--text-secondary); cursor: pointer; transition: border-color 0.2s, color 0.2s;
+}
+.accent-btn:hover { border-color: var(--accent); color: var(--text-primary); }
+
+/* ── Score ── */
+.score-bar {
+  display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+  background: rgba(74, 144, 217, 0.06); border: 1px solid rgba(74, 144, 217, 0.15);
+  border-radius: 10px; margin-top: 16px;
+}
+.score-num { font-size: 1.4rem; font-weight: 600; color: var(--text-primary); }
+.score-label { font-size: 0.88rem; color: var(--text-secondary); }
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-header { animation: fadeSlideIn 0.5s ease both; }
+
+@media (max-width: 600px) {
+  .page-header h1 { font-size: 1.65rem; }
+  .card { padding: 20px 18px; }
+  .match-pools { flex-direction: column; }
+  .pair-row { flex-direction: column; gap: 4px; }
+  .fib-input { width: 130px; }
+  .pw-inline { flex-direction: column; align-items: stretch; }
+  .pw-inline input { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="oraciones-condicionales.html" class="back-link">← Oraciones Condicionales</a>
+  <div class="page-header">
+    <h1>Práctica</h1>
+    <div class="subtitle">Dos modos de ejercicio generados por IA</div>
+  </div>
+  <div id="app"></div>
+</div>
+
+<script type="module">
+import { html, render, useState, useRef, useEffect } from 'https://unpkg.com/htm/preact/standalone.module.js';
+
+let sessionPassword = '';
+
+// ─── Password Gate ───
+function PasswordGate({ onAuth }) {
+  const [pw, setPw] = useState('');
+  const [err, setErr] = useState('');
+  const [checking, setChecking] = useState(false);
+
+  const submit = async () => {
+    setChecking(true); setErr('');
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw, model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
+      });
+      if (res.ok) { sessionPassword = pw; onAuth(); }
+      else { const d = await res.json(); setErr(d.error || 'Contraseña incorrecta'); }
+    } catch { setErr('Error de conexión.'); }
+    setChecking(false);
+  };
+
+  return html`
+    <div class="card">
+      <h2>Contraseña</h2>
+      <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:12px">Esta página usa IA para generar los ejercicios.</p>
+      <div class="pw-inline">
+        <input type="password" placeholder="Contraseña" value=${pw}
+          onInput=${e => setPw(e.target.value)}
+          onKeyDown=${e => e.key === 'Enter' && pw && submit()} />
+        <button class="btn-primary" onClick=${submit} disabled=${!pw || checking}>
+          ${checking ? html`<span class="loading-spinner"></span>` : 'Entrar'}
+        </button>
+      </div>
+      ${err && html`<div class="pw-error">${err}</div>`}
+    </div>
+  `;
+}
+
+// ─── MATCHING QUIZ ───
+const MATCH_SYSTEM = `You are a Spanish language teacher creating a matching exercise for conditional sentences (oraciones condicionales). Generate exactly 9 "si" clause + consequence pairs mixing all three conditional types.
+
+CRITICAL RULES:
+- Each Si clause must UNAMBIGUOUSLY match exactly ONE consequence
+- Use subject/person agreement as a disambiguation tool
+- Use logical/semantic context to prevent multiple valid pairings
+- Vary persons: yo, vos, él/ella, nosotros across the 9 pairs
+- B2 vocabulary, everyday register, Argentine Spanish (vos)
+- Include 1-2 trickier variants (pasado puntual, mixed 3A/3B)
+- Roughly 3 of each type but can vary
+
+Respond ONLY with valid JSON, no markdown:
+{"pairs":[{"si":"Si + clause...","c":"consequence...","type":"1|2|3","variant":"name","explanation":"brief tense/mood explanation"}]}`;
+
+function MatchingQuiz() {
+  const [pairs, setPairs] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [siPool, setSiPool] = useState([]);
+  const [cPool, setCPool] = useState([]);
+  const [matched, setMatched] = useState([]);
+  const [selectedSi, setSelectedSi] = useState(null);
+  const [selectedC, setSelectedC] = useState(null);
+  const [graded, setGraded] = useState(false);
+  const [results, setResults] = useState([]);
+
+  const generate = async () => {
+    setLoading(true); setError(''); setPairs(null); setGraded(false); setResults([]);
+    setMatched([]); setSelectedSi(null); setSelectedC(null);
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: sessionPassword, model: 'claude-sonnet-4-20250514', max_tokens: 1500,
+          system: MATCH_SYSTEM,
+          messages: [{ role: 'user', content: 'Generate 9 conditional matching pairs. Mix all three types.' }]
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      const raw = data.content?.[0]?.text || '';
+      const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      setPairs(parsed.pairs);
+      // Shuffle pools independently
+      const shuffle = a => [...a].sort(() => Math.random() - 0.5);
+      setSiPool(shuffle(parsed.pairs.map((p, i) => ({ ...p, idx: i }))));
+      setCPool(shuffle(parsed.pairs.map((p, i) => ({ ...p, idx: i }))));
+    } catch (e) { setError('No se pudo generar el ejercicio. ' + (e.message || '')); }
+    setLoading(false);
+  };
+
+  useEffect(() => { generate(); }, []);
+
+  const tapSi = (item) => {
+    if (graded) return;
+    setSelectedSi(selectedSi?.idx === item.idx ? null : item);
+    if (selectedC) {
+      setMatched(m => [...m, { si: item, c: selectedC }]);
+      setSiPool(p => p.filter(x => x.idx !== item.idx));
+      setCPool(p => p.filter(x => x.idx !== selectedC.idx));
+      setSelectedSi(null); setSelectedC(null);
+    }
+  };
+  const tapC = (item) => {
+    if (graded) return;
+    setSelectedC(selectedC?.idx === item.idx ? null : item);
+    if (selectedSi) {
+      setMatched(m => [...m, { si: selectedSi, c: item }]);
+      setSiPool(p => p.filter(x => x.idx !== selectedSi.idx));
+      setCPool(p => p.filter(x => x.idx !== item.idx));
+      setSelectedSi(null); setSelectedC(null);
+    }
+  };
+  const breakPair = (i) => {
+    if (graded) return;
+    const pair = matched[i];
+    setSiPool(p => [...p, pair.si]);
+    setCPool(p => [...p, pair.c]);
+    setMatched(m => m.filter((_, j) => j !== i));
+  };
+
+  const grade = () => {
+    if (matched.length < 9) return;
+    const r = matched.map(m => ({ ...m, correct: m.si.idx === m.c.idx }));
+    setResults(r);
+    setGraded(true);
+  };
+
+  const score = results.filter(r => r.correct).length;
+
+  if (!pairs && !loading && !error) return null;
+
+  return html`
+    <div>
+      ${loading && html`<div style="text-align:center; padding:40px 0"><span class="loading-spinner" style="width:28px;height:28px"></span><div style="margin-top:12px; color:var(--text-secondary); font-size:0.9rem">Generando ejercicio…</div></div>`}
+      ${error && html`<div style="color:var(--red); font-size:0.9rem; margin-bottom:12px">${error}</div><button class="btn-ghost" onClick=${generate}>Reintentar</button>`}
+
+      ${pairs && !loading && html`
+        ${(siPool.length > 0 || cPool.length > 0) && html`
+          <div class="match-pools">
+            <div class="pool">
+              <div class="pool-label">Cláusulas Si</div>
+              ${siPool.map(item => html`
+                <div class="badge ${selectedSi?.idx === item.idx ? 'selected' : ''}" onClick=${() => tapSi(item)}>${item.si}</div>
+              `)}
+            </div>
+            <div class="pool">
+              <div class="pool-label">Consecuencias</div>
+              ${cPool.map(item => html`
+                <div class="badge ${selectedC?.idx === item.idx ? 'selected' : ''}" onClick=${() => tapC(item)}>${item.c}</div>
+              `)}
+            </div>
+          </div>
+        `}
+
+        ${matched.length > 0 && html`
+          <div class="pairs-area">
+            <div class="pool-label" style="margin-bottom:8px">Parejas (tocá para deshacer)</div>
+            ${matched.map((m, i) => html`
+              <div>
+                <div class="pair-row ${graded ? (results[i]?.correct ? 'correct' : 'incorrect') : ''}" onClick=${() => breakPair(i)}>
+                  <div class="pair-num">${i + 1}</div>
+                  <div class="pair-si">${m.si.si}</div>
+                  <div class="pair-c">${m.c.c}</div>
+                </div>
+                ${graded && html`
+                  <div class="pair-explain">
+                    <span class="pair-type-tag ${m.si.type === '1' ? 'tag-t1' : m.si.type === '2' ? 'tag-t2' : 'tag-t3'}">Tipo ${m.si.type}</span>
+                    ${results[i]?.correct ? '' : html`<span style="color:var(--red); font-size:0.82rem">Pareja correcta: ${pairs[m.si.idx].c}</span><br/>`}
+                    ${m.si.explanation}
+                  </div>
+                `}
+              </div>
+            `)}
+          </div>
+        `}
+
+        ${!graded && html`
+          <div style="display:flex; gap:10px; flex-wrap:wrap">
+            <button class="btn-primary" onClick=${grade} disabled=${matched.length < 9}>
+              ${matched.length < 9 ? `Emparejar todas (${matched.length}/9)` : 'Corregir'}
+            </button>
+          </div>
+        `}
+
+        ${graded && html`
+          <div class="score-bar">
+            <div class="score-num">${score}/9</div>
+            <div class="score-label">${score === 9 ? '¡Perfecto!' : score >= 7 ? '¡Muy bien!' : score >= 5 ? 'Buen intento' : 'Seguí practicando'}</div>
+          </div>
+          <button class="btn-primary" style="margin-top:14px" onClick=${generate}>Nuevo ejercicio</button>
+        `}
+      `}
+    </div>
+  `;
+}
+
+// ─── FILL IN THE BLANK ───
+const FIB_SYSTEM = `You are a Spanish language teacher creating a fill-in-the-blank conjugation exercise for conditional sentences. Generate exactly 10 sentences mixing all three conditional types.
+
+Rules:
+- Each sentence has exactly TWO blanks (the two verbs to conjugate)
+- Provide the infinitive for each blank
+- Include irregular verbs (tener→tuviera, poder→pudiera, haber→hubiera, etc.)
+- Context must make the intended type clear
+- B2 vocabulary, everyday register, Argentine Spanish (vos)
+- Accept both -ra and -se forms for subjunctive
+- Accept both habría and hubiera for Type 3 results
+
+Respond ONLY with valid JSON, no markdown:
+{"sentences":[{"before_v1":"text before first blank","v1_inf":"infinitive","between":"text between blanks","v2_inf":"infinitive","after_v2":"text after second blank","v1_correct":["form1","form2"],"v2_correct":["form1","form2"],"type":"1|2|3","explanation":"brief explanation"}]}
+
+For v1_correct and v2_correct, include ALL acceptable forms (e.g. for subjunctive: both -ra and -se; for Type 3 results: both habría+participle and hubiera+participle).`;
+
+function FibQuiz() {
+  const [sentences, setSentences] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [answers, setAnswers] = useState({});
+  const [graded, setGraded] = useState(false);
+  const [results, setResults] = useState([]);
+  const activeInput = useRef(null);
+
+  const generate = async () => {
+    setLoading(true); setError(''); setSentences(null); setGraded(false); setResults([]); setAnswers({});
+    try {
+      const res = await fetch('/api/claude', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          password: sessionPassword, model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+          system: FIB_SYSTEM,
+          messages: [{ role: 'user', content: 'Generate 10 fill-in-the-blank conditional sentences. Mix all three types, include irregulars.' }]
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'API error');
+      const raw = data.content?.[0]?.text || '';
+      const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+      setSentences(parsed.sentences);
+    } catch (e) { setError('No se pudo generar el ejercicio. ' + (e.message || '')); }
+    setLoading(false);
+  };
+
+  useEffect(() => { generate(); }, []);
+
+  const setAns = (i, field, val) => setAnswers(a => ({ ...a, [`${i}_${field}`]: val }));
+
+  const normalize = s => s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  const checkVerb = (answer, corrects) => {
+    const a = normalize(answer);
+    return corrects.some(c => normalize(c) === a);
+  };
+
+  const grade = () => {
+    const r = sentences.map((s, i) => {
+      const a1 = answers[`${i}_v1`] || '';
+      const a2 = answers[`${i}_v2`] || '';
+      const c1 = checkVerb(a1, s.v1_correct);
+      const c2 = checkVerb(a2, s.v2_correct);
+      return { c1, c2, score: (c1 ? 1 : 0) + (c2 ? 1 : 0) };
+    });
+    setResults(r);
+    setGraded(true);
+  };
+
+  const insertAccent = (char) => {
+    const el = activeInput.current;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const val = el.value;
+    const newVal = val.substring(0, start) + char + val.substring(end);
+    // Find which input this is
+    const key = el.dataset.key;
+    if (key) {
+      setAnswers(a => ({ ...a, [key]: newVal }));
+      setTimeout(() => { el.selectionStart = el.selectionEnd = start + 1; el.focus(); }, 0);
+    }
+  };
+
+  const totalCorrect = results.reduce((s, r) => s + r.score, 0);
+
+  return html`
+    <div>
+      <div class="accent-row">
+        ${['á','é','í','ó','ú','ñ'].map(c => html`<button class="accent-btn" onClick=${() => insertAccent(c)}>${c}</button>`)}
+      </div>
+
+      ${loading && html`<div style="text-align:center; padding:40px 0"><span class="loading-spinner" style="width:28px;height:28px"></span><div style="margin-top:12px; color:var(--text-secondary); font-size:0.9rem">Generando ejercicio…</div></div>`}
+      ${error && html`<div style="color:var(--red); font-size:0.9rem; margin-bottom:12px">${error}</div><button class="btn-ghost" onClick=${generate}>Reintentar</button>`}
+
+      ${sentences && !loading && html`
+        <div>
+          ${sentences.map((s, i) => html`
+            <div class="fib-sentence">
+              <div class="fib-num">${i + 1}.</div>
+              <div class="fib-text">
+                ${s.before_v1}${' '}
+                <input class="fib-input ${graded ? (results[i]?.c1 ? 'correct' : 'incorrect') : ''}"
+                  data-key="${i}_v1"
+                  value=${answers[`${i}_v1`] || ''}
+                  onInput=${e => setAns(i, 'v1', e.target.value)}
+                  onFocus=${e => { activeInput.current = e.target; }}
+                  disabled=${graded}
+                  placeholder="..." />
+                ${' '}<span class="fib-inf">(${s.v1_inf})</span>${' '}
+                ${s.between}${' '}
+                <input class="fib-input ${graded ? (results[i]?.c2 ? 'correct' : 'incorrect') : ''}"
+                  data-key="${i}_v2"
+                  value=${answers[`${i}_v2`] || ''}
+                  onInput=${e => setAns(i, 'v2', e.target.value)}
+                  onFocus=${e => { activeInput.current = e.target; }}
+                  disabled=${graded}
+                  placeholder="..." />
+                ${' '}<span class="fib-inf">(${s.v2_inf})</span>${' '}
+                ${s.after_v2}
+              </div>
+              ${graded && html`
+                <div class="fib-correct-text">
+                  ${!results[i].c1 ? `✗ ${s.v1_correct[0]}` : `✓ ${s.v1_correct[0]}`}
+                  ${' · '}
+                  ${!results[i].c2 ? `✗ ${s.v2_correct[0]}` : `✓ ${s.v2_correct[0]}`}
+                </div>
+                <div class="fib-explain">
+                  <span class="pair-type-tag ${s.type === '1' ? 'tag-t1' : s.type === '2' ? 'tag-t2' : 'tag-t3'}">Tipo ${s.type}</span>
+                  ${s.explanation}
+                </div>
+              `}
+            </div>
+          `)}
+        </div>
+
+        ${!graded && html`<button class="btn-primary" style="margin-top:16px" onClick=${grade}>Corregir</button>`}
+
+        ${graded && html`
+          <div class="score-bar">
+            <div class="score-num">${totalCorrect}/20</div>
+            <div class="score-label">${totalCorrect >= 18 ? '¡Perfecto!' : totalCorrect >= 14 ? '¡Muy bien!' : totalCorrect >= 10 ? 'Buen intento' : 'Seguí practicando'} (${results.filter(r => r.score === 2).length}/10 oraciones completas)</div>
+          </div>
+          <button class="btn-primary" style="margin-top:14px" onClick=${generate}>Nuevo ejercicio</button>
+        `}
+      `}
+    </div>
+  `;
+}
+
+// ─── MAIN APP ───
+function App() {
+  const [authed, setAuthed] = useState(!!sessionPassword);
+  const [mode, setMode] = useState('match');
+
+  if (!authed) return html`<${PasswordGate} onAuth=${() => setAuthed(true)} />`;
+
+  return html`
+    <div class="card">
+      <div class="mode-toggle">
+        <button class="mode-btn ${mode === 'match' ? 'active' : ''}" onClick=${() => setMode('match')}>Relacionar columnas</button>
+        <button class="mode-btn ${mode === 'fib' ? 'active' : ''}" onClick=${() => setMode('fib')}>Completar conjugaciones</button>
+      </div>
+      ${mode === 'match' ? html`<${MatchingQuiz} />` : html`<${FibQuiz} />`}
+    </div>
+  `;
+}
+
+render(html`<${App} />`, document.getElementById('app'));
+</script>
+
+</body>
+</html>

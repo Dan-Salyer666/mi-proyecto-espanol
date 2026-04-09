@@ -20,9 +20,12 @@
   --text-muted:    #5a6f8e;
   --accent:        #4a90d9;
   --accent-glow:   rgba(74,144,217,0.15);
-  --link-cv:       #4a90d9;   /* consonant+vowel */
-  --link-vv:       #f59e0b;   /* sinalefa vowel+vowel */
-  --link-cc:       #a78bfa;   /* same consonant merge */
+  --link-cv:       #4a90d9;
+  --link-cv-bg:    rgba(74,144,217,0.12);
+  --link-vv:       #f59e0b;
+  --link-vv-bg:    rgba(245,158,11,0.12);
+  --link-cc:       #a78bfa;
+  --link-cc-bg:    rgba(167,139,250,0.12);
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -50,28 +53,28 @@ body::after {
 
 .wrap { max-width:820px;margin:0 auto;padding:24px 20px 60px;position:relative;z-index:1; }
 
-/* ── HEADER ── */
 .back { display:inline-flex;align-items:center;gap:6px;color:var(--text-muted);text-decoration:none;font-size:0.9rem;margin-bottom:18px; }
 .back:hover { color:var(--accent); }
 h1 { font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:6px; }
 .subtitle { color:var(--text-secondary);font-size:1rem;margin-bottom:28px; }
 
-/* ── CARDS ── */
 .card {
   background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
   padding:24px;margin-bottom:20px;
 }
 .card h2 { font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:14px; }
-.card h3 { font-family:'DM Serif Display',serif;font-size:1.1rem;margin-bottom:10px;color:var(--text-primary); }
+.card h3 { font-family:'DM Serif Display',serif;font-size:1.05rem;margin-bottom:8px;color:var(--text-primary); }
 .card p { color:var(--text-secondary);font-size:0.95rem;margin-bottom:10px; }
 
-/* ── RULES OVERVIEW ── */
-.rule-row { display:flex;align-items:flex-start;gap:12px;margin-bottom:12px; }
+.rule-row { display:flex;align-items:flex-start;gap:12px;margin-bottom:14px; }
 .rule-dot { width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px; }
 .rule-label { font-weight:600;font-size:0.95rem; }
 .rule-example { color:var(--text-muted);font-size:0.88rem;font-style:italic; }
+.rule-section { margin-top:18px;padding-top:14px;border-top:1px solid var(--border); }
+.rule-section-title { font-weight:600;font-size:0.9rem;color:var(--text-secondary);margin-bottom:10px; }
+.no-link-row { display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:0.88rem;color:var(--text-muted); }
+.no-link-dot { color:#f87171;font-weight:700;flex-shrink:0;margin-top:1px; }
 
-/* ── SELECTION ── */
 .field-label { font-size:0.85rem;color:var(--text-secondary);margin-bottom:6px;font-weight:500; }
 .btn-row { display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px; }
 .btn-opt {
@@ -111,7 +114,6 @@ h1 { font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:6px; }
 }
 .btn-ghost:hover { border-color:#2a4a75;color:var(--text-primary); }
 
-/* ── PASSWORD INLINE ── */
 .pw-row { display:flex;gap:8px;margin-bottom:14px;align-items:center; }
 .pw-input {
   flex:1;padding:8px 12px;border-radius:8px;border:1px solid var(--border);
@@ -124,35 +126,42 @@ h1 { font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:6px; }
   font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer;
 }
 
-/* ── LOADING ── */
 .loading { text-align:center;padding:40px 0;color:var(--text-muted); }
 .spinner { display:inline-block;width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin-bottom:10px; }
 @keyframes spin { to{transform:rotate(360deg)} }
 
-/* ── PASSAGE DISPLAY ── */
+/* ── PASSAGE ── */
 .passage-card {
   background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
   padding:28px 24px;margin-bottom:20px;
 }
 
-.legend { display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border); }
-.legend-item { display:flex;align-items:center;gap:6px;font-size:0.82rem;color:var(--text-secondary); }
-.legend-swatch { width:20px;height:3px;border-radius:2px; }
+.legend { margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--border); }
+.legend-row { display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap; }
+.legend-swatch { width:22px;height:4px;border-radius:2px;flex-shrink:0; }
+.legend-label { font-size:0.85rem;color:var(--text-secondary);min-width:160px; }
+.legend-ex { font-size:0.85rem;color:var(--text-muted);font-style:italic; }
+.legend-ex b { font-style:normal;font-weight:600; }
 
-.sentence-block { margin-bottom:22px; }
-.sentence-text { font-family:'DM Serif Display',serif;font-size:1.15rem;line-height:2;margin-bottom:4px; }
-.sentence-text .word { display:inline; }
-.sentence-text .link-arc {
-  display:inline;font-size:0.75rem;vertical-align:sub;margin:0 -1px;line-height:1;
-  font-weight:700;user-select:none;
+.sentence-block { margin-bottom:24px; }
+.sentence-text {
+  font-family:'DM Serif Display',serif;font-size:1.18rem;line-height:2.4;
 }
+.link-group {
+  display:inline;padding:1px 3px;
+  border-bottom:2.5px solid transparent;
+  border-radius:3px;
+}
+.link-group.cv  { border-bottom-color:var(--link-cv); background:var(--link-cv-bg); }
+.link-group.vv  { border-bottom-color:var(--link-vv); background:var(--link-vv-bg); }
+.link-group.cc  { border-bottom-color:var(--link-cc); background:var(--link-cc-bg); }
 
-.sentence-controls { display:flex;align-items:center;gap:10px;margin-top:4px; }
+.sentence-controls { display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap; }
 .btn-icon {
   width:30px;height:30px;border-radius:50%;border:1px solid var(--border);
   background:transparent;color:var(--text-muted);cursor:pointer;
   display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;
-  transition:all 0.2s;
+  transition:all 0.2s;flex-shrink:0;
 }
 .btn-icon:hover { border-color:var(--accent);color:var(--accent); }
 .btn-expand {
@@ -161,35 +170,44 @@ h1 { font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:6px; }
 }
 .btn-expand:hover { color:var(--accent); }
 
-.phonetic-line {
-  display:none;padding:8px 14px;margin-top:6px;border-radius:8px;
-  background:rgba(74,144,217,0.06);border:1px solid rgba(74,144,217,0.12);
-  font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--text-secondary);
-  letter-spacing:0.3px;line-height:1.8;
+.phonetic-panel {
+  display:none;margin-top:8px;padding:12px 16px;border-radius:10px;
+  background:rgba(74,144,217,0.05);border:1px solid rgba(74,144,217,0.1);
 }
-.phonetic-line.open { display:block; }
-.phonetic-line .ph-pause { color:var(--text-muted);margin:0 4px;font-weight:700; }
-.phonetic-line .ph-link { font-weight:600; }
-.phonetic-line .ph-link.cv { color:var(--link-cv); }
-.phonetic-line .ph-link.vv { color:var(--link-vv); }
-.phonetic-line .ph-link.cc { color:var(--link-cc); }
+.phonetic-panel.open { display:block; }
+.ph-pair { margin-bottom:8px;font-size:0.92rem;line-height:1.6; }
+.ph-pair:last-child { margin-bottom:0; }
+.ph-original { color:var(--text-secondary); }
+.ph-arrow { color:var(--text-muted);margin:0 8px; }
+.ph-result { font-weight:600;letter-spacing:0.5px; }
+.ph-result.cv { color:var(--link-cv); }
+.ph-result.vv { color:var(--link-vv); }
+.ph-result.cc { color:var(--link-cc); }
+
+.rate-bar { display:flex;align-items:center;gap:8px;margin-bottom:18px; }
+.rate-label { font-size:0.82rem;color:var(--text-muted); }
+.rate-btn {
+  padding:4px 12px;border-radius:6px;border:1px solid var(--border);
+  background:transparent;color:var(--text-muted);font-family:'Outfit',sans-serif;
+  font-size:0.78rem;cursor:pointer;transition:all 0.2s;
+}
+.rate-btn:hover { border-color:#2a4a75;color:var(--text-primary); }
+.rate-btn.active { background:rgba(74,144,217,0.15);color:var(--accent);border-color:rgba(74,144,217,0.3); }
 
 .bottom-buttons { display:flex;gap:12px;flex-wrap:wrap;margin-top:24px; }
 
-/* ── DIALECT INDICATOR ── */
 .dialect-tag {
   display:inline-block;padding:3px 10px;border-radius:6px;font-size:0.78rem;font-weight:500;
   background:rgba(74,144,217,0.08);color:var(--accent);border:1px solid rgba(74,144,217,0.15);
 }
-
 .error-msg { color:#f87171;font-size:0.9rem;margin-top:8px; }
 
-/* ── RESPONSIVE ── */
 @media(max-width:600px){
   .wrap { padding:16px 14px 40px; }
   h1 { font-size:1.6rem; }
   .sentence-text { font-size:1.05rem; }
   .passage-card { padding:20px 16px; }
+  .legend-label { min-width:auto; }
 }
 </style>
 </head>
@@ -197,207 +215,192 @@ h1 { font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:6px; }
 <div class="wrap" id="app"></div>
 
 <script type="module">
-import{html,render,useState,useRef,useCallback}from'https://unpkg.com/htm/preact/standalone.module.js';
+import{html,render,useState,useRef}from'https://unpkg.com/htm/preact/standalone.module.js';
 
-/* ═══════════════════════════════════════════
-   PASSWORD
-   ═══════════════════════════════════════════ */
 let sessionPassword = '';
 
-/* ═══════════════════════════════════════════
-   DIALECT TOGGLE — read from index.html
-   ═══════════════════════════════════════════ */
 function getDialect(){
   try{ return localStorage.getItem('spanish_dialect')||'neutral'; }catch(e){ return 'neutral'; }
 }
 
 /* ═══════════════════════════════════════════
-   ENLACE ANALYSIS ENGINE (client-side)
+   ENLACE ENGINE
    ═══════════════════════════════════════════ */
 const VOWELS = new Set('aáeéiíoóuúüAÁEÉIÍOÓUÚÜ');
-const CONSONANTS_RE = /[bcdfghjklmnñpqrstvwxyz]/i;
-const PAUSE_AFTER = /[.,;:!?…—–\-\n]/;
+const CON_RE = /[bcdfghjklmnñpqrstvwxyz]/i;
+const PAUSE_RE = /[.,;:!?…—–\n¡¿]/;
 
-function isVowel(ch){ return VOWELS.has(ch); }
-function isConsonant(ch){ return ch && CONSONANTS_RE.test(ch); }
-function stripH(ch){ return (ch && ch.toLowerCase()==='h') ? '' : ch; }
+function isV(c){ return VOWELS.has(c); }
+function isC(c){ return c && (CON_RE.test(c) || c.toLowerCase()==='y'); }
 
-function lastSoundChar(word){
-  // Return the last phonetically relevant character (skip trailing punctuation)
-  for(let i=word.length-1;i>=0;i--){
-    const c=word[i];
-    if(isVowel(c)||isConsonant(c)) return c;
-  }
+function lastSound(w){
+  for(let i=w.length-1;i>=0;i--){ const c=w[i]; if(isV(c)||isC(c)) return c; }
   return '';
 }
-function firstSoundChar(word){
-  // Return the first phonetically relevant character (h is transparent)
-  for(let i=0;i<word.length;i++){
-    const c=word[i];
+function firstSound(w){
+  for(let i=0;i<w.length;i++){
+    const c=w[i];
     if(c.toLowerCase()==='h') continue;
-    if(isVowel(c)||isConsonant(c)) return c;
+    if(isV(c)||isC(c)) return c;
   }
   return '';
 }
+function hasPause(w){ return PAUSE_RE.test(w[w.length-1]||''); }
 
-function hasPauseAfter(word){
-  // Check if word ends with punctuation that signals a breath pause
-  const last = word[word.length-1];
-  return PAUSE_AFTER.test(last||'');
-}
-
-function detectLink(wordA, wordB){
-  // Returns null or {type:'cv'|'vv'|'cc'}
-  if(!wordA||!wordB) return null;
-  if(hasPauseAfter(wordA)) return null; // pause = no link across boundary
-
-  const endCh = lastSoundChar(wordA);
-  const startCh = firstSoundChar(wordB);
-  if(!endCh||!startCh) return null;
-
-  const eV = isVowel(endCh), eC = isConsonant(endCh);
-  const sV = isVowel(startCh), sC = isConsonant(startCh);
-
-  // Rule 1: consonant + vowel
-  if(eC && sV) return {type:'cv'};
-  // Rule 2: vowel + vowel (sinalefa) — except stressed á+á causes hiatus
-  if(eV && sV){
-    // simplified: always link (the á+á hiatus exception is rare enough)
-    return {type:'vv'};
-  }
-  // Rule 3: same consonant + same consonant
-  if(eC && sC && endCh.toLowerCase()===startCh.toLowerCase()) return {type:'cc'};
-
+function detectLink(a,b){
+  if(!a||!b||hasPause(a)) return null;
+  const e=lastSound(a), s=firstSound(b);
+  if(!e||!s) return null;
+  const eV=isV(e), eC=isC(e), sV=isV(s), sC=isC(s);
+  if(eC && sV) return 'cv';
+  if(eV && sV) return 'vv';
+  if(eC && sC && e.toLowerCase()===s.toLowerCase()) return 'cc';
   return null;
 }
 
-/* ─── Phonetic representation ─── */
-function buildPhonetic(words, links){
-  // Build a simplified phonetic-flow string for the sentence
-  // links[i] = link between words[i] and words[i+1] or null
-  let parts = [];
-  for(let i=0;i<words.length;i++){
-    // Clean word (strip punctuation for phonetic display)
-    let w = words[i].replace(/[.,;:!?¡¿…—–"«»""'']/g,'').toLowerCase();
-    if(!w) continue;
-    parts.push({text:w, linkAfter:links[i]||null, pauseAfter:hasPauseAfter(words[i])});
-  }
-  return parts;
+function analyze(text){
+  const words = text.split(/\s+/).filter(Boolean);
+  const links = words.map((w,i) => i<words.length-1 ? detectLink(w,words[i+1]) : null);
+  return {words, links};
 }
 
-/* ─── Sentence splitter ─── */
+/* ─── Phonetic pair display (Gemini style) ─── */
+function phoneticPair(wA, wB, type){
+  let a = wA.replace(/[.,;:!?¡¿…—–"«»""''()]/g,'').toLowerCase();
+  let b = wB.replace(/[.,;:!?¡¿…—–"«»""''()]/g,'').toLowerCase();
+  // Remove silent h at start of b for phonetic display
+  let bPhon = b.replace(/^h/i,'');
+
+  if(type==='cv'){
+    // Last consonant(s) of A jump to B
+    let cut = a.length;
+    while(cut>0 && isC(a[cut-1])) cut--;
+    if(cut===0) cut=1; // keep at least first char
+    return a.slice(0,cut) + ' - ' + a.slice(cut) + bPhon;
+  }
+  if(type==='vv'){
+    return a + bPhon;
+  }
+  if(type==='cc'){
+    return a + bPhon.slice(1);
+  }
+  return a + ' ' + b;
+}
+
+function getLinkedPairs(words, links){
+  const pairs = [];
+  for(let i=0;i<links.length;i++){
+    if(links[i]){
+      pairs.push({
+        original: words[i]+' '+words[i+1],
+        phonetic: phoneticPair(words[i], words[i+1], links[i]),
+        type: links[i]
+      });
+    }
+  }
+  return pairs;
+}
+
 function splitSentences(text){
-  // Split on sentence-ending punctuation, keep non-empty
   return text.split(/(?<=[.!?…])\s+/).filter(s=>s.trim());
 }
 
 /* ═══════════════════════════════════════════
    TTS
    ═══════════════════════════════════════════ */
+let ttsRate = 1.0;
+
 function speak(text){
   if(!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
+  speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'es-AR';
-  u.rate = 0.85;
-  // prefer Latin American voice
+  u.lang='es-AR'; u.rate=ttsRate;
   const voices = speechSynthesis.getVoices();
-  const pref = voices.find(v=>/es[-_](AR|419|MX|US)/i.test(v.lang))
+  const v = voices.find(v=>/es[-_](AR|419|MX|US)/i.test(v.lang))
     || voices.find(v=>/^es/i.test(v.lang));
-  if(pref) u.voice = pref;
+  if(v) u.voice=v;
   speechSynthesis.speak(u);
 }
-// warm up voices
 if(window.speechSynthesis) speechSynthesis.getVoices();
 
 /* ═══════════════════════════════════════════
-   API CALL
+   API
    ═══════════════════════════════════════════ */
-async function generatePassage(pw, level, theme, dialect){
-  const dialectInstr = dialect==='rioplatense'
+const SEEDS=[
+  'el transporte público','un viaje inesperado','la historia de un barrio','una receta de familia',
+  'un partido de fútbol','la vida en el campo','una mudanza','el primer día de trabajo',
+  'un misterio en la ciudad','la música y los recuerdos','un error que salió bien',
+  'las estaciones del año','una amistad inesperada','el mercado del domingo',
+  'aprender algo nuevo','una tormenta de verano','la tecnología y los abuelos',
+  'un secreto de infancia','las costumbres de otro país','una noche sin dormir',
+  'los vecinos ruidosos','un regalo perfecto','la playa en invierno',
+  'una entrevista de trabajo','el arte callejero','una carta perdida',
+  'un café con un desconocido','la astronomía','los animales del barrio',
+  'una fiesta sorpresa','el último tren','cocinar para muchos'
+];
+
+async function generate(pw, level, theme, dialect){
+  const dInstr = dialect==='rioplatense'
     ? 'Usa español rioplatense argentino con formas de vos e imperativo voseante.'
     : 'Usa español neutro con formas de tú. No uses voseo.';
 
-  const themeInstr = theme.trim()
-    ? `Tema del texto: ${theme.trim()}.`
-    : 'Elige un tema interesante y variado libremente.';
+  let tInstr;
+  if(theme.trim()){
+    tInstr = `Tema del texto: ${theme.trim()}.`;
+  } else {
+    const seed = SEEDS[Math.floor(Math.random()*SEEDS.length)];
+    tInstr = `Elige un tema interesante y original. Sugerencia de partida (adaptala libremente): "${seed}". Sé creativo — no repitas temas.`;
+  }
 
   const system = `Eres un generador de textos para práctica de lectura en voz alta en español.
 Genera un texto de 4-5 párrafos cortos (3-4 oraciones cada uno) al nivel ${level}.
-${dialectInstr}
-${themeInstr}
-El texto debe tener variedad de estructuras que produzcan enlace fonético natural:
-- Muchas combinaciones de consonante final + vocal inicial entre palabras
-- Sinalefas (vocal final + vocal inicial)
-- Consonantes iguales entre palabras
-No fuerces estos patrones artificialmente — simplemente escribe de forma natural y fluida.
-Devuelve SOLO el texto, sin títulos ni explicaciones.`;
+${dInstr}
+${tInstr}
+El texto debe fluir con naturalidad y contener buena variedad de combinaciones entre palabras:
+consonante final + vocal inicial, vocal + vocal, y consonantes iguales entre palabras.
+No fuerces estos patrones — simplemente escribí de forma natural y fluida.
+Devuelve SOLO el texto en párrafos, sin títulos, sin explicaciones, sin comillas.`;
 
-  const res = await fetch('/api/claude', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
+  const res = await fetch('/api/claude',{
+    method:'POST', headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-      password:pw,
-      model:'claude-sonnet-4-20250514',
-      max_tokens:1200,
-      system,
-      messages:[{role:'user',content:'Genera el texto ahora.'}]
+      password:pw, model:'claude-sonnet-4-20250514', max_tokens:1200,
+      system, messages:[{role:'user',content:'Genera el texto ahora.'}]
     })
   });
-  if(!res.ok){
-    const t = await res.text();
-    throw new Error(res.status===401?'Contraseña incorrecta':t);
-  }
+  if(!res.ok) throw new Error(res.status===401?'pw':'Error: '+res.status);
   const data = await res.json();
-  let text = (data.content && data.content[0] && data.content[0].text) || '';
-  text = text.replace(/```[a-z]*\n?/g,'').replace(/```/g,'').trim();
-  return text;
+  let text = (data.content?.[0]?.text)||'';
+  return text.replace(/```[a-z]*\n?/g,'').replace(/```/g,'').trim();
 }
 
 /* ═══════════════════════════════════════════
    COMPONENTS
    ═══════════════════════════════════════════ */
-const ARC_CHARS = { cv:'⌢', vv:'⌢', cc:'⌢' };
-const LINK_COLORS = { cv:'var(--link-cv)', vv:'var(--link-vv)', cc:'var(--link-cc)' };
 
-function SentenceDisplay({text, index}){
-  const [showPhonetic, setShowPhonetic] = useState(false);
+function SentenceDisplay({text}){
+  const [open, setOpen] = useState(false);
+  const {words, links} = analyze(text);
+  const pairs = getLinkedPairs(words, links);
 
-  const words = text.split(/\s+/).filter(Boolean);
-  const links = [];
-  for(let i=0;i<words.length-1;i++){
-    links.push(detectLink(words[i],words[i+1]));
-  }
-  links.push(null); // last word has no link after
-
-  const phonetic = buildPhonetic(words, links);
-
-  // Build inline elements
+  // Build visual groups: consecutive linked words with same type get grouped
   const elems = [];
-  for(let i=0;i<words.length;i++){
-    elems.push(html`<span class="word">${words[i]}</span>`);
+  let i = 0;
+  while(i < words.length){
     if(links[i]){
-      elems.push(html`<span class="link-arc" style="color:${LINK_COLORS[links[i].type]}"> ‿ </span>`);
-    } else if(i<words.length-1){
+      const type = links[i];
+      const grp = [words[i]];
+      let j = i;
+      while(j < words.length-1 && links[j] === type){
+        grp.push(words[j+1]); j++;
+      }
+      elems.push(html`<span class="link-group ${type}" key=${'g'+i}>${grp.join(' ')}</span>`);
       elems.push(' ');
-    }
-  }
-
-  // Build phonetic line
-  const phElems = [];
-  for(let i=0;i<phonetic.length;i++){
-    const p = phonetic[i];
-    if(p.linkAfter){
-      phElems.push(html`<span class="ph-link ${p.linkAfter.type}">${p.text}</span>`);
+      i = j+1;
     } else {
-      phElems.push(html`<span>${p.text}</span>`);
-    }
-    if(p.pauseAfter && i<phonetic.length-1){
-      phElems.push(html`<span class="ph-pause">│</span>`);
-    } else if(i<phonetic.length-1 && !p.linkAfter){
-      phElems.push(' ');
-    } else if(p.linkAfter && i<phonetic.length-1){
-      phElems.push(html`<span class="ph-link ${p.linkAfter.type}">·</span>`);
+      elems.push(html`<span key=${'w'+i}>${words[i]}</span>`);
+      elems.push(' ');
+      i++;
     }
   }
 
@@ -406,103 +409,125 @@ function SentenceDisplay({text, index}){
       <div class="sentence-text">${elems}</div>
       <div class="sentence-controls">
         <button class="btn-icon" onClick=${()=>speak(text)} title="Escuchar">🔊</button>
-        <button class="btn-expand" onClick=${()=>setShowPhonetic(!showPhonetic)}>
-          ${showPhonetic ? '▾ ocultar flujo fonético' : '▸ ver flujo fonético'}
-        </button>
+        ${pairs.length>0 && html`
+          <button class="btn-expand" onClick=${()=>setOpen(!open)}>
+            ${open?'▾ ocultar enlaces fonéticos':'▸ ver enlaces fonéticos'}
+          </button>
+        `}
       </div>
-      <div class="phonetic-line ${showPhonetic?'open':''}">${phElems}</div>
+      ${pairs.length>0 && html`
+        <div class="phonetic-panel ${open?'open':''}">
+          ${pairs.map((p,j)=>html`
+            <div class="ph-pair" key=${j}>
+              <span class="ph-original">${p.original}</span>
+              <span class="ph-arrow">→</span>
+              <span class="ph-result ${p.type}">${p.phonetic}</span>
+            </div>
+          `)}
+        </div>
+      `}
     </div>
   `;
 }
 
 function App(){
-  const [screen, setScreen] = useState('select'); // select | loading | passage | pw
+  const [screen, setScreen] = useState('select');
   const [level, setLevel] = useState('B2');
   const [theme, setTheme] = useState('');
   const [themeOpen, setThemeOpen] = useState(true);
-  const [passageText, setPassageText] = useState('');
+  const [passage, setPassage] = useState('');
   const [error, setError] = useState('');
+  const [rate, setRate] = useState('normal');
   const pwRef = useRef(null);
-
   const dialect = getDialect();
 
-  async function doGenerate(pw){
+  function pickRate(r){
+    setRate(r);
+    ttsRate = r==='lento'?0.75 : r==='rapido'?1.25 : 1.0;
+  }
+
+  async function doGen(pw){
     setScreen('loading'); setError('');
-    try {
-      const text = await generatePassage(pw, level, theme, dialect);
-      setPassageText(text);
-      setScreen('passage');
-    } catch(e){
-      if(e.message==='Contraseña incorrecta'){
-        sessionPassword='';
-        setError('Contraseña incorrecta');
-        setScreen('pw');
-      } else {
-        setError(e.message||'Error al generar');
-        setScreen('select');
-      }
+    try{
+      const t = await generate(pw, level, theme, dialect);
+      setPassage(t); setScreen('passage');
+    }catch(e){
+      if(e.message==='pw'){ sessionPassword=''; setError('Contraseña incorrecta'); setScreen('pw'); }
+      else { setError(e.message); setScreen('select'); }
     }
   }
 
-  function handleGenerate(){
-    if(!sessionPassword){
-      setScreen('pw');
-    } else {
-      doGenerate(sessionPassword);
-    }
+  function go(){
+    if(!sessionPassword) setScreen('pw');
+    else doGen(sessionPassword);
   }
 
-  function handlePwSubmit(){
-    const pw = pwRef.current?.value?.trim();
+  function submitPw(){
+    const pw=pwRef.current?.value?.trim();
     if(!pw) return;
-    sessionPassword = pw;
-    doGenerate(pw);
+    sessionPassword=pw; doGen(pw);
   }
 
-  function handleReset(){
-    setPassageText('');
-    setScreen('select');
-  }
-
-  // ── Select Screen ──
-  if(screen==='select' || screen==='pw'){
+  /* ── SELECT ── */
+  if(screen==='select'||screen==='pw'){
     return html`
       <a class="back" href="index.html">← Inicio</a>
       <h1>Práctica de Enlace</h1>
       <p class="subtitle">Lectura en voz alta con fluidez natural</p>
 
-      <!-- CONCEPT OVERVIEW -->
       <div class="card">
         <h2>¿Qué es el enlace?</h2>
         <p>En español hablado, las palabras no se pronuncian por separado — se encadenan dentro de cada frase, creando un flujo continuo de sonido. Este fenómeno se llama <em>enlace</em> o <em>encadenamiento</em>.</p>
-        <p>Hay tres reglas principales:</p>
-        <div style="margin-top:14px">
+
+        <h3 style="margin-top:18px">Reglas de enlace</h3>
+        <div style="margin-top:10px">
           <div class="rule-row">
             <div class="rule-dot" style="background:var(--link-cv)"></div>
             <div>
               <div class="rule-label">Consonante + Vocal</div>
-              <div class="rule-example">La consonante final salta a la siguiente sílaba: "los ojos" → lo-so-jos</div>
+              <div class="rule-example">La consonante final salta a la sílaba siguiente: "los ojos" → lo - so - jos</div>
             </div>
           </div>
           <div class="rule-row">
             <div class="rule-dot" style="background:var(--link-vv)"></div>
             <div>
               <div class="rule-label">Vocal + Vocal (sinalefa)</div>
-              <div class="rule-example">Las vocales se funden en una sola sílaba: "mi amigo" → mia-mi-go</div>
+              <div class="rule-example">Las vocales se funden en una sola sílaba: "mi amigo" → mia - mi - go</div>
             </div>
           </div>
           <div class="rule-row">
             <div class="rule-dot" style="background:var(--link-cc)"></div>
             <div>
               <div class="rule-label">Consonante + Misma consonante</div>
-              <div class="rule-example">Se pronuncia una sola vez: "dos sillas" → do-si-llas</div>
+              <div class="rule-example">Se pronuncia una sola vez: "dos sillas" → do - si - llas</div>
             </div>
           </div>
         </div>
-        <p style="margin-top:14px;font-size:0.88rem;color:var(--text-muted)">La H es invisible — nunca bloquea el enlace. Las pausas naturales ocurren en comas, puntos y límites de cláusula.</p>
+
+        <p style="margin-top:14px;font-size:0.88rem;color:var(--text-muted)">
+          La <strong style="color:var(--text-secondary)">H</strong> es invisible — nunca bloquea el enlace: "mi hermano" → mier - ma - no
+        </p>
+        <p style="font-size:0.88rem;color:var(--text-muted)">
+          La <strong style="color:var(--text-secondary)">Y</strong> funciona como consonante: "playa es" → enlace de consonante + vocal.
+        </p>
+
+        <div class="rule-section">
+          <div class="rule-section-title">¿Cuándo NO se enlazan?</div>
+          <div class="no-link-row">
+            <span class="no-link-dot">✕</span>
+            <span>Dos consonantes <em>diferentes</em>: "el gato" — la L y la G no se combinan</span>
+          </div>
+          <div class="no-link-row">
+            <span class="no-link-dot">✕</span>
+            <span>Vocal seguida de consonante: "va con" — la A y la C no se enlazan</span>
+          </div>
+          <div class="no-link-row">
+            <span class="no-link-dot">✕</span>
+            <span>Puntuación (comas, puntos, etc.) — pausa natural para respirar</span>
+          </div>
+        </div>
       </div>
 
-      <!-- SELECTION -->
       <div class="card">
         <h2>Generar texto</h2>
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
@@ -519,8 +544,9 @@ function App(){
 
         <div class="field-label">Tema</div>
         <div class="check-row">
-          <input type="checkbox" id="theme-open" checked=${themeOpen} onChange=${e=>{setThemeOpen(e.target.checked);if(!e.target.checked)setTheme('');}} />
-          <label for="theme-open">Elegir tema</label>
+          <input type="checkbox" id="thk" checked=${themeOpen}
+            onChange=${e=>{setThemeOpen(e.target.checked);if(!e.target.checked)setTheme('');}} />
+          <label for="thk">Elegir tema</label>
         </div>
         <input class="text-input" style="margin-bottom:18px"
           placeholder="Ej: viajes, comida, historia argentina…"
@@ -534,18 +560,18 @@ function App(){
             <div class="field-label">Contraseña</div>
             <div class="pw-row">
               <input class="pw-input" type="password" ref=${pwRef} placeholder="Contraseña"
-                onKeyDown=${e=>{if(e.key==='Enter')handlePwSubmit()}} />
-              <button class="pw-btn" onClick=${handlePwSubmit}>→</button>
+                onKeyDown=${e=>{if(e.key==='Enter')submitPw()}} />
+              <button class="pw-btn" onClick=${submitPw}>→</button>
             </div>
           </div>
         ` : html`
-          <button class="btn-primary" onClick=${handleGenerate}>Generar texto</button>
+          <button class="btn-primary" onClick=${go}>Generar texto</button>
         `}
       </div>
     `;
   }
 
-  // ── Loading ──
+  /* ── LOADING ── */
   if(screen==='loading'){
     return html`
       <a class="back" href="index.html">← Inicio</a>
@@ -557,8 +583,8 @@ function App(){
     `;
   }
 
-  // ── Passage Display ──
-  const sentences = splitSentences(passageText);
+  /* ── PASSAGE ── */
+  const sentences = splitSentences(passage);
 
   return html`
     <a class="back" href="index.html">← Inicio</a>
@@ -567,26 +593,36 @@ function App(){
 
     <div class="passage-card">
       <div class="legend">
-        <div class="legend-item">
+        <div class="legend-row">
           <div class="legend-swatch" style="background:var(--link-cv)"></div>
-          <span>Consonante + vocal</span>
+          <span class="legend-label">Consonante + vocal</span>
+          <span class="legend-ex">los ojos → <b>lo - so - jos</b></span>
         </div>
-        <div class="legend-item">
+        <div class="legend-row">
           <div class="legend-swatch" style="background:var(--link-vv)"></div>
-          <span>Sinalefa (vocal + vocal)</span>
+          <span class="legend-label">Sinalefa (vocal + vocal)</span>
+          <span class="legend-ex">mi amigo → <b>mia - mi - go</b></span>
         </div>
-        <div class="legend-item">
+        <div class="legend-row">
           <div class="legend-swatch" style="background:var(--link-cc)"></div>
-          <span>Consonante doble</span>
+          <span class="legend-label">Consonante doble</span>
+          <span class="legend-ex">dos sillas → <b>do - si - llas</b></span>
         </div>
       </div>
 
-      ${sentences.map((s,i)=>html`<${SentenceDisplay} text=${s} index=${i} key=${i} />`)}
+      <div class="rate-bar">
+        <span class="rate-label">Velocidad 🔊</span>
+        ${[['lento','Lento'],['normal','Normal'],['rapido','Rápido']].map(([k,lb])=>html`
+          <button class="rate-btn ${rate===k?'active':''}" onClick=${()=>pickRate(k)}>${lb}</button>
+        `)}
+      </div>
+
+      ${sentences.map((s,i)=>html`<${SentenceDisplay} text=${s} key=${i} />`)}
     </div>
 
     <div class="bottom-buttons">
-      <button class="btn-primary" onClick=${handleReset}>← Nueva selección</button>
-      <button class="btn-ghost" onClick=${()=>doGenerate(sessionPassword)}>Otra vez (mismo nivel)</button>
+      <button class="btn-primary" onClick=${()=>{setPassage('');setScreen('select');}}>← Nueva selección</button>
+      <button class="btn-ghost" onClick=${()=>doGen(sessionPassword)}>Otra vez (mismo nivel)</button>
     </div>
   `;
 }

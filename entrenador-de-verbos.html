@@ -337,20 +337,20 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
     <div id="statsBar" class="stats-bar" style="display:none;"></div>
 
     <div class="config-section">
-      <div class="config-label">Duración de sesión</div>
-      <div class="btn-row" id="lenBtns">
-        <button class="btn-opt" data-val="10">10</button>
-        <button class="btn-opt sel" data-val="20">20</button>
-        <button class="btn-opt" data-val="40">40</button>
-      </div>
-    </div>
-
-    <div class="config-section">
       <div class="config-label">Verbos</div>
       <div class="btn-row" id="filterBtns">
         <button class="btn-opt sel" data-val="all">Todos</button>
         <button class="btn-opt" data-val="trouble">Difíciles</button>
         <button class="btn-opt" data-val="unseen">Sin ver</button>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <div class="config-label">Duración de sesión</div>
+      <div class="btn-row" id="lenBtns">
+        <button class="btn-opt" data-val="10">10</button>
+        <button class="btn-opt sel" data-val="20">20</button>
+        <button class="btn-opt" data-val="40">40</button>
       </div>
     </div>
 
@@ -1122,7 +1122,7 @@ function initBtnGroups(){
         el.querySelectorAll('.btn-opt').forEach(x=>x.classList.remove('sel'));
         b.classList.add('sel');
         if(gid==='lenBtns') cfg.len=+b.dataset.val;
-        if(gid==='filterBtns') cfg.filter=b.dataset.val;
+        if(gid==='filterBtns'){ cfg.filter=b.dataset.val; showStats(); }
         if(gid==='modeBtns') cfg.mode=b.dataset.val;
       });
     });
@@ -1130,67 +1130,121 @@ function initBtnGroups(){
 }
 
 // ═══════════════════════════════════════════════
-//  localStorage
+//  localStorage — mode-specific stats
 // ═══════════════════════════════════════════════
-const LS_KEY='entrenador_verbos_v1';
-const LS_MODE_KEY='entrenador_mode_stats_v1';
-function loadProgress(){
-  try{return JSON.parse(localStorage.getItem(LS_KEY))||{};}catch{return {};}
-}
-function saveProgress(prog){
-  try{localStorage.setItem(LS_KEY,JSON.stringify(prog));}catch{}
-}
-function loadModeStats(){
-  try{return JSON.parse(localStorage.getItem(LS_MODE_KEY))||{en2es:{t:0,c:0},es2en:{t:0,c:0},context:{t:0,c:0},oddout:{t:0,c:0}};}catch{return {en2es:{t:0,c:0},es2en:{t:0,c:0},context:{t:0,c:0},oddout:{t:0,c:0}};}
-}
-function saveModeStats(ms){
-  try{localStorage.setItem(LS_MODE_KEY,JSON.stringify(ms));}catch{}
-}
-function getVerbStats(id){
-  const p=loadProgress();
-  return p[id]||{seen:0,correct:0,wrong:0,trouble:false,lastSeen:null};
-}
-function updateVerbStats(id,wasCorrect,mode){
-  const p=loadProgress();
-  if(!p[id]) p[id]={seen:0,correct:0,wrong:0,trouble:false,lastSeen:null};
-  p[id].seen++;
-  if(wasCorrect) p[id].correct++; else p[id].wrong++;
-if(p[id].wrong>=1) p[id].trouble=true;
-  p[id].lastSeen=new Date().toISOString();
-  saveProgress(p);
-  // Track mode stats
-  if(mode){
-    const ms=loadModeStats();
-    if(!ms[mode]) ms[mode]={t:0,c:0};
-    ms[mode].t++;
-    if(wasCorrect) ms[mode].c++;
-    saveModeStats(ms);
+const LS_TODOS='entrenador_todos_stats_v1';
+const LS_DIF_STATS='entrenador_dificiles_stats_v1';
+const LS_SINVER='entrenador_sinver_stats_v1';
+const LS_SINVER_SEEN='entrenador_sinver_seen_v1';
+const LS_DIF_POOL='entrenador_dificiles_pool_v1';
+
+function _load(k,def){try{return JSON.parse(localStorage.getItem(k))||def;}catch{return def;}}
+function _save(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch{}}
+const emptyMS=()=>({en2es:{t:0,c:0},es2en:{t:0,c:0},context:{t:0,c:0},oddout:{t:0,c:0}});
+
+function loadTodosStats(){const d=_load(LS_TODOS,null);if(!d)return{views:0,...emptyMS()};return d;}
+function loadDifStats(){return _load(LS_DIF_STATS,emptyMS());}
+function loadSinverStats(){return _load(LS_SINVER,emptyMS());}
+function loadSinverSeen(){return new Set(_load(LS_SINVER_SEEN,[]));}
+function loadDifPool(){return new Set(_load(LS_DIF_POOL,[]));}
+
+function updateVerbStats(id,wasCorrect,qMode){
+  const vMode=cfg.filter;
+  if(vMode==='all'){
+    const s=loadTodosStats();
+    s.views=(s.views||0)+1;
+    if(!s[qMode])s[qMode]={t:0,c:0};
+    s[qMode].t++; if(wasCorrect)s[qMode].c++;
+    _save(LS_TODOS,s);
+  }else if(vMode==='trouble'){
+    const s=loadDifStats();
+    if(!s[qMode])s[qMode]={t:0,c:0};
+    s[qMode].t++; if(wasCorrect)s[qMode].c++;
+    _save(LS_DIF_STATS,s);
+  }else if(vMode==='unseen'){
+    const s=loadSinverStats();
+    if(!s[qMode])s[qMode]={t:0,c:0};
+    s[qMode].t++; if(wasCorrect)s[qMode].c++;
+    _save(LS_SINVER,s);
+    const seen=loadSinverSeen(); seen.add(id); _save(LS_SINVER_SEEN,[...seen]);
+  }
+  // Wrong in any mode → add to difíciles pool
+  if(!wasCorrect){
+    const pool=loadDifPool(); pool.add(id); _save(LS_DIF_POOL,[...pool]);
   }
 }
 
-function resetAllProgress(){
-  if(!confirm('¿Borrar todo el progreso? Esta acción no se puede deshacer.')) return;
-  if(!confirm('¿Estás seguro? Se perderán todos los datos de verbos vistos, difíciles y aciertos.')) return;
-  localStorage.removeItem(LS_KEY);
-  localStorage.removeItem(LS_MODE_KEY);
+function resetTodos(){
+  if(!confirm('¿Reiniciar las estadísticas del modo Todos?')) return;
+  localStorage.removeItem(LS_TODOS);
+  showStats();
+}
+function resetDificiles(){
+  if(!confirm('¿Reiniciar los verbos difíciles y sus estadísticas?')) return;
+  localStorage.removeItem(LS_DIF_STATS);
+  localStorage.removeItem(LS_DIF_POOL);
+  updateDifBtn();
+  showStats();
+}
+function resetSinver(){
+  if(!confirm('¿Reiniciar el progreso del modo Sin Ver?')) return;
+  localStorage.removeItem(LS_SINVER);
+  localStorage.removeItem(LS_SINVER_SEEN);
   showStats();
 }
 
-function showStats(){
-  const p=loadProgress();
-  const ids=Object.keys(p);
-  const ms=loadModeStats();
-  if(ids.length===0 && ms.en2es.t===0){document.getElementById('statsBar').style.display='none';return;}
-  const seen=ids.length;
-  const trouble=ids.filter(k=>p[k].trouble).length;
-  const totalQ=ids.reduce((s,k)=>s+p[k].seen,0);
-  const totalC=ids.reduce((s,k)=>s+p[k].correct,0);
-  const pct=totalQ?Math.round(totalC/totalQ*100):0;
+function updateDifBtn(){
+  const pool=loadDifPool();
+  const btn=document.querySelector('#filterBtns .btn-opt[data-val="trouble"]');
+  if(pool.size<10){
+    btn.disabled=true;
+    btn.style.opacity='0.4';
+    btn.style.cursor='not-allowed';
+    // If currently selected, switch to Todos
+    if(cfg.filter==='trouble'){
+      btn.classList.remove('sel');
+      const todosBtn=document.querySelector('#filterBtns .btn-opt[data-val="all"]');
+      todosBtn.classList.add('sel');
+      cfg.filter='all';
+    }
+  }else{
+    btn.disabled=false;
+    btn.style.opacity='';
+    btn.style.cursor='';
+  }
+}
 
+function showStats(){
+  const difPool=loadDifPool();
+  const difCount=difPool.size;
+  const vMode=cfg.filter;
   const modeLabels={en2es:'EN→ES',es2en:'ES→EN',context:'Contexto',oddout:'Intruso'};
+
+  updateDifBtn();
+
+  // Determine if this mode has data
+  let statsData, hasData=false;
+  if(vMode==='all'){
+    statsData=loadTodosStats();
+    hasData=statsData.views>0;
+  }else if(vMode==='trouble'){
+    statsData=loadDifStats();
+    hasData=Object.keys(modeLabels).some(k=>(statsData[k]||{t:0}).t>0)||difCount>0;
+  }else if(vMode==='unseen'){
+    statsData=loadSinverStats();
+    const seen=loadSinverSeen();
+    hasData=seen.size>0;
+  }
+
+  if(!hasData && difCount===0){
+    document.getElementById('statsBar').style.display='none';
+    return;
+  }
+
+  // Per-question-mode rows
   let modesHtml='';
   for(const [key,label] of Object.entries(modeLabels)){
-    const m=ms[key]||{t:0,c:0};
+    const m=statsData[key]||{t:0,c:0};
     if(m.t===0) continue;
     const mpct=Math.round(m.c/m.t*100);
     modesHtml+=`<div class="stats-mode-item">
@@ -1200,15 +1254,33 @@ function showStats(){
     </div>`;
   }
 
+  // Main stats line
+  let mainHtml='';
+  if(vMode==='all'&&statsData.views>0){
+    mainHtml+=`<div><span class="stat-num">${statsData.views}</span>vistas</div>`;
+  }else if(vMode==='unseen'){
+    const seen=loadSinverSeen();
+    mainHtml+=`<div><span class="stat-num">${seen.size} / ${VERBS.length}</span>progreso</div>`;
+  }
+  if(difCount>0){
+    mainHtml+=`<div><span class="stat-num">${difCount}</span>difíciles</div>`;
+  }
+
+  // Reset button
+  let resetBtn='';
+  if(vMode==='all'&&statsData.views>0) resetBtn=`<button class="btn-reset" onclick="resetTodos()">Reiniciar Todos</button>`;
+  else if(vMode==='trouble'&&(difCount>0||Object.keys(modeLabels).some(k=>(statsData[k]||{t:0}).t>0)))
+    resetBtn=`<button class="btn-reset" onclick="resetDificiles()">Reiniciar Difíciles</button>`;
+  else if(vMode==='unseen'){
+    const seen=loadSinverSeen();
+    if(seen.size>0) resetBtn=`<button class="btn-reset" onclick="resetSinver()">Reiniciar Sin Ver</button>`;
+  }
+
   document.getElementById('statsBar').style.display='block';
   document.getElementById('statsBar').innerHTML=`
-    <div class="stats-main">
-      <div><span class="stat-num">${seen}</span>verbos vistos</div>
-      <div><span class="stat-num">${trouble}</span>difíciles</div>
-      <div><span class="stat-num">${pct}%</span>aciertos</div>
-    </div>
+    ${mainHtml?`<div class="stats-main">${mainHtml}</div>`:''}
     ${modesHtml?`<div class="stats-modes">${modesHtml}</div>`:''}
-    <div class="stats-footer"><button class="btn-reset" onclick="resetAllProgress()">Reiniciar progreso</button></div>
+    ${resetBtn?`<div class="stats-footer">${resetBtn}</div>`:''}
   `;
 }
 
@@ -1224,16 +1296,17 @@ function showScreen(id){
 //  SESSION START
 // ═══════════════════════════════════════════════
 function startSession(){
-  const prog=loadProgress();
   let pool=[...VERBS];
 
-  // Filter by progress
+  // Filter by verbos mode
   if(cfg.filter==='trouble'){
-    pool=pool.filter(v=>prog[v.id]&&prog[v.id].trouble);
-   if(pool.length<10){alert('Necesitás al menos 10 verbos difíciles para empezar. Tenés '+pool.length+' hasta ahora. ¡Seguí practicando!');return;}
+    const difPool=loadDifPool();
+    pool=pool.filter(v=>difPool.has(v.id));
+    if(pool.length<10){alert('Necesitás al menos 10 verbos difíciles para empezar. Tenés '+pool.length+' hasta ahora. ¡Seguí practicando!');return;}
   }else if(cfg.filter==='unseen'){
-    pool=pool.filter(v=>!prog[v.id]||prog[v.id].seen===0);
-    if(pool.length<4){alert('¡Ya viste todos los verbos! Probá con otro filtro.');return;}
+    const seen=loadSinverSeen();
+    pool=pool.filter(v=>!seen.has(v.id));
+    if(pool.length===0){alert('¡Completaste todos los verbos en el modo Sin Ver! Revisá tus estadísticas y cuando estés listo, usá el botón de reinicio para empezar de nuevo.');return;}
   }
 
   // If locked to a specific mode, filter out verbs that can't support it
@@ -1247,6 +1320,11 @@ function startSession(){
   if(pool.length<4){
     alert('No hay suficientes verbos para este modo. Probá con Rotación.');
     return;
+  }
+
+  // Sin Ver: warn if fewer verbs remain than selected session size
+  if(cfg.filter==='unseen' && pool.length < cfg.len && pool.length >= 4){
+    alert(`Quedan ${pool.length} verbos en el modo Sin Ver. Se hará una sesión de ${pool.length}.`);
   }
 
   // Shuffle and pick
@@ -2144,28 +2222,11 @@ function showSummary(){
     ${missedHtml}
   <div class="summary-btns">
       <button class="btn-primary" onclick="startSession()">Otra vez</button>
-      <button class="btn-ghost" onclick="playTrouble()">Solo difíciles</button>
-      ${cfg.filter==='trouble'?'<button class="btn-reset" onclick="resetTroubleVerbs()">Resetear difíciles</button>':''}
       <button class="btn-ghost" onclick="backToMenu()">Menú</button>
     </div>`;
   showScreen('sSummary');
 }
 
-function playTrouble(){
-  cfg.filter='trouble';
-  document.querySelectorAll('#filterBtns .btn-opt').forEach(b=>{
-    b.classList.toggle('sel',b.dataset.val==='trouble');
-  });
-  startSession();
-}
-function resetTroubleVerbs(){
-  if(!confirm('¿Resetear todos los verbos difíciles? Se quitarán de la lista pero no se borrará tu progreso general.')) return;
-  const p=loadProgress();
-  Object.keys(p).forEach(id=>{ p[id].trouble=false; p[id].wrong=0; });
-  saveProgress(p);
-  showStats();
-  showScreen('sStart');
-}
 function backToMenu(){
   showStats();
   showScreen('sStart');

@@ -1002,6 +1002,7 @@ let driveToken     = null;
 let tokenClient    = null;
 let folderId       = null;
 let driveReady     = false;
+let _connectResolve = null;  // for promisified re-auth
 
 // ═══════════════════════════════════════════════
 //  PARAM UI
@@ -1096,6 +1097,10 @@ function showScreen(id) {
 function goParams() {
   showScreen('sParams');
   unlockParams();
+  // Re-sync conditional rows based on current cfg
+  document.getElementById('episodeRow').classList.toggle('hidden', cfg.mode !== 'fixed');
+  const voseoRow = document.getElementById('voseoRow');
+  if (voseoRow) voseoRow.classList.toggle('hidden', cfg.region !== 'latin_american');
   if (driveToken) loadActiveStories();
 }
 
@@ -1217,7 +1222,7 @@ function buildPrompt(p) {
     C2:'mastery C2 — near-native complexity, full stylistic and lexical range',
   };
   const regionDesc = {
-    neutral:       'neutral Spanish — broadly accessible to all Spanish speakers',
+    neutral:       'neutral Latin American Spanish — use tú forms exclusively, never vos. Do not set the story in Argentina or Uruguay. Avoid all regional slang, lunfardo, and voseo. Broadly accessible to all Spanish speakers.',
     rioplatense:   'Rioplatense Spanish (Argentine/Uruguayan) — use voseo throughout, lunfardo touches, local Río de la Plata flavor',
     latin_american:'Latin American Spanish' + (p.voseo ? ' — include voseo (vos/te) naturally alongside tú forms' : ' — use tú/usted, no voseo'),
     spain:         'Castilian Spanish — use vosotros, peninsular vocabulary',
@@ -1280,9 +1285,9 @@ PASAJE: 3-4 párrafos. Narración auténtica, no ejercicio de libro de texto. ${
 PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia, implicación y comprensión profunda — no localización de palabras. Incluye preguntas sobre motivación, tono y significado implícito.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
 
 JSON requerido:
-{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto","options":["A","B","C","D"],"correct":0,"explanation":"por qué"}]}
+{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}
 
-correct es índice 0-based (0=A, 1=B, 2=C, 3=D).`;
+correct es índice 0-based (0=primera opción, 1=segunda, 2=tercera, 3=cuarta). NO incluyas letras (A/B/C/D) ni números en el texto de opciones ni preguntas — el sistema los agrega automáticamente.`;
 }
 
 // ═══════════════════════════════════════════════
@@ -1445,6 +1450,23 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
 
     if (!quiz.questions || !Array.isArray(quiz.questions) || quiz.questions.length === 0)
       throw new Error('El cuestionario generado no tiene preguntas. Inténtalo de nuevo.');
+
+    // Strip letter prefixes (A. B. C. D.) and question numbers from AI output
+    quiz.questions.forEach(q => {
+      q.question = q.question.replace(/^\s*\d+[\.\)]\s*/, '');
+      q.options = q.options.map(opt => opt.replace(/^\s*[A-Da-d][\.\)\:]\s*/, ''));
+    });
+
+    // Shuffle options so correct answer isn't always in the same position
+    quiz.questions.forEach(q => {
+      const indices = q.options.map((_, i) => i);
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      q.options = indices.map(i => q.options[i]);
+      q.correct = indices.indexOf(q.correct);
+    });
 
     currentQuiz = quiz;
     generateRetries = 0;
@@ -1689,11 +1711,16 @@ function watchBibleReady() {
 //  ACTION FUNCTIONS
 // ═══════════════════════════════════════════════
 async function saveCurrentQuiz(callback) {
-  if (!driveToken) {
+  setDriveUI('busy', 'Verificando conexión…');
+  const connected = await ensureDriveConnection();
+  if (!connected) {
+    // Could not reconnect — keep user on page, offer retry
+    isProcessing = false;
+    setDriveUI('disconnected', 'Google Drive: no conectado');
     showTwoOptionModal(
-      'Drive no conectado — no se guardará',
-      'Si continúas sin conectar Drive, este cuestionario/episodio se perderá.',
-      'Conectar Drive ahora',  () => { pendingFn = () => _doSave(callback); connectDrive(); },
+      'No se pudo conectar con Google Drive',
+      'Tu episodio sigue en memoria — no cierres esta página. Intentá de nuevo en un momento.',
+      'Reintentar guardado', () => { isProcessing = true; saveCurrentQuiz(callback); },
       'Continuar sin guardar', () => callback()
     );
     return;
@@ -1706,11 +1733,22 @@ async function _doSave(callback) {
     const isFinal = (currentCfg.mode === 'fixed' && episodeNum >= episodeTarget) ||
                     (currentCfg.mode === 'open'  && episodeTarget > 0 && episodeNum >= episodeTarget);
     const status = currentCfg.mode === 'individual' ? null : isFinal ? 'complete' : 'in-progress';
-    await saveQuizToDrive({
+    const saved = await saveQuizToDrive({
       story_status:   status,
       episode_target: episodeTarget || null,
       star_rating:    currentStarRating,
     });
+    if (!saved) {
+      // Save failed even after reconnect — keep user on page
+      isProcessing = false;
+      showTwoOptionModal(
+        'Error al guardar en Drive',
+        'Tu episodio sigue en memoria — no cierres esta página.',
+        'Reintentar guardado', () => { isProcessing = true; saveCurrentQuiz(callback); },
+        'Continuar sin guardar', () => callback()
+      );
+      return;
+    }
     if (isFinal) {
       if (currentCfg.mode === 'fixed') activeFixedStory = null;
       if (currentCfg.mode === 'open')  activeOpenStory  = null;
@@ -2018,19 +2056,56 @@ function disconnectDrive() {
   document.getElementById('trackHub').classList.add('hidden');
 }
 
+// Promisified connect — resolves true/false when auth completes
+function connectDriveAsync() {
+  return new Promise(resolve => {
+    if (!driveReady) { resolve(false); return; }
+    _connectResolve = resolve;
+    setDriveUI('busy', 'Reconectando Drive…');
+    tokenClient.requestAccessToken({ prompt: '' });
+  });
+}
+
+// Validate token before save; silently re-auth if expired
+async function ensureDriveConnection() {
+  // No token at all — try to connect
+  if (!driveToken) return await connectDriveAsync();
+  // Token exists — validate with a lightweight API call
+  try {
+    const res = await fetch('https://www.googleapis.com/drive/v3/about?fields=user', {
+      headers: { 'Authorization': 'Bearer ' + driveToken }
+    });
+    if (res.ok) return true;
+    if (res.status === 401) {
+      driveToken = null;
+      return await connectDriveAsync();
+    }
+    return false;
+  } catch (e) {
+    console.error('Drive validation error:', e);
+    return false;
+  }
+}
+
 async function handleTokenResponse(resp) {
-  if (resp.error) { setDriveUI('disconnected', 'Error al conectar Drive'); return; }
+  if (resp.error) {
+    setDriveUI('disconnected', 'Error al conectar Drive');
+    if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(false); }
+    return;
+  }
   driveToken = resp.access_token;
   setDriveUI('busy', 'Verificando carpeta…');
   try {
     folderId = await ensureFolder();
     setDriveUI('connected', 'Google Drive: conectado ✓');
     await loadActiveStories();
+    if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(true); }
     // If pendingFn was set (e.g. connect-then-generate), call it now
-    if (pendingFn) { const f = pendingFn; pendingFn = null; f(); }
+    else if (pendingFn) { const f = pendingFn; pendingFn = null; f(); }
   } catch (e) {
     console.error('Drive setup error:', e);
     setDriveUI('disconnected', 'Error al acceder a Drive');
+    if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(false); }
   }
 }
 
@@ -2072,7 +2147,7 @@ async function ensureFolder() {
 //  GOOGLE DRIVE — SAVE
 // ═══════════════════════════════════════════════
 async function saveQuizToDrive(extraFields = {}) {
-  if (!driveToken || !folderId || !currentQuiz) return;
+  if (!driveToken || !folderId || !currentQuiz) return false;
   setDriveUI('busy', 'Guardando en Drive…');
   const record = {
     id: storyId || ('ind-' + Date.now()),
@@ -2096,15 +2171,35 @@ async function saveQuizToDrive(extraFields = {}) {
     `--${boundary}`, 'Content-Type: application/json', '',
     JSON.stringify(record), `--${boundary}--`,
   ].join('\r\n');
-  try {
-    await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+
+  const doUpload = async () => {
+    const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
       method: 'POST',
       headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':`multipart/related; boundary="${boundary}"` },
       body,
     });
+    return res;
+  };
+
+  try {
+    let res = await doUpload();
+    // If token expired during upload, reconnect and retry once
+    if (res.status === 401) {
+      driveToken = null;
+      const reconnected = await connectDriveAsync();
+      if (!reconnected) { setDriveUI('disconnected', 'Google Drive: no se pudo guardar'); return false; }
+      folderId = await ensureFolder();
+      res = await doUpload();
+      if (!res.ok) { setDriveUI('disconnected', 'Google Drive: error al guardar'); return false; }
+    } else if (!res.ok) {
+      console.error('Drive upload failed:', res.status);
+      setDriveUI('connected', 'Google Drive: error al guardar');
+      return false;
+    }
     setDriveUI('connected', 'Google Drive: guardado ✓');
     setTimeout(() => setDriveUI('connected', 'Google Drive: conectado ✓'), 2500);
-  } catch (e) { console.error('Save error:', e); setDriveUI('connected', 'Google Drive: error al guardar'); }
+    return true;
+  } catch (e) { console.error('Save error:', e); setDriveUI('connected', 'Google Drive: error al guardar'); return false; }
 }
 
 // ═══════════════════════════════════════════════

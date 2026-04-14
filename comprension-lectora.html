@@ -1321,6 +1321,9 @@ async function doGenerate() {
 
   const isContinuation = (cfg.mode !== 'individual') && storyId !== null;
 
+  // Snapshot state so we can restore on auth failure
+  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, biblePromise, regenerating };
+
   if (!isContinuation) {
     storyBible   = null; prevBible = null; biblePromise = null;
     storyId      = cfg.mode === 'individual' ? null : 'story-' + Date.now();
@@ -1378,7 +1381,14 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       })
     });
 
-    if (res.status === 401) { sessionPw = null; showScreen('sParams'); alert('Contraseña incorrecta.'); return; }
+    if (res.status === 401) {
+      sessionPw = null;
+      // Restore story state so next attempt starts clean
+      storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
+      storyBible = _snap.storyBible; prevBible = _snap.prevBible; biblePromise = _snap.biblePromise;
+      regenerating = _snap.regenerating;
+      showScreen('sParams'); alert('Contraseña incorrecta.'); return;
+    }
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const reader = res.body.getReader(), decoder = new TextDecoder();
@@ -1483,6 +1493,10 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
   } catch (err) {
     console.error('Generation error:', err);
     isProcessing = false;
+    // Restore story state so retry starts from correct episode
+    storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
+    storyBible = _snap.storyBible; prevBible = _snap.prevBible; biblePromise = _snap.biblePromise;
+    regenerating = _snap.regenerating;
     goParams();
     const canRetry = generateRetries < 3;
     generateRetries++;

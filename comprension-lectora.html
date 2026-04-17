@@ -733,8 +733,6 @@
       <div class="card-label">Registro</div>
       <div class="btn-group">
         <button class="btn-option selected" data-key="register" data-val="everyday" onclick="pickOpt(this)">Cotidiano</button>
-        <button class="btn-option" data-key="register" data-val="conversational" onclick="pickOpt(this)">Conversacional</button>
-        <button class="btn-option" data-key="register" data-val="formal" onclick="pickOpt(this)">Formal</button>
         <button class="btn-option" data-key="register" data-val="literary" onclick="pickOpt(this)">Literario</button>
         <button class="btn-option" data-key="register" data-val="news" onclick="pickOpt(this)">Periodístico</button>
       </div>
@@ -1228,11 +1226,25 @@ function buildPrompt(p) {
     spain:         'Castilian Spanish — use vosotros, peninsular vocabulary',
   };
   const registerMap = {
-    everyday:'everyday register — natural, relaxed prose',
-    conversational:'conversational — dialogue-heavy, colloquial',
-    formal:'formal register — structured, elevated tone',
-    literary:'literary register — stylistically rich, figurative language',
-    news:'journalistic register — informative, objective',
+    everyday: `EVERYDAY register (cotidiano) — This is how an educated adult native speaker actually writes and talks in daily life: to friends, at family dinners, in a café, in a WhatsApp message, telling a story to a coworker. This is NOT a textbook simplification and NOT literary prose — it is natural adult Spanish.
+
+VOCABULARY — PREFER these verbs liberally: ser, estar, tener, haber, poder, querer, deber, ir, venir, llegar, salir, volver, llevar, traer, pasar, quedar, hacer, poner, tomar, mostrar, empezar, terminar, esperar, comprar, pagar, ver, mirar, oír, escuchar, entender, saber, conocer, pensar, creer, sentir, acordarse, olvidar, darse cuenta, encontrar, hablar, decir, contar, preguntar, contestar, llamar.
+
+VOCABULARY — AVOID these literary verbs entirely: contemplar, divisar, vislumbrar, otear, escudriñar, acaecer, yacer, proferir, musitar, discurrir (as "to ponder"), henchir, marchar (use irse), retornar (use volver), tornar (as "to become"), hallar (use encontrar). Do NOT reach for elevated synonyms when a common verb exists. If you catch yourself picking the fancier word, pick the common one instead.
+
+SENTENCE STRUCTURE: Direct, clear sentences with moderate subordination. AVOID periodic sentences, stacked "como si + imperfect subjunctive" constructions, poetic inversions like "a lo lejos se divisaba…", and long fronted adverbial phrases that delay the subject. Short-to-medium sentence length is natural here.
+
+SUBJUNCTIVE: Present subjunctive is fine and common. Imperfect subjunctive ONLY in natural conditional sentences (si pudiera, si tuviera tiempo) or polite forms (quisiera pedirte). Do NOT use imperfect subjunctive for atmospheric or literary effect.
+
+DISCOURSE: Include dialogue naturally. Use the discourse markers adult speakers actually use: bueno, pues, o sea, entonces, la verdad, de hecho, en fin, vaya, oye, mira. Characters can have interior thoughts, but phrased plainly — not as stream-of-consciousness interior monologue.
+
+NO FIGURATIVE LANGUAGE as the default: no extended metaphors, no atmospheric scene-setting with poetic vocabulary, no symbolic description. A simple metaphor a real person might say ("estoy hecho polvo," "me volvió loco") is fine; Borges-style imagery is not.
+
+Inference questions still work in this register — everyday situations have motivations, implied feelings, unspoken tension, and what characters did NOT say. Subtext does not require literary prose. Do NOT elevate the prose to make inference possible.`,
+
+    literary: `LITERARY register (literario) — The prose of serious novels and literary short stories: Allende, Vargas Llosa, Bolaño, García Márquez, Cortázar. Figurative language, atmospheric description, interior monologue, distinctive stylistic voice. Complex subordination and varied sentence rhythm including periodic sentences and poetic inversions. Full range of subjunctive including imperfect subjunctive for stylistic effect (como si + imperfect subj., ojalá + imperfect subj.). Elevated vocabulary is welcomed — the verbs banned from everyday register (contemplar, divisar, vislumbrar, tornar, yacer, proferir, musitar, discurrir, henchir, acaecer) are appropriate here. Extended metaphors, symbolic description, and atmospheric imagery are in-bounds. Dialogue may be sparse, stylized, or absent; narration carries weight. The goal is prose that rewards careful reading.`,
+
+    news: `JOURNALISTIC register (periodístico) — The prose of quality Spanish-language newspapers and news sites (El País, La Nación, Infobae, BBC Mundo, El Comercio). Third-person, objective, attribution-heavy. Passive voice and pasiva refleja are common (se anunció, se espera, se confirmó, se estima). Conditional of rumor/unconfirmed reporting is appropriate where natural (habría declarado, estaría considerando, según fuentes). Dense noun phrases, institutional and technical vocabulary. Preferred verbs include: anunciar, declarar, afirmar, asegurar, confirmar, negar, desmentir, acordar, aprobar, rechazar, descartar, investigar, averiguar, determinar, señalar, indicar, añadir, precisar. NO figurative language, NO interior monologue, NO atmospheric scene-setting. Tone is factual and informative. Dialogue appears only as direct quotes from sources, clearly attributed ("declaró el ministro," "según fuentes oficiales"). Structure follows journalistic logic (lede, context, detail, reaction) rather than narrative arc.`,
   };
 
   const seInstr = p.seOn
@@ -1280,9 +1292,9 @@ Variedad: ${regionDesc[p.region] || p.region}
 ${themeStr}${epLabel}
 ${grammarStr}${bibleSection}
 
-PASAJE: 3-4 párrafos. Narración auténtica, no ejercicio de libro de texto. ${seInstr}
+PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones. ${seInstr}
 
-PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia, implicación y comprensión profunda — no localización de palabras. Incluye preguntas sobre motivación, tono y significado implícito.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
+PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier registro — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
 
 JSON requerido:
 {"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}
@@ -1346,7 +1358,8 @@ async function doGenerate() {
 
   const modeLabels = { individual: 'Individual', fixed: 'Historia Fija', open: 'Historia Abierta' };
   const regionLabels = { neutral: 'Neutro', rioplatense: 'Rioplatense', latin_american: 'Latinoamericano', spain: 'España' };
-  const registerLabels = { everyday: 'Cotidiano', conversational: 'Conversacional', formal: 'Formal', literary: 'Literario', news: 'Periodístico' };
+  // Backward-compat: old saves may have 'conversational' or 'formal' — map to nearest new register for display
+  const registerLabels = { everyday: 'Cotidiano', literary: 'Literario', news: 'Periodístico', conversational: 'Cotidiano', formal: 'Literario' };
   const ctxParts = [modeLabels[cfg.mode] || cfg.mode];
   if (episodeNum > 0) ctxParts.push(episodeTarget > 0 ? `Ep. ${episodeNum}/${episodeTarget}` : `Ep. ${episodeNum}`);
   ctxParts.push(currentCfg.level);
@@ -1367,7 +1380,7 @@ async function doGenerate() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         password:   sessionPw,
-        model:      'claude-opus-4-6',
+        model:      'claude-opus-4-7',
         max_tokens: 8000,
         stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
@@ -2296,7 +2309,10 @@ async function resumeStory(s) {
   storyId = s.story_id; episodeNum = s.episode;
   episodeTarget = s.episode_target || episodeTarget || 0;
   storyBible = s.story_bible || null; prevBible = null; biblePromise = null; regenerating = false;
-  cfg.level=s.level||cfg.level; cfg.register=s.register||cfg.register;
+  // Migrate old register values from pre-April-2026 saves (5-option era → 3-option era)
+  const REGISTER_MIGRATE = { conversational: 'everyday', formal: 'literary' };
+  const savedRegister = s.register ? (REGISTER_MIGRATE[s.register] || s.register) : null;
+  cfg.level=s.level||cfg.level; cfg.register=savedRegister||cfg.register;
   cfg.region=s.region||cfg.region; cfg.mode=s.mode||cfg.mode;
   ['level','register','region','mode'].forEach(key =>
     document.querySelectorAll(`[data-key="${key}"]`).forEach(b =>

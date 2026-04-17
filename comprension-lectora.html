@@ -648,6 +648,14 @@
     .speak-passage.playing{background:rgba(74,144,217,.15);color:var(--accent);border-color:rgba(74,144,217,.3)}
     .speak-inline{background:none;border:none;cursor:pointer;font-size:.85rem;padding:0 3px;opacity:.45;transition:opacity .2s;vertical-align:middle}
     .speak-inline:hover{opacity:.85}
+    .drive-spinner{
+      width:18px;height:18px;flex-shrink:0;
+      border:2px solid rgba(74,144,217,0.25);
+      border-top-color:var(--accent);
+      border-radius:50%;
+      animation:drive-spin 0.9s linear infinite;
+    }
+    @keyframes drive-spin{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
@@ -695,6 +703,11 @@
         <span id="driveLabel">Google Drive: no conectado</span>
       </div>
       <button class="btn-secondary" id="driveBtn" onclick="connectDrive()" style="font-size:0.8rem;padding:6px 14px">Conectar Drive</button>
+    </div>
+
+    <div id="driveLoading" class="hidden" style="display:flex;align-items:center;gap:12px;padding:14px 18px;margin-bottom:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;color:var(--text-secondary);font-family:'Outfit',sans-serif;font-size:0.9rem">
+      <div class="drive-spinner" aria-hidden="true"></div>
+      <span>Consultando Google Drive…</span>
     </div>
 
     <div id="trackHub" class="hidden" style="margin-bottom:16px">
@@ -948,10 +961,25 @@ let ttsRate = 0.75;
 let ttsPlaying = false;
 if(window.speechSynthesis) speechSynthesis.getVoices();
 
+// Strip emoji, variation selectors, and zero-width joiners so TTS never narrates
+// emoji names like "altavoz con volumen alto" when a speaker button's text leaks
+// into the content grabbed for reading.
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function speak(text) {
   if(!window.speechSynthesis) return;
+  const clean = cleanForTTS(text);
+  if(!clean) return;
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text); u.lang='es-AR'; u.rate=ttsRate;
+  const u = new SpeechSynthesisUtterance(clean); u.lang='es-AR'; u.rate=ttsRate;
   const v = speechSynthesis.getVoices();
   const p = v.find(x=>/es[-_]AR/i.test(x.lang)) || v.find(x=>/es[-_](MX|419|US)/i.test(x.lang)) || v.find(x=>/^es/i.test(x.lang));
   if(p) u.voice=p;
@@ -969,8 +997,8 @@ function togglePassageTTS(containerId, btnId) {
   if(ttsPlaying) { speechSynthesis.cancel(); ttsPlaying=false; btn.textContent='▶ Escuchar'; btn.classList.remove('playing'); return; }
   const el = document.getElementById(containerId);
   if(!el) return;
-  const text = el.innerText || el.textContent;
-  if(!text.trim()) return;
+  const text = cleanForTTS(el.innerText || el.textContent);
+  if(!text) return;
   if(!window.speechSynthesis) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text); u.lang='es-AR'; u.rate=ttsRate;
@@ -1943,9 +1971,9 @@ function showFixedConflictModal() {
   document.getElementById('conflictModalBody').innerHTML    =
     `Tienes una historia fija en progreso: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
   document.getElementById('conflictModalBtns').innerHTML   = `
-    <button class="btn-primary"   onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
+    <button class="btn-primary"   style="background:linear-gradient(135deg, #2ba87f, #34d399);color:#0a1628"  onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
     <button class="btn-danger"    onclick="confirmDeleteActiveStory('${s.story_id}','fixed')">Eliminar historia completa</button>
-    <button class="btn-secondary" onclick="closeConflictModal()">Cancelar</button>`;
+    <button class="btn-primary" onclick="closeConflictModal()">Cancelar</button>`;
   document.getElementById('conflictModal').classList.remove('hidden');
 }
 
@@ -1958,7 +1986,7 @@ function showOpenStoryModal() {
     : `episodio ${s.episode} — historia abierta`;
   const wrapUpOption = !hasWrapUp ? `
     <div style="display:flex;align-items:center;gap:8px;margin:4px 0;flex-wrap:wrap">
-      <button class="btn-secondary" onclick="setWrapUpAndContinue()" style="padding:8px 14px;white-space:nowrap">Continuar y cerrar en</button>
+      <button class="btn-primary" onclick="setWrapUpAndContinue()" style="padding:10px 18px;white-space:nowrap;width:auto;background:linear-gradient(135deg, #d9a21f, #fbbf24);color:#0a1628;font-size:0.95rem">Continuar y cerrar en</button>
       <input type="number" id="wrapUpInput" value="3" min="1" max="20" class="episode-input" style="width:58px">
       <span style="font-size:0.82rem;color:var(--text-muted)">episodios más</span>
     </div>` : '';
@@ -1967,10 +1995,10 @@ function showOpenStoryModal() {
   document.getElementById('conflictModalBody').innerHTML    =
     `Historia: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
   document.getElementById('conflictModalBtns').innerHTML   = `
-    <button class="btn-primary"   onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
+    <button class="btn-primary"   style="background:linear-gradient(135deg, #2ba87f, #34d399);color:#0a1628"         onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
     ${wrapUpOption}
     <button class="btn-danger"    onclick="confirmDeleteActiveStory('${s.story_id}','open')">Eliminar historia completa</button>
-    <button class="btn-secondary" onclick="closeConflictModal()">Cancelar</button>`;
+    <button class="btn-primary" onclick="closeConflictModal()">Cancelar</button>`;
   document.getElementById('conflictModal').classList.remove('hidden');
 }
 
@@ -2237,6 +2265,8 @@ async function loadActiveStories() {
   activeFixedStory = null; activeOpenStory = null;
   document.getElementById('trackHub').classList.add('hidden');
   document.getElementById('trackSlots').innerHTML = '';
+  const loadingEl = document.getElementById('driveLoading');
+  if (loadingEl) loadingEl.classList.remove('hidden');
   try {
     const q   = `'${folderId}' in parents and mimeType='application/json' and trashed=false`;
     const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc&pageSize=100`);
@@ -2256,6 +2286,9 @@ async function loadActiveStories() {
     stories.forEach(s => { if (s.mode==='fixed') activeFixedStory=s; if (s.mode==='open') activeOpenStory=s; });
     renderTrackHub(stories);
   } catch (e) { console.error('Load stories error:', e); }
+  finally {
+    if (loadingEl) loadingEl.classList.add('hidden');
+  }
 }
 
 function renderTrackHub(stories) {

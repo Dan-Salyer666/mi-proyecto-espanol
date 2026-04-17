@@ -1277,6 +1277,9 @@ Inference questions still work in this register — everyday situations have mot
 
   const seInstr = p.seOn
     ? `SE HIGHLIGHTING — TWO CATEGORIES ONLY:
+
+SCOPE: This markup applies ONLY to the passage ("passage" field). Questions, options, and explanations MUST be plain text with NO [SE:...] tags — if "se" appears inside a question or option, leave it completely unmarked.
+
 Mark ONLY the standalone pronoun "se" — NEVER mark "se" when it is part of another word (ser, sería, señor, seco, según, etc). Only the pronoun "se" that appears as its own word.
 
 Mark ONLY these two types — all other uses of "se" should appear as plain text with NO markup.
@@ -1295,7 +1298,7 @@ These describe actions without naming who does them.
 DO NOT mark any other "se" usage — leave reflexive, reciprocal, accidental (se le cayó), and IOP replacement (se lo dije) as plain unmarked text.
 
 When in doubt, leave it unmarked. Only mark when you are confident it is pronominal or pasiva/impersonal.`
-    : 'Do not add any special markup.';
+    : 'Do not add any special markup anywhere in the output.';
 
   const themeStr   = p.theme   ? `Tema: ${p.theme}` : 'Tema: elige algo interesante, sorpréndeme';
   const grammarStr = p.grammar ? `Enfoque gramatical: ${p.grammar}. Diseña el pasaje y preguntas para evaluar este punto.`
@@ -1303,6 +1306,29 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
 
   const bibleSection = p.bible
     ? `\n\nCONTINUIDAD (episodio ${p.epNum}):\n${p.bible}\n\nEscribe el siguiente episodio. Mantén continuidad de personajes, lugar y tono. Avanza la trama.`
+    : '';
+
+  // Variation forcing: fires only for fresh stories (episode 1 or no bible) when a theme is specified.
+  // Forces the model past the default/prototypical interpretation of the theme toward genuine structural variety.
+  const isFreshStart = !p.bible;
+  const varSeed = Math.floor(Math.random() * 10000);
+  const variationBlock = (isFreshStart && p.theme) ? `
+
+VARIATION REQUIREMENT (seed: ${varSeed}):
+The theme "${p.theme}" has an obvious default version. Do NOT write that version.
+
+Most themes are spaces containing many distinct tropes and structural patterns. For example, "Twilight Zone" includes time loops, doubles, paranoid small towns, cosmic irony, bureaucratic afterlife, doppelgängers, post-apocalyptic moral tests, unreliable memory, and many more. "Film noir / Sam Spade" includes classic detective plots but also political conspiracies, missing person cases where no one is who they claim, heist-gone-wrong, insurance fraud, amnesia, twin identities, and corrupted institutions. "Horror" isn't just haunted houses. "Romance" isn't just meet-cute.
+
+Before writing, silently commit to these five choices (do not print them — only the story):
+1. SUBGENRE / TROPE: within "${p.theme}", pick a less-prototypical angle. Do not pick the first example that comes to mind.
+2. SETTING: specific time and place, avoiding the genre's most clichéd locations.
+3. PROTAGONIST: a character type that's NOT the obvious pick for this genre.
+4. TWIST OR STRUCTURAL HINGE: what's actually going on beneath the surface — the revelation, the turn, the recontextualization.
+5. A TROPE YOU DELIBERATELY AVOID: name one cliché of the genre (internally) and do not use it.
+
+Use seed ${varSeed} as a concrete nudge toward less-obvious creative choices. Different seeds should pull you toward different corners of the genre.
+
+The story MUST feel structurally distinct from the most prototypical version of "${p.theme}" — not just the same story in a different setting. If a reader familiar with the genre could guess the ending from the premise, you have defaulted and must pick again.`
     : '';
 
   const isWrapUpFinal = p.epTarget > 0 && p.epNum === p.epTarget;
@@ -1318,7 +1344,7 @@ Nivel: ${levelMap[p.level] || p.level}
 Registro: ${registerMap[p.register] || p.register}
 Variedad: ${regionDesc[p.region] || p.region}
 ${themeStr}${epLabel}
-${grammarStr}${bibleSection}
+${grammarStr}${bibleSection}${variationBlock}
 
 PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones. ${seInstr}
 
@@ -1503,9 +1529,12 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       throw new Error('El cuestionario generado no tiene preguntas. Inténtalo de nuevo.');
 
     // Strip letter prefixes (A. B. C. D.) and question numbers from AI output
+    // Also strip any SE markup that leaked into non-passage fields (only passage should have markup)
+    const stripSE = s => (s || '').replace(/\[SE:\w+\]([\s\S]*?)\[\/SE\]/g, '$1');
     quiz.questions.forEach(q => {
-      q.question = q.question.replace(/^\s*\d+[\.\)]\s*/, '');
-      q.options = q.options.map(opt => opt.replace(/^\s*[A-Da-d][\.\)\:]\s*/, ''));
+      q.question = stripSE(q.question).replace(/^\s*\d+[\.\)]\s*/, '');
+      q.options = q.options.map(opt => stripSE(opt).replace(/^\s*[A-Da-d][\.\)\:]\s*/, ''));
+      if (q.explanation) q.explanation = stripSE(q.explanation);
     });
 
     // Shuffle options so correct answer isn't always in the same position
@@ -1985,8 +2014,8 @@ function showOpenStoryModal() {
     ? `episodio ${s.episode} · cierre en ${s.episode_target - s.episode} ep. más`
     : `episodio ${s.episode} — historia abierta`;
   const wrapUpOption = !hasWrapUp ? `
-    <div style="display:flex;align-items:center;gap:8px;margin:4px 0;flex-wrap:wrap">
-      <button class="btn-primary" onclick="setWrapUpAndContinue()" style="padding:10px 18px;white-space:nowrap;width:auto;background:linear-gradient(135deg, #d9a21f, #fbbf24);color:#0a1628;font-size:0.95rem">Continuar y cerrar en</button>
+    <div style="flex-basis:100%;display:flex;align-items:center;gap:10px">
+      <button class="btn-primary" onclick="setWrapUpAndContinue()" style="width:50%;padding:13px 18px;white-space:nowrap;background:linear-gradient(135deg, #d9a21f, #fbbf24);color:#0a1628;font-size:0.92rem;font-weight:600">Continuar y cerrar en</button>
       <input type="number" id="wrapUpInput" value="3" min="1" max="20" class="episode-input" style="width:58px">
       <span style="font-size:0.82rem;color:var(--text-muted)">episodios más</span>
     </div>` : '';
@@ -1995,10 +2024,16 @@ function showOpenStoryModal() {
   document.getElementById('conflictModalBody').innerHTML    =
     `Historia: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
   document.getElementById('conflictModalBtns').innerHTML   = `
-    <button class="btn-primary"   style="background:linear-gradient(135deg, #2ba87f, #34d399);color:#0a1628"         onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
+    <div style="flex-basis:100%;display:flex;justify-content:center">
+      <button class="btn-primary" style="width:50%;background:linear-gradient(135deg, #2ba87f, #34d399);color:#0a1628" onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
+    </div>
     ${wrapUpOption}
-    <button class="btn-danger"    onclick="confirmDeleteActiveStory('${s.story_id}','open')">Eliminar historia completa</button>
-    <button class="btn-primary" onclick="closeConflictModal()">Cancelar</button>`;
+    <div style="flex-basis:100%;display:flex;justify-content:center">
+      <button class="btn-danger" style="width:50%" onclick="confirmDeleteActiveStory('${s.story_id}','open')">Eliminar historia completa</button>
+    </div>
+    <div style="flex-basis:100%;display:flex;justify-content:center">
+      <button class="btn-primary" style="width:50%" onclick="closeConflictModal()">Cancelar</button>
+    </div>`;
   document.getElementById('conflictModal').classList.remove('hidden');
 }
 

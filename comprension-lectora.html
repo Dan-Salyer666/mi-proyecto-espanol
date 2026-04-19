@@ -49,19 +49,18 @@
     }
 
     body::after {
+      /* Azulejos background — subdued tile texture behind all content.
+         Low opacity keeps the dark navy theme dominant and card
+         contents fully readable. Replaced the old geometric pattern
+         which served the same purpose. */
       content: '';
       position: fixed;
       inset: 0;
-      opacity: 0.035;
-      background-image:
-        linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
-        linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
-        linear-gradient(30deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
-        linear-gradient(150deg, #1e3355 12%, transparent 12.5%, transparent 87%, #1e3355 87.5%, #1e3355),
-        linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e),
-        linear-gradient(60deg, #253d5e 25%, transparent 25.5%, transparent 75%, #253d5e 75%, #253d5e);
-      background-size: 80px 140px;
-      background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+      background-image: url('assets/Azulejos.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.10;
       pointer-events: none;
       z-index: 0;
     }
@@ -376,15 +375,6 @@
       font-size: 1.05rem;
       line-height: 1.9;
       color: var(--text-primary);
-      background-image:
-        linear-gradient(rgba(13, 26, 47, 0.88), rgba(13, 26, 47, 0.88)),
-        url('assets/Azulejos.webp');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      padding: 22px 24px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
     }
     .passage-text p { margin-bottom: 1.15em; }
     .passage-text p:last-child { margin-bottom: 0; }
@@ -1369,29 +1359,34 @@ The story MUST feel structurally distinct from the most prototypical version of 
   //    BEFORE writing the passage — so those elements can be seeded from the
   //    first sentence rather than retrofitted at the end. The plan is returned
   //    in planned_ending and frozen for the rest of the story.
+  //    NOTE: Language here is deliberately plain (not literary) because the
+  //    prompt's vocabulary primes the passage's vocabulary. The planning field
+  //    is STRUCTURAL — the passage's STYLE comes from the register field.
   const planningBlock = needsEndingPlan ? `
 
 PLANIFICACIÓN DEL DESENLACE (OBLIGATORIA — antes de redactar el pasaje):
-Una historia funciona cuando el autor sabe por qué la está escribiendo antes de empezar. No improvises el final. Comprométete con el desenlace ahora, y siembra sus elementos desde la primera oración.
+Antes de escribir, decide adónde va la historia. No improvises el final. Fija el desenlace ahora y siembra sus elementos desde la primera oración.
 
-Decide y devuelve estas tres partes en el campo "planned_ending" del JSON:
+Devuelve estas tres partes en el campo "planned_ending" del JSON:
 
-1. NÚCLEO TEMÁTICO (thematic_core) — una sola oración nombrando lo que la historia está diciendo realmente. NO es el argumento ni el género — es la tesis. Ejemplos de distintos géneros:
-   · Parábola: "la advertencia estuvo siempre ahí; nadie dispuesto a mirarla la vio."
-   · Western: "la justicia y la venganza se confunden hasta que ya no importa cuál ganó."
-   · Romance: "el amor no sobrevive a la necesidad de tener razón."
-   · Noir: "las instituciones se protegen a sí mismas, no a las personas que dicen servir."
-   · Twilight Zone: "la normalidad que defendemos con más fuerza es la que menos hemos examinado."
+1. IDEA CENTRAL (thematic_core) — una sola oración que diga de qué trata la historia en el fondo, más allá del argumento. Ejemplos (úsalos para entender la idea, NO copies su estilo — formula tu idea central en el registro del pasaje):
+   · "la gente casi siempre sabe la verdad pero no quiere escucharla."
+   · "lo que uno llama mala suerte suele ser una decisión que no se animó a tomar."
+   · "el silencio de los demás también es una respuesta."
+   · "los pueblos pequeños saben cosas que nadie dice en voz alta."
+   · "a veces proteger a alguien es lo contrario de ayudarlo."
 
-2. MOMENTO FINAL (final_beat) — dos o tres oraciones describiendo la escena, imagen o línea exacta que aterriza el tema al cierre. No el final completo — el momento clave. La imagen que queda. La línea que se dice o no se dice. El instante de reconocimiento o recontextualización.
+2. MOMENTO FINAL (final_beat) — dos o tres oraciones describiendo el instante exacto que cierra la historia. No el final completo: el momento clave. La imagen que queda. La frase que se dice o no se dice. El momento en que algo cobra otro sentido.
 
-3. RESOLUCIÓN DE HILOS (thread_resolution) — qué preguntas deben responderse explícitamente, cuáles pueden quedar deliberadamente abiertas, y cuáles deben ser RECONTEXTUALIZADAS retroactivamente (es decir, algo que el lector interpretó de una manera al leer los primeros episodios pero que al final significa otra cosa). Esta recontextualización es lo que hace memorable un final.
+3. RESOLUCIÓN DE HILOS (thread_resolution) — qué preguntas quedan respondidas, cuáles quedan abiertas a propósito, y cuáles cambian de sentido al final (algo que el lector entendió de una manera en los primeros episodios y al final significa otra cosa). Ese cambio de sentido es lo que hace un final memorable.
 
-Escribe el pasaje sabiendo hacia dónde vas. El lector no debe poder adivinar el desenlace — pero al llegar al final, debe sentir que la historia lo estuvo construyendo todo el tiempo.${p.epTarget > 1 ? `
+SEPARACIÓN DE PLAN Y ESTILO (crítica): El plan de desenlace es ESTRUCTURAL, no estilístico. El pasaje se ejecuta en el registro especificado al inicio del prompt — no en el registro de estos ejemplos ni en el de este bloque de planificación. El plan guía QUÉ pasa en la historia; el registro guía CÓMO se escribe. Si el registro es cotidiano, el pasaje usa oraciones directas y vocabulario cotidiano aunque la idea central sea profunda. Si el registro es literario, el pasaje puede elevarse. El plan NO autoriza elevar el registro.
 
-Esta es una historia de ${p.epTarget} episodios. Planea arcos y ritmo acordes: episodios intermedios desarrollan el mundo y los personajes, siembran los elementos que el final recontextualizará, y mantienen la tensión sin precipitar el cierre. El desenlace se aterriza en el episodio ${p.epTarget}.` : ''}${p.epTarget === 0 && !isSoloStory ? `
+Escribe el pasaje sabiendo hacia dónde va. El lector no debe poder adivinar el final — pero al llegar, debe sentir que la historia lo estuvo construyendo todo el tiempo.${p.epTarget > 1 ? `
 
-Esta es una historia abierta — el número total de episodios es flexible. Cuando el lector decida cerrar, los últimos 3 episodios ejecutarán el desenlace que planeas ahora. Hasta entonces, desarrolla la trama hacia ese desenlace sin apresurarlo. Siembra los elementos; no los aterrices todavía.` : ''}` : '';
+Esta es una historia de ${p.epTarget} episodios. Planea arcos y ritmo acordes: los episodios intermedios desarrollan el mundo y los personajes, siembran los elementos que el final va a cambiar de sentido, y mantienen la tensión sin apurar el cierre. El desenlace se aterriza en el episodio ${p.epTarget}.` : ''}${p.epTarget === 0 && !isSoloStory ? `
+
+Esta es una historia abierta — el número total de episodios es flexible. Cuando el lector decida cerrar, los últimos 3 episodios ejecutarán el desenlace que planeas ahora. Hasta entonces, desarrolla la trama hacia ese desenlace sin apurarlo. Siembra los elementos; no los aterrices todavía.` : ''}` : '';
 
   // ── Ending context: fires on middle episodes (ep 2+ but not final) when a
   //    planned ending exists. Keeps the committed ending in front of the model
@@ -1399,11 +1394,13 @@ Esta es una historia abierta — el número total de episodios es flexible. Cuan
   const endingContext = (hasEndingPlan && !isFinalEp && p.epNum > 1) ? `
 
 DESENLACE PLANEADO (establecido en episodio 1 — NO modificar):
-· Núcleo temático: ${p.plannedEnding.thematic_core}
+· Idea central: ${p.plannedEnding.thematic_core}
 · Momento final: ${p.plannedEnding.final_beat}
 · Resolución de hilos: ${p.plannedEnding.thread_resolution}
 
-La historia converge hacia este desenlace. Desarrolla este episodio haciendo avanzar la trama en esa dirección: siembra los elementos que el final necesitará, profundiza en los personajes cuyos arcos deben cerrarse, y mantén el núcleo temático presente en el subtexto. NO aterrices el desenlace todavía — eso es trabajo del episodio final. Pero tampoco divagues: cada escena debe servir al desenlace planeado.` : '';
+La historia va hacia ese desenlace. En este episodio, haz avanzar la trama en esa dirección: siembra los elementos que el final va a necesitar, profundiza en los personajes cuyos arcos tienen que cerrarse, y mantén la idea central presente en el fondo. NO aterrices el desenlace todavía — eso es trabajo del episodio final. Pero tampoco dispersas la historia: cada escena debe aportar al desenlace planeado.
+
+RECORDATORIO DE REGISTRO: Este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt, no en el registro del plan.` : '';
 
   // ── Final execution block: replaces the old weak parenthetical in the label.
   //    When a planned ending exists, this is where it lands. When no plan exists
@@ -1411,24 +1408,27 @@ La historia converge hacia este desenlace. Desarrolla este episodio haciendo ava
   const finalExecutionBlock = isFinalEp ? (hasEndingPlan ? `
 
 EPISODIO FINAL — EJECUTA ESTE DESENLACE:
-· Núcleo temático: ${p.plannedEnding.thematic_core}
+· Idea central: ${p.plannedEnding.thematic_core}
 · Momento final: ${p.plannedEnding.final_beat}
 · Resolución de hilos: ${p.plannedEnding.thread_resolution}
 
 Instrucciones de cierre:
-- Aterriza el núcleo temático con claridad, pero sin subrayarlo. Deja que las imágenes, las acciones y las elecciones de los personajes hagan el trabajo. No expliques la moraleja.
-- Incluye el momento final tal como fue planeado — esa es la gravedad del episodio. Constrúyelo; no lo apresures.
-- Resuelve los hilos según el plan: responde lo que debe responderse, deja abierto lo que debe quedar abierto, y recontextualiza lo que debe recontextualizarse. La recontextualización retroactiva (algo que el lector entendió de una manera pero que al final significa otra) es lo que hace que un final trascienda.
-- No abras hilos nuevos en el episodio final. Todo lo que aparece aquí debe servir al cierre.
-- El final debe sentirse INEVITABLE en retrospectiva y SORPRENDENTE en el momento. Si el lector puede predecir el final a mitad del episodio, algo no está funcionando — falta una vuelta de tuerca o una imagen que lo recontextualice.` : `
+- Aterriza la idea central con claridad, pero sin subrayarla. Deja que las imágenes, las acciones y las decisiones de los personajes hagan el trabajo. No expliques la moraleja.
+- Incluye el momento final tal como fue planeado — ese es el peso del episodio. Constrúyelo; no lo apures.
+- Resuelve los hilos según el plan: responde lo que tiene que responderse, deja abierto lo que debe quedar abierto, y cambia el sentido de lo que debe cambiar de sentido. Ese cambio de sentido (algo que el lector entendió de una manera y al final significa otra) es lo que hace que un final se quede con el lector.
+- No abras hilos nuevos en el episodio final. Todo lo que aparece aquí debe aportar al cierre.
+- El final debe sentirse INEVITABLE al mirar hacia atrás y SORPRENDENTE en el momento. Si el lector puede adivinar el final a mitad del episodio, falta algo — una vuelta de tuerca, una imagen que lo cambie.
+
+RECORDATORIO DE REGISTRO: Este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt. Incluso en registro cotidiano, el final puede tener peso sin elevar la prosa — oraciones directas pueden cargar muchísimo significado.` : `
 
 EPISODIO FINAL — cierre narrativo (sin plan explícito previo):
-Este es el último episodio. Proporciona un cierre satisfactorio:
+Este es el último episodio. Da un cierre satisfactorio:
 - Resuelve los hilos principales de la trama.
 - Cierra los arcos de los personajes centrales con coherencia.
 - No abras hilos nuevos.
-- Si el género o tema sugiere un giro o recontextualización (parábola, Twilight Zone, noir, ironía final), inclúyelo.
-- El final debe sentirse ganado, no improvisado.`) : '';
+- Si el género o tema sugiere un giro o un cambio de sentido (parábola, Twilight Zone, noir, ironía final), inclúyelo.
+- El final debe sentirse ganado, no improvisado.
+- Escribe en el registro especificado al inicio del prompt.`) : '';
 
   // Episode label stays brief — the FINAL heavy lifting now happens in finalExecutionBlock above.
   const epLabel = p.epNum > 0
@@ -1453,6 +1453,8 @@ ${grammarStr}${bibleSection}${endingContext}${finalExecutionBlock}${variationBlo
 PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones. ${seInstr}
 
 PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier registro — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
+
+REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo registro que el pasaje. No introduzcas vocabulario que no aparecería en ese registro. Por ejemplo, en registro cotidiano, verbos como "ahuyentar," "proferir," "divisar," "vislumbrar," "tornar," "yacer," "henchir," "acaecer," "discurrir" son inadecuados — usa "espantar," "decir," "ver," "volverse," "estar tendido," "llenar," "ocurrir," "pasar el tiempo." Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
 
 JSON requerido:
 ${jsonSchema}

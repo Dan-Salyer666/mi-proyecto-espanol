@@ -1272,21 +1272,21 @@ function buildPrompt(p) {
 
 VOCABULARY — PREFER these verbs liberally: ser, estar, tener, haber, poder, querer, deber, ir, venir, llegar, salir, volver, llevar, traer, pasar, quedar, hacer, poner, tomar, mostrar, empezar, terminar, esperar, comprar, pagar, ver, mirar, oír, escuchar, entender, saber, conocer, pensar, creer, sentir, acordarse, olvidar, darse cuenta, encontrar, hablar, decir, contar, preguntar, contestar, llamar.
 
-VOCABULARY — AVOID these literary verbs entirely: contemplar, divisar, vislumbrar, otear, escudriñar, acaecer, yacer, proferir, musitar, discurrir (as "to ponder"), henchir, marchar (use irse), retornar (use volver), tornar (as "to become"), hallar (use encontrar). Do NOT reach for elevated synonyms when a common verb exists. If you catch yourself picking the fancier word, pick the common one instead.
+VOCABULARY — AVOID these literary verbs entirely: contemplar, divisar, vislumbrar, otear, escudriñar, acaecer, yacer, proferir, musitar, discurrir (as «to ponder»), henchir, marchar (use irse), retornar (use volver), tornar (as «to become»), hallar (use encontrar). Do NOT reach for elevated synonyms when a common verb exists. If you catch yourself picking the fancier word, pick the common one instead.
 
-SENTENCE STRUCTURE: Direct, clear sentences with moderate subordination. AVOID periodic sentences, stacked "como si + imperfect subjunctive" constructions, poetic inversions like "a lo lejos se divisaba…", and long fronted adverbial phrases that delay the subject. Short-to-medium sentence length is natural here.
+SENTENCE STRUCTURE: Direct, clear sentences with moderate subordination. AVOID periodic sentences, stacked «como si + imperfect subjunctive» constructions, poetic inversions like «a lo lejos se divisaba…», and long fronted adverbial phrases that delay the subject. Short-to-medium sentence length is natural here.
 
 SUBJUNCTIVE: Present subjunctive is fine and common. Imperfect subjunctive ONLY in natural conditional sentences (si pudiera, si tuviera tiempo) or polite forms (quisiera pedirte). Do NOT use imperfect subjunctive for atmospheric or literary effect.
 
 DISCOURSE: Include dialogue naturally. Use the discourse markers adult speakers actually use: bueno, pues, o sea, entonces, la verdad, de hecho, en fin, vaya, oye, mira. Characters can have interior thoughts, but phrased plainly — not as stream-of-consciousness interior monologue.
 
-NO FIGURATIVE LANGUAGE as the default: no extended metaphors, no atmospheric scene-setting with poetic vocabulary, no symbolic description. A simple metaphor a real person might say ("estoy hecho polvo," "me volvió loco") is fine; Borges-style imagery is not.
+NO FIGURATIVE LANGUAGE as the default: no extended metaphors, no atmospheric scene-setting with poetic vocabulary, no symbolic description. A simple metaphor a real person might say («estoy hecho polvo», «me volvió loco») is fine; Borges-style imagery is not.
 
 Inference questions still work in this register — everyday situations have motivations, implied feelings, unspoken tension, and what characters did NOT say. Subtext does not require literary prose. Do NOT elevate the prose to make inference possible.`,
 
     literary: `LITERARY register (literario) — The prose of serious novels and literary short stories: Allende, Vargas Llosa, Bolaño, García Márquez, Cortázar. Figurative language, atmospheric description, interior monologue, distinctive stylistic voice. Complex subordination and varied sentence rhythm including periodic sentences and poetic inversions. Full range of subjunctive including imperfect subjunctive for stylistic effect (como si + imperfect subj., ojalá + imperfect subj.). Elevated vocabulary is welcomed — the verbs banned from everyday register (contemplar, divisar, vislumbrar, tornar, yacer, proferir, musitar, discurrir, henchir, acaecer) are appropriate here. Extended metaphors, symbolic description, and atmospheric imagery are in-bounds. Dialogue may be sparse, stylized, or absent; narration carries weight. The goal is prose that rewards careful reading.`,
 
-    news: `JOURNALISTIC register (periodístico) — The prose of quality Spanish-language newspapers and news sites (El País, La Nación, Infobae, BBC Mundo, El Comercio). Third-person, objective, attribution-heavy. Passive voice and pasiva refleja are common (se anunció, se espera, se confirmó, se estima). Conditional of rumor/unconfirmed reporting is appropriate where natural (habría declarado, estaría considerando, según fuentes). Dense noun phrases, institutional and technical vocabulary. Preferred verbs include: anunciar, declarar, afirmar, asegurar, confirmar, negar, desmentir, acordar, aprobar, rechazar, descartar, investigar, averiguar, determinar, señalar, indicar, añadir, precisar. NO figurative language, NO interior monologue, NO atmospheric scene-setting. Tone is factual and informative. Dialogue appears only as direct quotes from sources, clearly attributed ("declaró el ministro," "según fuentes oficiales"). Structure follows journalistic logic (lede, context, detail, reaction) rather than narrative arc.`,
+    news: `JOURNALISTIC register (periodístico) — The prose of quality Spanish-language newspapers and news sites (El País, La Nación, Infobae, BBC Mundo, El Comercio). Third-person, objective, attribution-heavy. Passive voice and pasiva refleja are common (se anunció, se espera, se confirmó, se estima). Conditional of rumor/unconfirmed reporting is appropriate where natural (habría declarado, estaría considerando, según fuentes). Dense noun phrases, institutional and technical vocabulary. Preferred verbs include: anunciar, declarar, afirmar, asegurar, confirmar, negar, desmentir, acordar, aprobar, rechazar, descartar, investigar, averiguar, determinar, señalar, indicar, añadir, precisar. NO figurative language, NO interior monologue, NO atmospheric scene-setting. Tone is factual and informative. Dialogue appears only as direct quotes from sources, clearly attributed («declaró el ministro», «según fuentes oficiales»). Structure follows journalistic logic (lede, context, detail, reaction) rather than narrative arc.`,
   };
 
   const seInstr = p.seOn
@@ -1339,19 +1339,19 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
   const variationBlock = (isFreshStart && p.theme) ? `
 
 VARIATION REQUIREMENT (seed: ${varSeed}):
-The theme "${p.theme}" has an obvious default version. Do NOT write that version.
+The theme «${p.theme}» has an obvious default version. Do NOT write that version.
 
-Most themes are spaces containing many distinct tropes and structural patterns. For example, "Twilight Zone" includes time loops, doubles, paranoid small towns, cosmic irony, bureaucratic afterlife, doppelgängers, post-apocalyptic moral tests, unreliable memory, and many more. "Film noir / Sam Spade" includes classic detective plots but also political conspiracies, missing person cases where no one is who they claim, heist-gone-wrong, insurance fraud, amnesia, twin identities, and corrupted institutions. "Horror" isn't just haunted houses. "Romance" isn't just meet-cute.
+Most themes are spaces containing many distinct tropes and structural patterns. For example, «Twilight Zone» includes time loops, doubles, paranoid small towns, cosmic irony, bureaucratic afterlife, doppelgängers, post-apocalyptic moral tests, unreliable memory, and many more. «Film noir / Sam Spade» includes classic detective plots but also political conspiracies, missing person cases where no one is who they claim, heist-gone-wrong, insurance fraud, amnesia, twin identities, and corrupted institutions. «Horror» isn't just haunted houses. «Romance» isn't just meet-cute.
 
 Before writing, commit internally to these four choices (do not print them — only the story):
-1. SUBGENRE / TROPE: within "${p.theme}", pick a less-prototypical angle. Do not pick the first example that comes to mind.
+1. SUBGENRE / TROPE: within «${p.theme}», pick a less-prototypical angle. Do not pick the first example that comes to mind.
 2. SETTING: specific time and place, avoiding the genre's most clichéd locations.
 3. PROTAGONIST: a character type that's NOT the obvious pick for this genre.
 4. A TROPE YOU DELIBERATELY AVOID: name one cliché of the genre (internally) and do not use it.
 
 Use seed ${varSeed} as a concrete nudge toward less-obvious creative choices. Different seeds should pull you toward different corners of the genre.
 
-The story MUST feel structurally distinct from the most prototypical version of "${p.theme}" — not just the same story in a different setting.`
+The story MUST feel structurally distinct from the most prototypical version of «${p.theme}» — not just the same story in a different setting.`
     : '';
 
   // ── Planning block: fires on ep 1 (fija/open) and solo stories. The story
@@ -1370,11 +1370,11 @@ Antes de escribir, decide adónde va la historia. No improvises el final. Fija e
 Devuelve estas tres partes en el campo "planned_ending" del JSON:
 
 1. IDEA CENTRAL (thematic_core) — una sola oración que diga de qué trata la historia en el fondo, más allá del argumento. Ejemplos (úsalos para entender la idea, NO copies su estilo — formula tu idea central en el registro del pasaje):
-   · "la gente casi siempre sabe la verdad pero no quiere escucharla."
-   · "lo que uno llama mala suerte suele ser una decisión que no se animó a tomar."
-   · "el silencio de los demás también es una respuesta."
-   · "los pueblos pequeños saben cosas que nadie dice en voz alta."
-   · "a veces proteger a alguien es lo contrario de ayudarlo."
+   · «la gente casi siempre sabe la verdad pero no quiere escucharla.»
+   · «lo que uno llama mala suerte suele ser una decisión que no se animó a tomar.»
+   · «el silencio de los demás también es una respuesta.»
+   · «los pueblos pequeños saben cosas que nadie dice en voz alta.»
+   · «a veces proteger a alguien es lo contrario de ayudarlo.»
 
 2. MOMENTO FINAL (final_beat) — dos o tres oraciones describiendo el instante exacto que cierra la historia. No el final completo: el momento clave. La imagen que queda. La frase que se dice o no se dice. El momento en que algo cobra otro sentido.
 
@@ -1617,10 +1617,15 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
           inStr = true; preCleaned += c; continue;
         }
         // We're inside a string and hit a quote — is this the closing quote or a content quote?
-        // Look ahead: if next non-space char is , } ] : then it's structural (closing quote)
+        // Look ahead: if next non-whitespace char is , } ] : then it's structural (closing quote).
+        // NOTE: The skip list MUST include newlines (\n, \r) in addition to spaces/tabs —
+        // models often pretty-print JSON with line breaks between array elements, and a
+        // missing \n here used to misclassify valid closing quotes as content quotes,
+        // producing false «» replacements that then broke the JSON.
         let lookAhead = '';
         for (let j = i + 1; j < clean.length && j < i + 10; j++) {
-          if (clean[j] !== ' ' && clean[j] !== '\t') { lookAhead = clean[j]; break; }
+          const ch = clean[j];
+          if (ch !== ' ' && ch !== '\t' && ch !== '\n' && ch !== '\r') { lookAhead = ch; break; }
         }
         if (',}]:'.includes(lookAhead) || i === clean.length - 1) {
           // Structural closing quote

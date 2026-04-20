@@ -740,13 +740,12 @@
       </div>
     </div>
 
-    <!-- Register -->
+    <!-- Style (internal key stays "register" for minimal churn; "news" option removed Apr 2026) -->
     <div class="card">
-      <div class="card-label">Registro</div>
+      <div class="card-label">Estilo</div>
       <div class="btn-group">
         <button class="btn-option selected" data-key="register" data-val="everyday" onclick="pickOpt(this)">Cotidiano</button>
         <button class="btn-option" data-key="register" data-val="literary" onclick="pickOpt(this)">Literario</button>
-        <button class="btn-option" data-key="register" data-val="news" onclick="pickOpt(this)">Periodístico</button>
       </div>
     </div>
 
@@ -761,20 +760,35 @@
       </div>
     </div>
 
-    <!-- Theme + Grammar Focus -->
+    <!-- Ambientación -->
     <div class="card">
-      <div class="card-label">Tema</div>
-      <input type="text" id="themeInput" class="param-input"
-             placeholder="Ej: una noche en Buenos Aires, un viaje en tren, una decisión difícil…">
-      <div class="toggle-row">
-        <label class="toggle-label">
-          <input type="checkbox" id="surpriseMe" onchange="toggleDisable('surpriseMe','themeInput')">
-          Sorpréndeme — tema libre
-        </label>
+      <div class="card-label">Ambientación</div>
+      <div class="btn-group">
+        <button class="btn-option selected" data-key="setting" data-val="surprise" onclick="pickOpt(this)">Sorpréndeme</button>
+        <button class="btn-option" data-key="setting" data-val="actual" onclick="pickOpt(this)">Actual</button>
+        <button class="btn-option" data-key="setting" data-val="historico" onclick="pickOpt(this)">Histórico</button>
+        <button class="btn-option" data-key="setting" data-val="futuro" onclick="pickOpt(this)">Futuro</button>
+        <button class="btn-option" data-key="setting" data-val="imaginario" onclick="pickOpt(this)">Imaginario</button>
+        <button class="btn-option" data-key="setting" data-val="realidad_alterna" onclick="pickOpt(this)">Realidad alterna</button>
       </div>
+    </div>
 
-      <div class="divider"></div>
+    <!-- Tono -->
+    <div class="card">
+      <div class="card-label">Tono</div>
+      <div class="btn-group">
+        <button class="btn-option selected" data-key="mood" data-val="surprise" onclick="pickOpt(this)">Sorpréndeme</button>
+        <button class="btn-option" data-key="mood" data-val="tenso" onclick="pickOpt(this)">Tenso</button>
+        <button class="btn-option" data-key="mood" data-val="oscuro" onclick="pickOpt(this)">Oscuro</button>
+        <button class="btn-option" data-key="mood" data-val="acogedor" onclick="pickOpt(this)">Acogedor</button>
+        <button class="btn-option" data-key="mood" data-val="melancolico" onclick="pickOpt(this)">Melancólico</button>
+        <button class="btn-option" data-key="mood" data-val="satirico" onclick="pickOpt(this)">Satírico</button>
+        <button class="btn-option" data-key="mood" data-val="esperanzador" onclick="pickOpt(this)">Esperanzador</button>
+      </div>
+    </div>
 
+    <!-- Enfoque gramatical -->
+    <div class="card">
       <div class="card-label">Enfoque gramatical</div>
       <input type="text" id="grammarInput" class="param-input"
              placeholder="Ej: pretérito vs imperfecto, tres personajes en pasado, sueño en futuro…">
@@ -949,12 +963,18 @@ let answers          = [];
 // Story state
 let storyBible       = null;
 let prevBible        = null;
-let plannedEnding    = null;  // {thematic_core, final_beat, thread_resolution} — committed on ep 1, frozen thereafter
+let plannedEnding    = null;  // {central_mystery, mystery_resolutions, climactic_scene, consequence, why_it_matters} — committed on ep 1, frozen thereafter
+let chosenSeed       = null;  // seed object selected at ep 1 from seedPool; persisted in save record; null for legacy/fallback
 let episodeNum       = 0;
 let episodeTarget    = 0;
 let storyId          = null;
 let biblePromise     = null;
 let regenerating     = false;
+
+// Seed pool — loaded once at page init from /datos/seeds/story_seeds.json.
+// Filtered by mode_tier + user-selected setting/mood/style at ep 1 to pick a
+// seed whose "mechanism" seeds the planning block with a committed climax shape.
+let seedPool         = null;  // {seeds: [...]} or null if fetch failed
 
 // Active story trackers
 let activeFixedStory = null;
@@ -966,7 +986,7 @@ let lastScore        = null;
 let currentStarRating= null;
 let isProcessing     = false;
 
-const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false };
+const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false, setting:'surprise', mood:'surprise' };
 
 // ═══════════════════════════════════════════════
 //  TTS
@@ -1110,7 +1130,80 @@ function closePwModal() {
 }
 
 document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitPw(); });
-window.addEventListener('load', () => { setTimeout(initDriveAuth, 500); });
+window.addEventListener('load', () => { setTimeout(initDriveAuth, 500); loadSeedPool(); });
+
+// ═══════════════════════════════════════════════
+//  SEED POOL LOADER
+// ═══════════════════════════════════════════════
+// Loads /datos/seeds/story_seeds.json once at page load. The pool seeds the
+// planning block at ep 1 with a committed climax shape. If the fetch fails,
+// seedPool stays null and the prompt falls through to a no-seed branch so
+// the site keeps working without the seed system.
+async function loadSeedPool() {
+  try {
+    const res = await fetch('/datos/seeds/story_seeds.json', { cache: 'no-cache' });
+    if (!res.ok) { console.warn('Seed pool fetch failed:', res.status); return; }
+    const data = await res.json();
+    if (data && Array.isArray(data.seeds) && data.seeds.length) {
+      seedPool = data;
+      console.log(`Loaded ${data.seeds.length} story seeds.`);
+    } else {
+      console.warn('Seed pool JSON has no seeds array.');
+    }
+  } catch (e) {
+    console.warn('Seed pool load error (non-fatal):', e);
+  }
+}
+
+// Map mode → tier inclusivity. Solo tier works everywhere; fija tier works in
+// fija/abierta; abierta tier needs narrative room. Unknown modes = accept all.
+const MODE_TIER_ACCEPTS = {
+  individual: ['solo'],
+  fixed:      ['solo', 'fija'],
+  open:       ['solo', 'fija', 'abierta'],
+};
+
+// Map cfg.register (internal) to seed style value (seed file vocabulary)
+const STYLE_MAP = { everyday: 'cotidiano', literary: 'literario' };
+
+// Pick a seed from the pool that matches mode_tier + user-selected setting/mood/style.
+// Zero-match fallback: relax softest constraints first (mood → setting → style-last-resort).
+// Returns the chosen seed object, or null if pool is missing/empty.
+function pickSeed(modeKey, settingChoice, moodChoice, styleChoice) {
+  if (!seedPool || !Array.isArray(seedPool.seeds) || !seedPool.seeds.length) return null;
+  const acceptedTiers = MODE_TIER_ACCEPTS[modeKey] || ['solo', 'fija', 'abierta'];
+  const styleKey = STYLE_MAP[styleChoice] || styleChoice;
+  // Filter helper: empty array on seed means "fits all" for that axis.
+  const matches = (seed, axis, choice) => {
+    if (!choice || choice === 'surprise') return true;
+    const arr = seed[axis];
+    if (!Array.isArray(arr) || arr.length === 0) return true;
+    return arr.includes(choice);
+  };
+  // Progressive filter with fallback: try tightest constraints first, then relax.
+  const filterPasses = [
+    // Pass 1: all constraints applied
+    (s) => acceptedTiers.includes(s.mode_tier)
+        && matches(s, 'fits_settings', settingChoice)
+        && matches(s, 'fits_moods',    moodChoice)
+        && matches(s, 'fits_styles',   styleKey),
+    // Pass 2: drop mood constraint
+    (s) => acceptedTiers.includes(s.mode_tier)
+        && matches(s, 'fits_settings', settingChoice)
+        && matches(s, 'fits_styles',   styleKey),
+    // Pass 3: drop mood + setting
+    (s) => acceptedTiers.includes(s.mode_tier)
+        && matches(s, 'fits_styles',   styleKey),
+    // Pass 4: mode_tier only (last resort)
+    (s) => acceptedTiers.includes(s.mode_tier),
+  ];
+  for (const fn of filterPasses) {
+    const pool = seedPool.seeds.filter(fn);
+    if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
+  }
+  return null;
+}
+
 window.addEventListener('beforeunload', e => {
   // Warn if on quiz or graded screen with active content
   const onQuiz   = !document.getElementById('sQuiz').classList.contains('hidden');
@@ -1285,9 +1378,33 @@ NO FIGURATIVE LANGUAGE as the default: no extended metaphors, no atmospheric sce
 Inference questions still work in this register — everyday situations have motivations, implied feelings, unspoken tension, and what characters did NOT say. Subtext does not require literary prose. Do NOT elevate the prose to make inference possible.`,
 
     literary: `LITERARY register (literario) — The prose of serious novels and literary short stories: Allende, Vargas Llosa, Bolaño, García Márquez, Cortázar. Figurative language, atmospheric description, interior monologue, distinctive stylistic voice. Complex subordination and varied sentence rhythm including periodic sentences and poetic inversions. Full range of subjunctive including imperfect subjunctive for stylistic effect (como si + imperfect subj., ojalá + imperfect subj.). Elevated vocabulary is welcomed — the verbs banned from everyday register (contemplar, divisar, vislumbrar, tornar, yacer, proferir, musitar, discurrir, henchir, acaecer) are appropriate here. Extended metaphors, symbolic description, and atmospheric imagery are in-bounds. Dialogue may be sparse, stylized, or absent; narration carries weight. The goal is prose that rewards careful reading.`,
-
-    news: `JOURNALISTIC register (periodístico) — The prose of quality Spanish-language newspapers and news sites (El País, La Nación, Infobae, BBC Mundo, El Comercio). Third-person, objective, attribution-heavy. Passive voice and pasiva refleja are common (se anunció, se espera, se confirmó, se estima). Conditional of rumor/unconfirmed reporting is appropriate where natural (habría declarado, estaría considerando, según fuentes). Dense noun phrases, institutional and technical vocabulary. Preferred verbs include: anunciar, declarar, afirmar, asegurar, confirmar, negar, desmentir, acordar, aprobar, rechazar, descartar, investigar, averiguar, determinar, señalar, indicar, añadir, precisar. NO figurative language, NO interior monologue, NO atmospheric scene-setting. Tone is factual and informative. Dialogue appears only as direct quotes from sources, clearly attributed («declaró el ministro», «según fuentes oficiales»). Structure follows journalistic logic (lede, context, detail, reaction) rather than narrative arc.`,
   };
+  // NOTE: "news" (periodístico) register removed Apr 2026 — Daniel never used it.
+  // Any pre-April-2026 save with register:"news" is migrated to "literary" in resumeStory.
+
+  // ── Setting / Mood / Seed descriptive maps. User's pick + seed mechanism
+  //    together define the structural shape of the story.
+  const settingMap = {
+    actual:           'ambientación contemporánea (época actual, mundo presente)',
+    historico:        'ambientación en alguna época pasada — elige el siglo y el lugar que mejor sirvan a la historia',
+    futuro:           'ambientación en el futuro, ya sea cercano o lejano',
+    imaginario:       'mundo inventado — fantasía o realidad enteramente ficticia',
+    realidad_alterna: 'mundo reconocible con un elemento fundamentalmente distinto (algo sobrenatural aceptado como normal, un cambio histórico, una anomalía cotidiana)',
+  };
+  const moodMap = {
+    tenso:        'tono tenso — suspenso, sensación de que algo está mal o por estallar, expectativa inquieta',
+    oscuro:       'tono oscuro — pesado, moralmente cargado, consecuencias serias, sin escape fácil',
+    acogedor:     'tono acogedor — cálido, de baja tensión, humano, reconfortante',
+    melancolico:  'tono melancólico — nostálgico, tristeza tranquila, reflexivo, belleza de lo perdido',
+    satirico:     'tono satírico — irónico, observacional, humor punzante que revela algo sobre la condición humana',
+    esperanzador: 'tono esperanzador — optimista, humano, con algo que redime aunque no todo se resuelva',
+  };
+  const settingStr = (p.setting && p.setting !== 'surprise' && settingMap[p.setting])
+    ? `Ambientación: ${settingMap[p.setting]}.`
+    : 'Ambientación: libre — elige la más adecuada para la historia que vas a contar.';
+  const moodStr = (p.mood && p.mood !== 'surprise' && moodMap[p.mood])
+    ? `Tono: ${moodMap[p.mood]}.`
+    : 'Tono: libre — elige el más adecuado para la historia que vas a contar.';
 
   const seInstr = p.seOn
     ? `SE HIGHLIGHTING — TWO CATEGORIES ONLY:
@@ -1314,7 +1431,7 @@ DO NOT mark any other "se" usage — leave reflexive, reciprocal, accidental (se
 When in doubt, leave it unmarked. Only mark when you are confident it is pronominal or pasiva/impersonal.`
     : 'Do not add any special markup anywhere in the output.';
 
-  const themeStr   = p.theme   ? `Tema: ${p.theme}` : 'Tema: elige algo interesante, sorpréndeme';
+  // themeStr removed Apr 2026 — theme free-text input replaced by setting/mood selectors + seed system.
   const grammarStr = p.grammar ? `Enfoque gramatical: ${p.grammar}. Diseña el pasaje y preguntas para evaluar este punto.`
                                : 'Sin enfoque gramatical específico.';
 
@@ -1330,105 +1447,138 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
   const needsEndingPlan = isFreshStart && (isMultiEpFirst || isSoloStory);
   const hasEndingPlan   = !!p.plannedEnding;
 
-  // Variation forcing: fires only for fresh stories when a theme is specified.
-  // Forces the model past the default/prototypical interpretation of the theme toward genuine structural variety.
-  // NOTE: Item #4 (twist/hinge) was removed in the ending-planning rework — that commitment is now
-  // captured explicitly in planned_ending JSON output instead of being left silent. The remaining four
-  // items stay internal; they're about genre distinctiveness, complementary to the ending plan.
-  const varSeed = Math.floor(Math.random() * 10000);
-  const variationBlock = (isFreshStart && p.theme) ? `
-
-VARIATION REQUIREMENT (seed: ${varSeed}):
-The theme «${p.theme}» has an obvious default version. Do NOT write that version.
-
-Most themes are spaces containing many distinct tropes and structural patterns. For example, «Twilight Zone» includes time loops, doubles, paranoid small towns, cosmic irony, bureaucratic afterlife, doppelgängers, post-apocalyptic moral tests, unreliable memory, and many more. «Film noir / Sam Spade» includes classic detective plots but also political conspiracies, missing person cases where no one is who they claim, heist-gone-wrong, insurance fraud, amnesia, twin identities, and corrupted institutions. «Horror» isn't just haunted houses. «Romance» isn't just meet-cute.
-
-Before writing, commit internally to these four choices (do not print them — only the story):
-1. SUBGENRE / TROPE: within «${p.theme}», pick a less-prototypical angle. Do not pick the first example that comes to mind.
-2. SETTING: specific time and place, avoiding the genre's most clichéd locations.
-3. PROTAGONIST: a character type that's NOT the obvious pick for this genre.
-4. A TROPE YOU DELIBERATELY AVOID: name one cliché of the genre (internally) and do not use it.
-
-Use seed ${varSeed} as a concrete nudge toward less-obvious creative choices. Different seeds should pull you toward different corners of the genre.
-
-The story MUST feel structurally distinct from the most prototypical version of «${p.theme}» — not just the same story in a different setting.`
-    : '';
+  // variationBlock removed Apr 2026 — theme-driven variation forcing replaced by seed system.
+  // The seed's "mechanism" + random seed pick from the pool now provide structural variety.
 
   // ── Planning block: fires on ep 1 (fija/open) and solo stories. The story
-  //    must commit to its thematic purpose, final beat, and thread resolution
-  //    BEFORE writing the passage — so those elements can be seeded from the
-  //    first sentence rather than retrofitted at the end. The plan is returned
-  //    in planned_ending and frozen for the rest of the story.
+  //    must commit to its structural climax shape, concrete resolutions, and
+  //    dramatized climactic scene BEFORE writing the passage. The plan is
+  //    returned in planned_ending JSON and frozen for the rest of the story.
+  //    If a seed was picked (chosenSeed), its mechanism guides the climax shape;
+  //    otherwise the block falls through to a seedless version.
   //    NOTE: Language here is deliberately plain (not literary) because the
   //    prompt's vocabulary primes the passage's vocabulary. The planning field
-  //    is STRUCTURAL — the passage's STYLE comes from the register field.
+  //    is STRUCTURAL — the passage's STYLE comes from the style field.
+  const seedMechanismBlock = (needsEndingPlan && p.seed) ? `
+
+FORMA DEL CLÍMAX para esta historia (seed: ${p.seed.id}):
+${p.seed.mechanism}
+
+RESOLUCIÓN PROMETIDA:
+· Qué DEBES resolver concretamente en el final: ${p.seed.resolution_guidance.must_resolve}
+· Qué PUEDE quedar a la inferencia del lector (con anclas, sin explicación): ${p.seed.resolution_guidance.can_stay_open}` : '';
+
   const planningBlock = needsEndingPlan ? `
+${seedMechanismBlock}
 
 PLANIFICACIÓN DEL DESENLACE (OBLIGATORIA — antes de redactar el pasaje):
 Antes de escribir, decide adónde va la historia. No improvises el final. Fija el desenlace ahora y siembra sus elementos desde la primera oración.
 
-Devuelve estas tres partes en el campo "planned_ending" del JSON:
+Devuelve el campo "planned_ending" del JSON con esta estructura de cinco partes:
 
-1. IDEA CENTRAL (thematic_core) — una sola oración que diga de qué trata la historia en el fondo, más allá del argumento. Ejemplos (úsalos para entender la idea, NO copies su estilo — formula tu idea central en el registro del pasaje):
-   · «la gente casi siempre sabe la verdad pero no quiere escucharla.»
-   · «lo que uno llama mala suerte suele ser una decisión que no se animó a tomar.»
-   · «el silencio de los demás también es una respuesta.»
-   · «los pueblos pequeños saben cosas que nadie dice en voz alta.»
-   · «a veces proteger a alguien es lo contrario de ayudarlo.»
+1. central_mystery — una oración que nombre la pregunta o tensión central de la historia, lo que mantiene la atención del lector.
 
-2. MOMENTO FINAL (final_beat) — dos o tres oraciones describiendo el instante exacto que cierra la historia. No el final completo: el momento clave. La imagen que queda. La frase que se dice o no se dice. El momento en que algo cobra otro sentido.
+2. mystery_resolutions — un objeto con dos sub-objetos:
+   · resolved_definitively: para CADA hilo importante que levantes y que prometiste resolver, agrega una entrada con una clave descriptiva corta y una respuesta concreta. Las respuestas son cosas que efectivamente ocurren, se revelan o se ven en la historia. NO son gestos ni insinuaciones. Si el seed de arriba dice que debes resolver X, X aparece aquí con una respuesta concreta.
+   · left_open_by_design: para los hilos que eliges dejar a la interpretación del lector, agrega una entrada que nombre qué opciones de lectura quedan abiertas. El lector debe tener anclas suficientes para inferir sin que se lo digas.
 
-3. RESOLUCIÓN DE HILOS (thread_resolution) — qué preguntas quedan respondidas, cuáles quedan abiertas a propósito, y cuáles cambian de sentido al final (algo que el lector entendió de una manera en los primeros episodios y al final significa otra cosa). Ese cambio de sentido es lo que hace un final memorable.
+3. climactic_scene — CUATRO sub-campos que juntos forman UNA ESCENA DRAMATIZADA:
+   · where: el lugar físico concreto del momento clímax.
+   · trigger: la cosa específica — un objeto visto, una frase escuchada, un detalle descubierto, una puerta que se abre — que dispara el momento.
+   · realization: qué entiende la protagonista en ese instante, en términos CONCRETOS. NO vale «entendió algo». Vale «entendió que su hermano le había mentido sobre el dinero».
+   · decision_or_action: qué HACE la protagonista en respuesta. Una acción visible o una decisión que toma. NO vale una observación pasiva ni un entendimiento silencioso sin consecuencia.
 
-SEPARACIÓN DE PLAN Y ESTILO (crítica): El plan de desenlace es ESTRUCTURAL, no estilístico. El pasaje se ejecuta en el registro especificado al inicio del prompt — no en el registro de estos ejemplos ni en el de este bloque de planificación. El plan guía QUÉ pasa en la historia; el registro guía CÓMO se escribe. Si el registro es cotidiano, el pasaje usa oraciones directas y vocabulario cotidiano aunque la idea central sea profunda. Si el registro es literario, el pasaje puede elevarse. El plan NO autoriza elevar el registro.
+4. consequence — qué es inmediatamente distinto después del clímax. Un cambio concreto de estado, relación o situación.
+
+5. why_it_matters — una oración que responda: ¿por qué vale la pena contar esta historia? La carga temática que justifica el tiempo del lector.
+
+SEPARACIÓN DE PLAN Y ESTILO (crítica): El plan de desenlace es ESTRUCTURAL, no estilístico. El pasaje se ejecuta en el ESTILO especificado al inicio del prompt — no en el estilo de este bloque, ni en el estilo del mecanismo del seed. El plan guía QUÉ pasa; el estilo guía CÓMO se escribe. Si el estilo es cotidiano, el pasaje usa oraciones directas y vocabulario cotidiano aunque la idea central sea profunda. Si el estilo es literario, el pasaje puede elevarse. El plan NO autoriza elevar el estilo.
 
 Escribe el pasaje sabiendo hacia dónde va. El lector no debe poder adivinar el final — pero al llegar, debe sentir que la historia lo estuvo construyendo todo el tiempo.${p.epTarget > 1 ? `
 
-Esta es una historia de ${p.epTarget} episodios. Planea arcos y ritmo acordes: los episodios intermedios desarrollan el mundo y los personajes, siembran los elementos que el final va a cambiar de sentido, y mantienen la tensión sin apurar el cierre. El desenlace se aterriza en el episodio ${p.epTarget}.` : ''}${p.epTarget === 0 && !isSoloStory ? `
+Esta es una historia de ${p.epTarget} episodios. Planea arcos y ritmo acordes: los episodios intermedios desarrollan el mundo y los personajes, siembran los elementos que el final va a usar, y mantienen la tensión sin apurar el cierre. El clímax se aterriza en el episodio ${p.epTarget}.` : ''}${p.epTarget === 0 && !isSoloStory ? `
 
 Esta es una historia abierta — el número total de episodios es flexible. Cuando el lector decida cerrar, los últimos 3 episodios ejecutarán el desenlace que planeas ahora. Hasta entonces, desarrolla la trama hacia ese desenlace sin apurarlo. Siembra los elementos; no los aterrices todavía.` : ''}` : '';
 
   // ── Ending context: fires on middle episodes (ep 2+ but not final) when a
-  //    planned ending exists. Keeps the committed ending in front of the model
+  //    planned ending exists. Keeps the committed plan in front of the model
   //    so every episode converges toward it rather than drifting.
+  //    NOTE: we interpolate KEYS of the resolution sub-objects (compact, safe
+  //    from quote/escape issues) plus the short climactic_scene string fields.
+  //    Full value text from resolved_definitively/left_open_by_design is only
+  //    surfaced in the FINAL episode block where the model needs every detail.
+  const resolvedKeys = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.resolved_definitively)
+    ? Object.keys(p.plannedEnding.mystery_resolutions.resolved_definitively).join(', ') : '';
+  const openKeys = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.left_open_by_design)
+    ? Object.keys(p.plannedEnding.mystery_resolutions.left_open_by_design).join(', ') : '';
+  const climaxScene = (hasEndingPlan && p.plannedEnding.climactic_scene) || {};
+
   const endingContext = (hasEndingPlan && !isFinalEp && p.epNum > 1) ? `
 
 DESENLACE PLANEADO (establecido en episodio 1 — NO modificar):
-· Idea central: ${p.plannedEnding.thematic_core}
-· Momento final: ${p.plannedEnding.final_beat}
-· Resolución de hilos: ${p.plannedEnding.thread_resolution}
+· Misterio central: ${p.plannedEnding.central_mystery || '(no especificado)'}
+· Debes resolver en el final: ${resolvedKeys || '(ninguno — revisa el plan)'}
+· Queda abierto por diseño: ${openKeys || '(ninguno)'}
+· Clímax planeado: ${climaxScene.decision_or_action || '(no especificado)'} en ${climaxScene.where || '(lugar no especificado)'}
+· Consecuencia: ${p.plannedEnding.consequence || '(no especificada)'}
 
-La historia va hacia ese desenlace. En este episodio, haz avanzar la trama en esa dirección: siembra los elementos que el final va a necesitar, profundiza en los personajes cuyos arcos tienen que cerrarse, y mantén la idea central presente en el fondo. NO aterrices el desenlace todavía — eso es trabajo del episodio final. Pero tampoco dispersas la historia: cada escena debe aportar al desenlace planeado.
+La historia va hacia ese desenlace. En este episodio, haz avanzar la trama en esa dirección: siembra los elementos que el final va a necesitar, profundiza en los personajes cuyos arcos tienen que cerrarse, y mantén el misterio central presente en el fondo. NO aterrices el clímax todavía — eso es trabajo del episodio final. Pero tampoco dispersas la historia: cada escena debe aportar al desenlace planeado.
 
-RECORDATORIO DE REGISTRO: Este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt, no en el registro del plan.` : '';
+RECORDATORIO DE ESTILO: Este plan es estructural. Escribe el pasaje en el estilo especificado al inicio del prompt, no en el estilo del plan.` : '';
 
   // ── Final execution block: replaces the old weak parenthetical in the label.
-  //    When a planned ending exists, this is where it lands. When no plan exists
-  //    (legacy stories pre-update), falls back to general "satisfying closure" language.
+  //    When a planned ending exists, this is where it lands with explicit
+  //    anti-evasion rules. When no plan exists (very legacy stories), falls
+  //    back to general closure language.
+  const resolvedEntries = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.resolved_definitively)
+    ? Object.entries(p.plannedEnding.mystery_resolutions.resolved_definitively).map(([k,v]) => `  · ${k}: ${v}`).join('\n') : '  (ninguno)';
+  const openEntries = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.left_open_by_design)
+    ? Object.entries(p.plannedEnding.mystery_resolutions.left_open_by_design).map(([k,v]) => `  · ${k}: ${v}`).join('\n') : '  (ninguno)';
+
   const finalExecutionBlock = isFinalEp ? (hasEndingPlan ? `
 
 EPISODIO FINAL — EJECUTA ESTE DESENLACE:
-· Idea central: ${p.plannedEnding.thematic_core}
-· Momento final: ${p.plannedEnding.final_beat}
-· Resolución de hilos: ${p.plannedEnding.thread_resolution}
 
-Instrucciones de cierre:
-- Aterriza la idea central con claridad, pero sin subrayarla. Deja que las imágenes, las acciones y las decisiones de los personajes hagan el trabajo. No expliques la moraleja.
-- Incluye el momento final tal como fue planeado — ese es el peso del episodio. Constrúyelo; no lo apures.
-- Resuelve los hilos según el plan: responde lo que tiene que responderse, deja abierto lo que debe quedar abierto, y cambia el sentido de lo que debe cambiar de sentido. Ese cambio de sentido (algo que el lector entendió de una manera y al final significa otra) es lo que hace que un final se quede con el lector.
-- No abras hilos nuevos en el episodio final. Todo lo que aparece aquí debe aportar al cierre.
-- El final debe sentirse INEVITABLE al mirar hacia atrás y SORPRENDENTE en el momento. Si el lector puede adivinar el final a mitad del episodio, falta algo — una vuelta de tuerca, una imagen que lo cambie.
+Plan fijado en episodio 1:
+· Misterio central: ${p.plannedEnding.central_mystery || '(no especificado)'}
+· Debes resolver EXPLÍCITAMENTE (cada uno visible en este episodio):
+${resolvedEntries}
+· Queda abierto por diseño (el lector infiere con las anclas que ya diste — NO expliques):
+${openEntries}
+· Clímax — ocurre como ESCENA MOSTRADA, no como resumen:
+  · Lugar: ${climaxScene.where || '(no especificado)'}
+  · Disparador: ${climaxScene.trigger || '(no especificado)'}
+  · Lo que entiende la protagonista (concreto): ${climaxScene.realization || '(no especificado)'}
+  · Lo que HACE la protagonista: ${climaxScene.decision_or_action || '(no especificado)'}
+· Consecuencia inmediata: ${p.plannedEnding.consequence || '(no especificada)'}
+· Por qué importa la historia: ${p.plannedEnding.why_it_matters || '(no especificado)'}
 
-RECORDATORIO DE REGISTRO: Este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt. Incluso en registro cotidiano, el final puede tener peso sin elevar la prosa — oraciones directas pueden cargar muchísimo significado.` : `
+REGLAS DE EJECUCIÓN (críticas — el final vive o muere con estas):
+
+1. EL CLÍMAX ES UNA ESCENA DRAMATIZADA, no un resumen ni una reflexión. Se muestra, no se cuenta. El lector ve el lugar, oye el disparador, siente el momento. Si resumes o reflexionas sobre el clímax en vez de dramatizarlo, el episodio falla.
+
+2. LA PROTAGONISTA ACTÚA. Toma una decisión visible o ejecuta una acción concreta — no solo observa y entiende algo pasivamente. Si termina el episodio mirando en silencio mientras «entiende algo», el episodio falla.
+
+3. CADA ELEMENTO DE resolved_definitively DEBE SER LEGIBLE EN EL PASAJE. No basta con que esté implícito: el lector debe poder identificar la respuesta al terminar. Puede mostrarse en acción, revelarse en diálogo, o hacerse evidente por contexto; pero queda respondido.
+
+4. LOS ELEMENTOS DE left_open_by_design NO SE EXPLICAN. El lector los infiere con las anclas que ya le diste. No los reveles, no los resuelvas, no los trates en monólogo interno. La ambigüedad es intencional.
+
+5. PROHIBIDOS LOS FINALES EVASIVOS. Frases como «entendió que la respuesta no importaba», «estaban del mismo lado de algo», «la pregunta tampoco era una pregunta», «supo que ya era parte de algo», «entendió sin palabras» — ese cierre metafísico ambiguo que pretende profundidad pero evita nombrar lo que pasa — está PROHIBIDO. Si la protagonista entiende algo, el pasaje nombra QUÉ entendió en términos concretos.
+
+6. EL ORDEN ES: TENSIÓN → CLÍMAX (escena dramatizada) → CONSECUENCIA → SIGNIFICADO. La última imagen puede ser contemplativa, pero viene DESPUÉS del clímax, no lo reemplaza.
+
+7. NO abras hilos nuevos en el episodio final. Todo lo que aparece aquí aporta al cierre.
+
+RECORDATORIO DE ESTILO: Este plan es estructural. Escribe el pasaje en el estilo especificado al inicio del prompt. Incluso en estilo cotidiano, el clímax puede tener peso sin elevar la prosa — oraciones directas pueden cargar muchísimo significado.` : `
 
 EPISODIO FINAL — cierre narrativo (sin plan explícito previo):
 Este es el último episodio. Da un cierre satisfactorio:
-- Resuelve los hilos principales de la trama.
-- Cierra los arcos de los personajes centrales con coherencia.
-- No abras hilos nuevos.
-- Si el género o tema sugiere un giro o un cambio de sentido (parábola, Twilight Zone, noir, ironía final), inclúyelo.
-- El final debe sentirse ganado, no improvisado.
-- Escribe en el registro especificado al inicio del prompt.`) : '';
+· Resuelve los hilos principales de la trama con respuestas concretas, no gestos.
+· Cierra los arcos de los personajes centrales con coherencia.
+· La protagonista toma una decisión visible o ejecuta una acción — no solo observa pasivamente.
+· No abras hilos nuevos.
+· Evita finales evasivos tipo «entendió algo sin palabras» o «estaban del mismo lado de algo».
+· Escribe en el estilo especificado al inicio del prompt.`) : '';
 
   // Episode label stays brief — the FINAL heavy lifting now happens in finalExecutionBlock above.
   const epLabel = p.epNum > 0
@@ -1438,25 +1588,29 @@ Este es el último episodio. Da un cierre satisfactorio:
     : '';
 
   // JSON schema: conditionally includes planned_ending on episodes that need to commit.
+  // New 5-field shape replaces the old thematic_core/final_beat/thread_resolution triple.
+  // Double quotes are JSON-required; no literal Spanish-language content uses double quotes
+  // (guillemets « » or plain text only) to prevent model-mirrored quote-in-string parse errors.
   const jsonSchema = needsEndingPlan
-    ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"thematic_core":"una oración","final_beat":"dos o tres oraciones","thread_resolution":"qué se resuelve, qué queda abierto, qué se recontextualiza"},"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`
+    ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"central_mystery":"una oración — la pregunta o tensión central","mystery_resolutions":{"resolved_definitively":{"clave_descriptiva":"respuesta concreta"},"left_open_by_design":{"clave_descriptiva":"qué opciones de lectura quedan abiertas"}},"climactic_scene":{"where":"lugar físico concreto","trigger":"qué cosa específica dispara el clímax","realization":"qué entiende la protagonista en términos concretos","decision_or_action":"qué HACE ella — una acción visible"},"consequence":"qué es inmediatamente distinto después del clímax","why_it_matters":"por qué vale la pena contar esta historia"},"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`
     : `{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`;
 
   return `Crea un cuestionario de comprensión lectora en español. Responde SOLO con JSON válido, sin texto adicional ni comillas de código.
 
 Nivel: ${levelMap[p.level] || p.level}
-Registro: ${registerMap[p.register] || p.register}
+Estilo: ${registerMap[p.register] || p.register}
 Variedad: ${regionDesc[p.region] || p.region}
-${themeStr}${epLabel}
-${grammarStr}${bibleSection}${endingContext}${finalExecutionBlock}${variationBlock}${planningBlock}
+${settingStr}
+${moodStr}${epLabel}
+${grammarStr}${bibleSection}${endingContext}${finalExecutionBlock}${planningBlock}
 
-PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
+PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el estilo especificado arriba. El estilo es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
 
 PRONOMBRES EN DIÁLOGO: La variedad regional especificada arriba controla qué pronombres usar en TODAS las líneas de diálogo. Si la variedad es neutral o Latin American sin voseo, los personajes NUNCA dicen «vos», «sabés», «tenés», «sos», «querés», «podés» — dicen «tú», «sabes», «tienes», «eres», «quieres», «puedes». Si la variedad es rioplatense o Latin American con voseo, los personajes usan voseo. Verifica cada línea de diálogo contra esta regla antes de entregar. ${seInstr}
 
-PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier registro — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
+PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier estilo — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
 
-REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo registro que el pasaje. No introduzcas vocabulario que no aparecería en ese registro. Por ejemplo, en registro cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
+ESTILO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo estilo que el pasaje. No introduzcas vocabulario que no aparecería en ese estilo. Por ejemplo, en estilo cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
 
 JSON requerido:
 ${jsonSchema}
@@ -1488,7 +1642,7 @@ function startGenerate() {
 }
 
 async function doGenerate() {
-  const theme   = document.getElementById('surpriseMe').checked ? null : document.getElementById('themeInput').value.trim() || null;
+  // Theme input was removed Apr 2026 — replaced by setting/mood selectors + seed system.
   const grammar = document.getElementById('noGrammar').checked  ? null : document.getElementById('grammarInput').value.trim() || null;
   /* SE HIGHLIGHT DISABLED 2026-04-18 — flag forced false.
      Rendering logic and prompt branch remain intact below but unreachable.
@@ -1500,13 +1654,19 @@ async function doGenerate() {
   const isContinuation = (cfg.mode !== 'individual') && storyId !== null;
 
   // Snapshot state so we can restore on auth failure
-  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, biblePromise, regenerating };
+  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, chosenSeed, biblePromise, regenerating };
 
   if (!isContinuation) {
     storyBible   = null; prevBible = null; plannedEnding = null; biblePromise = null;
     storyId      = cfg.mode === 'individual' ? null : 'story-' + Date.now();
     episodeNum   = cfg.mode === 'individual' ? 0 : 1;
     episodeTarget= cfg.mode === 'fixed' ? (parseInt(document.getElementById('epCount').value) || 5) : (episodeTarget || 0);
+    // Pick seed for this new story. Fires once per fresh story; the same seed
+    // is carried through every subsequent episode via the _snap/restore path.
+    // If seedPool failed to load OR no seed matches filters, chosenSeed stays
+    // null and buildPrompt falls through to a no-seed fallback branch.
+    chosenSeed = pickSeed(cfg.mode, cfg.setting, cfg.mood, cfg.register);
+    if (chosenSeed) console.log('Seed selected:', chosenSeed.id);
     // Clear regenerating here: the retry button on JSON parse errors sets this flag,
     // but on a fresh start retry it's meaningless. If we don't clear it, the flag
     // stays stuck at true and the NEXT doGenerate() call (e.g. Save-and-continue
@@ -1517,13 +1677,13 @@ async function doGenerate() {
   } else if (regenerating) {
     regenerating = false;
     storyBible   = prevBible;
-    // episodeNum stays the same; plannedEnding stays the same (committed in ep 1)
+    // episodeNum stays the same; plannedEnding and chosenSeed stay the same (committed in ep 1)
   } else {
     episodeNum++;
   }
 
-  currentCfg = { ...cfg, theme, grammar, seOn, voseo,
-    bible: storyBible, plannedEnding, epNum: episodeNum, epTarget: episodeTarget };
+  currentCfg = { ...cfg, grammar, seOn, voseo,
+    bible: storyBible, plannedEnding, seed: chosenSeed, epNum: episodeNum, epTarget: episodeTarget };
 
   const epMsg = episodeNum > 0
     ? (episodeTarget > 0 ? `Generando episodio ${episodeNum} de ${episodeTarget}…` : `Generando episodio ${episodeNum}…`)
@@ -1531,14 +1691,18 @@ async function doGenerate() {
 
   const modeLabels = { individual: 'Individual', fixed: 'Historia Fija', open: 'Historia Abierta' };
   const regionLabels = { neutral: 'Neutro', rioplatense: 'Rioplatense', latin_american: 'Latinoamericano', spain: 'España' };
-  // Backward-compat: old saves may have 'conversational' or 'formal' — map to nearest new register for display
+  // Backward-compat: old saves may have 'conversational' or 'formal' — map to nearest new style for display
   const registerLabels = { everyday: 'Cotidiano', literary: 'Literario', news: 'Periodístico', conversational: 'Cotidiano', formal: 'Literario' };
+  const settingLabels = { surprise: 'Ambientación libre', actual: 'Actual', historico: 'Histórico', futuro: 'Futuro', imaginario: 'Imaginario', realidad_alterna: 'Realidad alterna' };
+  const moodLabels    = { surprise: 'Tono libre', tenso: 'Tenso', oscuro: 'Oscuro', acogedor: 'Acogedor', melancolico: 'Melancólico', satirico: 'Satírico', esperanzador: 'Esperanzador' };
   const ctxParts = [modeLabels[cfg.mode] || cfg.mode];
   if (episodeNum > 0) ctxParts.push(episodeTarget > 0 ? `Ep. ${episodeNum}/${episodeTarget}` : `Ep. ${episodeNum}`);
   ctxParts.push(currentCfg.level);
   ctxParts.push(registerLabels[currentCfg.register] || currentCfg.register);
   ctxParts.push(regionLabels[currentCfg.region] || currentCfg.region);
-  if (theme) ctxParts.push(`Tema: ${theme}`);
+  if (currentCfg.setting && currentCfg.setting !== 'surprise') ctxParts.push(settingLabels[currentCfg.setting] || currentCfg.setting);
+  if (currentCfg.mood    && currentCfg.mood    !== 'surprise') ctxParts.push(moodLabels[currentCfg.mood]       || currentCfg.mood);
+  if (chosenSeed)        ctxParts.push(`Semilla: ${chosenSeed.name}`);
   const ctxLabel = document.getElementById('genContextLabel');
   ctxLabel.textContent = ctxParts.join(' · ');
   ctxLabel.style.display = 'block';
@@ -1571,7 +1735,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       sessionPw = null;
       // Restore story state so next attempt starts clean
       storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; biblePromise = _snap.biblePromise;
+      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; chosenSeed = _snap.chosenSeed; biblePromise = _snap.biblePromise;
       regenerating = _snap.regenerating;
       showScreen('sParams'); alert('Contraseña incorrecta.'); return;
     }
@@ -1656,13 +1820,30 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     //    Once set, it's frozen for the rest of the story — subsequent episodes
     //    see it as context but never regenerate it. Remove from quiz object so
     //    it doesn't leak into render / save-as-quiz-content paths.
+    //    New shape (Apr 2026): central_mystery, mystery_resolutions (with
+    //    resolved_definitively + left_open_by_design sub-objects), climactic_scene
+    //    (with where/trigger/realization/decision_or_action), consequence, why_it_matters.
     if (quiz.planned_ending && typeof quiz.planned_ending === 'object') {
       const pe = quiz.planned_ending;
-      if (pe.thematic_core || pe.final_beat || pe.thread_resolution) {
+      // Any of the top-level keys present = we treat it as a valid plan
+      const hasAnyKey = pe.central_mystery || pe.mystery_resolutions || pe.climactic_scene || pe.consequence || pe.why_it_matters;
+      if (hasAnyKey) {
+        const mr = (pe.mystery_resolutions && typeof pe.mystery_resolutions === 'object') ? pe.mystery_resolutions : {};
+        const cs = (pe.climactic_scene && typeof pe.climactic_scene === 'object') ? pe.climactic_scene : {};
         plannedEnding = {
-          thematic_core:    (pe.thematic_core    || '').trim(),
-          final_beat:       (pe.final_beat       || '').trim(),
-          thread_resolution:(pe.thread_resolution || '').trim(),
+          central_mystery: (pe.central_mystery || '').toString().trim(),
+          mystery_resolutions: {
+            resolved_definitively: (mr.resolved_definitively && typeof mr.resolved_definitively === 'object') ? mr.resolved_definitively : {},
+            left_open_by_design:   (mr.left_open_by_design   && typeof mr.left_open_by_design   === 'object') ? mr.left_open_by_design   : {},
+          },
+          climactic_scene: {
+            where:              (cs.where              || '').toString().trim(),
+            trigger:            (cs.trigger            || '').toString().trim(),
+            realization:        (cs.realization        || '').toString().trim(),
+            decision_or_action: (cs.decision_or_action || '').toString().trim(),
+          },
+          consequence:    (pe.consequence    || '').toString().trim(),
+          why_it_matters: (pe.why_it_matters || '').toString().trim(),
         };
       }
       delete quiz.planned_ending;
@@ -1705,7 +1886,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     isProcessing = false;
     // Restore story state so retry starts from correct episode
     storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; biblePromise = _snap.biblePromise;
+    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; chosenSeed = _snap.chosenSeed; biblePromise = _snap.biblePromise;
     regenerating = _snap.regenerating;
     goParams();
     const canRetry = generateRetries < 3;
@@ -1734,6 +1915,9 @@ function renderQuiz(quiz, seOn) {
   document.getElementById('qTitle').textContent = quiz.title;
   const tags = [currentCfg.level, currentCfg.register];
   if (currentCfg.region !== 'neutral') tags.push(currentCfg.region.replace('_',' '));
+  if (currentCfg.setting && currentCfg.setting !== 'surprise') tags.push(currentCfg.setting.replace('_',' '));
+  if (currentCfg.mood    && currentCfg.mood    !== 'surprise') tags.push(currentCfg.mood);
+  if (chosenSeed) tags.push(`🌱 ${chosenSeed.name}`);
   document.getElementById('qTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
 
   const epEl = document.getElementById('qEpisode');
@@ -2093,7 +2277,7 @@ async function generateBible(passage, cfg) {
 - Lugar y atmósfera
 - Eventos clave ocurridos
 - Hilos narrativos sin resolver
-- Notas de registro (variedad: ${cfg.region}, registro: ${cfg.register})
+- Notas de estilo (variedad: ${cfg.region}, estilo: ${cfg.register})
 
 IMPORTANTE: Este documento captura QUÉ HA PASADO, no hacia dónde va la historia. No sugieras dirección narrativa ni giros futuros — el desenlace ya está planeado por separado. Limítate a describir el estado actual del mundo del relato.
 
@@ -2416,7 +2600,9 @@ async function saveQuizToDrive(extraFields = {}) {
     episode: episodeNum || null,
     story_status: extraFields.story_status || (currentCfg.mode === 'individual' ? null : 'in-progress'),
     level: currentCfg.level, register: currentCfg.register, region: currentCfg.region,
-    theme: currentCfg.theme || null, grammar_focus: currentCfg.grammar || null,
+    setting: currentCfg.setting || null, mood: currentCfg.mood || null,
+    seed_id: (chosenSeed && chosenSeed.id) || null,
+    grammar_focus: currentCfg.grammar || null,
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
     questions: currentQuiz.questions, story_bible: storyBible || null,
     planned_ending: plannedEnding || null,
@@ -2549,18 +2735,28 @@ async function resumeStory(s) {
   storyBible = s.story_bible || null; prevBible = null; biblePromise = null; regenerating = false;
   // Restore planned ending if the saved record has one (pre-planned-ending-update records won't).
   plannedEnding = (s.planned_ending && typeof s.planned_ending === 'object') ? s.planned_ending : null;
-  // Migrate old register values from pre-April-2026 saves (5-option era → 3-option era)
-  const REGISTER_MIGRATE = { conversational: 'everyday', formal: 'literary' };
+  // Restore chosen seed by looking up seed_id in the pool. If the pool failed to
+  // load OR the seed_id is missing/stale, chosenSeed falls to null and the next
+  // episode uses the seedless prompt branch.
+  chosenSeed = null;
+  if (s.seed_id && seedPool && Array.isArray(seedPool.seeds)) {
+    chosenSeed = seedPool.seeds.find(sd => sd.id === s.seed_id) || null;
+  }
+  // Migrate old register values from legacy saves:
+  //  conversational/formal — 5-option era (pre-April 2026)
+  //  news — 3-option era "Periodístico" (removed April 2026)
+  const REGISTER_MIGRATE = { conversational: 'everyday', formal: 'literary', news: 'literary' };
   const savedRegister = s.register ? (REGISTER_MIGRATE[s.register] || s.register) : null;
   cfg.level=s.level||cfg.level; cfg.register=savedRegister||cfg.register;
   cfg.region=s.region||cfg.region; cfg.mode=s.mode||cfg.mode;
-  ['level','register','region','mode'].forEach(key =>
+  cfg.setting = s.setting || 'surprise';
+  cfg.mood    = s.mood    || 'surprise';
+  ['level','register','region','mode','setting','mood'].forEach(key =>
     document.querySelectorAll(`[data-key="${key}"]`).forEach(b =>
       b.classList.toggle('selected', b.dataset.val === cfg[key])
     )
   );
-  // Populate theme and grammar from saved record
-  if (s.theme) { document.getElementById('themeInput').value = s.theme; document.getElementById('surpriseMe').checked = false; document.getElementById('themeInput').disabled = false; }
+  // Populate grammar focus from saved record (theme input is gone Apr 2026)
   if (s.grammar_focus) { document.getElementById('grammarInput').value = s.grammar_focus; document.getElementById('noGrammar').checked = false; document.getElementById('grammarInput').disabled = false; }
   lockParams();
   requirePw(doGenerate);
@@ -2570,11 +2766,11 @@ function lockParams() {
   document.querySelectorAll('#sParams .btn-option').forEach(b => {
     b.style.pointerEvents = 'none'; b.style.opacity = '0.5';
   });
-  ['themeInput','grammarInput'].forEach(id => {
+  ['grammarInput'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.disabled = true; el.style.opacity = '0.5'; }
   });
-  ['surpriseMe','noGrammar','seCheck'].forEach(id => {
+  ['noGrammar','seCheck'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.disabled = true; el.style.opacity = '0.5'; }
   });
@@ -2596,11 +2792,9 @@ function unlockParams() {
   document.querySelectorAll('#sParams .btn-option').forEach(b => {
     b.style.pointerEvents = ''; b.style.opacity = '';
   });
-  ['themeInput','grammarInput'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.style.opacity = ''; if (!document.getElementById(id === 'themeInput' ? 'surpriseMe' : 'noGrammar').checked) el.disabled = false; }
-  });
-  ['surpriseMe','noGrammar','seCheck'].forEach(id => {
+  const gi = document.getElementById('grammarInput');
+  if (gi) { gi.style.opacity = ''; if (!document.getElementById('noGrammar').checked) gi.disabled = false; }
+  ['noGrammar','seCheck'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.disabled = false; el.style.opacity = ''; }
   });

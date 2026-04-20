@@ -1,0 +1,225 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "description": "Story shape seeds for comprension-lectora. Generator filters by mode_tier + user-selected setting/mood/style, picks randomly from eligible pool, and injects the seed's mechanism into the planning block so the model commits to a specific climax shape.",
+    "mode_tier_values": {
+      "solo": "Only works in solo mode.",
+      "fija": "Works in solo or fija mode.",
+      "abierta": "Works in any mode (solo, fija, abierta)."
+    },
+    "filter_field_semantics": {
+      "fits_settings": "Empty array = fits all settings. Listed values = hard filter.",
+      "fits_moods": "Empty array = fits all moods. Listed values = hard filter.",
+      "fits_styles": "Empty array = fits all styles. Listed values = hard filter."
+    },
+    "setting_values": ["actual", "historico", "futuro", "imaginario", "realidad_alterna"],
+    "mood_values": ["tenso", "oscuro", "acogedor", "melancolico", "satirico", "esperanzador"],
+    "style_values": ["cotidiano", "literario"]
+  },
+
+  "seeds": [
+    {
+      "id": "cotidiano.decision_pequena_irreversible",
+      "category": "cotidiano",
+      "name": "Decisión pequeña irreversible",
+      "mode_tier": "solo",
+      "mechanism": "En un momento aparentemente ordinario, la protagonista toma una decisión pequeña que sabe que no se puede deshacer. La tensión se construye hacia ese instante — una llamada que no hace, una firma que sí pone, una puerta que cierra. El clímax es la decisión misma, tomada en silencio o con un gesto mínimo. La consecuencia se implica, no se muestra completa.",
+      "climax_shape": "decision_interna",
+      "tone_tags": ["introspectivo", "contenido", "cotidiano"],
+      "fits_settings": ["actual", "historico"],
+      "fits_moods": ["melancolico", "acogedor", "tenso"],
+      "fits_styles": ["cotidiano", "literario"],
+      "resolution_guidance": {
+        "must_resolve": "Qué decidió la protagonista y por qué la decisión era irreversible para ella.",
+        "can_stay_open": "Las consecuencias a largo plazo, cómo reaccionarán los demás, si se arrepentirá."
+      }
+    },
+
+    {
+      "id": "cotidiano.reconciliacion_tacita",
+      "category": "cotidiano",
+      "name": "Reconciliación tácita",
+      "mode_tier": "solo",
+      "mechanism": "Dos personas con un conflicto pendiente se cruzan de nuevo. No se confronta el pasado con palabras. El clímax es un gesto pequeño — un café compartido, una ayuda ofrecida, una frase aparentemente banal — que ambos entienden como reconciliación sin nombrarla nunca.",
+      "climax_shape": "gesto_reconciliador",
+      "tone_tags": ["cálido", "contenido", "emocional"],
+      "fits_settings": ["actual", "historico"],
+      "fits_moods": ["melancolico", "acogedor", "esperanzador"],
+      "fits_styles": ["cotidiano", "literario"],
+      "resolution_guidance": {
+        "must_resolve": "Cuál fue el conflicto original y qué significa exactamente el gesto final.",
+        "can_stay_open": "Si hay reconciliación completa, cómo seguirá la relación, si volverán a hablar."
+      }
+    },
+
+    {
+      "id": "cotidiano.confesion_que_no_se_pide",
+      "category": "cotidiano",
+      "name": "Confesión que no se pide",
+      "mode_tier": "fija",
+      "mechanism": "Alguien le dice a la protagonista algo íntimo o pesado que ella no pidió escuchar — un secreto, una culpa, una verdad incómoda sobre un tercero. El clímax es su decisión de qué hacer con esa información: actuar, guardar silencio consciente, romper la relación, fingir que no la oyó.",
+      "climax_shape": "decision_ante_revelacion_ajena",
+      "tone_tags": ["introspectivo", "moralmente_ambiguo"],
+      "fits_settings": ["actual", "historico"],
+      "fits_moods": ["tenso", "melancolico", "oscuro"],
+      "fits_styles": ["cotidiano", "literario"],
+      "resolution_guidance": {
+        "must_resolve": "Qué le confesaron y qué eligió hacer ella con esa información.",
+        "can_stay_open": "Las consecuencias de su elección, si el confesor se entera de su decisión."
+      }
+    },
+
+    {
+      "id": "giro_final.inversion_depredador_presa",
+      "category": "giro_final",
+      "name": "Inversión depredador-presa",
+      "mode_tier": "fija",
+      "mechanism": "La protagonista actúa con la seguridad de quien controla una situación — investiga, explora, domina, estudia. Durante la historia aparecen detalles pequeños que no cuadran. El clímax es un detalle concreto y específico que revela que la escala está invertida: ella es lo observado, lo estudiado, lo cazado, el experimento. La revelación recontextualiza todo lo anterior.",
+      "climax_shape": "revelacion_de_posicion",
+      "tone_tags": ["inquietante", "giro_final"],
+      "fits_settings": ["actual", "futuro", "imaginario", "realidad_alterna"],
+      "fits_moods": ["tenso", "oscuro"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Quién o qué controla realmente la situación y qué es ella en ese marco.",
+        "can_stay_open": "Su destino después de la revelación, el propósito último de la observación."
+      }
+    },
+
+    {
+      "id": "giro_final.purgatorio_a_medida",
+      "category": "giro_final",
+      "name": "Purgatorio a medida",
+      "mode_tier": "fija",
+      "mechanism": "La protagonista cometió una falta moral específica — crueldad, cobardía, traición, egoísmo. Se encuentra en una situación (lugar, bucle, tarea) que parece extraña pero manejable. El clímax es el momento en que entiende que la situación fue diseñada a medida para convertir precisamente su defecto en su castigo. La trampa la construyó ella misma con lo que es.",
+      "climax_shape": "reconocimiento_del_castigo",
+      "tone_tags": ["moralista", "inquietante", "ironico"],
+      "fits_settings": ["actual", "historico", "futuro", "imaginario", "realidad_alterna"],
+      "fits_moods": ["oscuro", "tenso"],
+      "fits_styles": ["literario"],
+      "resolution_guidance": {
+        "must_resolve": "Cuál fue su falta moral y cómo exactamente la trampa la refleja.",
+        "can_stay_open": "Si podrá escapar, cuánto tiempo lleva allí, si hay otros en la misma situación."
+      }
+    },
+
+    {
+      "id": "giro_final.fractura_de_identidad",
+      "category": "giro_final",
+      "name": "Fractura de identidad",
+      "mode_tier": "fija",
+      "mechanism": "La protagonista lucha por volver a su vida, recordar algo importante, o convencer a alguien de quién es. Cada intento revela más grietas en su realidad. El clímax es el descubrimiento concreto de que sus recuerdos son falsos o de que ella no es quien creía: una actriz en una obra, una copia, un fantasma, una simulación, un personaje en la mente de otro.",
+      "climax_shape": "revelacion_de_identidad_falsa",
+      "tone_tags": ["inquietante", "filosofico"],
+      "fits_settings": ["actual", "futuro", "imaginario", "realidad_alterna"],
+      "fits_moods": ["tenso", "oscuro", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Qué es ella realmente y cómo se sostiene la ilusión en la que vivía.",
+        "can_stay_open": "Quién la creó, por qué, si hay otros como ella, qué pasa después."
+      }
+    },
+
+    {
+      "id": "western.forastero_que_expone_al_pueblo",
+      "category": "western",
+      "name": "Forastero que expone al pueblo",
+      "mode_tier": "fija",
+      "mechanism": "Un forastero llega a un pueblo aparentemente tranquilo. Su presencia — por algo que sabe, algo que es, o algo que pide — hace visible la hipocresía, culpa o pacto silencioso que el pueblo había decidido ignorar. El clímax es el momento en que el pueblo elige cómo responder: defender la mentira, sacrificar al forastero, o romper con el pacto. Esa respuesta define al pueblo.",
+      "climax_shape": "revelacion_moral_colectiva",
+      "tone_tags": ["moralista", "tenso", "coral"],
+      "fits_settings": ["historico", "realidad_alterna", "imaginario", "futuro"],
+      "fits_moods": ["tenso", "oscuro", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Qué estaba escondiendo el pueblo y qué eligieron hacer con el forastero.",
+        "can_stay_open": "El destino exacto del forastero, las consecuencias para el pueblo a largo plazo."
+      }
+    },
+
+    {
+      "id": "western.duelo_moral",
+      "category": "western",
+      "name": "Duelo moral",
+      "mode_tier": "solo",
+      "mechanism": "Dos personajes con códigos morales incompatibles convergen hacia una confrontación inevitable. No es solo un enfrentamiento físico: cada uno representa un valor (la ley vs la venganza, la lealtad vs la verdad, el honor vs la supervivencia). El clímax es el enfrentamiento mismo, pero lo que lo define no es quién gana físicamente sino qué valor prevalece — o si ambos pierden algo irrecuperable al elegir.",
+      "climax_shape": "confrontacion_moral",
+      "tone_tags": ["tenso", "tragico"],
+      "fits_settings": ["historico", "realidad_alterna", "imaginario", "futuro"],
+      "fits_moods": ["tenso", "oscuro", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Quién prevaleció, qué valor triunfó, qué perdió el sobreviviente.",
+        "can_stay_open": "Cómo vivirá el sobreviviente con la decisión, juicio de los demás."
+      }
+    },
+
+    {
+      "id": "amor.reencuentro_que_llega_tarde",
+      "category": "amor",
+      "name": "Reencuentro que llega tarde",
+      "mode_tier": "solo",
+      "mechanism": "Dos personas que se amaron hace años se reencuentran. Algo fundamental ha cambiado — compromisos nuevos, hijos, la persona misma, el momento histórico. La tensión no es si se amaron, sino qué harán ahora. El clímax es un momento compartido donde ambos entienden que lo que fue posible ya no lo es, y eligen qué se llevan: una conversación honesta, una última vez, una despedida limpia, una mentira piadosa.",
+      "climax_shape": "reconocimiento_de_lo_perdido",
+      "tone_tags": ["melancolico", "emocional"],
+      "fits_settings": ["actual", "historico"],
+      "fits_moods": ["melancolico", "acogedor"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Por qué no puede ser ahora y qué eligen llevarse del reencuentro.",
+        "can_stay_open": "Sus vidas después, si volverán a verse, si alguien más se entera."
+      }
+    },
+
+    {
+      "id": "amor.eleccion_entre_dos_vidas",
+      "category": "amor",
+      "name": "Elección entre dos vidas",
+      "mode_tier": "fija",
+      "mechanism": "La protagonista está entre dos caminos genuinamente incompatibles: dos personas que la aman, dos ciudades, dos versiones de sí misma, dos lealtades. Ambas opciones son reales, no una trampa. La tensión se construye hacia un momento donde la decisión ya no puede postergarse. El clímax es la elección, hecha por razones que el lector finalmente entiende. La consecuencia central es la pérdida real del otro camino, no solo la ganancia del elegido.",
+      "climax_shape": "eleccion_irreversible",
+      "tone_tags": ["emocional", "reflexivo"],
+      "fits_settings": ["actual", "historico", "futuro"],
+      "fits_moods": ["melancolico", "esperanzador", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Qué eligió y la razón concreta que inclinó la balanza.",
+        "can_stay_open": "Si se arrepentirá, qué pasará con el camino no elegido, reacción de los demás."
+      }
+    },
+
+    {
+      "id": "sci_fi.descubrimiento_que_invalida_la_mision",
+      "category": "sci_fi",
+      "name": "Descubrimiento que invalida la misión",
+      "mode_tier": "fija",
+      "mechanism": "El protagonista (o equipo) está en una misión con un objetivo claro — explorar, recuperar, rescatar, terminar un trabajo. A mitad de camino encuentran información concreta que hace la misión absurda, inmoral, o imposible: el objetivo ya estaba muerto, el rescate era una trampa, el planeta que iban a colonizar tiene dueños. El clímax es la decisión: completar la misión igual, traicionarla, o hacer algo que nadie previó.",
+      "climax_shape": "decision_ante_verdad_que_cambia_todo",
+      "tone_tags": ["filosofico", "tenso", "aventura"],
+      "fits_settings": ["futuro", "imaginario", "realidad_alterna"],
+      "fits_moods": ["tenso", "melancolico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Qué descubrieron exactamente y qué decidieron hacer.",
+        "can_stay_open": "Consecuencias para otros, si se sabrá la verdad, juicio de quien los envió."
+      }
+    },
+
+    {
+      "id": "sci_fi.dilema_etico_primer_contacto",
+      "category": "sci_fi",
+      "name": "Dilema ético en el primer contacto",
+      "mode_tier": "fija",
+      "mechanism": "Un grupo humano (exploradores, científicos, diplomáticos, colonos) se encuentra con un ser, cultura o situación que desafía sus suposiciones sobre lo correcto. El conflicto central no es físico sino ético: intervenir o no, revelar o ocultar, respetar la diferencia o imponer su criterio. El clímax es la decisión tomada — y el reconocimiento honesto de lo que se pierde al tomarla, porque no hay opción sin costo.",
+      "climax_shape": "decision_etica_sin_buena_salida",
+      "tone_tags": ["filosofico", "humanista", "reflexivo"],
+      "fits_settings": ["futuro", "imaginario", "realidad_alterna"],
+      "fits_moods": ["tenso", "melancolico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Qué decidieron, qué principio los guió, qué sacrificaron al decidir.",
+        "can_stay_open": "Efectos a largo plazo, si fue la decisión correcta, reacción de autoridades."
+      }
+    }
+  ]
+}

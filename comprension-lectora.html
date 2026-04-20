@@ -1262,9 +1262,9 @@ function buildPrompt(p) {
     C2:'mastery C2 — near-native complexity, full stylistic and lexical range',
   };
   const regionDesc = {
-    neutral:       'neutral Latin American Spanish — use tú forms exclusively, never vos. Do not set the story in Argentina or Uruguay. Avoid all regional slang, lunfardo, and voseo. Broadly accessible to all Spanish speakers.',
-    rioplatense:   'Rioplatense Spanish (Argentine/Uruguayan) — use voseo throughout, lunfardo touches, local Río de la Plata flavor',
-    latin_american:'Latin American Spanish' + (p.voseo ? ' — include voseo (vos/te) naturally alongside tú forms' : ' — use tú/usted, no voseo'),
+    neutral:       'neutral Latin American Spanish — use tú forms exclusively, NEVER vos. This applies EVERYWHERE including all dialogue. Dialogue lines like «¿vos sabés?» or «vos siempre te das cuenta» are FORBIDDEN in this variety. Use «¿tú sabes?» and «tú siempre te das cuenta» instead. Do not set the story in Argentina or Uruguay. Avoid all regional slang, lunfardo, and voseo. Broadly accessible to all Spanish speakers.',
+    rioplatense:   'Rioplatense Spanish (Argentine/Uruguayan) — use voseo throughout including all dialogue, lunfardo touches, local Río de la Plata flavor',
+    latin_american:'Latin American Spanish' + (p.voseo ? ' — voseo IS permitted in this run; use voseo (vos/te/sos/tenés/sabés/querés) naturally alongside tú forms, including in dialogue' : ' — use tú/usted exclusively, NO voseo anywhere, including in dialogue. Lines like «¿vos sabés?» or «vos siempre» are FORBIDDEN. Use «¿tú sabes?» and «tú siempre» instead.'),
     spain:         'Castilian Spanish — use vosotros, peninsular vocabulary',
   };
   const registerMap = {
@@ -1450,11 +1450,13 @@ Variedad: ${regionDesc[p.region] || p.region}
 ${themeStr}${epLabel}
 ${grammarStr}${bibleSection}${endingContext}${finalExecutionBlock}${variationBlock}${planningBlock}
 
-PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones. ${seInstr}
+PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
+
+PRONOMBRES EN DIÁLOGO: La variedad regional especificada arriba controla qué pronombres usar en TODAS las líneas de diálogo. Si la variedad es neutral o Latin American sin voseo, los personajes NUNCA dicen «vos», «sabés», «tenés», «sos», «querés», «podés» — dicen «tú», «sabes», «tienes», «eres», «quieres», «puedes». Si la variedad es rioplatense o Latin American con voseo, los personajes usan voseo. Verifica cada línea de diálogo contra esta regla antes de entregar. ${seInstr}
 
 PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier registro — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
 
-REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo registro que el pasaje. No introduzcas vocabulario que no aparecería en ese registro. Por ejemplo, en registro cotidiano, verbos como "ahuyentar," "proferir," "divisar," "vislumbrar," "tornar," "yacer," "henchir," "acaecer," "discurrir" son inadecuados — usa "espantar," "decir," "ver," "volverse," "estar tendido," "llenar," "ocurrir," "pasar el tiempo." Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
+REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo registro que el pasaje. No introduzcas vocabulario que no aparecería en ese registro. Por ejemplo, en registro cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
 
 JSON requerido:
 ${jsonSchema}
@@ -1505,6 +1507,13 @@ async function doGenerate() {
     storyId      = cfg.mode === 'individual' ? null : 'story-' + Date.now();
     episodeNum   = cfg.mode === 'individual' ? 0 : 1;
     episodeTarget= cfg.mode === 'fixed' ? (parseInt(document.getElementById('epCount').value) || 5) : (episodeTarget || 0);
+    // Clear regenerating here: the retry button on JSON parse errors sets this flag,
+    // but on a fresh start retry it's meaningless. If we don't clear it, the flag
+    // stays stuck at true and the NEXT doGenerate() call (e.g. Save-and-continue
+    // after a successful retry) takes the "regenerating" branch instead of
+    // incrementing episodeNum — causing the system to regenerate ep 1 again
+    // when the user expected ep 2.
+    regenerating = false;
   } else if (regenerating) {
     regenerating = false;
     storyBible   = prevBible;

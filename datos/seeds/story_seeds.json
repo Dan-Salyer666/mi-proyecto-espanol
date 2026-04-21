@@ -1,224 +1,816 @@
 {
   "_meta": {
-    "version": "1.0",
-    "description": "Story shape seeds for comprension-lectora. Generator filters by mode_tier + user-selected setting/mood/style, picks randomly from eligible pool, and injects the seed's mechanism into the planning block so the model commits to a specific climax shape.",
-    "mode_tier_values": {
-      "solo": "Only works in solo mode.",
-      "fija": "Works in solo or fija mode.",
-      "abierta": "Works in any mode (solo, fija, abierta)."
-    },
+    "version": "2.0",
+    "updated": "2026-04-20",
+    "description": "Psychological story engines — setting-agnostic and gender-neutral. Each seed describes WHAT happens in a human heart when a plot goes off, not a genre. A single engine (e.g. 'paralysis_of_truth' from Hamlet) should work in any setting from ancient Egypt to a battlestar. Setting and mood are chosen separately by the user; the seed provides structural shape only.",
+    "breaking_changes_from_v1": "Fields renamed and expanded. category is now psychological_class. Gender-neutral Spanish throughout. Genre-locked v1 seeds (western.*, amor.*, sci_fi.*) removed — their essence absorbed into setting-agnostic engines. Mode tier simplified — all seeds work in 3-15 episode fixed stories; min_episodes flags seeds that need more narrative real estate.",
     "filter_field_semantics": {
+      "min_episodes": "Shortest story length this engine can sustain. Default 3. Raise when the engine requires multiple turns (false victory, slow reveal, late recontextualization).",
       "fits_settings": "Empty array = fits all settings. Listed values = hard filter.",
-      "fits_moods": "Empty array = fits all moods. Listed values = hard filter.",
-      "fits_styles": "Empty array = fits all styles. Listed values = hard filter."
+      "fits_moods":    "Empty array = fits all moods. Listed values = hard filter.",
+      "fits_styles":   "Empty array = fits all styles. Listed values = hard filter."
     },
     "setting_values": ["actual", "historico", "futuro", "imaginario", "realidad_alterna"],
-    "mood_values": ["tenso", "oscuro", "acogedor", "melancolico", "satirico", "esperanzador"],
-    "style_values": ["cotidiano", "literario"]
+    "mood_values":    ["tenso", "oscuro", "acogedor", "melancolico", "satirico", "esperanzador"],
+    "style_values":   ["cotidiano", "literario"],
+    "psychological_class_values": [
+      "moral_trap",
+      "perception_shift",
+      "paralysis_or_indecision",
+      "obsession_cost",
+      "bargain_or_temptation",
+      "ambition_or_hubris",
+      "misplaced_trust",
+      "diplomatic_crucible",
+      "scientific_or_reasoned_resolution",
+      "ethical_stand",
+      "inescapable_fate",
+      "grace_or_sacrifice"
+    ]
   },
 
   "seeds": [
     {
-      "id": "cotidiano.decision_pequena_irreversible",
-      "category": "cotidiano",
-      "name": "Decisión pequeña irreversible",
-      "mode_tier": "solo",
-      "mechanism": "En un momento aparentemente ordinario, la protagonista toma una decisión pequeña que sabe que no se puede deshacer. La tensión se construye hacia ese instante — una llamada que no hace, una firma que sí pone, una puerta que cierra. El clímax es la decisión misma, tomada en silencio o con un gesto mínimo. La consecuencia se implica, no se muestra completa.",
-      "climax_shape": "decision_interna",
-      "tone_tags": ["introspectivo", "contenido", "cotidiano"],
-      "fits_settings": ["actual", "historico"],
-      "fits_moods": ["melancolico", "acogedor", "tenso"],
-      "fits_styles": ["cotidiano", "literario"],
+      "id": "paralysis_of_truth",
+      "name": "Paralisis de la verdad",
+      "source_echo": "Hamlet",
+      "psychological_class": "paralysis_or_indecision",
+      "min_episodes": 4,
+      "mechanism": "Alguien capaz y moralmente serio recibe la tarea de enmendar un agravio profundo o reparar un sistema roto. Pero la exigencia de certeza absoluta — de saber sin duda antes de actuar — produce una demora devastadora. Cada paso hacia la accion se posterga por una razon mas: falta de pruebas, el momento no es correcto, los danos colaterales, la duda sobre los propios motivos. Cuando finalmente se actua, el mundo alrededor ya se desmorono. La tragedia no es el mal original sino la demora ante el.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "oscuro", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Qué decidió la protagonista y por qué la decisión era irreversible para ella.",
-        "can_stay_open": "Las consecuencias a largo plazo, cómo reaccionarán los demás, si se arrepentirá."
+        "must_resolve": "Que decide finalmente quien vacila, que ya se ha perdido por la demora, y si la accion tardia sirve de algo.",
+        "can_stay_open": "Si quien vacila podra vivir con la conciencia de lo perdido, el juicio moral historico."
       }
     },
 
     {
-      "id": "cotidiano.reconciliacion_tacita",
-      "category": "cotidiano",
-      "name": "Reconciliación tácita",
-      "mode_tier": "solo",
-      "mechanism": "Dos personas con un conflicto pendiente se cruzan de nuevo. No se confronta el pasado con palabras. El clímax es un gesto pequeño — un café compartido, una ayuda ofrecida, una frase aparentemente banal — que ambos entienden como reconciliación sin nombrarla nunca.",
-      "climax_shape": "gesto_reconciliador",
-      "tone_tags": ["cálido", "contenido", "emocional"],
-      "fits_settings": ["actual", "historico"],
-      "fits_moods": ["melancolico", "acogedor", "esperanzador"],
-      "fits_styles": ["cotidiano", "literario"],
+      "id": "prophesied_ambition",
+      "name": "Ambicion profetizada",
+      "source_echo": "Macbeth",
+      "psychological_class": "ambition_or_hubris",
+      "min_episodes": 4,
+      "mechanism": "Una figura capaz pero en posicion subordinada recibe un vislumbre de un destino glorioso — una profecia, una prediccion algoritmica, una informacion filtrada, una senal que interpreta como promesa. Creyendo que el desenlace ya esta fijado, destruye preventivamente su propia moral y su equilibrio para acelerarlo. Cada paso contaminado se justifica como la realizacion de lo inevitable. La profecia se cumple, pero por el mecanismo exacto de su autodestruccion.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Cuál fue el conflicto original y qué significa exactamente el gesto final.",
-        "can_stay_open": "Si hay reconciliación completa, cómo seguirá la relación, si volverán a hablar."
+        "must_resolve": "Que precio pago quien quiso forzar el destino y si la profecia era real o se cumplio por el mecanismo de creerla.",
+        "can_stay_open": "Que hubiera pasado sin actuar, quien filtro o dio la profecia y por que."
       }
     },
 
     {
-      "id": "cotidiano.confesion_que_no_se_pide",
-      "category": "cotidiano",
-      "name": "Confesión que no se pide",
-      "mode_tier": "fija",
-      "mechanism": "Alguien le dice a la protagonista algo íntimo o pesado que ella no pidió escuchar — un secreto, una culpa, una verdad incómoda sobre un tercero. El clímax es su decisión de qué hacer con esa información: actuar, guardar silencio consciente, romper la relación, fingir que no la oyó.",
-      "climax_shape": "decision_ante_revelacion_ajena",
-      "tone_tags": ["introspectivo", "moralmente_ambiguo"],
-      "fits_settings": ["actual", "historico"],
+      "id": "poisoned_trust",
+      "name": "Confianza envenenada",
+      "source_echo": "Othello",
+      "psychological_class": "misplaced_trust",
+      "min_episodes": 4,
+      "mechanism": "Una figura respetada y capaz es destruida desde adentro por alguien de absoluta confianza. El subordinado no usa fuerza — usa las inseguridades ocultas del lider (pertenencia, edad, origen, competencia) y convierte pequenas ambiguedades en evidencia. El amor mas profundo del lider se transforma lentamente en paranoia letal. Al final, quien manipula queda expuesto, pero el dano es irreversible.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Como se revela la manipulacion y que destruye el lider antes de entender.",
+        "can_stay_open": "Por que el manipulador actuo — envidia pura, agravio antiguo, o algo mas extrano."
+      }
+    },
+
+    {
+      "id": "machiavellian_climb",
+      "name": "Ascenso maquiavelico",
+      "source_echo": "Richard III",
+      "psychological_class": "ambition_or_hubris",
+      "min_episodes": 5,
+      "mechanism": "Una persona sin disculpas por su crueldad y con carisma letal elimina — social, legal, fisicamente — cada obstaculo hacia el poder supremo. Tiene exito completo. Llega a la cima. Pero el trono construido con cadaveres resulta aislado, odiado universalmente, e indefendible cuando los fantasmas de las victimas convergen. No cae por bondad ajena sino porque ya no queda nadie dispuesto a defenderlo.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "satirico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Como cae el ambicioso y que alianza o traicion lo tumba.",
+        "can_stay_open": "Si reconoce su error al final o muere sin entender."
+      }
+    },
+
+    {
+      "id": "blind_abdication",
+      "name": "Abdicacion ciega",
+      "source_echo": "King Lear",
+      "psychological_class": "ambition_or_hubris",
+      "min_episodes": 5,
+      "mechanism": "Una figura poderosa renuncia voluntariamente a su autoridad y la reparte segun muestras superficiales de lealtad, no segun competencia o amor real. Despojada de poder, es inmediatamente expulsada al caos por quienes ungio. Forzada a sobrevivir sin los privilegios que siempre la protegieron, aprende demasiado tarde quien la queria de verdad — y quien ya estaba calculando desde antes.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "melancolico"],
+      "fits_styles": ["literario"],
+      "resolution_guidance": {
+        "must_resolve": "Que reconoce al final quien abdico y cual era la verdadera lealtad.",
+        "can_stay_open": "Si muere reconciliado o maldiciendo, que queda de su legado."
+      }
+    },
+
+    {
+      "id": "orchestrated_forgiveness",
+      "name": "Perdon orquestado",
+      "source_echo": "The Tempest",
+      "psychological_class": "grace_or_sacrifice",
+      "min_episodes": 5,
+      "mechanism": "Una figura desterrada usa medios extraordinarios — tecnologia avanzada, recursos inmensos, autoridad secreta — para atrapar a sus antiguos traidores en un entorno aislado y controlado. En vez de ejecutar la venganza definitiva, los somete a pruebas psicologicas hasta que algunos muestran arrepentimiento genuino. Elige el perdon. Renuncia al poder construido para esa venganza. La historia termina no con sangre sino con el costo enorme de soltar.",
+      "fits_settings": [],
+      "fits_moods": ["melancolico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que perdona y que no, y que pierde al elegir el perdon.",
+        "can_stay_open": "Si los perdonados realmente cambiaron o solo sobrevivieron a la prueba."
+      }
+    },
+
+    {
+      "id": "preemptive_betrayal",
+      "name": "Traicion preventiva",
+      "source_echo": "Julius Caesar",
+      "psychological_class": "moral_trap",
+      "min_episodes": 4,
+      "mechanism": "Un grupo de conspiradores, genuinamente convencidos de salvar a la sociedad de una tirania inminente, ejecuta una traicion masiva y subita contra una figura popular. Miscalculan la reaccion publica. El vacio de poder genera un caos peor que la tirania temida. Los conspiradores 'honorables' son destruidos, uno a uno, por el movimiento que ellos mismos desataron.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Como colapsa la conspiracion y si algun conspirador reconoce el error antes de caer.",
+        "can_stay_open": "Si la figura traicionada era realmente tirano o no."
+      }
+    },
+
+    {
+      "id": "inherited_feud",
+      "name": "Odio heredado",
+      "source_echo": "Romeo and Juliet",
+      "psychological_class": "inescapable_fate",
+      "min_episodes": 4,
+      "mechanism": "Dos individuos de facciones violentamente opuestas — familias, clanes, gremios, paises — intentan forjar una union (amorosa, laboral, politica) fuera del odio sistemico heredado. Su destruccion mutua, casi inevitable por la maquinaria que heredaron, se convierte en el unico catalizador capaz de forzar a las facciones a reconocer el costo suicida del conflicto. La paz llega, pero tarde.",
+      "fits_settings": [],
       "fits_moods": ["tenso", "melancolico", "oscuro"],
-      "fits_styles": ["cotidiano", "literario"],
+      "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Qué le confesaron y qué eligió hacer ella con esa información.",
-        "can_stay_open": "Las consecuencias de su elección, si el confesor se entera de su decisión."
+        "must_resolve": "Que precio pagan quienes intentan cruzar y si la reconciliacion de las facciones dura.",
+        "can_stay_open": "Si alguno pudo haber evitado el desenlace actuando distinto."
       }
     },
 
     {
-      "id": "giro_final.inversion_depredador_presa",
-      "category": "giro_final",
-      "name": "Inversión depredador-presa",
-      "mode_tier": "fija",
-      "mechanism": "La protagonista actúa con la seguridad de quien controla una situación — investiga, explora, domina, estudia. Durante la historia aparecen detalles pequeños que no cuadran. El clímax es un detalle concreto y específico que revela que la escala está invertida: ella es lo observado, lo estudiado, lo cazado, el experimento. La revelación recontextualiza todo lo anterior.",
-      "climax_shape": "revelacion_de_posicion",
-      "tone_tags": ["inquietante", "giro_final"],
+      "id": "weaponized_contract",
+      "name": "Contrato convertido en arma",
+      "source_echo": "The Merchant of Venice",
+      "psychological_class": "moral_trap",
+      "min_episodes": 4,
+      "mechanism": "Alguien queda legal e inextricablemente atado a un contrato letal con un antagonista marginado y profundamente vengativo. La resolucion no viene por fuerza bruta ni por escape — viene por un tecnicismo hiper-especifico que vuelve la trampa contra quien la tendio. Sobrevive quien lee el contrato literalmente y encuentra el vacio que el otro no vio. La justicia es real pero el sabor es amargo.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "oscuro", "satirico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Cual es el tecnicismo y que destino le toca al trapero.",
+        "can_stay_open": "Si el vengador estaba moralmente equivocado o solo tacticamente."
+      }
+    },
+
+    {
+      "id": "evolutionary_catalyst",
+      "name": "Catalizador de transformacion",
+      "source_echo": "2001: A Space Odyssey",
+      "psychological_class": "perception_shift",
+      "min_episodes": 5,
+      "mechanism": "Una persona o grupo encuentra un artefacto, entidad o conocimiento incomprensible. El conflicto no es derrotarlo — es sobrevivir a lo que te obliga a trascender. Quien acepta cambia de forma permanente: no vuelve a ser quien era, ni humano del mismo modo. Quien se resiste es reemplazado. Al final, lo que era el personaje ya no existe; lo que quedo es algo mas.",
+      "fits_settings": ["futuro", "imaginario", "realidad_alterna", "historico"],
+      "fits_moods": ["tenso", "melancolico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "En que se convierte y si queda algun rastro del ser anterior.",
+        "can_stay_open": "Que es exactamente el catalizador, de donde viene, que quiere."
+      }
+    },
+
+    {
+      "id": "bureaucracy_of_doom",
+      "name": "Burocracia hacia la catastrofe",
+      "source_echo": "Dr. Strangelove",
+      "psychological_class": "inescapable_fate",
+      "min_episodes": 4,
+      "mechanism": "Un evento catastrofico de escala mundial o vital se ha disparado. La tension no viene de la malicia sino del apego absurdo al protocolo, los sistemas rotos, y los egos fragiles de quienes intentan detenerlo. La maquinaria que deberia salvar es la que condena. El desenlace llega no porque nadie quisiera evitarlo, sino porque cada paso responsable llego un minuto tarde.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "oscuro", "satirico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Si el desastre se consuma o se detiene, y cual fue el ultimo eslabon que fallo o se sostuvo.",
+        "can_stay_open": "Que pasa con los responsables despues, si alguien aprende."
+      }
+    },
+
+    {
+      "id": "corrupted_sovereign",
+      "name": "Soberano corrompido",
+      "source_echo": "Apocalypse Now / Heart of Darkness",
+      "psychological_class": "perception_shift",
+      "min_episodes": 5,
+      "mechanism": "Un operario leal es enviado a territorio caotico para recuperar o eliminar a una figura heroica que se volvio renegada. Al llegar y observar, descubre que la 'locura' del renegado tiene mas sentido que el sistema hipocrita que lo envio. La mision original se vuelve imposible moralmente. Quien obedece debe elegir: ejecutar, unirse, o algo peor que ambas.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "melancolico"],
+      "fits_styles": ["literario"],
+      "resolution_guidance": {
+        "must_resolve": "Que hace el operario al enfrentar al renegado y que se convierte en el mismo.",
+        "can_stay_open": "Cual era la verdad completa del renegado, si el sistema enviara otro operario despues."
+      }
+    },
+
+    {
+      "id": "engineered_soul",
+      "name": "Alma redisenada",
+      "source_echo": "A Clockwork Orange",
+      "psychological_class": "ethical_stand",
+      "min_episodes": 4,
+      "mechanism": "La sociedad intenta 'curar' a alguien profundamente destructivo despojandolo por la fuerza de su voluntad o de su naturaleza primaria. Los resultados superficiales son perfectos — ya no hace dano. Pero la historia pregunta sin disfraz: es peor una bondad artificial forzada que una maldad autentica elegida? Quien decidio por el sistema se enfrenta a lo que produjo.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "satirico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que queda del sujeto tratado y que precio social pago la 'cura'.",
+        "can_stay_open": "Si la sociedad cambiara su metodo despues de este caso."
+      }
+    },
+
+    {
+      "id": "fatal_temptation",
+      "name": "Tentacion fatal",
+      "source_echo": "Double Indemnity / noir clasico",
+      "psychological_class": "bargain_or_temptation",
+      "min_episodes": 3,
+      "mechanism": "Una persona cinica pero comoda es seducida a una transgresion aparentemente perfecta — un crimen, una mentira, una traicion — por un manipulador carismatico. Ejecutan juntos el plan. Tiene exito. Entonces la paranoia, la culpa, y las circunstancias que se cierran transforman a los complices en enemigos. Uno de los dos no sale vivo, y quien sale no vuelve a confiar en nadie, ni en si mismo.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Quien traiciona primero, como se rompe el pacto, y quien sobrevive y como.",
+        "can_stay_open": "Si el manipulador tenia intencion de traicionar desde el principio."
+      }
+    },
+
+    {
+      "id": "inexorable_force",
+      "name": "Fuerza inexorable",
+      "source_echo": "No Country for Old Men",
+      "psychological_class": "inescapable_fate",
+      "min_episodes": 4,
+      "mechanism": "Una persona ordinaria tropieza con un golpe de suerte no ganado — dinero, conocimiento, poder. La ganancia desata la persecucion de un antagonista implacable que opera bajo principios ajenos, no negociables, casi no humanos. No hay trato. No hay argumento. Quien lo entiende sobrevive; quien lo subestima muere. Y a veces entender tampoco basta.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que pasa con el ordinario, que pasa con el hallazgo, si alguien vio lo que el antagonista representa.",
+        "can_stay_open": "Quien o que es exactamente el antagonista, si seguira despues del final."
+      }
+    },
+
+    {
+      "id": "obsessive_reclamation",
+      "name": "Reclamo obsesivo",
+      "source_echo": "The Searchers / Once Upon a Time in the West",
+      "psychological_class": "obsession_cost",
+      "min_episodes": 4,
+      "mechanism": "Alguien endurecido y muy capaz dedica anos a perseguir a quienes le arrancaron algo esencial — una persona, un honor, una verdad. La persecucion dura tanto que lo va convirtiendo en lo que caza. El climax llega cuando finalmente tiene al adversario enfrente. Lo que decide en ese instante revela que queda del ser original: reclamarlo, perdonarlo, o quedarse de ese lado para siempre.",
+      "fits_settings": [],
+      "fits_moods": ["melancolico", "oscuro", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que elige al enfrentarse al adversario y que queda del ser original.",
+        "can_stay_open": "Si lo reclamado todavia existe para ser rescatado, que viene despues del reencuentro."
+      }
+    },
+
+    {
+      "id": "stripped_victory",
+      "name": "Victoria despojada",
+      "source_echo": "The Old Man and the Sea",
+      "psychological_class": "obsession_cost",
+      "min_episodes": 3,
+      "mechanism": "Alguien emprende una batalla monumental contra una fuerza singular y abrumadora — una presa, un enemigo, una meta. Tecnicamente gana. Pero el costo del trayecto y los carroneros en el camino de vuelta van despojando la victoria hasta dejar solo la dignidad de haber sobrevivido al intento. El premio material no importa; importa que ocurrio.",
+      "fits_settings": [],
+      "fits_moods": ["melancolico", "esperanzador", "acogedor"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que queda al final del esfuerzo y si quien lo vivio lo considera valioso.",
+        "can_stay_open": "Si alguien mas entendera o creera lo que ocurrio."
+      }
+    },
+
+    {
+      "id": "abandoned_creation",
+      "name": "Creacion abandonada",
+      "source_echo": "Frankenstein",
+      "psychological_class": "moral_trap",
+      "min_episodes": 4,
+      "mechanism": "Quien crea algo — cientifico, artista, arquitecto, lider — logra el gran avance y queda aterrado por la realidad de su exito. Lo abandona. La creacion, confundida y buscando sentido, va destruyendo lentamente la vida del creador en una busqueda desesperada de reconocimiento. El verdadero monstruo no es lo creado: es la cobardia de no mirarlo a los ojos.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "melancolico", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Si el creador finalmente enfrenta su creacion y que pasa cuando lo hace.",
+        "can_stay_open": "Que era realmente la creacion, si sobrevive al creador."
+      }
+    },
+
+    {
+      "id": "erasure_of_reality",
+      "name": "Borrado de la realidad",
+      "source_echo": "1984",
+      "psychological_class": "inescapable_fate",
+      "min_episodes": 4,
+      "mechanism": "Un disidente solitario intenta preservar su memoria objetiva y sus pensamientos privados dentro de un sistema que impone conformidad absoluta. El giro demoledor es descubrir que su rebelion silenciosa fue anticipada, monitoreada, y finalmente vuelta insignificante por el mismo sistema — no por fuerza bruta sino por haber hecho que dudara de lo que recuerda.",
+      "fits_settings": ["actual", "futuro", "realidad_alterna", "historico"],
+      "fits_moods": ["oscuro", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que recuerda el disidente al final y si algo queda de su resistencia.",
+        "can_stay_open": "Si el sistema es eterno o si alguien mas intentara lo mismo."
+      }
+    },
+
+    {
+      "id": "endless_return",
+      "name": "Regreso sin fin",
+      "source_echo": "The Odyssey",
+      "psychological_class": "obsession_cost",
+      "min_episodes": 5,
+      "mechanism": "Alguien sobrevive a un conflicto central masivo e intenta simplemente volver a casa. En lugar de eso, debe atravesar una serie de pruebas desconectadas, casi oniricas, que especificamente ponen a prueba su ingenio, su lealtad, y su capacidad de resistir la tentacion de rendirse. El regreso es mas largo que la guerra misma, y quien llega ya no es el mismo que partio.",
+      "fits_settings": [],
+      "fits_moods": ["melancolico", "tenso", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Si llega a casa y en que se convirtio 'casa' durante la ausencia.",
+        "can_stay_open": "Cuantas pruebas mas habria aguantado, que hubiera pasado si se hubiera rendido."
+      }
+    },
+
+    {
+      "id": "flawed_fulfillment",
+      "name": "Deseo con defecto",
+      "source_echo": "Twilight Zone: ironia del deseo cumplido",
+      "psychological_class": "moral_trap",
+      "min_episodes": 3,
+      "mechanism": "Quien desea intensamente algo finalmente lo consigue. Pero una alteracion simultanea y minima en su realidad fisica vuelve ese deseo permanentemente inaccesible — los ojos que ya no ven, el idioma que ya no comparte, el tiempo que dejo de funcionar. La victoria no se anula; se despoja de sentido. La ironia es quirurgica.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "melancolico", "satirico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Cual es el defecto exacto que vuelve inaccesible el deseo.",
+        "can_stay_open": "Si hubo una fuerza consciente detras del giro o solo coincidencia cruel."
+      }
+    },
+
+    {
+      "id": "predator_prey_inversion",
+      "name": "Inversion depredador-presa",
+      "source_echo": "Twilight Zone: la escala invertida",
+      "psychological_class": "perception_shift",
+      "min_episodes": 3,
+      "mechanism": "Alguien actua con la seguridad de quien controla una situacion — investiga, explora, domina, estudia. Durante la historia aparecen detalles que no cuadran. El climax es un detalle concreto y especifico que revela que la escala esta invertida: es lo observado, lo estudiado, lo cazado, el experimento. La revelacion recontextualiza todo lo anterior.",
       "fits_settings": ["actual", "futuro", "imaginario", "realidad_alterna"],
       "fits_moods": ["tenso", "oscuro"],
       "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Quién o qué controla realmente la situación y qué es ella en ese marco.",
-        "can_stay_open": "Su destino después de la revelación, el propósito último de la observación."
+        "must_resolve": "Quien o que controla realmente la situacion y que es el personaje dentro de ese marco.",
+        "can_stay_open": "El destino posterior, el proposito ultimo de la observacion."
       }
     },
 
     {
-      "id": "giro_final.purgatorio_a_medida",
-      "category": "giro_final",
+      "id": "tailored_purgatory",
       "name": "Purgatorio a medida",
-      "mode_tier": "fija",
-      "mechanism": "La protagonista cometió una falta moral específica — crueldad, cobardía, traición, egoísmo. Se encuentra en una situación (lugar, bucle, tarea) que parece extraña pero manejable. El clímax es el momento en que entiende que la situación fue diseñada a medida para convertir precisamente su defecto en su castigo. La trampa la construyó ella misma con lo que es.",
-      "climax_shape": "reconocimiento_del_castigo",
-      "tone_tags": ["moralista", "inquietante", "ironico"],
-      "fits_settings": ["actual", "historico", "futuro", "imaginario", "realidad_alterna"],
-      "fits_moods": ["oscuro", "tenso"],
+      "source_echo": "Twilight Zone: castigo hecho a medida",
+      "psychological_class": "moral_trap",
+      "min_episodes": 3,
+      "mechanism": "Alguien cometio una falta moral especifica — crueldad, cobardia, traicion, egoismo. Se encuentra en una situacion que parece extrana pero manejable. El climax es el momento en que entiende que la situacion fue disenada para convertir precisamente su defecto en su castigo. La trampa la construyo la victima con lo que es.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "satirico"],
       "fits_styles": ["literario"],
       "resolution_guidance": {
-        "must_resolve": "Cuál fue su falta moral y cómo exactamente la trampa la refleja.",
-        "can_stay_open": "Si podrá escapar, cuánto tiempo lleva allí, si hay otros en la misma situación."
+        "must_resolve": "Cual fue la falta moral y como la trampa la refleja.",
+        "can_stay_open": "Si podra escapar, cuanto lleva alli, si hay otros en la misma situacion."
       }
     },
 
     {
-      "id": "giro_final.fractura_de_identidad",
-      "category": "giro_final",
+      "id": "faustian_deficit",
+      "name": "Deficit faustico",
+      "source_echo": "Twilight Zone: el costo oculto del pacto",
+      "psychological_class": "bargain_or_temptation",
+      "min_episodes": 3,
+      "mechanism": "Alguien intenta saltarse una limitacion humana — la muerte, la falta de talento, el envejecimiento — mediante un pacto sobrenatural o tecnologico. El final revela que el costo oculto del pacto despoja exactamente aquello que hacia que superar la limitacion valiera la pena. Se gana lo pedido; se pierde la razon por la que se lo pedia.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "melancolico", "satirico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Cual es el costo oculto exacto y si quien pacto lo entiende antes del final.",
+        "can_stay_open": "Quien ofrecio el pacto y por que acepta este trato."
+      }
+    },
+
+    {
+      "id": "misdirected_vengeance",
+      "name": "Venganza mal dirigida",
+      "source_echo": "Twilight Zone: el enemigo equivocado",
+      "psychological_class": "obsession_cost",
+      "min_episodes": 4,
+      "mechanism": "Alguien dedica la narrativa entera a perseguir un mal percibido. Ejecuta el golpe final, decisivo, letal. En ese instante descubre — por un detalle, una confesion, una ultima palabra — que destruyo a si mismo, a un ser querido, a un inocente. La venganza era real; el blanco nunca fue quien creia.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Quien era realmente el enemigo y como lo entiende el vengador.",
+        "can_stay_open": "Si hay manera de reparar, si seguira viviendo con esto."
+      }
+    },
+
+    {
+      "id": "echo_chamber_paranoia",
+      "name": "Camara de eco paranoica",
+      "source_echo": "Twilight Zone: 'The Monsters Are Due on Maple Street'",
+      "psychological_class": "perception_shift",
+      "min_episodes": 4,
+      "mechanism": "Una anomalia menor e inexplicada se introduce en un grupo aislado. El final revela que la anomalia era inofensiva — o solo una prueba — y que la destruccion catastrofica fue enteramente autoinfligida por la sospecha mutua creciente del grupo. El monstruo no estaba afuera; el monstruo era el miedo en accion.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "oscuro"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que era realmente la anomalia y que hicieron entre ellos.",
+        "can_stay_open": "Si alguien mira desde afuera, si era una prueba y quien la diseno."
+      }
+    },
+
+    {
+      "id": "cassandra_curse",
+      "name": "Maldicion de Casandra",
+      "source_echo": "Twilight Zone: la verdad que nadie cree",
+      "psychological_class": "inescapable_fate",
+      "min_episodes": 4,
+      "mechanism": "Una sola persona descubre una verdad que terminaria el mundo — o el pueblo, o la empresa, o la relacion. El climax no es una batalla para detenerla. Es la revelacion fria de que su incapacidad de convencer a nadie garantiza la destruccion. Tenia razon. No importo.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que intenta decir, a quien, y por que nadie escucha.",
+        "can_stay_open": "Si alguien lo creera demasiado tarde, si el desastre ocurre o solo se acerca."
+      }
+    },
+
+    {
+      "id": "identity_fracture",
       "name": "Fractura de identidad",
-      "mode_tier": "fija",
-      "mechanism": "La protagonista lucha por volver a su vida, recordar algo importante, o convencer a alguien de quién es. Cada intento revela más grietas en su realidad. El clímax es el descubrimiento concreto de que sus recuerdos son falsos o de que ella no es quien creía: una actriz en una obra, una copia, un fantasma, una simulación, un personaje en la mente de otro.",
-      "climax_shape": "revelacion_de_identidad_falsa",
-      "tone_tags": ["inquietante", "filosofico"],
+      "source_echo": "Twilight Zone: la realidad falsa",
+      "psychological_class": "perception_shift",
+      "min_episodes": 4,
+      "mechanism": "Alguien lucha por volver a su vida, recordar algo importante, o convencer a otros de quien es. Cada intento revela grietas en su realidad. El climax es el descubrimiento concreto de que sus recuerdos son falsos o que no es quien creia: un actor en una obra, una copia, un fantasma, una simulacion, un personaje en la mente de otro.",
       "fits_settings": ["actual", "futuro", "imaginario", "realidad_alterna"],
       "fits_moods": ["tenso", "oscuro", "melancolico"],
       "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Qué es ella realmente y cómo se sostiene la ilusión en la que vivía.",
-        "can_stay_open": "Quién la creó, por qué, si hay otros como ella, qué pasa después."
+        "must_resolve": "Que es realmente y como se sostenia la ilusion.",
+        "can_stay_open": "Quien la creo, por que, si hay otros como ella, que pasa despues."
       }
     },
 
     {
-      "id": "western.forastero_que_expone_al_pueblo",
-      "category": "western",
-      "name": "Forastero que expone al pueblo",
-      "mode_tier": "fija",
-      "mechanism": "Un forastero llega a un pueblo aparentemente tranquilo. Su presencia — por algo que sabe, algo que es, o algo que pide — hace visible la hipocresía, culpa o pacto silencioso que el pueblo había decidido ignorar. El clímax es el momento en que el pueblo elige cómo responder: defender la mentira, sacrificar al forastero, o romper con el pacto. Esa respuesta define al pueblo.",
-      "climax_shape": "revelacion_moral_colectiva",
-      "tone_tags": ["moralista", "tenso", "coral"],
-      "fits_settings": ["historico", "realidad_alterna", "imaginario", "futuro"],
-      "fits_moods": ["tenso", "oscuro", "melancolico"],
+      "id": "predestination_paradox",
+      "name": "Paradoja de predestinacion",
+      "source_echo": "Twilight Zone: el futuro que se provoca",
+      "psychological_class": "inescapable_fate",
+      "min_episodes": 4,
+      "mechanism": "Alguien recibe conocimiento de un evento tragico futuro y toma medidas drasticas y especificas para prevenirlo. El final revela que esas medidas preventivas precisas son el mecanismo exacto que causa la tragedia. No habia futuro alternativo — habia un solo futuro, y este era el mecanismo.",
+      "fits_settings": [],
+      "fits_moods": ["oscuro", "tenso", "melancolico"],
       "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Qué estaba escondiendo el pueblo y qué eligieron hacer con el forastero.",
-        "can_stay_open": "El destino exacto del forastero, las consecuencias para el pueblo a largo plazo."
+        "must_resolve": "Cual accion preventiva causo la tragedia y como se entera.",
+        "can_stay_open": "Quien envio el aviso del futuro, si algun otro futuro era posible."
       }
     },
 
     {
-      "id": "western.duelo_moral",
-      "category": "western",
-      "name": "Duelo moral",
-      "mode_tier": "solo",
-      "mechanism": "Dos personajes con códigos morales incompatibles convergen hacia una confrontación inevitable. No es solo un enfrentamiento físico: cada uno representa un valor (la ley vs la venganza, la lealtad vs la verdad, el honor vs la supervivencia). El clímax es el enfrentamiento mismo, pero lo que lo define no es quién gana físicamente sino qué valor prevalece — o si ambos pierden algo irrecuperable al elegir.",
-      "climax_shape": "confrontacion_moral",
-      "tone_tags": ["tenso", "tragico"],
-      "fits_settings": ["historico", "realidad_alterna", "imaginario", "futuro"],
-      "fits_moods": ["tenso", "oscuro", "melancolico"],
+      "id": "sisyphus_awakening",
+      "name": "Despertar de Sisifo",
+      "source_echo": "Twilight Zone: el bucle reconocido",
+      "psychological_class": "inescapable_fate",
+      "min_episodes": 4,
+      "mechanism": "La narrativa construye hacia lo que parece un climax normal o un escape. Justo antes del final, el entorno se resetea sutilmente. El cierre real es el momento horrible de lucidez: lleva siglos repitiendo esto y volvera a repetirlo. El libre albedrio era la ilusion de haberlo olvidado.",
+      "fits_settings": ["actual", "futuro", "imaginario", "realidad_alterna"],
+      "fits_moods": ["oscuro", "tenso", "melancolico"],
       "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Quién prevaleció, qué valor triunfó, qué perdió el sobreviviente.",
-        "can_stay_open": "Cómo vivirá el sobreviviente con la decisión, juicio de los demás."
+        "must_resolve": "Que detalle revela el reseteo y que entiende el personaje en ese instante.",
+        "can_stay_open": "Quien o que mantiene el bucle, si hay alguna vez una salida."
       }
     },
 
     {
-      "id": "amor.reencuentro_que_llega_tarde",
-      "category": "amor",
-      "name": "Reencuentro que llega tarde",
-      "mode_tier": "solo",
-      "mechanism": "Dos personas que se amaron hace años se reencuentran. Algo fundamental ha cambiado — compromisos nuevos, hijos, la persona misma, el momento histórico. La tensión no es si se amaron, sino qué harán ahora. El clímax es un momento compartido donde ambos entienden que lo que fue posible ya no lo es, y eligen qué se llevan: una conversación honesta, una última vez, una despedida limpia, una mentira piadosa.",
-      "climax_shape": "reconocimiento_de_lo_perdido",
-      "tone_tags": ["melancolico", "emocional"],
+      "id": "noble_bargain",
+      "name": "Trato noble",
+      "source_echo": "Twilight Zone: gracia por sacrificio",
+      "psychological_class": "grace_or_sacrifice",
+      "min_episodes": 3,
+      "mechanism": "Alguien enfrenta una fuerza imparable y aterradora — la muerte, un mal historico, una consecuencia que no se puede negociar. En vez de huir, engana a la fuerza o la retrasa para salvar a un inocente. El final es una rendicion pacifica, elegida, a esa misma fuerza como recompensa por la generosidad. La muerte si llega, pero con dignidad ganada.",
+      "fits_settings": [],
+      "fits_moods": ["melancolico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que sacrifica, a quien salva, y como enfrenta la fuerza al final.",
+        "can_stay_open": "Que recordaran de su acto, si el salvado entendera alguna vez."
+      }
+    },
+
+    {
+      "id": "earned_delusion",
+      "name": "Ilusion merecida",
+      "source_echo": "Twilight Zone: el refugio que se queda",
+      "psychological_class": "grace_or_sacrifice",
+      "min_episodes": 3,
+      "mechanism": "Alguien atrapado en una realidad brutal logra deslizarse a una fantasia, una memoria nostalgica, o una dimension alterna. El giro es la subversion del tropo 'despertar': no despierta. Se queda. La historia valida el refugio como legitimo, no como escape patologico. A veces la cordura es quedarse en el lugar bueno.",
+      "fits_settings": [],
+      "fits_moods": ["melancolico", "acogedor", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "A donde elige quedarse y que decide sobre la realidad de la que viene.",
+        "can_stay_open": "Si el refugio es 'real', que le pasa al cuerpo que dejo atras."
+      }
+    },
+
+    {
+      "id": "empathic_bridge",
+      "name": "Puente empatico",
+      "source_echo": "Twilight Zone / Star Trek: enemigos que se reconocen",
+      "psychological_class": "grace_or_sacrifice",
+      "min_episodes": 3,
+      "mechanism": "Dos fuerzas fundamentalmente opuestas — enemigos en guerra, humano y monstruo, cazador y cazado — quedan forzadas a un escenario de supervivencia compartida. El climax es el abandono del conflicto central a favor de la vulnerabilidad mutua. La enemistad resulta ser una costumbre; lo humano (o lo sintiente) resulta ser mas antiguo que el bando.",
+      "fits_settings": [],
+      "fits_moods": ["esperanzador", "melancolico", "tenso"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que deciden al final y que hacen con el reconocimiento mutuo.",
+        "can_stay_open": "Si el mundo de afuera aceptara el cambio, que pasa cuando terminan aislados."
+      }
+    },
+
+    {
+      "id": "mutual_concession",
+      "name": "Cesion mutua",
+      "source_echo": "Star Trek: diplomacia no heroica",
+      "psychological_class": "diplomatic_crucible",
+      "min_episodes": 4,
+      "mechanism": "Dos bandos al borde del conflicto mortal se retiran del abismo al sacrificar cada uno un fragmento de orgullo o territorio. No hay vencedor. Nadie obtiene lo que queria. Lo que consiguen es la continuacion — un equilibrio incomodo, sostenido por trabajo diplomatico permanente. La paz no es limpia. Es posible.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "melancolico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que cede cada bando y cual es el equilibrio al que llegan.",
+        "can_stay_open": "Si la paz durara, quien queda descontento y podria romperla."
+      }
+    },
+
+    {
+      "id": "cultural_decoder",
+      "name": "Traductor cultural",
+      "source_echo": "Star Trek: el malentendido descifrado",
+      "psychological_class": "diplomatic_crucible",
+      "min_episodes": 3,
+      "mechanism": "El conflicto entre dos grupos resulta ser un malentendido masivo basado en estilos de comunicacion incompatibles o imperativos biologicos o culturales distintos. Una vez que alguien rompe la barrera de traduccion, las hostilidades cesan. El descubrimiento no es 'teniamos razon'; es 'hablabamos idiomas distintos sobre lo mismo'.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "esperanzador", "acogedor"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Cual era el malentendido exacto y quien lo rompe.",
+        "can_stay_open": "Si el traductor cultural podra ensenar a otros, si hay mas malentendidos similares."
+      }
+    },
+
+    {
+      "id": "recognition_of_sentience",
+      "name": "Reconocimiento de conciencia",
+      "source_echo": "Star Trek: lo que creiamos cosa era alguien",
+      "psychological_class": "scientific_or_reasoned_resolution",
+      "min_episodes": 4,
+      "mechanism": "Una fuerza inicialmente tratada como peligro, enfermedad o desastre natural resulta ser un ser vivo y pensante. El giro etico cambia la pregunta completa: ya no es 'como destruimos esto' sino 'como nos comunicamos con esto y lo protegemos'. Todo el que actuo antes con la premisa anterior debe recalcular — y algunos no pueden.",
+      "fits_settings": ["futuro", "imaginario", "realidad_alterna", "actual"],
+      "fits_moods": ["tenso", "esperanzador", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que es el ser y como llega el reconocimiento.",
+        "can_stay_open": "Si otros lo aceptaran, si el dano previo se puede reparar."
+      }
+    },
+
+    {
+      "id": "prime_directive_sacrifice",
+      "name": "Sacrificio de no intervenir",
+      "source_echo": "Star Trek: el peso de no actuar",
+      "psychological_class": "ethical_stand",
+      "min_episodes": 4,
+      "mechanism": "Una persona con poder para intervenir mira una tragedia evitable desplegarse en un mundo, comunidad o grupo que no esta listo. Elige no intervenir por principio — porque la intervencion, aunque salvaria vidas, deformaria ese mundo para siempre. El final es una reflexion sombria sobre el peso de la abstinencia y la arrogancia de creerse dios con permiso de serlo.",
+      "fits_settings": [],
+      "fits_moods": ["melancolico", "oscuro", "tenso"],
+      "fits_styles": ["literario"],
+      "resolution_guidance": {
+        "must_resolve": "Que decide y por que, y con que carga queda.",
+        "can_stay_open": "Si actuo correctamente o si debio intervenir, si alguien juzgara."
+      }
+    },
+
+    {
+      "id": "defense_of_the_other",
+      "name": "Defensa del marginado",
+      "source_echo": "Star Trek: expandir la definicion de vida",
+      "psychological_class": "ethical_stand",
+      "min_episodes": 3,
+      "mechanism": "Un individuo — un ser sintetico, un paria alienigena, una variante mutada, una persona sin estatus — es amenazado con desmantelamiento, ejecucion o experimentacion. El climax es una defensa apasionada, juridicamente y filosoficamente fundada, de su derecho a existir. La historia expande lo que cuenta como vida, persona, sujeto con derechos.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Si la defensa prospera y bajo que argumento exacto.",
+        "can_stay_open": "Si el cambio de criterio se aplicara a otros casos similares."
+      }
+    },
+
+    {
+      "id": "disobedience_for_greater_good",
+      "name": "Desobediencia por el bien mayor",
+      "source_echo": "Star Trek: romper la cadena de mando",
+      "psychological_class": "ethical_stand",
+      "min_episodes": 3,
+      "mechanism": "Una cadena de mando rigida o una orden institucional injusta obliga al personaje a amotinarse, arriesgar su carrera, o romper un contrato sagrado para hacer lo objetivamente correcto. El final es la aceptacion serena de las consecuencias profesionales — el castigo, el exilio, el descredito — como precio justo por haber elegido la conciencia.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "esperanzador", "melancolico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Que desobedece, que hace en su lugar, y que acepta como castigo.",
+        "can_stay_open": "Si la historia lo vindicara, si otros lo imitaran."
+      }
+    },
+
+    {
+      "id": "logical_paradox_defeat",
+      "name": "Derrota por paradoja",
+      "source_echo": "Star Trek: derrotar a la maquina con su propia logica",
+      "psychological_class": "scientific_or_reasoned_resolution",
+      "min_episodes": 3,
+      "mechanism": "Un grupo queda rehen de una entidad o sistema hiperlogico y tiranico — un computador dominante, un burocrata implacable, una ideologia con coartada total. No se derrota con armas. Se derrota alimentandolo con una paradoja irresoluble, o demostrandole que su directiva central es internamente incoherente. Colapsa solo.",
+      "fits_settings": ["futuro", "imaginario", "realidad_alterna", "actual"],
+      "fits_moods": ["tenso", "satirico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Cual es la paradoja exacta y quien la formula.",
+        "can_stay_open": "Si el sistema aprendera y volvera mejorado, que queda del poder que ejercia."
+      }
+    },
+
+    {
+      "id": "calculated_bluff",
+      "name": "Faroleo calculado",
+      "source_echo": "Star Trek: 'The Corbomite Maneuver'",
+      "psychological_class": "scientific_or_reasoned_resolution",
+      "min_episodes": 3,
+      "mechanism": "Completamente superado en fuerza por un enemigo hostil, el personaje fabrica una amenaza masiva y terrorifica — una arma apocaliptica, una flota invisible, una represalia automatica — con tal conviccion absoluta que el enemigo cede. Lo que gana la supervivencia no es fuerza real sino la confianza perfecta al mentir.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "satirico", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Cual es el faroleo y como se sostiene hasta el final.",
+        "can_stay_open": "Que pasara si el enemigo descubre la verdad despues."
+      }
+    },
+
+    {
+      "id": "honorable_loophole",
+      "name": "Vacio legal honorable",
+      "source_echo": "Star Trek: ganar respetando el codigo del otro",
+      "psychological_class": "scientific_or_reasoned_resolution",
+      "min_episodes": 3,
+      "mechanism": "Obligado por un codigo estricto y arcaico del enemigo — un duelo, un juicio ritual, una ley de honor extranjera — el personaje navega el sistema con perfeccion literal y encuentra un tecnicismo que le permite ganar el desafio sin comprometer sus propios valores. Respeta al enemigo al derrotarlo en sus terminos exactos.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "esperanzador", "satirico"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Cual es el tecnicismo y como lo ejecuta.",
+        "can_stay_open": "Si el enemigo respetara la victoria, si el codigo sera modificado despues."
+      }
+    },
+
+    {
+      "id": "shared_enemy_pivot",
+      "name": "Enemigo comun",
+      "source_echo": "Star Trek / narrativas de rivales forzados",
+      "psychological_class": "diplomatic_crucible",
+      "min_episodes": 3,
+      "mechanism": "Un enfrentamiento entre el personaje y un rival es interrumpido por una tercera amenaza abrumadora. Los rivales deben combinar recursos tacticos y coordinarse para sobrevivir. Ganan respeto mutuo a reganadientes. El final no borra la vieja rivalidad pero la recontextualiza — ahora saben de que es capaz el otro, y eso pesa.",
+      "fits_settings": [],
+      "fits_moods": ["tenso", "esperanzador"],
+      "fits_styles": ["literario", "cotidiano"],
+      "resolution_guidance": {
+        "must_resolve": "Como sobreviven juntos y que respeto queda despues.",
+        "can_stay_open": "Si la vieja rivalidad volvera o si el cambio es permanente."
+      }
+    },
+
+    {
+      "id": "quiet_refusal",
+      "name": "Negativa silenciosa",
+      "source_echo": "original",
+      "psychological_class": "ethical_stand",
+      "min_episodes": 3,
+      "mechanism": "Alguien es reclutado gradualmente — con amabilidad, con logica, con presion suave — para formar parte de algo que desde adentro parece normal pero visto de afuera no lo es. El climax es el momento en que se da cuenta exactamente que se le esta pidiendo y toma la decision, pequena y deliberada, de negarse. No gana. No huye. Solo se queda quieto mientras el sistema sigue sin el personaje.",
+      "fits_settings": ["actual", "historico", "realidad_alterna", "futuro"],
+      "fits_moods": ["tenso", "melancolico", "esperanzador"],
+      "fits_styles": ["cotidiano", "literario"],
+      "resolution_guidance": {
+        "must_resolve": "Que se le pedia exactamente y como se niega.",
+        "can_stay_open": "Que hacen quienes lo reclutaron despues, si habra consecuencias."
+      }
+    },
+
+    {
+      "id": "small_irreversible_choice",
+      "name": "Eleccion pequena irreversible",
+      "source_echo": "original",
+      "psychological_class": "moral_trap",
+      "min_episodes": 3,
+      "mechanism": "En un momento aparentemente ordinario, alguien toma una decision pequena que sabe que no puede deshacer — una llamada que no hace, una firma que pone, una puerta que cierra, un silencio que elige. La tension construye hacia ese instante. El climax es la decision misma, tomada en silencio o con un gesto minimo. La consecuencia se implica, no se muestra completa.",
+      "fits_settings": ["actual", "historico"],
+      "fits_moods": ["melancolico", "tenso", "acogedor"],
+      "fits_styles": ["cotidiano", "literario"],
+      "resolution_guidance": {
+        "must_resolve": "Que decidio y por que la decision era irreversible.",
+        "can_stay_open": "Las consecuencias largas, la reaccion de otros, si se arrepentira."
+      }
+    },
+
+    {
+      "id": "tacit_reconciliation",
+      "name": "Reconciliacion tacita",
+      "source_echo": "original",
+      "psychological_class": "grace_or_sacrifice",
+      "min_episodes": 3,
+      "mechanism": "Dos personas con un conflicto antiguo y no resuelto se cruzan de nuevo. No se confronta el pasado con palabras. El climax es un gesto pequeno — un cafe compartido, una ayuda ofrecida, una frase banal — que ambas entienden como reconciliacion sin nombrarla. Lo que no se dice es lo que cura.",
+      "fits_settings": ["actual", "historico"],
+      "fits_moods": ["melancolico", "acogedor", "esperanzador"],
+      "fits_styles": ["cotidiano", "literario"],
+      "resolution_guidance": {
+        "must_resolve": "Cual fue el conflicto original y que significa exactamente el gesto final.",
+        "can_stay_open": "Si la reconciliacion es completa, como seguira la relacion."
+      }
+    },
+
+    {
+      "id": "confession_unasked",
+      "name": "Confesion que no se pidio",
+      "source_echo": "original",
+      "psychological_class": "moral_trap",
+      "min_episodes": 3,
+      "mechanism": "Alguien le dice al personaje algo intimo o pesado que no pidio escuchar — un secreto, una culpa, una verdad incomoda sobre un tercero. El climax es la decision de que hacer con esa informacion: actuar, guardar silencio consciente, romper la relacion, fingir que no oyo. Las consecuencias son suyas aunque la culpa original no lo fuera.",
+      "fits_settings": ["actual", "historico"],
+      "fits_moods": ["tenso", "melancolico", "oscuro"],
+      "fits_styles": ["cotidiano", "literario"],
+      "resolution_guidance": {
+        "must_resolve": "Que le confesaron y que eligio hacer con esa informacion.",
+        "can_stay_open": "Las consecuencias de su eleccion, si el confesor se enterara de su respuesta."
+      }
+    },
+
+    {
+      "id": "late_reencounter",
+      "name": "Reencuentro tardio",
+      "source_echo": "original",
+      "psychological_class": "grace_or_sacrifice",
+      "min_episodes": 3,
+      "mechanism": "Dos personas que se amaron o aliaron hace anos se reencuentran. Algo fundamental cambio — compromisos nuevos, el tiempo que paso, la persona misma. La tension no es si se quisieron; es que hacen ahora. El climax es un momento compartido donde ambas entienden que lo que fue posible ya no lo es, y eligen que se llevan: una conversacion honesta, una ultima vez, una despedida limpia, una mentira piadosa.",
       "fits_settings": ["actual", "historico"],
       "fits_moods": ["melancolico", "acogedor"],
       "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Por qué no puede ser ahora y qué eligen llevarse del reencuentro.",
-        "can_stay_open": "Sus vidas después, si volverán a verse, si alguien más se entera."
+        "must_resolve": "Por que no puede ser ahora y que eligen llevarse del reencuentro.",
+        "can_stay_open": "Sus vidas despues, si volveran a verse."
       }
     },
 
     {
-      "id": "amor.eleccion_entre_dos_vidas",
-      "category": "amor",
-      "name": "Elección entre dos vidas",
-      "mode_tier": "fija",
-      "mechanism": "La protagonista está entre dos caminos genuinamente incompatibles: dos personas que la aman, dos ciudades, dos versiones de sí misma, dos lealtades. Ambas opciones son reales, no una trampa. La tensión se construye hacia un momento donde la decisión ya no puede postergarse. El clímax es la elección, hecha por razones que el lector finalmente entiende. La consecuencia central es la pérdida real del otro camino, no solo la ganancia del elegido.",
-      "climax_shape": "eleccion_irreversible",
-      "tone_tags": ["emocional", "reflexivo"],
-      "fits_settings": ["actual", "historico", "futuro"],
-      "fits_moods": ["melancolico", "esperanzador", "tenso"],
+      "id": "stranger_exposes_village",
+      "name": "Forastero que expone",
+      "source_echo": "narrativas del testigo incomodo",
+      "psychological_class": "ethical_stand",
+      "min_episodes": 4,
+      "mechanism": "Alguien de afuera llega a una comunidad aparentemente tranquila. Su presencia — por algo que sabe, algo que es, o algo que pide — vuelve visible la hipocresia, culpa o pacto silencioso que la comunidad habia decidido ignorar. El climax es el momento en que la comunidad elige como responder: defender la mentira, sacrificar al forastero, o romper el pacto. La respuesta define a la comunidad.",
+      "fits_settings": ["actual", "historico", "imaginario", "realidad_alterna", "futuro"],
+      "fits_moods": ["tenso", "oscuro", "melancolico"],
       "fits_styles": ["literario", "cotidiano"],
       "resolution_guidance": {
-        "must_resolve": "Qué eligió y la razón concreta que inclinó la balanza.",
-        "can_stay_open": "Si se arrepentirá, qué pasará con el camino no elegido, reacción de los demás."
-      }
-    },
-
-    {
-      "id": "sci_fi.descubrimiento_que_invalida_la_mision",
-      "category": "sci_fi",
-      "name": "Descubrimiento que invalida la misión",
-      "mode_tier": "fija",
-      "mechanism": "El protagonista (o equipo) está en una misión con un objetivo claro — explorar, recuperar, rescatar, terminar un trabajo. A mitad de camino encuentran información concreta que hace la misión absurda, inmoral, o imposible: el objetivo ya estaba muerto, el rescate era una trampa, el planeta que iban a colonizar tiene dueños. El clímax es la decisión: completar la misión igual, traicionarla, o hacer algo que nadie previó.",
-      "climax_shape": "decision_ante_verdad_que_cambia_todo",
-      "tone_tags": ["filosofico", "tenso", "aventura"],
-      "fits_settings": ["futuro", "imaginario", "realidad_alterna"],
-      "fits_moods": ["tenso", "melancolico", "esperanzador"],
-      "fits_styles": ["literario", "cotidiano"],
-      "resolution_guidance": {
-        "must_resolve": "Qué descubrieron exactamente y qué decidieron hacer.",
-        "can_stay_open": "Consecuencias para otros, si se sabrá la verdad, juicio de quien los envió."
-      }
-    },
-
-    {
-      "id": "sci_fi.dilema_etico_primer_contacto",
-      "category": "sci_fi",
-      "name": "Dilema ético en el primer contacto",
-      "mode_tier": "fija",
-      "mechanism": "Un grupo humano (exploradores, científicos, diplomáticos, colonos) se encuentra con un ser, cultura o situación que desafía sus suposiciones sobre lo correcto. El conflicto central no es físico sino ético: intervenir o no, revelar o ocultar, respetar la diferencia o imponer su criterio. El clímax es la decisión tomada — y el reconocimiento honesto de lo que se pierde al tomarla, porque no hay opción sin costo.",
-      "climax_shape": "decision_etica_sin_buena_salida",
-      "tone_tags": ["filosofico", "humanista", "reflexivo"],
-      "fits_settings": ["futuro", "imaginario", "realidad_alterna"],
-      "fits_moods": ["tenso", "melancolico", "esperanzador"],
-      "fits_styles": ["literario", "cotidiano"],
-      "resolution_guidance": {
-        "must_resolve": "Qué decidieron, qué principio los guió, qué sacrificaron al decidir.",
-        "can_stay_open": "Efectos a largo plazo, si fue la decisión correcta, reacción de autoridades."
+        "must_resolve": "Que escondia la comunidad y que eligieron hacer con el forastero.",
+        "can_stay_open": "El destino exacto del forastero, las consecuencias largas para la comunidad."
       }
     }
   ]

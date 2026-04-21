@@ -1,0 +1,157 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "updated": "2026-04-20",
+    "description": "Opening hooks — mechanisms that shatter the protagonist's status quo in the first paragraphs. Each opening is a delivery system for an inciting incident. Setting-agnostic and gender-neutral. Picked at ep 1 alongside an ending seed; the opening's mechanism goes into the planning block so the model writes the first paragraph from a committed hook rather than defaulting to 'X had been doing Y for Z years'.",
+    "filter_field_semantics": {
+      "min_episodes": "Shortest story length this opening can sustain. Openings that need setup time (flashback frames, in-media-res chaos that needs later contextualization) have higher floors.",
+      "avoids_ending_classes": "Ending seed psychological_classes that conflict with this opening's structural promise. Example: 'inevitable_doom' opening cannot pair with 'grace_or_sacrifice' ending because one foretells tragedy and the other delivers grace."
+    },
+    "psychological_class_values_reference": [
+      "moral_trap", "perception_shift", "paralysis_or_indecision", "obsession_cost",
+      "bargain_or_temptation", "ambition_or_hubris", "misplaced_trust", "diplomatic_crucible",
+      "scientific_or_reasoned_resolution", "ethical_stand", "inescapable_fate", "grace_or_sacrifice"
+    ]
+  },
+
+  "openings": [
+    {
+      "id": "arrival_of_other",
+      "name": "Llegada del otro",
+      "category": "external_intrusion",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "Un extrano, un objeto, una senal, o una figura nueva entra en un sistema cerrado. La narrativa se dispara por la friccion que esta presencia genera. Abre con el momento exacto de la llegada — un toque en la puerta, una sombra en la camara, un mensaje que aparece donde no debia. El personaje central estaba haciendo algo ordinario; ese algo queda interrumpido.",
+      "anti_pattern": "No abras con parrafos de contexto sobre el personaje o el lugar antes de la llegada. Abre CON la llegada."
+    },
+
+    {
+      "id": "sudden_deprivation",
+      "name": "Privacion subita",
+      "category": "external_intrusion",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "Algo esencial para la supervivencia fisica o emocional del personaje es robado, destruido, o desaparece sin aviso. La historia es la persecucion por recuperarlo. Abre con el momento del descubrimiento — la puerta abierta, el lugar vacio, la ausencia concreta. No expliques que era importante; muestra la herida.",
+      "anti_pattern": "No abras describiendo lo que se perdio antes de que desaparezca. La herida llega primero; el contexto viene despues."
+    },
+
+    {
+      "id": "anomaly_discovery",
+      "name": "Hallazgo anomalo",
+      "category": "external_intrusion",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "El personaje tropieza con algo que rompe las reglas de su realidad — una puerta oculta, un glitch en un sistema, una ciudad enterrada, un documento que no deberia existir. La curiosidad lo obliga a investigar. Abre con el momento de la vision directa del objeto imposible, sin preambulo.",
+      "anti_pattern": "No abras con el personaje sintiendo una 'premonicion' o 'rutina alterada'. Abre con la cosa misma, vista con los ojos."
+    },
+
+    {
+      "id": "mandate_call",
+      "name": "Mandato",
+      "category": "external_intrusion",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "Una autoridad incuestionable — un rey, un superior militar, una deidad, un algoritmo, un patron — asigna al personaje una tarea. No la eligio; le cae encima bajo amenaza de consecuencia. Abre con el momento de la asignacion — el sobre entregado, la orden recibida, la voz que llama desde un altavoz.",
+      "anti_pattern": "No abras con el personaje en su rutina profesional antes del llamado. Abre con la orden, concreta y cortante."
+    },
+
+    {
+      "id": "forbidden_threshold",
+      "name": "Umbral prohibido",
+      "category": "internal_transgression",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "El personaje deliberadamente abre la caja con llave, entra en la zona prohibida, lee el texto vedado. La historia es la consecuencia inmediata de su curiosidad o su soberbia. Abre con el momento exacto del paso sobre el umbral — la mano que gira la llave, el pie que cruza la linea. La decision ya fue tomada antes del primer parrafo.",
+      "anti_pattern": "No abras con el personaje dudando o deliberando. Abre con la transgresion en curso."
+    },
+
+    {
+      "id": "desperate_bargain",
+      "name": "Trato desesperado",
+      "category": "internal_transgression",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "Ante un problema cotidiano pero aplastante — pobreza, enfermedad, fracaso — el personaje entra voluntariamente en un trato con una entidad peligrosa o una empresa criminal. Abre con el momento de la conversacion en que el trato se cierra — el apreton de manos, la firma, el paquete recibido. Ya no hay marcha atras.",
+      "anti_pattern": "No abras estableciendo por que el personaje necesita ayuda. Abre con el trato ya siendo consumado."
+    },
+
+    {
+      "id": "calculated_betrayal",
+      "name": "Traicion calculada",
+      "category": "internal_transgression",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "El personaje golpea primero. Asesina a un lider, roba a su empleador, se amotina contra su capitan, filtra los documentos. Abre con la accion activa de romper el sistema — una llave siendo copiada, un dedo en un disparador, un archivo siendo descargado en secreto.",
+      "anti_pattern": "No abras con el personaje reflexionando sobre sus motivos. Abre con el acto en progreso."
+    },
+
+    {
+      "id": "chaos_drop",
+      "name": "In media res",
+      "category": "structural_hook",
+      "min_episodes": 4,
+      "avoids_ending_classes": [],
+      "mechanism": "La historia abre literalmente en medio de una secuencia de alto riesgo, sin contexto. El personaje esquiva disparos, huye de un colapso, discute con alguien cuya identidad no sabemos, todo antes de que el lector sepa por que o donde. La exposicion se entrega goteando despues, dentro de la accion.",
+      "anti_pattern": "No abras con establecimiento de lugar o personaje. Abre con un verbo de accion, mid-crisis."
+    },
+
+    {
+      "id": "tabula_rasa",
+      "name": "Despertar en blanco",
+      "category": "structural_hook",
+      "min_episodes": 4,
+      "avoids_ending_classes": [],
+      "mechanism": "El personaje despierta sin memoria de quien es, donde esta, o como llego alli. La trama es la lucha simultanea por sobrevivir fisicamente y reconstruir su identidad. Abre con los primeros segundos de conciencia — una sensacion fisica que no reconoce, una luz, una postura incomoda. No empieza sabiendo nada.",
+      "anti_pattern": "No abras con un narrador omnisciente contextualizando. Queda dentro del personaje, confundido con el."
+    },
+
+    {
+      "id": "inevitable_doom",
+      "name": "Fatalidad anunciada",
+      "category": "structural_hook",
+      "min_episodes": 5,
+      "avoids_ending_classes": ["grace_or_sacrifice"],
+      "mechanism": "La historia abre al final — el personaje esta desangrandose, parado frente a una tumba, mirando el mundo arder. Luego salta hacia atras ('tres semanas antes') para explicar la cadena de decisiones que vuelve esta tragedia inevitable. El lector sabe adonde va pero no como se llega.",
+      "anti_pattern": "No abras en orden cronologico. Abre CON el final, luego retrocede. El flashback es la estructura, no un truco."
+    },
+
+    {
+      "id": "ticking_clock",
+      "name": "Cuenta regresiva",
+      "category": "structural_hook",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "La historia abre con el conocimiento explicito de que un evento catastrofico ocurrira en un momento preciso e inminente — un impacto, una ejecucion, un fallo, un ultimatum. Toda la narrativa es una carrera contra ese deadline ya establecido. Abre con la noticia del limite temporal siendo anunciada o descubierta.",
+      "anti_pattern": "No abras con el personaje entrando en su dia normal. Abre con el reloj ya marcando."
+    },
+
+    {
+      "id": "paradigm_collapse",
+      "name": "Colapso del paradigma",
+      "category": "systemic_shift",
+      "min_episodes": 4,
+      "avoids_ending_classes": [],
+      "mechanism": "Un evento masivo que altera el mundo ocurre en la primera escena — un pulso electromagnetico, un desastre natural, un despertar magico, un asesinato que cambia todo. La historia es la transicion inmediata del status quo civilizado al estado lawless de supervivencia. Abre con el momento exacto de la ruptura — la luz que se va, el temblor que llega, el anuncio que cae.",
+      "anti_pattern": "No abras con la vida normal previa. Abre con la ruptura sucediendo."
+    },
+
+    {
+      "id": "shifting_baseline",
+      "name": "Base corrida",
+      "category": "systemic_shift",
+      "min_episodes": 3,
+      "avoids_ending_classes": [],
+      "mechanism": "El personaje hace su rutina absolutamente normal y mundana, pero un detalle pequeno y aterrador esta mal — nadie lo reconoce, el cielo tiene un color equivocado, las palabras cambiaron de significado, una foto familiar tiene otra cara. La historia es el intento del personaje de probar que no esta loco. Abre con la rutina — y con el detalle incorrecto dentro de ella.",
+      "anti_pattern": "No abras explicando que algo esta raro. Abre dentro de la rutina, con el detalle visible pero no nombrado todavia por el narrador."
+    }
+  ],
+
+  "universal_opening_anti_patterns": [
+    "Abrir con 'Desde hace X anos/meses/dias, el personaje habia estado haciendo Y...' — la rutina prolongada como establecimiento.",
+    "Abrir con el clima, la hora del dia, o la estacion como escena de establecimiento.",
+    "Abrir con monologo interior sobre como 'ultimamente la vida habia cambiado' o 'nunca imagino que ese dia seria distinto'.",
+    "Abrir describiendo una tarea mundana antes del 'pero hoy era diferente'. El pivote 'pero hoy' es el sintoma del anti-patron.",
+    "Abrir con un flashback a la infancia del personaje para 'establecer quien es'.",
+    "Abrir con dialogo expositivo donde dos personajes se cuentan cosas que ambos ya saben."
+  ]
+}

@@ -982,6 +982,9 @@ const storyCache     = {};
 let lastScore        = null;
 let currentStarRating= null;
 let isProcessing     = false;
+// Silent auto-retry on transient generation failures (parse errors, truncation).
+// Used so that one failed attempt is re-fired silently before showing the user an error.
+let _autoRetryInProgress = false;
 
 const cfg = { level:'B2', mode:'fixed', register:'everyday', region:'neutral', voseo:false, setting:'surprise', mood:'surprise' };
 
@@ -1806,7 +1809,7 @@ async function doGenerate() {
       body: JSON.stringify({
         password:   sessionPw,
         model:      'claude-opus-4-7',
-        max_tokens: 8000,
+        max_tokens: 12000,
         stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
 Return ONLY valid JSON matching the exact schema. No preamble, no explanation, no markdown fences.
@@ -1974,6 +1977,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
 
     currentQuiz = quiz;
     generateRetries = 0;
+    _autoRetryInProgress = false;
     answers     = new Array(quiz.questions.length).fill(null);
     renderQuiz(quiz, currentCfg.seOn);
     showScreen('sQuiz');
@@ -1992,6 +1996,21 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     chosenSeed = _snap.chosenSeed; chosenOpening = _snap.chosenOpening; previousPassage = _snap.previousPassage;
     biblePromise = _snap.biblePromise;
     regenerating = _snap.regenerating;
+
+    // ── Silent auto-retry on transient generation failures.
+    //    If this is the first failure in this generation attempt, silently re-fire
+    //    doGenerate() before showing the error UI. State has been restored above,
+    //    so the recursive call starts from the same effective pre-call state.
+    //    If the retry also fails, the flag blocks a second auto-retry and we fall
+    //    through to the normal user-facing error UI below.
+    if (!_autoRetryInProgress) {
+      _autoRetryInProgress = true;
+      console.log('Auto-retrying generation after transient failure...');
+      isProcessing = true;  // reassert: caller expects this true during generation
+      return doGenerate();
+    }
+    _autoRetryInProgress = false;  // reset so future user-initiated attempts can auto-retry
+
     goParams();
     const canRetry = generateRetries < 3;
     generateRetries++;

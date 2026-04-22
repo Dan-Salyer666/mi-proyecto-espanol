@@ -532,6 +532,56 @@
       color: var(--text-muted);
     }
 
+    /* ── Seed/intensity badges (Batch 3 Apr 2026) — click-to-reveal on reader page ──
+       Values start hidden behind • dots so the story lands without spoilers.
+       Click toggles between hidden ("•••") and revealed (actual value). */
+    .seed-badges-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 18px;
+      align-items: center;
+    }
+    .seed-badges-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-right: 4px;
+    }
+    .seed-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.74rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+    }
+    .seed-badge:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+      background: var(--bg-card-hover);
+    }
+    .seed-badge-label {
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.66rem;
+    }
+    .seed-badge-value {
+      font-weight: 500;
+    }
+    .seed-badge-value.is-masked {
+      letter-spacing: 3px;
+      color: var(--text-muted);
+    }
+
     /* ── Password modal ── */
     .modal-overlay {
       position: fixed;
@@ -856,6 +906,24 @@
       <div class="se-swatch" style="color:var(--text-muted);font-style:italic">Sin color = otro uso (reflexivo, recíproco, accidental, IOP)</div>
     </div>
 
+    <!-- Seed/intensity reveal row (Batch 3 Apr 2026). Click any badge to reveal its value.
+         All three start masked so the story lands unspoiled. Populated by renderQuiz. -->
+    <div id="seedBadgesRow" class="seed-badges-row hidden">
+      <span class="seed-badges-hint">Toca para revelar:</span>
+      <span class="seed-badge" id="badgeIntensity" onclick="toggleSeedBadge(this)">
+        <span class="seed-badge-label">Intensidad</span>
+        <span class="seed-badge-value is-masked" data-value="">•••</span>
+      </span>
+      <span class="seed-badge" id="badgeOpening" onclick="toggleSeedBadge(this)">
+        <span class="seed-badge-label">Apertura</span>
+        <span class="seed-badge-value is-masked" data-value="">•••</span>
+      </span>
+      <span class="seed-badge" id="badgeSeed" onclick="toggleSeedBadge(this)">
+        <span class="seed-badge-label">Semilla</span>
+        <span class="seed-badge-value is-masked" data-value="">•••</span>
+      </span>
+    </div>
+
     <div class="card" style="margin-bottom:20px">
       <div class="card-label">Lectura</div>
       <div class="rate-bar">
@@ -964,6 +1032,7 @@ let prevBible        = null;
 let plannedEnding    = null;  // {central_mystery, mystery_resolutions, climactic_scene, consequence, why_it_matters, beat_plan} — committed on ep 1, frozen thereafter
 let chosenSeed       = null;  // ending seed object selected at ep 1 from seedPool; persisted in save record; null for legacy/fallback
 let chosenOpening    = null;  // opening seed object selected at ep 1 from openingPool; persisted in save record
+let chosenIntensity  = null;  // dramatic intensity 1–5 rolled at ep 1 (weighted distribution), frozen for the story. Controls climax voltage only — no structural impact. See rollIntensity() for the distribution and INTENSITY_PROMPTS for the injected prompt blocks.
 let previousPassage  = null;  // raw prose of the episode just completed — used as last-paragraphs anchor in next ep's prompt (Apr 2026 handoff upgrade)
 let episodeNum       = 0;
 let episodeTarget    = 0;
@@ -1234,6 +1303,61 @@ function pickOpening(episodeCount, endingSeed) {
   }
   return null;
 }
+
+// ═══════════════════════════════════════════════
+//  DRAMATIC INTENSITY (Batch 3 — Apr 2026)
+//  Weighted 1–5 roll, fired once at ep 1 alongside seed/opening selection.
+//  Controls ONLY the voltage of the climax scene — structural commitments
+//  (concrete resolution, named realization, visible decision_or_action)
+//  stay locked regardless of intensity. This is the "spice the ending"
+//  feature that replaced the scrapped three-mode proposal: same climax
+//  schema, different dramatic temperature.
+// ═══════════════════════════════════════════════
+// Symmetric middle-weighted distribution: 10/25/30/25/10.
+// Most stories land at 2–4 (quiet → charged); 1s and 5s are the tails.
+// Flat 20/20/20/20/20 would make extremes too common; this centers variance
+// around the familiar while still producing real surprises.
+function rollIntensity() {
+  const r = Math.random();
+  if (r < 0.10) return 1;
+  if (r < 0.35) return 2;
+  if (r < 0.65) return 3;
+  if (r < 0.90) return 4;
+  return 5;
+}
+
+// One prompt block per intensity level. Each repeats the schema lock
+// (where/trigger/realization/decision_or_action stay concrete) so the model
+// can't drift into atmospherics at the extremes. Injected on ep 1 (so the
+// planned_ending gets WRITTEN at this intensity) and on the final ep (so
+// the climax gets DELIVERED at this intensity). Middle eps skip the block —
+// they're just escalating, not tuning the climax.
+const INTENSITY_PROMPTS = {
+  1: `INTENSIDAD DRAMÁTICA DEL CLÍMAX: 1 de 5 — contenido.
+· La escena del clímax es íntima, silenciosa, casi sin testigos. Ocurre en espacio privado o marginal, no en un escenario cargado.
+· La resolución llega como un reconocimiento: un gesto mínimo, una frase dicha en voz baja, una decisión tomada sin público.
+· El cambio es real pero su manifestación es pequeña. El lector siente el peso sin que el pasaje suba el volumen.
+· LOS CUATRO CAMPOS DE climactic_scene SIGUEN SIENDO CONCRETOS: where, trigger, realization, decision_or_action nombran cosas verificables en el pasaje. La intensidad baja no es excusa para evadir la escena — es una escena pequeña, no una escena borrada.`,
+  2: `INTENSIDAD DRAMÁTICA DEL CLÍMAX: 2 de 5 — sobrio.
+· Hay presión visible pero controlada. El personaje actúa con claridad, sin grandes gestos.
+· La escena ocurre en espacio humano ordinario (una cocina, un umbral, un banco en la calle) — no en un escenario de alta carga.
+· El lector siente el peso del momento sin necesidad de énfasis dramático.
+· LOS CUATRO CAMPOS DE climactic_scene SIGUEN SIENDO CONCRETOS: where, trigger, realization, decision_or_action nombran cosas verificables. Tono bajo, estructura intacta.`,
+  3: `INTENSIDAD DRAMÁTICA DEL CLÍMAX: 3 de 5 — firme.
+· La escena tiene peso físico y emocional real. Algo cambia de forma tangible — en la relación, en el espacio, en lo que el personaje podrá hacer desde ahora.
+· Presión sin espectáculo. El lector siente la altura del momento.
+· LOS CUATRO CAMPOS DE climactic_scene SIGUEN SIENDO CONCRETOS: where, trigger, realization, decision_or_action nombran cosas verificables. Este es el nivel base; la historia se permite cargar sin desbordarse.`,
+  4: `INTENSIDAD DRAMÁTICA DEL CLÍMAX: 4 de 5 — cargado.
+· Presión alta y visible. La decisión o acción del personaje tiene consecuencias inmediatas que el lector VE suceder en la escena.
+· Puede incluir confrontación directa, riesgo físico, pérdida inmediata, o un enfrentamiento que no se puede deshacer. La escena se siente grande dentro del mundo de la historia.
+· LOS CUATRO CAMPOS DE climactic_scene SIGUEN SIENDO CONCRETOS: where, trigger, realization, decision_or_action nombran cosas verificables. Las stakes suben, la estructura no cambia.
+· No confundir intensidad alta con violencia gratuita — el peso viene de lo que está en juego, no del espectáculo.`,
+  5: `INTENSIDAD DRAMÁTICA DEL CLÍMAX: 5 de 5 — pleno.
+· Máxima intensidad dentro de lo verosímil para la historia. Confrontación directa, stakes concretos y altos, una acción o revelación que define la historia entera.
+· La escena es el momento del que el lector hablará después. Todo el peso narrativo converge aquí.
+· LOS CUATRO CAMPOS DE climactic_scene SIGUEN SIENDO CONCRETOS: where, trigger, realization, decision_or_action nombran cosas verificables. El voltaje está al máximo; la estructura es la misma.
+· Evita la caricatura. Intensidad no es melodrama — sigue siendo una escena humana, sólo que en su punto más alto. No añadas violencia o tragedia que el resto de la historia no haya ganado.`
+};
 
 window.addEventListener('beforeunload', e => {
   // Warn if on quiz or graded screen with active content
@@ -1723,6 +1847,14 @@ Este es el último episodio. Da un cierre satisfactorio:
     ? ` (Episodio ${p.epNum} de ${p.epTarget})`
     : '';
 
+  // ── Intensity block (Batch 3 — Apr 2026): injected on ep 1 (planning) and final ep (delivery).
+  //    Middle eps skip it — they're just escalating, not tuning the climax.
+  //    Guards: only fires if p.intensity is a recognized 1–5 value.
+  const intensityRaw   = (p.intensity && INTENSITY_PROMPTS[p.intensity]) || '';
+  const intensityBlock = (intensityRaw && (needsEndingPlan || isFinalEp))
+    ? `\n\n${intensityRaw}`
+    : '';
+
   // JSON schema: conditionally includes planned_ending (with beat_plan) on ep 1.
   const beatPlanSchemaFragment = `,"beat_plan":[{"beat":1,"function":"función narrativa de este episodio"}]`;
   const jsonSchema = needsEndingPlan
@@ -1736,7 +1868,7 @@ Estilo: ${registerMap[p.register] || p.register}
 Variedad: ${regionDesc[p.region] || p.region}
 ${settingStr}
 ${moodStr}${epLabel}
-${framingBlock}${bibleSection}${handoffBlock}${antiRecapBlock}${beatContextBlock}${endingContext}${finalExecutionBlock}${planningBlock}
+${framingBlock}${intensityBlock}${bibleSection}${handoffBlock}${antiRecapBlock}${beatContextBlock}${endingContext}${finalExecutionBlock}${planningBlock}
 
 PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el estilo especificado arriba. El estilo es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
 
@@ -1793,7 +1925,7 @@ async function doGenerate() {
   const isContinuation = storyId !== null;
 
   // Snapshot state so we can restore on auth failure
-  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, chosenSeed, chosenOpening, previousPassage, biblePromise, regenerating };
+  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, chosenSeed, chosenOpening, chosenIntensity, previousPassage, biblePromise, regenerating };
 
   if (!isContinuation) {
     storyBible    = null; prevBible = null; plannedEnding = null; biblePromise = null;
@@ -1807,8 +1939,10 @@ async function doGenerate() {
     // first because opening filters against the ending's psychological_class.
     chosenSeed    = pickSeed(episodeTarget, cfg.setting, cfg.mood, cfg.register);
     chosenOpening = pickOpening(episodeTarget, chosenSeed);
+    chosenIntensity = rollIntensity();  // Batch 3 — weighted 1–5 climax voltage, frozen per story.
     if (chosenSeed)    console.log('Ending seed selected:', chosenSeed.id);
     if (chosenOpening) console.log('Opening seed selected:', chosenOpening.id);
+    if (chosenIntensity) console.log('Dramatic intensity rolled:', chosenIntensity);
     regenerating = false;
   } else if (regenerating) {
     regenerating = false;
@@ -1822,6 +1956,7 @@ async function doGenerate() {
   currentCfg = { ...cfg, seOn, voseo,
     bible: storyBible, plannedEnding,
     seed: chosenSeed, opening: chosenOpening,
+    intensity: chosenIntensity,
     previousPassage,
     epNum: episodeNum, epTarget: episodeTarget };
 
@@ -1837,8 +1972,11 @@ async function doGenerate() {
   ctxParts.push(regionLabels[currentCfg.region] || currentCfg.region);
   if (currentCfg.setting && currentCfg.setting !== 'surprise') ctxParts.push(settingLabels[currentCfg.setting] || currentCfg.setting);
   if (currentCfg.mood    && currentCfg.mood    !== 'surprise') ctxParts.push(moodLabels[currentCfg.mood]       || currentCfg.mood);
-  if (chosenOpening) ctxParts.push(`Apertura: ${chosenOpening.name}`);
-  if (chosenSeed)    ctxParts.push(`Semilla: ${chosenSeed.name}`);
+  // Seed picks (Apertura / Semilla) removed from loading label Apr 2026 Batch 3 — they
+  // now appear only as click-to-reveal badges on the reader page so the story lands
+  // without the user already knowing the structural frame. Intensity roll stays visible
+  // here since it's the "spice" element Daniel wants to see during generation.
+  if (chosenIntensity) ctxParts.push(`Intensidad: ${chosenIntensity}/5`);
   const ctxLabel = document.getElementById('genContextLabel');
   ctxLabel.textContent = ctxParts.join(' · ');
   ctxLabel.style.display = 'block';
@@ -1872,7 +2010,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       // Restore story state so next attempt starts clean
       storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
       storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding;
-      chosenSeed = _snap.chosenSeed; chosenOpening = _snap.chosenOpening; previousPassage = _snap.previousPassage;
+      chosenSeed = _snap.chosenSeed; chosenOpening = _snap.chosenOpening; chosenIntensity = _snap.chosenIntensity; previousPassage = _snap.previousPassage;
       biblePromise = _snap.biblePromise;
       regenerating = _snap.regenerating;
       showScreen('sParams'); alert('Contraseña incorrecta.'); return;
@@ -2038,7 +2176,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     // Restore story state so retry starts from correct episode
     storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
     storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding;
-    chosenSeed = _snap.chosenSeed; chosenOpening = _snap.chosenOpening; previousPassage = _snap.previousPassage;
+    chosenSeed = _snap.chosenSeed; chosenOpening = _snap.chosenOpening; chosenIntensity = _snap.chosenIntensity; previousPassage = _snap.previousPassage;
     biblePromise = _snap.biblePromise;
     regenerating = _snap.regenerating;
 
@@ -2079,14 +2217,66 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
 // ═══════════════════════════════════════════════
 const LETTERS = ['A','B','C','D'];
 
+// ═══════════════════════════════════════════════
+//  SEED / INTENSITY BADGES (Batch 3 Apr 2026)
+//  Click-to-reveal badges on the reader screen so the story lands unspoiled.
+//  Each badge carries its truth in data-value; the displayed text toggles
+//  between the mask ("•••") and the actual value on click.
+// ═══════════════════════════════════════════════
+function setSeedBadge(badgeId, value) {
+  const badge = document.getElementById(badgeId);
+  if (!badge) return;
+  const valEl = badge.querySelector('.seed-badge-value');
+  if (!valEl) return;
+  if (value) {
+    valEl.dataset.value = value;
+    valEl.textContent = '•••';
+    valEl.classList.add('is-masked');
+    badge.style.display = '';
+  } else {
+    // No value for this badge (e.g. no seed picked) — hide it entirely rather
+    // than showing an empty reveal.
+    badge.style.display = 'none';
+  }
+}
+
+function toggleSeedBadge(badge) {
+  const valEl = badge.querySelector('.seed-badge-value');
+  if (!valEl) return;
+  if (valEl.classList.contains('is-masked')) {
+    valEl.textContent = valEl.dataset.value || '—';
+    valEl.classList.remove('is-masked');
+  } else {
+    valEl.textContent = '•••';
+    valEl.classList.add('is-masked');
+  }
+}
+
 function renderQuiz(quiz, seOn) {
   document.getElementById('qTitle').textContent = quiz.title;
   const tags = [currentCfg.level, currentCfg.register];
   if (currentCfg.region !== 'neutral') tags.push(currentCfg.region.replace('_',' '));
   if (currentCfg.setting && currentCfg.setting !== 'surprise') tags.push(currentCfg.setting.replace('_',' '));
   if (currentCfg.mood    && currentCfg.mood    !== 'surprise') tags.push(currentCfg.mood);
-  if (chosenSeed) tags.push(`🌱 ${chosenSeed.name}`);
+  // chosenSeed tag removed from here Apr 2026 Batch 3 — now a click-to-reveal badge below
+  // so the seed choice doesn't spoil the story structure before reading.
   document.getElementById('qTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  // Populate the click-to-reveal badge row (Batch 3 Apr 2026). Row is hidden entirely
+  // if no random selections exist for this story (e.g. legacy resume with no seeds).
+  const badgeRow = document.getElementById('seedBadgesRow');
+  const intensityVal = chosenIntensity ? `${chosenIntensity}/5` : '';
+  const openingVal   = chosenOpening ? chosenOpening.name : '';
+  const seedVal      = chosenSeed ? chosenSeed.name : '';
+  const anyBadges    = !!(intensityVal || openingVal || seedVal);
+  if (anyBadges) {
+    setSeedBadge('badgeIntensity', intensityVal);
+    setSeedBadge('badgeOpening',   openingVal);
+    setSeedBadge('badgeSeed',      seedVal);
+    badgeRow.classList.remove('hidden');
+  } else {
+    badgeRow.classList.add('hidden');
+  }
 
   const epEl = document.getElementById('qEpisode');
   if (episodeNum > 0) {
@@ -2730,6 +2920,7 @@ async function saveQuizToDrive(extraFields = {}) {
     setting: currentCfg.setting || null, mood: currentCfg.mood || null,
     seed_id:         (chosenSeed    && chosenSeed.id)    || null,
     opening_seed_id: (chosenOpening && chosenOpening.id) || null,
+    dramatic_intensity: chosenIntensity || null,  // Batch 3 Apr 2026 — 1–5, frozen at ep 1; null for legacy saves
     narrative_framing: currentCfg.narrative_framing || 'ai_decide',
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
     questions: currentQuiz.questions, story_bible: storyBible || null,
@@ -2873,6 +3064,11 @@ async function resumeStory(s) {
   if (s.opening_seed_id && openingPool && Array.isArray(openingPool.openings)) {
     chosenOpening = openingPool.openings.find(o => o.id === s.opening_seed_id) || null;
   }
+  // Restore dramatic intensity (Batch 3 Apr 2026). Legacy saves without the field
+  // stay at null — subsequent episodes will run without an intensity block, which
+  // matches their original generation context. New stories always have a 1–5 value.
+  chosenIntensity = (typeof s.dramatic_intensity === 'number' && s.dramatic_intensity >= 1 && s.dramatic_intensity <= 5)
+    ? s.dramatic_intensity : null;
   // Restore previousPassage from the saved record's passage — this is the tail
   // the next episode will use as its handoff anchor.
   previousPassage = s.passage || null;

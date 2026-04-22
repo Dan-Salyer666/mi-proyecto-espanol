@@ -782,16 +782,19 @@
       </div>
     </div>
 
-    <!-- Enfoque gramatical -->
+    <!-- Encuadre narrativo — replaces free-text "Enfoque gramatical" (Apr 2026 Batch 2).
+         Each non-default option injects a structural framing block in the prompt that
+         forces grammar patterns naturally through the chosen narrative device. -->
     <div class="card">
-      <div class="card-label">Enfoque gramatical</div>
-      <input type="text" id="grammarInput" class="param-input"
-             placeholder="Ej: pretérito vs imperfecto, tres personajes en pasado, sueño en futuro…">
-      <div class="toggle-row">
-        <label class="toggle-label">
-          <input type="checkbox" id="noGrammar" onchange="toggleDisable('noGrammar','grammarInput')">
-          Sin enfoque específico
-        </label>
+      <div class="card-label">Encuadre narrativo</div>
+      <div class="btn-group">
+        <button class="btn-option selected" data-key="narrative_framing" data-val="ai_decide" onclick="pickOpt(this)">Que el AI decida</button>
+        <button class="btn-option" data-key="narrative_framing" data-val="recuerdo" onclick="pickOpt(this)">Recuerdo</button>
+        <button class="btn-option" data-key="narrative_framing" data-val="presente_inmediato" onclick="pickOpt(this)">Presente inmediato</button>
+        <button class="btn-option" data-key="narrative_framing" data-val="epistolar" onclick="pickOpt(this)">Epistolar</button>
+        <button class="btn-option" data-key="narrative_framing" data-val="informe" onclick="pickOpt(this)">Informe</button>
+        <button class="btn-option" data-key="narrative_framing" data-val="flashback_anidado" onclick="pickOpt(this)">Flashback anidado</button>
+        <button class="btn-option" data-key="narrative_framing" data-val="monologo_interior" onclick="pickOpt(this)">Monólogo interior</button>
       </div>
     </div>
 
@@ -986,7 +989,7 @@ let isProcessing     = false;
 // Used so that one failed attempt is re-fired silently before showing the user an error.
 let _autoRetryInProgress = false;
 
-const cfg = { level:'B2', mode:'fixed', register:'everyday', region:'neutral', voseo:false, setting:'surprise', mood:'surprise' };
+const cfg = { level:'B2', mode:'fixed', register:'everyday', region:'neutral', voseo:false, setting:'surprise', mood:'surprise', narrative_framing:'ai_decide' };
 
 // ═══════════════════════════════════════════════
 //  TTS
@@ -1459,8 +1462,49 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
     : 'Do not add any special markup anywhere in the output.';
 
   // themeStr removed Apr 2026 — theme free-text input replaced by setting/mood selectors + seed system.
-  const grammarStr = p.grammar ? `Enfoque gramatical: ${p.grammar}. Diseña el pasaje y preguntas para evaluar este punto.`
-                               : 'Sin enfoque gramatical específico.';
+  // Narrative framing (Apr 2026 Batch 2): replaces the free-text "Enfoque gramatical" input.
+  // Each non-default option injects a structural prompt block that forces grammar patterns
+  // naturally through the chosen narrative device, rather than naming tense rules to the model.
+  // ai_decide (default) = no injection; model picks framing based on setting/mood/seed/content.
+  const framingMap = {
+    recuerdo: `ENCUADRE NARRATIVO — Recuerdo:
+- El narrador cuenta esto desde un momento posterior, mirando hacia atrás a lo que sucedió.
+- Establece un marco temporal claro: el narrador está AHORA en un presente, recordando un pasado concreto.
+- Alterna naturalmente entre el imperfecto (descripciones, contexto, hábitos de entonces) y el pretérito (acciones puntuales, eventos específicos del recuerdo).
+- Puede incluir el pluscuamperfecto cuando algo había sucedido antes del momento recordado.
+- No es un cuento en tiempo presente — es un recuerdo, con la distancia y el tono que eso implica.`,
+    presente_inmediato: `ENCUADRE NARRATIVO — Presente inmediato:
+- Todo el pasaje está narrado en presente del indicativo como si estuviera sucediendo mientras se lee.
+- El efecto es de inmediatez, tensión, cercanía física al momento.
+- Usa verbos de percepción directa en presente: ve, escucha, siente, huele, piensa.
+- Evita saltos al pasado salvo que sean instantáneos ("lo recuerda ahora") — mantén la escena en el ahora.
+- El presente histórico-narrativo es aceptable y natural en este encuadre.`,
+    epistolar: `ENCUADRE NARRATIVO — Epistolar:
+- El pasaje es una carta, correo, mensaje largo o entrada de diario dirigida a alguien específico.
+- Usa la primera persona y dirige el texto a un «tú» o «usted» concreto (la variedad regional controla cuál).
+- Incluye marcas epistolares naturales: encabezado breve, referencias al receptor («¿te acordás de…?», «sabes que…»), cierre implícito o explícito.
+- El tiempo narrativo mezcla presente del emisor (lo que piensa y siente AHORA al escribir) con pasado de lo que cuenta.
+- Puede incluir futuro y condicional cuando el emisor reflexiona sobre lo que hará o habría hecho.`,
+    informe: `ENCUADRE NARRATIVO — Informe:
+- El pasaje tiene la forma de un documento oficial: informe, reporte, testimonio, acta o declaración.
+- Tono formal, distante, objetivo en superficie — pero la verdadera historia emerge entre las líneas del registro burocrático.
+- Usa tercera persona y voz pasiva con naturalidad («se constató que…», «fue observado que…»).
+- Incluye fechas, horas, nombres y números de referencia cuando ayuden al verismo.
+- El contraste entre el tono neutro del informe y lo que realmente sucedió es la fuente del subtexto.`,
+    flashback_anidado: `ENCUADRE NARRATIVO — Flashback anidado:
+- El pasaje abre en un momento presente o reciente, y dentro de ese marco el narrador o un personaje cae en un recuerdo anterior.
+- Dos capas temporales visibles: el AHORA del marco (pretérito o presente narrativo) y el ANTES del flashback (pluscuamperfecto para lo anterior al flashback, pretérito e imperfecto dentro de él).
+- El pluscuamperfecto («había llegado», «había visto», «se había dado cuenta») es obligatorio al menos una vez para marcar la profundidad temporal.
+- El flashback debe cerrar — el pasaje regresa al marco inicial antes de terminar.`,
+    monologo_interior: `ENCUADRE NARRATIVO — Monólogo interior:
+- Todo el pasaje es el flujo de pensamiento de un personaje, en primera persona, sin mediación de un narrador externo.
+- Mezcla libre de tiempos verbales según hacia dónde salta la mente: presente (lo que percibe o siente ahora), pretérito e imperfecto (lo que recuerda), futuro (lo que teme o desea), condicional (lo que imagina o habría hecho).
+- Usa el subjuntivo con naturalidad en duda, deseo o hipótesis («ojalá fuera», «no creo que sea», «si tuviera…»).
+- Fragmentación aceptable: frases incompletas, asociaciones libres, autocontradicciones. Pero sin caos — el lector debe poder seguir.
+- No es diálogo ni narración convencional — es pensamiento directo, sin comillas ni guiones.`
+  };
+  const framingRaw   = (p.narrative_framing && framingMap[p.narrative_framing]) || '';
+  const framingBlock = framingRaw ? `\n\n${framingRaw}` : '';
 
   // ── Story structure flags ──
   const isFreshStart    = !p.bible;
@@ -1692,13 +1736,13 @@ Estilo: ${registerMap[p.register] || p.register}
 Variedad: ${regionDesc[p.region] || p.region}
 ${settingStr}
 ${moodStr}${epLabel}
-${grammarStr}${bibleSection}${handoffBlock}${antiRecapBlock}${beatContextBlock}${endingContext}${finalExecutionBlock}${planningBlock}
+${framingBlock}${bibleSection}${handoffBlock}${antiRecapBlock}${beatContextBlock}${endingContext}${finalExecutionBlock}${planningBlock}
 
 PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el estilo especificado arriba. El estilo es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
 
 PRONOMBRES EN DIÁLOGO: La variedad regional especificada arriba controla qué pronombres usar en TODAS las líneas de diálogo. Si la variedad es neutral o Latin American sin voseo, los personajes NUNCA dicen «vos», «sabés», «tenés», «sos», «querés», «podés» — dicen «tú», «sabes», «tienes», «eres», «quieres», «puedes». Si la variedad es rioplatense o Latin American con voseo, los personajes usan voseo. Verifica cada línea de diálogo contra esta regla antes de entregar. ${seInstr}
 
-PREGUNTAS: EXACTAMENTE 6 preguntas de opción múltiple — no 1, no 4, no 5, no 7. SEIS. El array "questions" del JSON debe tener exactamente 6 objetos. Cuenta las preguntas antes de cerrar el JSON. 4 opciones (A/B/C/D) por pregunta. Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier estilo — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
+PREGUNTAS: EXACTAMENTE 6 preguntas de opción múltiple — no 1, no 4, no 5, no 7. SEIS. El array "questions" del JSON debe tener exactamente 6 objetos. Cuenta las preguntas antes de cerrar el JSON. 4 opciones (A/B/C/D) por pregunta. Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier estilo — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.
 
 ESTILO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo estilo que el pasaje. No introduzcas vocabulario que no aparecería en ese estilo. Por ejemplo, en estilo cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
 
@@ -1735,7 +1779,8 @@ function startGenerate() {
 
 async function doGenerate() {
   // Theme input was removed Apr 2026 — replaced by setting/mood selectors + seed system.
-  const grammar = document.getElementById('noGrammar').checked  ? null : document.getElementById('grammarInput').value.trim() || null;
+  // Grammar free-text input was removed Apr 2026 Batch 2 — replaced by narrative_framing
+  // selector (read directly from cfg via pickOpt), injected as framingBlock in buildPrompt.
   /* SE HIGHLIGHT DISABLED 2026-04-18 — flag forced false.
      Rendering logic and prompt branch remain intact below but unreachable.
      To reactivate: restore the checkbox card in the HTML and change this
@@ -1774,7 +1819,7 @@ async function doGenerate() {
     episodeNum++;
   }
 
-  currentCfg = { ...cfg, grammar, seOn, voseo,
+  currentCfg = { ...cfg, seOn, voseo,
     bible: storyBible, plannedEnding,
     seed: chosenSeed, opening: chosenOpening,
     previousPassage,
@@ -2685,7 +2730,7 @@ async function saveQuizToDrive(extraFields = {}) {
     setting: currentCfg.setting || null, mood: currentCfg.mood || null,
     seed_id:         (chosenSeed    && chosenSeed.id)    || null,
     opening_seed_id: (chosenOpening && chosenOpening.id) || null,
-    grammar_focus: currentCfg.grammar || null,
+    narrative_framing: currentCfg.narrative_framing || 'ai_decide',
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
     questions: currentQuiz.questions, story_bible: storyBible || null,
     planned_ending: plannedEnding || null,
@@ -2841,7 +2886,9 @@ async function resumeStory(s) {
   cfg.mode='fixed';  // frozen Apr 2026 — never read mode from saves
   cfg.setting = s.setting || 'surprise';
   cfg.mood    = s.mood    || 'surprise';
-  ['level','register','region','setting','mood'].forEach(key =>
+  // narrative_framing (Apr 2026 Batch 2): restored from save, defaulting to 'ai_decide' for legacy saves.
+  cfg.narrative_framing = s.narrative_framing || 'ai_decide';
+  ['level','register','region','setting','mood','narrative_framing'].forEach(key =>
     document.querySelectorAll(`[data-key="${key}"]`).forEach(b =>
       b.classList.toggle('selected', b.dataset.val === cfg[key])
     )
@@ -2849,8 +2896,7 @@ async function resumeStory(s) {
   // Sync the episode count input to the saved target
   const epInp = document.getElementById('epCount');
   if (epInp && episodeTarget) epInp.value = episodeTarget;
-  // Populate grammar focus from saved record (theme input is gone Apr 2026)
-  if (s.grammar_focus) { document.getElementById('grammarInput').value = s.grammar_focus; document.getElementById('noGrammar').checked = false; document.getElementById('grammarInput').disabled = false; }
+  // narrative_framing restore is handled by the button-click toggle loop above (Apr 2026 Batch 2).
   lockParams();
   requirePw(doGenerate);
 }
@@ -2859,11 +2905,9 @@ function lockParams() {
   document.querySelectorAll('#sParams .btn-option').forEach(b => {
     b.style.pointerEvents = 'none'; b.style.opacity = '0.5';
   });
-  ['grammarInput'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) { el.disabled = true; el.style.opacity = '0.5'; }
-  });
-  ['noGrammar','seCheck'].forEach(id => {
+  // grammarInput / noGrammar removed Apr 2026 Batch 2 — narrative_framing uses the btn-option
+  // pattern and is locked by the loop above alongside level/register/region/setting/mood.
+  ['seCheck'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.disabled = true; el.style.opacity = '0.5'; }
   });
@@ -2885,9 +2929,8 @@ function unlockParams() {
   document.querySelectorAll('#sParams .btn-option').forEach(b => {
     b.style.pointerEvents = ''; b.style.opacity = '';
   });
-  const gi = document.getElementById('grammarInput');
-  if (gi) { gi.style.opacity = ''; if (!document.getElementById('noGrammar').checked) gi.disabled = false; }
-  ['noGrammar','seCheck'].forEach(id => {
+  // grammarInput / noGrammar removed Apr 2026 Batch 2.
+  ['seCheck'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.disabled = false; el.style.opacity = ''; }
   });

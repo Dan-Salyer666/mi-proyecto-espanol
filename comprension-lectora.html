@@ -531,26 +531,7 @@
       border: 1px solid var(--border);
       color: var(--text-muted);
     }
-    .tag-reveal {
-      cursor: pointer;
-      user-select: none;
-      min-width: 210px;
-      text-align: center;
-      transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
-    }    .tag-reveal:not(.is-revealed) {
-      font-style: italic;
-      text-transform: none;
-      letter-spacing: 0.02em;
-    }
-    .tag-reveal:hover {
-      border-color: var(--accent);
-      color: var(--text-primary);
-      background: var(--bg-card-hover);
-    }
-    .tag-reveal.is-revealed {
-      color: var(--text-secondary);
-      border-color: var(--border-focus);
-    }
+
     /* ── Password modal ── */
     .modal-overlay {
       position: fixed;
@@ -745,21 +726,27 @@
       </div>
     </div>
 
-    <!-- Episodes (mode dropped Apr 2026 — all stories are fixed with a chosen length) -->
+    <!-- Mode -->
     <div class="card">
-      <div class="card-label">Número de episodios</div>
-      <div class="episode-row" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <input type="number" id="epCount" class="episode-input" value="5" min="3" max="15" style="width:90px">
-        <span style="color:var(--text-secondary);font-size:0.88rem">(entre 3 y 15)</span>
+      <div class="card-label">Modo</div>
+      <div class="btn-group">
+        <button class="btn-option selected" data-key="mode" data-val="individual" onclick="pickMode(this)">Individual</button>
+        <button class="btn-option" data-key="mode" data-val="fixed" onclick="pickMode(this)">Historia Fija</button>
+        <button class="btn-option" data-key="mode" data-val="open" onclick="pickMode(this)">Historia Abierta</button>
+      </div>
+      <div id="episodeRow" class="episode-row hidden">
+        <label for="epCount">Número de episodios:</label>
+        <input type="number" id="epCount" class="episode-input" value="5" min="2" max="20">
       </div>
     </div>
 
-    <!-- Style (internal key stays "register" for minimal churn; "news" option removed Apr 2026) -->
+    <!-- Register -->
     <div class="card">
-      <div class="card-label">Estilo</div>
+      <div class="card-label">Registro</div>
       <div class="btn-group">
         <button class="btn-option selected" data-key="register" data-val="everyday" onclick="pickOpt(this)">Cotidiano</button>
         <button class="btn-option" data-key="register" data-val="literary" onclick="pickOpt(this)">Literario</button>
+        <button class="btn-option" data-key="register" data-val="news" onclick="pickOpt(this)">Periodístico</button>
       </div>
     </div>
 
@@ -774,46 +761,28 @@
       </div>
     </div>
 
-    <!-- Ambientación -->
+    <!-- Theme + Grammar Focus -->
     <div class="card">
-      <div class="card-label">Ambientación</div>
-      <div class="btn-group">
-        <button class="btn-option selected" data-key="setting" data-val="surprise" onclick="pickOpt(this)">Sorpréndeme</button>
-        <button class="btn-option" data-key="setting" data-val="actual" onclick="pickOpt(this)">Actual</button>
-        <button class="btn-option" data-key="setting" data-val="historico" onclick="pickOpt(this)">Histórico</button>
-        <button class="btn-option" data-key="setting" data-val="futuro" onclick="pickOpt(this)">Futuro</button>
-        <button class="btn-option" data-key="setting" data-val="imaginario" onclick="pickOpt(this)">Imaginario</button>
-        <button class="btn-option" data-key="setting" data-val="realidad_alterna" onclick="pickOpt(this)">Realidad alterna</button>
+      <div class="card-label">Tema</div>
+      <input type="text" id="themeInput" class="param-input"
+             placeholder="Ej: una noche en Buenos Aires, un viaje en tren, una decisión difícil…">
+      <div class="toggle-row">
+        <label class="toggle-label">
+          <input type="checkbox" id="surpriseMe" onchange="toggleDisable('surpriseMe','themeInput')">
+          Sorpréndeme — tema libre
+        </label>
       </div>
-    </div>
 
-    <!-- Tono -->
-    <div class="card">
-      <div class="card-label">Tono</div>
-      <div class="btn-group">
-        <button class="btn-option selected" data-key="mood" data-val="surprise" onclick="pickOpt(this)">Sorpréndeme</button>
-        <button class="btn-option" data-key="mood" data-val="tenso" onclick="pickOpt(this)">Tenso</button>
-        <button class="btn-option" data-key="mood" data-val="oscuro" onclick="pickOpt(this)">Oscuro</button>
-        <button class="btn-option" data-key="mood" data-val="acogedor" onclick="pickOpt(this)">Acogedor</button>
-        <button class="btn-option" data-key="mood" data-val="melancolico" onclick="pickOpt(this)">Melancólico</button>
-        <button class="btn-option" data-key="mood" data-val="satirico" onclick="pickOpt(this)">Satírico</button>
-        <button class="btn-option" data-key="mood" data-val="esperanzador" onclick="pickOpt(this)">Esperanzador</button>
-      </div>
-    </div>
+      <div class="divider"></div>
 
-    <!-- Encuadre narrativo — replaces free-text "Enfoque gramatical" (Apr 2026 Batch 2).
-         Each non-default option injects a structural framing block in the prompt that
-         forces grammar patterns naturally through the chosen narrative device. -->
-    <div class="card">
-      <div class="card-label">Encuadre narrativo</div>
-      <div class="btn-group">
-        <button class="btn-option selected" data-key="narrative_framing" data-val="ai_decide" onclick="pickOpt(this)">Que el AI decida</button>
-        <button class="btn-option" data-key="narrative_framing" data-val="recuerdo" onclick="pickOpt(this)">Recuerdo</button>
-        <button class="btn-option" data-key="narrative_framing" data-val="presente_inmediato" onclick="pickOpt(this)">Presente inmediato</button>
-        <button class="btn-option" data-key="narrative_framing" data-val="epistolar" onclick="pickOpt(this)">Epistolar</button>
-        <button class="btn-option" data-key="narrative_framing" data-val="informe" onclick="pickOpt(this)">Informe</button>
-        <button class="btn-option" data-key="narrative_framing" data-val="flashback_anidado" onclick="pickOpt(this)">Flashback anidado</button>
-        <button class="btn-option" data-key="narrative_framing" data-val="monologo_interior" onclick="pickOpt(this)">Monólogo interior</button>
+      <div class="card-label">Enfoque gramatical</div>
+      <input type="text" id="grammarInput" class="param-input"
+             placeholder="Ej: pretérito vs imperfecto, tres personajes en pasado, sueño en futuro…">
+      <div class="toggle-row">
+        <label class="toggle-label">
+          <input type="checkbox" id="noGrammar" onchange="toggleDisable('noGrammar','grammarInput')">
+          Sin enfoque específico
+        </label>
       </div>
     </div>
 
@@ -980,35 +949,24 @@ let answers          = [];
 // Story state
 let storyBible       = null;
 let prevBible        = null;
-let plannedEnding    = null;  // {central_mystery, mystery_resolutions, climactic_scene, consequence, why_it_matters, beat_plan} — committed on ep 1, frozen thereafter
-let chosenSeed       = null;  // ending seed object selected at ep 1 from seedPool; persisted in save record; null for legacy/fallback
-let chosenOpening    = null;  // opening seed object selected at ep 1 from openingPool; persisted in save record
-let previousPassage  = null;  // raw prose of the episode just completed — used as last-paragraphs anchor in next ep's prompt (Apr 2026 handoff upgrade)
+let plannedEnding    = null;  // {thematic_core, final_beat, thread_resolution} — committed on ep 1, frozen thereafter
 let episodeNum       = 0;
 let episodeTarget    = 0;
 let storyId          = null;
 let biblePromise     = null;
 let regenerating     = false;
 
-// Seed pools — loaded once at page init. Ending seeds = psychological engines;
-// Opening seeds = inciting-incident mechanisms. Both picked at ep 1, frozen thereafter.
-let seedPool         = null;  // {seeds: [...]}    or null if fetch failed
-let openingPool      = null;  // {openings: [...]} or null if fetch failed
-
-// Active story tracker (only one story can be in progress at a time now)
+// Active story trackers
 let activeFixedStory = null;
-// activeOpenStory removed Apr 2026 — open mode dropped.
+let activeOpenStory  = null;
 const storyCache     = {};
 
 // Grading / rating
 let lastScore        = null;
 let currentStarRating= null;
 let isProcessing     = false;
-// Silent auto-retry on transient generation failures (parse errors, truncation).
-// Used so that one failed attempt is re-fired silently before showing the user an error.
-let _autoRetryInProgress = false;
 
-const cfg = { level:'B2', mode:'fixed', register:'everyday', region:'neutral', voseo:false, setting:'surprise', mood:'surprise', narrative_framing:'ai_decide' };
+const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false };
 
 // ═══════════════════════════════════════════════
 //  TTS
@@ -1096,8 +1054,15 @@ function pickOpt(btn) {
   cfg[key] = btn.dataset.val;
 }
 
-// pickMode() removed Apr 2026 — mode UI dropped. cfg.mode is a frozen constant 'fixed'.
-// Active-story conflict detection still happens at generate time via startGenerate → fixed story check.
+function pickMode(btn) {
+  const newMode = btn.dataset.val;
+  if (newMode === 'fixed' && activeFixedStory) { showFixedConflictModal(); return; }
+  if (newMode === 'open'  && activeOpenStory)  { showOpenStoryModal();     return; }
+  // Clear any lingering story state when switching modes
+  if (storyId) clearStoryState();
+  pickOpt(btn);
+  document.getElementById('episodeRow').classList.toggle('hidden', cfg.mode !== 'fixed');
+}
 
 function pickRegion(btn) {
   pickOpt(btn);
@@ -1145,115 +1110,7 @@ function closePwModal() {
 }
 
 document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') submitPw(); });
-window.addEventListener('load', () => { setTimeout(initDriveAuth, 500); loadSeedPool(); });
-
-// ═══════════════════════════════════════════════
-//  SEED POOL LOADER
-// ═══════════════════════════════════════════════
-// Loads /datos/seeds/story_seeds.json once at page load. The pool seeds the
-// planning block at ep 1 with a committed climax shape. If the fetch fails,
-// seedPool stays null and the prompt falls through to a no-seed branch so
-// the site keeps working without the seed system.
-async function loadSeedPool() {
-  try {
-    const res = await fetch('/datos/seeds/story_seeds.json', { cache: 'no-cache' });
-    if (!res.ok) { console.warn('Seed pool fetch failed:', res.status); return; }
-    const data = await res.json();
-    if (data && Array.isArray(data.seeds) && data.seeds.length) {
-      seedPool = data;
-      console.log(`Loaded ${data.seeds.length} story seeds.`);
-    } else {
-      console.warn('Seed pool JSON has no seeds array.');
-    }
-  } catch (e) {
-    console.warn('Seed pool load error (non-fatal):', e);
-  }
-  // Opening seeds are loaded in parallel but independently.
-  try {
-    const res = await fetch('/datos/seeds/opening_seeds.json', { cache: 'no-cache' });
-    if (res.ok) {
-      const data = await res.json();
-      if (data && Array.isArray(data.openings) && data.openings.length) {
-        openingPool = data;
-        console.log(`Loaded ${data.openings.length} opening seeds.`);
-      }
-    } else {
-      console.warn('Opening pool fetch failed:', res.status);
-    }
-  } catch (e) {
-    console.warn('Opening pool load error (non-fatal):', e);
-  }
-}
-
-// Map cfg.register (internal) to seed style value (seed file vocabulary)
-const STYLE_MAP = { everyday: 'cotidiano', literary: 'literario' };
-
-// Pick a story seed from the pool that matches user-selected setting/mood/style
-// AND has min_episodes <= requested episode count. Zero-match fallback: relax
-// softest constraints first (mood → setting → style-last-resort → min_episodes).
-// Returns the chosen seed object, or null if pool missing/empty.
-function pickSeed(episodeCount, settingChoice, moodChoice, styleChoice) {
-  if (!seedPool || !Array.isArray(seedPool.seeds) || !seedPool.seeds.length) return null;
-  const styleKey = STYLE_MAP[styleChoice] || styleChoice;
-  const ep = episodeCount || 3;
-  const matches = (seed, axis, choice) => {
-    if (!choice || choice === 'surprise') return true;
-    const arr = seed[axis];
-    if (!Array.isArray(arr) || arr.length === 0) return true;
-    return arr.includes(choice);
-  };
-  const fitsEpisodes = (seed) => (seed.min_episodes || 3) <= ep;
-  const filterPasses = [
-    // Pass 1: all constraints
-    (s) => fitsEpisodes(s)
-        && matches(s, 'fits_settings', settingChoice)
-        && matches(s, 'fits_moods',    moodChoice)
-        && matches(s, 'fits_styles',   styleKey),
-    // Pass 2: drop mood
-    (s) => fitsEpisodes(s)
-        && matches(s, 'fits_settings', settingChoice)
-        && matches(s, 'fits_styles',   styleKey),
-    // Pass 3: drop mood + setting
-    (s) => fitsEpisodes(s)
-        && matches(s, 'fits_styles',   styleKey),
-    // Pass 4: min_episodes only
-    (s) => fitsEpisodes(s),
-    // Pass 5: last resort — anything
-    (_s) => true,
-  ];
-  for (const fn of filterPasses) {
-    const pool = seedPool.seeds.filter(fn);
-    if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
-  }
-  return null;
-}
-
-// Pick an opening seed that fits episode count AND is compatible with the chosen ending seed.
-// An opening's avoids_ending_classes lists ending psychological_classes that conflict
-// with its structural promise (e.g. 'inevitable_doom' opening cannot pair with a
-// 'grace_or_sacrifice' ending). If endingSeed is null, just filter by episode count.
-function pickOpening(episodeCount, endingSeed) {
-  if (!openingPool || !Array.isArray(openingPool.openings) || !openingPool.openings.length) return null;
-  const ep = episodeCount || 3;
-  const endingClass = endingSeed ? endingSeed.psychological_class : null;
-  const fitsEpisodes = (o) => (o.min_episodes || 3) <= ep;
-  const fitsEnding = (o) => {
-    if (!endingClass) return true;
-    const avoids = Array.isArray(o.avoids_ending_classes) ? o.avoids_ending_classes : [];
-    return !avoids.includes(endingClass);
-  };
-  const filterPasses = [
-    (o) => fitsEpisodes(o) && fitsEnding(o),
-    (o) => fitsEpisodes(o),
-    (_o) => true,
-  ];
-  for (const fn of filterPasses) {
-    const pool = openingPool.openings.filter(fn);
-    if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
-  }
-  return null;
-}
-
+window.addEventListener('load', () => { setTimeout(initDriveAuth, 500); });
 window.addEventListener('beforeunload', e => {
   // Warn if on quiz or graded screen with active content
   const onQuiz   = !document.getElementById('sQuiz').classList.contains('hidden');
@@ -1280,7 +1137,8 @@ function showScreen(id) {
 function goParams() {
   showScreen('sParams');
   unlockParams();
-  // episode row is always visible in the new UI (mode removed Apr 2026); no toggle needed.
+  // Re-sync conditional rows based on current cfg
+  document.getElementById('episodeRow').classList.toggle('hidden', cfg.mode !== 'fixed');
   const voseoRow = document.getElementById('voseoRow');
   if (voseoRow) voseoRow.classList.toggle('hidden', cfg.region !== 'latin_american');
   if (driveToken) loadActiveStories();
@@ -1427,33 +1285,9 @@ NO FIGURATIVE LANGUAGE as the default: no extended metaphors, no atmospheric sce
 Inference questions still work in this register — everyday situations have motivations, implied feelings, unspoken tension, and what characters did NOT say. Subtext does not require literary prose. Do NOT elevate the prose to make inference possible.`,
 
     literary: `LITERARY register (literario) — The prose of serious novels and literary short stories: Allende, Vargas Llosa, Bolaño, García Márquez, Cortázar. Figurative language, atmospheric description, interior monologue, distinctive stylistic voice. Complex subordination and varied sentence rhythm including periodic sentences and poetic inversions. Full range of subjunctive including imperfect subjunctive for stylistic effect (como si + imperfect subj., ojalá + imperfect subj.). Elevated vocabulary is welcomed — the verbs banned from everyday register (contemplar, divisar, vislumbrar, tornar, yacer, proferir, musitar, discurrir, henchir, acaecer) are appropriate here. Extended metaphors, symbolic description, and atmospheric imagery are in-bounds. Dialogue may be sparse, stylized, or absent; narration carries weight. The goal is prose that rewards careful reading.`,
-  };
-  // NOTE: "news" (periodístico) register removed Apr 2026 — Daniel never used it.
-  // Any pre-April-2026 save with register:"news" is migrated to "literary" in resumeStory.
 
-  // ── Setting / Mood / Seed descriptive maps. User's pick + seed mechanism
-  //    together define the structural shape of the story.
-  const settingMap = {
-    actual:           'ambientación contemporánea (época actual, mundo presente)',
-    historico:        'ambientación en alguna época pasada — elige el siglo y el lugar que mejor sirvan a la historia',
-    futuro:           'ambientación en el futuro, ya sea cercano o lejano',
-    imaginario:       'mundo inventado — fantasía o realidad enteramente ficticia',
-    realidad_alterna: 'mundo reconocible con un elemento fundamentalmente distinto (algo sobrenatural aceptado como normal, un cambio histórico, una anomalía cotidiana)',
+    news: `JOURNALISTIC register (periodístico) — The prose of quality Spanish-language newspapers and news sites (El País, La Nación, Infobae, BBC Mundo, El Comercio). Third-person, objective, attribution-heavy. Passive voice and pasiva refleja are common (se anunció, se espera, se confirmó, se estima). Conditional of rumor/unconfirmed reporting is appropriate where natural (habría declarado, estaría considerando, según fuentes). Dense noun phrases, institutional and technical vocabulary. Preferred verbs include: anunciar, declarar, afirmar, asegurar, confirmar, negar, desmentir, acordar, aprobar, rechazar, descartar, investigar, averiguar, determinar, señalar, indicar, añadir, precisar. NO figurative language, NO interior monologue, NO atmospheric scene-setting. Tone is factual and informative. Dialogue appears only as direct quotes from sources, clearly attributed («declaró el ministro», «según fuentes oficiales»). Structure follows journalistic logic (lede, context, detail, reaction) rather than narrative arc.`,
   };
-  const moodMap = {
-    tenso:        'tono tenso — suspenso, sensación de que algo está mal o por estallar, expectativa inquieta',
-    oscuro:       'tono oscuro — pesado, moralmente cargado, consecuencias serias, sin escape fácil',
-    acogedor:     'tono acogedor — cálido, de baja tensión, humano, reconfortante',
-    melancolico:  'tono melancólico — nostálgico, tristeza tranquila, reflexivo, belleza de lo perdido',
-    satirico:     'tono satírico — irónico, observacional, humor punzante que revela algo sobre la condición humana',
-    esperanzador: 'tono esperanzador — optimista, humano, con algo que redime aunque no todo se resuelva',
-  };
-  const settingStr = (p.setting && p.setting !== 'surprise' && settingMap[p.setting])
-    ? `Ambientación: ${settingMap[p.setting]}.`
-    : 'Ambientación: libre — elige la más adecuada para la historia que vas a contar.';
-  const moodStr = (p.mood && p.mood !== 'surprise' && moodMap[p.mood])
-    ? `Tono: ${moodMap[p.mood]}.`
-    : 'Tono: libre — elige el más adecuado para la historia que vas a contar.';
 
   const seInstr = p.seOn
     ? `SE HIGHLIGHTING — TWO CATEGORIES ONLY:
@@ -1480,297 +1314,154 @@ DO NOT mark any other "se" usage — leave reflexive, reciprocal, accidental (se
 When in doubt, leave it unmarked. Only mark when you are confident it is pronominal or pasiva/impersonal.`
     : 'Do not add any special markup anywhere in the output.';
 
-  // themeStr removed Apr 2026 — theme free-text input replaced by setting/mood selectors + seed system.
-  // Narrative framing (Apr 2026 Batch 2): replaces the free-text "Enfoque gramatical" input.
-  // Each non-default option injects a structural prompt block that forces grammar patterns
-  // naturally through the chosen narrative device, rather than naming tense rules to the model.
-  // ai_decide (default) = no injection; model picks framing based on setting/mood/seed/content.
-  const framingMap = {
-    recuerdo: `ENCUADRE NARRATIVO — Recuerdo:
-- El narrador cuenta esto desde un momento posterior, mirando hacia atrás a lo que sucedió.
-- Establece un marco temporal claro: el narrador está AHORA en un presente, recordando un pasado concreto.
-- Alterna naturalmente entre el imperfecto (descripciones, contexto, hábitos de entonces) y el pretérito (acciones puntuales, eventos específicos del recuerdo).
-- Puede incluir el pluscuamperfecto cuando algo había sucedido antes del momento recordado.
-- No es un cuento en tiempo presente — es un recuerdo, con la distancia y el tono que eso implica.`,
-    presente_inmediato: `ENCUADRE NARRATIVO — Presente inmediato:
-- Todo el pasaje está narrado en presente del indicativo como si estuviera sucediendo mientras se lee.
-- El efecto es de inmediatez, tensión, cercanía física al momento.
-- Usa verbos de percepción directa en presente: ve, escucha, siente, huele, piensa.
-- Evita saltos al pasado salvo que sean instantáneos ("lo recuerda ahora") — mantén la escena en el ahora.
-- El presente histórico-narrativo es aceptable y natural en este encuadre.`,
-    epistolar: `ENCUADRE NARRATIVO — Epistolar:
-- El pasaje es una carta, correo, mensaje largo o entrada de diario dirigida a alguien específico.
-- Usa la primera persona y dirige el texto a un «tú» o «usted» concreto (la variedad regional controla cuál).
-- Incluye marcas epistolares naturales: encabezado breve, referencias al receptor («¿te acordás de…?», «sabes que…»), cierre implícito o explícito.
-- El tiempo narrativo mezcla presente del emisor (lo que piensa y siente AHORA al escribir) con pasado de lo que cuenta.
-- Puede incluir futuro y condicional cuando el emisor reflexiona sobre lo que hará o habría hecho.`,
-    informe: `ENCUADRE NARRATIVO — Informe:
-- El pasaje tiene la forma de un documento oficial: informe, reporte, testimonio, acta o declaración.
-- Tono formal, distante, objetivo en superficie — pero la verdadera historia emerge entre las líneas del registro burocrático.
-- Usa tercera persona y voz pasiva con naturalidad («se constató que…», «fue observado que…»).
-- Incluye fechas, horas, nombres y números de referencia cuando ayuden al verismo.
-- El contraste entre el tono neutro del informe y lo que realmente sucedió es la fuente del subtexto.`,
-    flashback_anidado: `ENCUADRE NARRATIVO — Flashback anidado:
-- El pasaje abre en un momento presente o reciente, y dentro de ese marco el narrador o un personaje cae en un recuerdo anterior.
-- Dos capas temporales visibles: el AHORA del marco (pretérito o presente narrativo) y el ANTES del flashback (pluscuamperfecto para lo anterior al flashback, pretérito e imperfecto dentro de él).
-- El pluscuamperfecto («había llegado», «había visto», «se había dado cuenta») es obligatorio al menos una vez para marcar la profundidad temporal.
-- El flashback debe cerrar — el pasaje regresa al marco inicial antes de terminar.`,
-    monologo_interior: `ENCUADRE NARRATIVO — Monólogo interior:
-- Todo el pasaje es el flujo de pensamiento de un personaje, en primera persona, sin mediación de un narrador externo.
-- Mezcla libre de tiempos verbales según hacia dónde salta la mente: presente (lo que percibe o siente ahora), pretérito e imperfecto (lo que recuerda), futuro (lo que teme o desea), condicional (lo que imagina o habría hecho).
-- Usa el subjuntivo con naturalidad en duda, deseo o hipótesis («ojalá fuera», «no creo que sea», «si tuviera…»).
-- Fragmentación aceptable: frases incompletas, asociaciones libres, autocontradicciones. Pero sin caos — el lector debe poder seguir.
-- No es diálogo ni narración convencional — es pensamiento directo, sin comillas ni guiones.`
-  };
-  const framingRaw   = (p.narrative_framing && framingMap[p.narrative_framing]) || '';
-  const framingBlock = framingRaw ? `\n\n${framingRaw}` : '';
+  const themeStr   = p.theme   ? `Tema: ${p.theme}` : 'Tema: elige algo interesante, sorpréndeme';
+  const grammarStr = p.grammar ? `Enfoque gramatical: ${p.grammar}. Diseña el pasaje y preguntas para evaluar este punto.`
+                               : 'Sin enfoque gramatical específico.';
+
+  const bibleSection = p.bible
+    ? `\n\nCONTINUIDAD (episodio ${p.epNum}):\n${p.bible}\n\nEscribe el siguiente episodio. Mantén continuidad de personajes, lugar y tono. Avanza la trama.`
+    : '';
 
   // ── Story structure flags ──
-  const isFreshStart    = !p.bible;
-  const isFinalEp       = p.epTarget > 0 && p.epNum === p.epTarget;
-  const isMiddleEp      = !isFreshStart && !isFinalEp;  // any ep 2+ that isn't final
-  const needsEndingPlan = isFreshStart && p.epNum === 1;
+  const isFreshStart  = !p.bible;
+  const isFinalEp     = p.epTarget > 0 && p.epNum === p.epTarget;
+  const isMultiEpFirst= isFreshStart && (p.epNum === 1 || p.epTarget > 0);   // ep 1 of fija or open
+  const isSoloStory   = p.epNum === 0;                                         // individual mode
+  const needsEndingPlan = isFreshStart && (isMultiEpFirst || isSoloStory);
   const hasEndingPlan   = !!p.plannedEnding;
-  const beatPlan        = (hasEndingPlan && Array.isArray(p.plannedEnding.beat_plan)) ? p.plannedEnding.beat_plan : [];
-  const currentBeat     = beatPlan.find(b => b && b.beat === p.epNum) || null;
-  const previousBeat    = beatPlan.find(b => b && b.beat === (p.epNum - 1)) || null;
 
-  // ── Bible section: compact continuity for middle + final episodes. The bible
-  //    itself carries character names, current physical state, and unresolved
-  //    hooks — NOT a re-narration of prior action. See generateBible() for the
-  //    shrunk-bible format.
-  const bibleSection = p.bible
-    ? `\n\nCONTINUIDAD (episodio ${p.epNum}):\n${p.bible}`
+  // Variation forcing: fires only for fresh stories when a theme is specified.
+  // Forces the model past the default/prototypical interpretation of the theme toward genuine structural variety.
+  // NOTE: Item #4 (twist/hinge) was removed in the ending-planning rework — that commitment is now
+  // captured explicitly in planned_ending JSON output instead of being left silent. The remaining four
+  // items stay internal; they're about genre distinctiveness, complementary to the ending plan.
+  const varSeed = Math.floor(Math.random() * 10000);
+  const variationBlock = (isFreshStart && p.theme) ? `
+
+VARIATION REQUIREMENT (seed: ${varSeed}):
+The theme «${p.theme}» has an obvious default version. Do NOT write that version.
+
+Most themes are spaces containing many distinct tropes and structural patterns. For example, «Twilight Zone» includes time loops, doubles, paranoid small towns, cosmic irony, bureaucratic afterlife, doppelgängers, post-apocalyptic moral tests, unreliable memory, and many more. «Film noir / Sam Spade» includes classic detective plots but also political conspiracies, missing person cases where no one is who they claim, heist-gone-wrong, insurance fraud, amnesia, twin identities, and corrupted institutions. «Horror» isn't just haunted houses. «Romance» isn't just meet-cute.
+
+Before writing, commit internally to these four choices (do not print them — only the story):
+1. SUBGENRE / TROPE: within «${p.theme}», pick a less-prototypical angle. Do not pick the first example that comes to mind.
+2. SETTING: specific time and place, avoiding the genre's most clichéd locations.
+3. PROTAGONIST: a character type that's NOT the obvious pick for this genre.
+4. A TROPE YOU DELIBERATELY AVOID: name one cliché of the genre (internally) and do not use it.
+
+Use seed ${varSeed} as a concrete nudge toward less-obvious creative choices. Different seeds should pull you toward different corners of the genre.
+
+The story MUST feel structurally distinct from the most prototypical version of «${p.theme}» — not just the same story in a different setting.`
     : '';
 
-  // ── Last-paragraphs handoff (Apr 2026 continuity upgrade):
-  //    Instead of letting the model warm up and re-establish scene from a summary,
-  //    we feed the verbatim final ~2 paragraphs of the previous episode. The model
-  //    picks up voice, setting, and tension without a recap. Final episode gets a
-  //    shorter tail (1 paragraph) because finalExecutionBlock needs prompt budget.
-  const tailParagraphs = (txt, n) => {
-    if (!txt) return '';
-    // Strip any SE markers so they don't leak into the handoff
-    const clean = txt.replace(/\[SE:\w+\]([\s\S]*?)\[\/SE\]/g, '$1');
-    const paras = clean.split(/\n\n+/).map(s => s.trim()).filter(Boolean);
-    return paras.slice(-n).join('\n\n');
-  };
-  const handoffTail = (p.previousPassage && p.epNum > 1)
-    ? tailParagraphs(p.previousPassage, isFinalEp ? 1 : 2)
-    : '';
-  const handoffBlock = handoffTail ? `
-
-ÚLTIMOS PÁRRAFOS DEL EPISODIO ANTERIOR (NO los resumas — continúa desde aquí):
-«««
-${handoffTail}
-»»»
-
-Entra directo a la siguiente escena desde ese momento. El lector acaba de leer esos párrafos. No repitas lo ocurrido, no re-establezcas personajes, no pongas a nadie «recordando lo que había pasado». Escribe como si fueras la siguiente página del mismo libro.` : '';
-
-  // ── Anti-recap and anti-opening-pattern instructions.
-  //    Middle + final episodes should NEVER open with recap prose.
-  //    Episode 1 should NEVER open with the "X had been doing Y for Z years" pattern.
-  const antiRecapBlock = (isMiddleEp || isFinalEp) ? `
-
-NO RECAPITULES. Prohibidas frases de apertura de tipo recap: «Después de lo que había pasado…», «Al día siguiente, todavía pensando en…», «Desde el incidente con X…», «La conversación con Y seguía dando vueltas en su cabeza…», «Había transcurrido una semana desde…». El lector leyó el episodio anterior hace un momento. Entra directo a la siguiente escena.` : '';
-
-  // ── Opening block: fires on ep 1. Forces the model past the default
-  //    "rutina de años interrumpida" opening into a committed inciting-incident
-  //    mechanism chosen at seed time.
-  const openingMechanism = (needsEndingPlan && p.opening) ? `
-
-MECANISMO DE APERTURA OBLIGATORIO (opening seed: ${p.opening.id}):
-${p.opening.mechanism}
-
-Anti-patrón específico de este mecanismo: ${p.opening.anti_pattern}
-
-ANTI-PATRONES UNIVERSALES DE APERTURA (prohibidos siempre, elijas el mecanismo que elijas):
-· «Desde hace X años/meses/días, el personaje había estado haciendo Y...» — rutina prolongada como establecimiento.
-· Clima, hora del día, o estación como escena de establecimiento inicial.
-· Monólogo interior sobre cómo «últimamente la vida había cambiado» o «nunca imaginó que ese día sería distinto».
-· Tarea mundana descrita antes del pivote «pero hoy era diferente».
-· Flashback a la infancia del personaje para establecer quién es.
-· Diálogo expositivo entre dos personajes que se cuentan cosas que ambos ya saben.
-
-Abre el pasaje con el mecanismo de apertura elegido. Los detalles del personaje (nombre, profesión, contexto) emergen DENTRO de la acción, no antes.` : '';
-
-  // variationBlock removed Apr 2026 — theme-driven variation forcing replaced by seed system.
-
-  // ── Ending-seed mechanism (fires only at ep 1 alongside planning):
-  const seedMechanismBlock = (needsEndingPlan && p.seed) ? `
-
-FORMA DEL CLÍMAX para esta historia (ending seed: ${p.seed.id}):
-${p.seed.mechanism}
-
-RESOLUCIÓN PROMETIDA:
-· Qué DEBES resolver concretamente en el final: ${p.seed.resolution_guidance.must_resolve}
-· Qué PUEDE quedar a la inferencia del lector (con anclas, sin explicación): ${p.seed.resolution_guidance.can_stay_open}` : '';
-
-  // ── Gender instruction (fires at ep 1, with explicit rotation guidance):
-  const genderInstruction = needsEndingPlan ? `
-
-GÉNERO DE LOS PERSONAJES PRINCIPALES: No asumas por defecto que el protagonista es mujer. Elige libremente género masculino, femenino, o una mezcla entre los personajes principales. El gramatismo español obliga a elegir — elígelo de forma deliberada y variada, no siempre igual. El mecanismo de apertura, el clímax planeado, y los personajes secundarios funcionan con cualquier combinación.` : '';
-
-  // ── Planning block: fires on ep 1. Commits to ending shape AND beat plan.
-  //    The beat_plan allocates story function across ALL episodes using 25/50/25
-  //    (Setup / Escalation / Resolution). Every future episode reads its own beat
-  //    from the plan and knows exactly what function its passage must serve.
+  // ── Planning block: fires on ep 1 (fija/open) and solo stories. The story
+  //    must commit to its thematic purpose, final beat, and thread resolution
+  //    BEFORE writing the passage — so those elements can be seeded from the
+  //    first sentence rather than retrofitted at the end. The plan is returned
+  //    in planned_ending and frozen for the rest of the story.
+  //    NOTE: Language here is deliberately plain (not literary) because the
+  //    prompt's vocabulary primes the passage's vocabulary. The planning field
+  //    is STRUCTURAL — the passage's STYLE comes from the register field.
   const planningBlock = needsEndingPlan ? `
-${openingMechanism}${seedMechanismBlock}${genderInstruction}
 
-PLANIFICACIÓN DEL DESENLACE Y DE LA ESTRUCTURA (OBLIGATORIA — antes de redactar el pasaje):
-Esta es una historia de ${p.epTarget} episodios. Antes de escribir el primer párrafo, planea TODA la historia. Fija el desenlace y asigna a cada episodio una función narrativa distinta.
+PLANIFICACIÓN DEL DESENLACE (OBLIGATORIA — antes de redactar el pasaje):
+Antes de escribir, decide adónde va la historia. No improvises el final. Fija el desenlace ahora y siembra sus elementos desde la primera oración.
 
-Devuelve el campo "planned_ending" del JSON con esta estructura:
+Devuelve estas tres partes en el campo "planned_ending" del JSON:
 
-1. central_mystery — una oración que nombre la pregunta o tensión central de la historia, lo que mantiene la atención del lector a lo largo de los ${p.epTarget} episodios.
+1. IDEA CENTRAL (thematic_core) — una sola oración que diga de qué trata la historia en el fondo, más allá del argumento. Ejemplos (úsalos para entender la idea, NO copies su estilo — formula tu idea central en el registro del pasaje):
+   · «la gente casi siempre sabe la verdad pero no quiere escucharla.»
+   · «lo que uno llama mala suerte suele ser una decisión que no se animó a tomar.»
+   · «el silencio de los demás también es una respuesta.»
+   · «los pueblos pequeños saben cosas que nadie dice en voz alta.»
+   · «a veces proteger a alguien es lo contrario de ayudarlo.»
 
-2. mystery_resolutions — un objeto con dos sub-objetos:
-   · resolved_definitively: para CADA hilo importante que levantes y que prometas resolver, agrega una entrada con una clave descriptiva corta y una respuesta concreta. Las respuestas son cosas que efectivamente ocurren, se revelan o se ven en la historia. NO son gestos ni insinuaciones. Si el ending seed de arriba dice que debes resolver X, X aparece aquí con una respuesta concreta.
-   · left_open_by_design: para los hilos que eliges dejar a la interpretación del lector, agrega una entrada que nombre qué opciones de lectura quedan abiertas. El lector debe tener anclas suficientes para inferir sin que se lo digas.
+2. MOMENTO FINAL (final_beat) — dos o tres oraciones describiendo el instante exacto que cierra la historia. No el final completo: el momento clave. La imagen que queda. La frase que se dice o no se dice. El momento en que algo cobra otro sentido.
 
-3. climactic_scene — CUATRO sub-campos que juntos forman UNA ESCENA DRAMATIZADA en el episodio ${p.epTarget}:
-   · where: el lugar físico concreto del momento clímax.
-   · trigger: la cosa específica — un objeto visto, una frase escuchada, un detalle descubierto, una puerta que se abre — que dispara el momento.
-   · realization: qué entiende el personaje central en ese instante, en términos CONCRETOS. NO vale «entendió algo». Vale «entendió que su hermano le había mentido sobre el dinero».
-   · decision_or_action: qué HACE el personaje en respuesta. Una acción visible o una decisión que toma. NO vale una observación pasiva ni un entendimiento silencioso sin consecuencia.
+3. RESOLUCIÓN DE HILOS (thread_resolution) — qué preguntas quedan respondidas, cuáles quedan abiertas a propósito, y cuáles cambian de sentido al final (algo que el lector entendió de una manera en los primeros episodios y al final significa otra cosa). Ese cambio de sentido es lo que hace un final memorable.
 
-4. consequence — qué es inmediatamente distinto después del clímax. Un cambio concreto de estado, relación o situación.
+SEPARACIÓN DE PLAN Y ESTILO (crítica): El plan de desenlace es ESTRUCTURAL, no estilístico. El pasaje se ejecuta en el registro especificado al inicio del prompt — no en el registro de estos ejemplos ni en el de este bloque de planificación. El plan guía QUÉ pasa en la historia; el registro guía CÓMO se escribe. Si el registro es cotidiano, el pasaje usa oraciones directas y vocabulario cotidiano aunque la idea central sea profunda. Si el registro es literario, el pasaje puede elevarse. El plan NO autoriza elevar el registro.
 
-5. why_it_matters — una oración que responda: ¿por qué vale la pena contar esta historia? La carga temática que justifica el tiempo del lector.
+Escribe el pasaje sabiendo hacia dónde va. El lector no debe poder adivinar el final — pero al llegar, debe sentir que la historia lo estuvo construyendo todo el tiempo.${p.epTarget > 1 ? `
 
-6. beat_plan — un array de EXACTAMENTE ${p.epTarget} objetos, uno por episodio, en orden. Cada objeto tiene:
-   · beat: número de episodio (1 al ${p.epTarget}).
-   · function: una oración corta en español que describe QUÉ hace ese episodio dentro de la estructura general. No un resumen — una función narrativa. Ejemplos del tipo de fraseo: «Establecer lo normal y mostrar la primera grieta», «La grieta se abre; el personaje se ve forzado a actuar», «Falso alivio antes de la caída», «Todo se derrumba; confrontación con la verdad», «Clímax dramatizado y consecuencia (ejecuta climactic_scene)». Cada episodio tiene una función DISTINTA — no repitas.
+Esta es una historia de ${p.epTarget} episodios. Planea arcos y ritmo acordes: los episodios intermedios desarrollan el mundo y los personajes, siembran los elementos que el final va a cambiar de sentido, y mantienen la tensión sin apurar el cierre. El desenlace se aterriza en el episodio ${p.epTarget}.` : ''}${p.epTarget === 0 && !isSoloStory ? `
 
-PRINCIPIO DE ASIGNACIÓN (25/50/25):
-· Primer 25% de los episodios (${Math.max(1, Math.floor(p.epTarget * 0.25))} episodio${Math.max(1, Math.floor(p.epTarget * 0.25)) === 1 ? '' : 's'}): Setup — el mecanismo de apertura, establecer la tensión central, presentar al personaje en crisis.
-· 50% medio de los episodios: Escalada — el personaje intenta resolver, las apuestas suben, pasan cosas irreversibles, el mundo se complica. Este es el tramo más largo y más peligroso para la repetición; cada episodio aquí debe tener una función DIFERENTE.
-· Último 25% (mínimo el episodio final): Resolución — aterrizar el climactic_scene, entregar la consecuencia, dar el why_it_matters.
+Esta es una historia abierta — el número total de episodios es flexible. Cuando el lector decida cerrar, los últimos 3 episodios ejecutarán el desenlace que planeas ahora. Hasta entonces, desarrolla la trama hacia ese desenlace sin apurarlo. Siembra los elementos; no los aterrices todavía.` : ''}` : '';
 
-SEPARACIÓN DE PLAN Y ESTILO (crítica): El plan de desenlace es ESTRUCTURAL, no estilístico. El pasaje se ejecuta en el ESTILO especificado al inicio del prompt — no en el estilo del mecanismo del seed ni del mecanismo de apertura. El plan guía QUÉ pasa; el estilo guía CÓMO se escribe. Si el estilo es cotidiano, el pasaje usa oraciones directas y vocabulario cotidiano aunque la idea central sea profunda. Si el estilo es literario, el pasaje puede elevarse.
-
-EL PASAJE DE ESTE EPISODIO (episodio 1) cubre el beat 1 del plan que acabas de hacer. Escribe el pasaje cumpliendo esa función: establece lo suficiente del mundo y el personaje para que el lector entre, ejecuta el mecanismo de apertura elegido, y siembra las semillas del desenlace planeado. NO cuentes toda la historia. NO adelantes el clímax. Este es el primer cuarto.` : '';
-
-  // ── Middle-episode beat guidance: fires on eps 2..N-1 when a beat_plan exists.
-  //    Surfaces THIS episode's function and the PREVIOUS episode's function so
-  //    the model can continue without repeating.
-  const climaxScene = (hasEndingPlan && p.plannedEnding.climactic_scene) || {};
-  const resolvedKeys = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.resolved_definitively)
-    ? Object.keys(p.plannedEnding.mystery_resolutions.resolved_definitively).join(', ') : '';
-  const openKeys = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.left_open_by_design)
-    ? Object.keys(p.plannedEnding.mystery_resolutions.left_open_by_design).join(', ') : '';
-
-  const beatContextBlock = (isMiddleEp && currentBeat) ? `
-
-FUNCIÓN DE ESTE EPISODIO (beat ${currentBeat.beat} de ${beatPlan.length}):
-${currentBeat.function}
-
-${previousBeat ? `El episodio anterior cubrió: «${previousBeat.function}». No repitas esa función — avanza.` : ''}
-
-Beats ya cubiertos: ${beatPlan.filter(b => b.beat < p.epNum).map(b => `[${b.beat}] ${b.function}`).join(' · ') || '(ninguno)'}
-Beats siguientes (NO los aterrices aquí): ${beatPlan.filter(b => b.beat > p.epNum && b.beat < p.epTarget).map(b => `[${b.beat}] ${b.function}`).join(' · ') || '(ninguno)'}
-Beat final (solo en el último episodio): [${p.epTarget}] ${beatPlan.find(b => b.beat === p.epTarget) ? beatPlan.find(b => b.beat === p.epTarget).function : '(no planificado)'}` : '';
-
-  const endingContext = (hasEndingPlan && isMiddleEp) ? `
+  // ── Ending context: fires on middle episodes (ep 2+ but not final) when a
+  //    planned ending exists. Keeps the committed ending in front of the model
+  //    so every episode converges toward it rather than drifting.
+  const endingContext = (hasEndingPlan && !isFinalEp && p.epNum > 1) ? `
 
 DESENLACE PLANEADO (establecido en episodio 1 — NO modificar):
-· Misterio central: ${p.plannedEnding.central_mystery || '(no especificado)'}
-· Debes resolver en el final: ${resolvedKeys || '(ninguno — revisa el plan)'}
-· Queda abierto por diseño: ${openKeys || '(ninguno)'}
-· Clímax planeado: ${climaxScene.decision_or_action || '(no especificado)'} en ${climaxScene.where || '(lugar no especificado)'}
-· Consecuencia: ${p.plannedEnding.consequence || '(no especificada)'}
+· Idea central: ${p.plannedEnding.thematic_core}
+· Momento final: ${p.plannedEnding.final_beat}
+· Resolución de hilos: ${p.plannedEnding.thread_resolution}
 
-La historia va hacia ese desenlace. Este episodio cubre el beat ${p.epNum} (ver función arriba). Siembra los elementos que el final va a necesitar sin apurarlos. NO aterrices el clímax todavía.
+La historia va hacia ese desenlace. En este episodio, haz avanzar la trama en esa dirección: siembra los elementos que el final va a necesitar, profundiza en los personajes cuyos arcos tienen que cerrarse, y mantén la idea central presente en el fondo. NO aterrices el desenlace todavía — eso es trabajo del episodio final. Pero tampoco dispersas la historia: cada escena debe aportar al desenlace planeado.
 
-RECORDATORIO DE ESTILO: Este plan es estructural. Escribe el pasaje en el estilo especificado al inicio del prompt.` : '';
+RECORDATORIO DE REGISTRO: Este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt, no en el registro del plan.` : '';
 
-  // ── Final execution block (unchanged in structure but now references beat_plan).
-  const resolvedEntries = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.resolved_definitively)
-    ? Object.entries(p.plannedEnding.mystery_resolutions.resolved_definitively).map(([k,v]) => `  · ${k}: ${v}`).join('\n') : '  (ninguno)';
-  const openEntries = (hasEndingPlan && p.plannedEnding.mystery_resolutions && p.plannedEnding.mystery_resolutions.left_open_by_design)
-    ? Object.entries(p.plannedEnding.mystery_resolutions.left_open_by_design).map(([k,v]) => `  · ${k}: ${v}`).join('\n') : '  (ninguno)';
-
+  // ── Final execution block: replaces the old weak parenthetical in the label.
+  //    When a planned ending exists, this is where it lands. When no plan exists
+  //    (legacy stories pre-update), falls back to general "satisfying closure" language.
   const finalExecutionBlock = isFinalEp ? (hasEndingPlan ? `
 
 EPISODIO FINAL — EJECUTA ESTE DESENLACE:
+· Idea central: ${p.plannedEnding.thematic_core}
+· Momento final: ${p.plannedEnding.final_beat}
+· Resolución de hilos: ${p.plannedEnding.thread_resolution}
 
-Plan fijado en episodio 1:
-· Misterio central: ${p.plannedEnding.central_mystery || '(no especificado)'}
-· Beat de este episodio: ${currentBeat ? currentBeat.function : '(clímax + consecuencia)'}
-· Debes resolver EXPLÍCITAMENTE (cada uno visible en este episodio):
-${resolvedEntries}
-· Queda abierto por diseño (el lector infiere con las anclas que ya diste — NO expliques):
-${openEntries}
-· Clímax — ocurre como ESCENA MOSTRADA, no como resumen:
-  · Lugar: ${climaxScene.where || '(no especificado)'}
-  · Disparador: ${climaxScene.trigger || '(no especificado)'}
-  · Lo que entiende el personaje (concreto): ${climaxScene.realization || '(no especificado)'}
-  · Lo que HACE el personaje: ${climaxScene.decision_or_action || '(no especificado)'}
-· Consecuencia inmediata: ${p.plannedEnding.consequence || '(no especificada)'}
-· Por qué importa la historia: ${p.plannedEnding.why_it_matters || '(no especificado)'}
+Instrucciones de cierre:
+- Aterriza la idea central con claridad, pero sin subrayarla. Deja que las imágenes, las acciones y las decisiones de los personajes hagan el trabajo. No expliques la moraleja.
+- Incluye el momento final tal como fue planeado — ese es el peso del episodio. Constrúyelo; no lo apures.
+- Resuelve los hilos según el plan: responde lo que tiene que responderse, deja abierto lo que debe quedar abierto, y cambia el sentido de lo que debe cambiar de sentido. Ese cambio de sentido (algo que el lector entendió de una manera y al final significa otra) es lo que hace que un final se quede con el lector.
+- No abras hilos nuevos en el episodio final. Todo lo que aparece aquí debe aportar al cierre.
+- El final debe sentirse INEVITABLE al mirar hacia atrás y SORPRENDENTE en el momento. Si el lector puede adivinar el final a mitad del episodio, falta algo — una vuelta de tuerca, una imagen que lo cambie.
 
-REGLAS DE EJECUCIÓN (críticas — el final vive o muere con estas):
-
-1. EL CLÍMAX ES UNA ESCENA DRAMATIZADA, no un resumen ni una reflexión. Se muestra, no se cuenta. El lector ve el lugar, oye el disparador, siente el momento. Si resumes o reflexionas sobre el clímax en vez de dramatizarlo, el episodio falla.
-
-2. EL PERSONAJE ACTÚA. Toma una decisión visible o ejecuta una acción concreta — no solo observa y entiende algo pasivamente. Si termina el episodio mirando en silencio mientras «entiende algo», el episodio falla.
-
-3. CADA ELEMENTO DE resolved_definitively DEBE SER LEGIBLE EN EL PASAJE. No basta con que esté implícito: el lector debe poder identificar la respuesta al terminar. Puede mostrarse en acción, revelarse en diálogo, o hacerse evidente por contexto; pero queda respondido.
-
-4. LOS ELEMENTOS DE left_open_by_design NO SE EXPLICAN. El lector los infiere con las anclas que ya le diste. No los reveles, no los resuelvas, no los trates en monólogo interno. La ambigüedad es intencional.
-
-5. PROHIBIDOS LOS FINALES EVASIVOS. Frases como «entendió que la respuesta no importaba», «estaban del mismo lado de algo», «la pregunta tampoco era una pregunta», «supo que ya era parte de algo», «entendió sin palabras» — ese cierre metafísico ambiguo que pretende profundidad pero evita nombrar lo que pasa — está PROHIBIDO. Si el personaje entiende algo, el pasaje nombra QUÉ entendió en términos concretos.
-
-6. EL ORDEN ES: TENSIÓN → CLÍMAX (escena dramatizada) → CONSECUENCIA → SIGNIFICADO. La última imagen puede ser contemplativa, pero viene DESPUÉS del clímax, no lo reemplaza.
-
-7. NO abras hilos nuevos en el episodio final. Todo lo que aparece aquí aporta al cierre.
-
-RECORDATORIO DE ESTILO: Este plan es estructural. Escribe el pasaje en el estilo especificado al inicio del prompt. Incluso en estilo cotidiano, el clímax puede tener peso sin elevar la prosa — oraciones directas pueden cargar muchísimo significado.` : `
+RECORDATORIO DE REGISTRO: Este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt. Incluso en registro cotidiano, el final puede tener peso sin elevar la prosa — oraciones directas pueden cargar muchísimo significado.` : `
 
 EPISODIO FINAL — cierre narrativo (sin plan explícito previo):
 Este es el último episodio. Da un cierre satisfactorio:
-· Resuelve los hilos principales de la trama con respuestas concretas, no gestos.
-· Cierra los arcos de los personajes centrales con coherencia.
-· El personaje toma una decisión visible o ejecuta una acción — no solo observa pasivamente.
-· No abras hilos nuevos.
-· Evita finales evasivos tipo «entendió algo sin palabras» o «estaban del mismo lado de algo».
-· Escribe en el estilo especificado al inicio del prompt.`) : '';
+- Resuelve los hilos principales de la trama.
+- Cierra los arcos de los personajes centrales con coherencia.
+- No abras hilos nuevos.
+- Si el género o tema sugiere un giro o un cambio de sentido (parábola, Twilight Zone, noir, ironía final), inclúyelo.
+- El final debe sentirse ganado, no improvisado.
+- Escribe en el registro especificado al inicio del prompt.`) : '';
 
-  // Episode label stays brief.
+  // Episode label stays brief — the FINAL heavy lifting now happens in finalExecutionBlock above.
   const epLabel = p.epNum > 0
-    ? ` (Episodio ${p.epNum} de ${p.epTarget})`
+    ? (p.epTarget > 0
+        ? ` (Episodio ${p.epNum} de ${p.epTarget})`
+        : ` (Episodio ${p.epNum} — historia abierta)`)
     : '';
 
-  // JSON schema: conditionally includes planned_ending (with beat_plan) on ep 1.
-  const beatPlanSchemaFragment = `,"beat_plan":[{"beat":1,"function":"función narrativa de este episodio"}]`;
+  // JSON schema: conditionally includes planned_ending on episodes that need to commit.
   const jsonSchema = needsEndingPlan
-    ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"central_mystery":"una oración — la pregunta o tensión central","mystery_resolutions":{"resolved_definitively":{"clave_descriptiva":"respuesta concreta"},"left_open_by_design":{"clave_descriptiva":"qué opciones de lectura quedan abiertas"}},"climactic_scene":{"where":"lugar físico concreto","trigger":"qué cosa específica dispara el clímax","realization":"qué entiende el personaje en términos concretos","decision_or_action":"qué HACE el personaje — una acción visible"},"consequence":"qué es inmediatamente distinto después del clímax","why_it_matters":"por qué vale la pena contar esta historia"${beatPlanSchemaFragment}},"questions":[{"question":"pregunta 1","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 2","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 3","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 4","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 5","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 6","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"}]}`
-    : `{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"pregunta 1","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 2","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 3","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 4","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 5","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"},{"question":"pregunta 6","options":["opción a","opción b","opción c","opción d"],"correct":0,"explanation":"por qué"}]}`;
+    ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"thematic_core":"una oración","final_beat":"dos o tres oraciones","thread_resolution":"qué se resuelve, qué queda abierto, qué se recontextualiza"},"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`
+    : `{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`;
 
   return `Crea un cuestionario de comprensión lectora en español. Responde SOLO con JSON válido, sin texto adicional ni comillas de código.
 
 Nivel: ${levelMap[p.level] || p.level}
-Estilo: ${registerMap[p.register] || p.register}
+Registro: ${registerMap[p.register] || p.register}
 Variedad: ${regionDesc[p.region] || p.region}
-${settingStr}
-${moodStr}${epLabel}
-${framingBlock}${bibleSection}${handoffBlock}${antiRecapBlock}${beatContextBlock}${endingContext}${finalExecutionBlock}${planningBlock}
+${themeStr}${epLabel}
+${grammarStr}${bibleSection}${endingContext}${finalExecutionBlock}${variationBlock}${planningBlock}
 
-PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el estilo especificado arriba. El estilo es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
+PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
 
 PRONOMBRES EN DIÁLOGO: La variedad regional especificada arriba controla qué pronombres usar en TODAS las líneas de diálogo. Si la variedad es neutral o Latin American sin voseo, los personajes NUNCA dicen «vos», «sabés», «tenés», «sos», «querés», «podés» — dicen «tú», «sabes», «tienes», «eres», «quieres», «puedes». Si la variedad es rioplatense o Latin American con voseo, los personajes usan voseo. Verifica cada línea de diálogo contra esta regla antes de entregar. ${seInstr}
 
-PREGUNTAS: EXACTAMENTE 6 preguntas de opción múltiple — no 1, no 4, no 5, no 7. SEIS. El array "questions" del JSON debe tener exactamente 6 objetos. Cuenta las preguntas antes de cerrar el JSON. 4 opciones (A/B/C/D) por pregunta. Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier estilo — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.
+PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier registro — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.${p.grammar ? ' Al menos 2 preguntas sobre el enfoque gramatical.' : ''}
 
-ESTILO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo estilo que el pasaje. No introduzcas vocabulario que no aparecería en ese estilo. Por ejemplo, en estilo cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
+REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo registro que el pasaje. No introduzcas vocabulario que no aparecería en ese registro. Por ejemplo, en registro cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
 
 JSON requerido:
 ${jsonSchema}
 
-correct es índice 0-based (0=primera opción, 1=segunda, 2=tercera, 3=cuarta). NO incluyas letras (A/B/C/D) ni números en el texto de opciones ni preguntas — el sistema los agrega automáticamente.
-
-ÚLTIMA VERIFICACIÓN ANTES DE ENTREGAR: el array "questions" tiene EXACTAMENTE 6 objetos. Si tienes menos, agrega más preguntas hasta llegar a 6.`;
+correct es índice 0-based (0=primera opción, 1=segunda, 2=tercera, 3=cuarta). NO incluyas letras (A/B/C/D) ni números en el texto de opciones ni preguntas — el sistema los agrega automáticamente.`;
 }
 
 // ═══════════════════════════════════════════════
@@ -1797,9 +1488,8 @@ function startGenerate() {
 }
 
 async function doGenerate() {
-  // Theme input was removed Apr 2026 — replaced by setting/mood selectors + seed system.
-  // Grammar free-text input was removed Apr 2026 Batch 2 — replaced by narrative_framing
-  // selector (read directly from cfg via pickOpt), injected as framingBlock in buildPrompt.
+  const theme   = document.getElementById('surpriseMe').checked ? null : document.getElementById('themeInput').value.trim() || null;
+  const grammar = document.getElementById('noGrammar').checked  ? null : document.getElementById('grammarInput').value.trim() || null;
   /* SE HIGHLIGHT DISABLED 2026-04-18 — flag forced false.
      Rendering logic and prompt branch remain intact below but unreachable.
      To reactivate: restore the checkbox card in the HTML and change this
@@ -1807,57 +1497,48 @@ async function doGenerate() {
   const seOn    = false;
   const voseo   = cfg.region === 'latin_american' && (document.getElementById('voseoCheck')?.checked || false);
 
-  // cfg.mode is frozen to 'fixed' (Apr 2026 — individual/open modes removed).
-  // Continuation = same story_id is active from resuming a saved story.
-  const isContinuation = storyId !== null;
+  const isContinuation = (cfg.mode !== 'individual') && storyId !== null;
 
   // Snapshot state so we can restore on auth failure
-  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, chosenSeed, chosenOpening, previousPassage, biblePromise, regenerating };
+  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, biblePromise, regenerating };
 
   if (!isContinuation) {
-    storyBible    = null; prevBible = null; plannedEnding = null; biblePromise = null;
-    previousPassage = null;
-    storyId       = 'story-' + Date.now();
-    episodeNum    = 1;
-    const rawEp   = parseInt(document.getElementById('epCount').value);
-    episodeTarget = (isNaN(rawEp) ? 5 : Math.max(3, Math.min(15, rawEp)));
-    // Pick ending seed + opening seed for this new story. Both fire once per fresh
-    // story and are carried through every subsequent episode. Ending seed is picked
-    // first because opening filters against the ending's psychological_class.
-    chosenSeed    = pickSeed(episodeTarget, cfg.setting, cfg.mood, cfg.register);
-    chosenOpening = pickOpening(episodeTarget, chosenSeed);
-    if (chosenSeed)    console.log('Ending seed selected:', chosenSeed.id);
-    if (chosenOpening) console.log('Opening seed selected:', chosenOpening.id);
+    storyBible   = null; prevBible = null; plannedEnding = null; biblePromise = null;
+    storyId      = cfg.mode === 'individual' ? null : 'story-' + Date.now();
+    episodeNum   = cfg.mode === 'individual' ? 0 : 1;
+    episodeTarget= cfg.mode === 'fixed' ? (parseInt(document.getElementById('epCount').value) || 5) : (episodeTarget || 0);
+    // Clear regenerating here: the retry button on JSON parse errors sets this flag,
+    // but on a fresh start retry it's meaningless. If we don't clear it, the flag
+    // stays stuck at true and the NEXT doGenerate() call (e.g. Save-and-continue
+    // after a successful retry) takes the "regenerating" branch instead of
+    // incrementing episodeNum — causing the system to regenerate ep 1 again
+    // when the user expected ep 2.
     regenerating = false;
   } else if (regenerating) {
     regenerating = false;
     storyBible   = prevBible;
-    // episodeNum, plannedEnding, chosenSeed, chosenOpening, previousPassage all stay
-    // the same (committed in ep 1 or carried forward from last successful episode)
+    // episodeNum stays the same; plannedEnding stays the same (committed in ep 1)
   } else {
     episodeNum++;
   }
 
-  currentCfg = { ...cfg, seOn, voseo,
-    bible: storyBible, plannedEnding,
-    seed: chosenSeed, opening: chosenOpening,
-    previousPassage,
-    epNum: episodeNum, epTarget: episodeTarget };
+  currentCfg = { ...cfg, theme, grammar, seOn, voseo,
+    bible: storyBible, plannedEnding, epNum: episodeNum, epTarget: episodeTarget };
 
-  const epMsg = `Generando episodio ${episodeNum} de ${episodeTarget}…`;
+  const epMsg = episodeNum > 0
+    ? (episodeTarget > 0 ? `Generando episodio ${episodeNum} de ${episodeTarget}…` : `Generando episodio ${episodeNum}…`)
+    : 'Generando tu cuestionario…';
 
+  const modeLabels = { individual: 'Individual', fixed: 'Historia Fija', open: 'Historia Abierta' };
   const regionLabels = { neutral: 'Neutro', rioplatense: 'Rioplatense', latin_american: 'Latinoamericano', spain: 'España' };
+  // Backward-compat: old saves may have 'conversational' or 'formal' — map to nearest new register for display
   const registerLabels = { everyday: 'Cotidiano', literary: 'Literario', news: 'Periodístico', conversational: 'Cotidiano', formal: 'Literario' };
-  const settingLabels = { surprise: 'Ambientación libre', actual: 'Actual', historico: 'Histórico', futuro: 'Futuro', imaginario: 'Imaginario', realidad_alterna: 'Realidad alterna' };
-  const moodLabels    = { surprise: 'Tono libre', tenso: 'Tenso', oscuro: 'Oscuro', acogedor: 'Acogedor', melancolico: 'Melancólico', satirico: 'Satírico', esperanzador: 'Esperanzador' };
-  const ctxParts = [`Ep. ${episodeNum}/${episodeTarget}`];
+  const ctxParts = [modeLabels[cfg.mode] || cfg.mode];
+  if (episodeNum > 0) ctxParts.push(episodeTarget > 0 ? `Ep. ${episodeNum}/${episodeTarget}` : `Ep. ${episodeNum}`);
   ctxParts.push(currentCfg.level);
   ctxParts.push(registerLabels[currentCfg.register] || currentCfg.register);
   ctxParts.push(regionLabels[currentCfg.region] || currentCfg.region);
-  if (currentCfg.setting && currentCfg.setting !== 'surprise') ctxParts.push(settingLabels[currentCfg.setting] || currentCfg.setting);
-  if (currentCfg.mood    && currentCfg.mood    !== 'surprise') ctxParts.push(moodLabels[currentCfg.mood]       || currentCfg.mood);
-  if (chosenOpening) ctxParts.push(`Apertura: ${chosenOpening.name}`);
-  if (chosenSeed)    ctxParts.push(`Semilla: ${chosenSeed.name}`);
+  if (theme) ctxParts.push(`Tema: ${theme}`);
   const ctxLabel = document.getElementById('genContextLabel');
   ctxLabel.textContent = ctxParts.join(' · ');
   ctxLabel.style.display = 'block';
@@ -1873,7 +1554,7 @@ async function doGenerate() {
       body: JSON.stringify({
         password:   sessionPw,
         model:      'claude-opus-4-7',
-        max_tokens: 12000,
+        max_tokens: 8000,
         stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
 Return ONLY valid JSON matching the exact schema. No preamble, no explanation, no markdown fences.
@@ -1890,9 +1571,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       sessionPw = null;
       // Restore story state so next attempt starts clean
       storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding;
-      chosenSeed = _snap.chosenSeed; chosenOpening = _snap.chosenOpening; previousPassage = _snap.previousPassage;
-      biblePromise = _snap.biblePromise;
+      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; biblePromise = _snap.biblePromise;
       regenerating = _snap.regenerating;
       showScreen('sParams'); alert('Contraseña incorrecta.'); return;
     }
@@ -1973,42 +1652,17 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     if (!quiz.questions || !Array.isArray(quiz.questions) || quiz.questions.length === 0)
       throw new Error('El cuestionario generado no tiene preguntas. Inténtalo de nuevo.');
 
-    // ── Capture planned_ending on the episode that committed it (ep 1).
+    // ── Capture planned_ending on the episode that committed it (ep 1 or solo).
     //    Once set, it's frozen for the rest of the story — subsequent episodes
     //    see it as context but never regenerate it. Remove from quiz object so
     //    it doesn't leak into render / save-as-quiz-content paths.
-    //    Apr 2026 shape: central_mystery, mystery_resolutions (with
-    //    resolved_definitively + left_open_by_design sub-objects), climactic_scene
-    //    (with where/trigger/realization/decision_or_action), consequence, why_it_matters,
-    //    plus beat_plan (array of {beat, function} per episode for handoff).
     if (quiz.planned_ending && typeof quiz.planned_ending === 'object') {
       const pe = quiz.planned_ending;
-      const hasAnyKey = pe.central_mystery || pe.mystery_resolutions || pe.climactic_scene || pe.consequence || pe.why_it_matters || pe.beat_plan;
-      if (hasAnyKey) {
-        const mr = (pe.mystery_resolutions && typeof pe.mystery_resolutions === 'object') ? pe.mystery_resolutions : {};
-        const cs = (pe.climactic_scene && typeof pe.climactic_scene === 'object') ? pe.climactic_scene : {};
-        // Beat plan: expect an array of {beat: int, function: string}. Defensive
-        // normalization — strip anything missing required fields.
-        const rawBeats = Array.isArray(pe.beat_plan) ? pe.beat_plan : [];
-        const beatPlan = rawBeats
-          .filter(b => b && typeof b === 'object' && typeof b.beat === 'number' && typeof b.function === 'string')
-          .map(b => ({ beat: b.beat, function: b.function.trim() }))
-          .sort((a, b) => a.beat - b.beat);
+      if (pe.thematic_core || pe.final_beat || pe.thread_resolution) {
         plannedEnding = {
-          central_mystery: (pe.central_mystery || '').toString().trim(),
-          mystery_resolutions: {
-            resolved_definitively: (mr.resolved_definitively && typeof mr.resolved_definitively === 'object') ? mr.resolved_definitively : {},
-            left_open_by_design:   (mr.left_open_by_design   && typeof mr.left_open_by_design   === 'object') ? mr.left_open_by_design   : {},
-          },
-          climactic_scene: {
-            where:              (cs.where              || '').toString().trim(),
-            trigger:            (cs.trigger            || '').toString().trim(),
-            realization:        (cs.realization        || '').toString().trim(),
-            decision_or_action: (cs.decision_or_action || '').toString().trim(),
-          },
-          consequence:    (pe.consequence    || '').toString().trim(),
-          why_it_matters: (pe.why_it_matters || '').toString().trim(),
-          beat_plan: beatPlan,
+          thematic_core:    (pe.thematic_core    || '').trim(),
+          final_beat:       (pe.final_beat       || '').trim(),
+          thread_resolution:(pe.thread_resolution || '').trim(),
         };
       }
       delete quiz.planned_ending;
@@ -2034,47 +1688,25 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       q.correct = indices.indexOf(q.correct);
     });
 
-    // Capture this episode's passage for next episode's handoff anchor.
-    // This is the verbatim tail of ~2 paragraphs (or 1 for final episodes) that
-    // the next prompt will show the model so it can continue without recap.
-    previousPassage = quiz.passage || null;
-
     currentQuiz = quiz;
     generateRetries = 0;
-    _autoRetryInProgress = false;
     answers     = new Array(quiz.questions.length).fill(null);
     renderQuiz(quiz, currentCfg.seOn);
     showScreen('sQuiz');
     syncDriveBtns();
 
-    // Bible generation fires for every episode (all stories are fixed Apr 2026).
-    prevBible    = storyBible;
-    biblePromise = generateBible(quiz.passage, currentCfg);
+    if (currentCfg.mode !== 'individual') {
+      prevBible    = storyBible;
+      biblePromise = generateBible(quiz.passage, currentCfg);
+    }
 
   } catch (err) {
     console.error('Generation error:', err);
     isProcessing = false;
     // Restore story state so retry starts from correct episode
     storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding;
-    chosenSeed = _snap.chosenSeed; chosenOpening = _snap.chosenOpening; previousPassage = _snap.previousPassage;
-    biblePromise = _snap.biblePromise;
+    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; biblePromise = _snap.biblePromise;
     regenerating = _snap.regenerating;
-
-    // ── Silent auto-retry on transient generation failures.
-    //    If this is the first failure in this generation attempt, silently re-fire
-    //    doGenerate() before showing the error UI. State has been restored above,
-    //    so the recursive call starts from the same effective pre-call state.
-    //    If the retry also fails, the flag blocks a second auto-retry and we fall
-    //    through to the normal user-facing error UI below.
-    if (!_autoRetryInProgress) {
-      _autoRetryInProgress = true;
-      console.log('Auto-retrying generation after transient failure...');
-      isProcessing = true;  // reassert: caller expects this true during generation
-      return doGenerate();
-    }
-    _autoRetryInProgress = false;  // reset so future user-initiated attempts can auto-retry
-
     goParams();
     const canRetry = generateRetries < 3;
     generateRetries++;
@@ -2097,35 +1729,13 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
 //  RENDER QUIZ
 // ═══════════════════════════════════════════════
 const LETTERS = ['A','B','C','D'];
-// ── Click-to-reveal handler for the seed/apertura tags.
-//    Swaps between the masked hint and the actual value on each click.
-function toggleRevealTag(el) {
-  if (el.classList.contains('is-revealed')) {
-    el.textContent = el.dataset.masked;
-    el.classList.remove('is-revealed');
-  } else {
-    el.textContent = el.dataset.value;
-    el.classList.add('is-revealed');
-  }
-}
+
 function renderQuiz(quiz, seOn) {
   document.getElementById('qTitle').textContent = quiz.title;
   const tags = [currentCfg.level, currentCfg.register];
   if (currentCfg.region !== 'neutral') tags.push(currentCfg.region.replace('_',' '));
-  if (currentCfg.setting && currentCfg.setting !== 'surprise') tags.push(currentCfg.setting.replace('_',' '));
-  if (currentCfg.mood    && currentCfg.mood    !== 'surprise') tags.push(currentCfg.mood);
-  // Regular plain tags first
-  let tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
-  // Then the click-to-reveal seed and apertura tags — grouped with the others in the same row
-  if (chosenSeed) {
-    const masked = '🌱 Semilla — toca';
-    tagsHtml += `<span class="tag tag-reveal" data-masked="${masked}" data-value="🌱 ${chosenSeed.name}" onclick="toggleRevealTag(this)">${masked}</span>`;
-  }
-  if (chosenOpening) {
-    const masked = '🚪 Apertura — toca';
-    tagsHtml += `<span class="tag tag-reveal" data-masked="${masked}" data-value="🚪 ${chosenOpening.name}" onclick="toggleRevealTag(this)">${masked}</span>`;
-  }
-  document.getElementById('qTags').innerHTML = tagsHtml;
+  document.getElementById('qTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+
   const epEl = document.getElementById('qEpisode');
   if (episodeNum > 0) {
     epEl.style.display = 'block';
@@ -2136,10 +1746,8 @@ function renderQuiz(quiz, seOn) {
   document.getElementById('seLegend').classList.toggle('hidden', !(seOn && hasSeMarkers));
   document.getElementById('passageDisplay').innerHTML = renderPassage(quiz.passage, seOn);
 
-  // "Nueva configuración" button was for individual mode; mode removed Apr 2026.
-  // Keep the wrap hidden permanently; it's dead UI.
-  const newCfgWrap = document.getElementById('quizNewConfigWrap');
-  if (newCfgWrap) newCfgWrap.classList.add('hidden');
+  // Show "Nueva configuración" only for individual mode
+  document.getElementById('quizNewConfigWrap').classList.toggle('hidden', currentCfg.mode !== 'individual');
 
   // Reset grade button and answer counter
   updateAnswerCount();
@@ -2265,10 +1873,12 @@ function pickStar(n) {
 // ═══════════════════════════════════════════════
 function buildGradedActions() {
   const el   = document.getElementById('gradedActions');
-  // All stories are fixed-length (Apr 2026 — individual/open modes removed).
-  const isFinal = episodeNum >= episodeTarget;
+  const mode = currentCfg.mode;
+  const isFinal = mode === 'individual' ||
+    (mode === 'fixed' && episodeNum >= episodeTarget) ||
+    (mode === 'open'  && episodeTarget > 0 && episodeNum >= episodeTarget);
 
-  // Star rating: show only on final episode
+  // Star rating: show for individual and final episode
   const starSection = document.getElementById('starRatingSection');
   if (starSection) {
     starSection.classList.toggle('hidden', !isFinal);
@@ -2276,12 +1886,21 @@ function buildGradedActions() {
     [1,2,3].forEach(i => { const b = document.getElementById('star'+i); if(b) b.classList.remove('active'); });
   }
 
+  if (mode === 'individual') {
+    el.innerHTML = `
+      <button class="btn-save-primary" onclick="actionSaveAndContinue()">Guardar y generar otro</button>
+      <button class="btn-save"         onclick="actionSaveAndReturn()">Guardar y volver al menú</button>
+      <button class="btn-warn"         onclick="actionDiscardAndRegenerate()">Descartar y regenerar</button>
+      <button class="btn-danger"       onclick="actionDiscardAndReturn()">Descartar y volver al menú</button>`;
+    return;
+  }
+
   const savedCount = episodeNum - 1;
   const deleteLabel = savedCount > 0 ? `Eliminar serie (${savedCount} ep. guardados)` : 'Descartar y volver al menú';
 
   if (!isFinal) {
     const nextNum = episodeNum + 1;
-    const nextLabel = `episodio ${nextNum} de ${episodeTarget}`;
+    const nextLabel = episodeTarget > 0 ? `episodio ${nextNum} de ${episodeTarget}` : `episodio ${nextNum}`;
     el.innerHTML = `
       <button class="btn-save-primary" id="nextEpBtn" onclick="actionSaveAndContinue()">
         Guardar y continuar — ${nextLabel}
@@ -2292,9 +1911,10 @@ function buildGradedActions() {
       <button class="btn-danger" onclick="actionDeleteSeries()">${deleteLabel}</button>`;
     watchBibleReady();
   } else {
+    const anotherLabel = mode === 'fixed' ? 'Guardar e iniciar otra historia fija' : 'Guardar e iniciar otra historia abierta';
     el.innerHTML = `
       <button class="btn-save-primary" onclick="actionSaveAndReturn()">Guardar y volver al menú</button>
-      <button class="btn-save"         onclick="actionSaveAndStartAnother()">Guardar e iniciar otra historia</button>
+      <button class="btn-save"         onclick="actionSaveAndStartAnother()">${anotherLabel}</button>
       <button class="btn-warn"         onclick="actionDiscardAndRegenerate()">Descartar episodio ${episodeNum} y regenerar</button>
       <button class="btn-danger"       onclick="actionDeleteSeries()">${deleteLabel}</button>`;
   }
@@ -2334,8 +1954,9 @@ async function saveCurrentQuiz(callback) {
 
 async function _doSave(callback) {
   if (driveToken && folderId && currentQuiz) {
-    const isFinal = episodeNum >= episodeTarget;
-    const status = isFinal ? 'complete' : 'in-progress';
+    const isFinal = (currentCfg.mode === 'fixed' && episodeNum >= episodeTarget) ||
+                    (currentCfg.mode === 'open'  && episodeTarget > 0 && episodeNum >= episodeTarget);
+    const status = currentCfg.mode === 'individual' ? null : isFinal ? 'complete' : 'in-progress';
     const saved = await saveQuizToDrive({
       story_status:   status,
       episode_target: episodeTarget || null,
@@ -2353,7 +1974,8 @@ async function _doSave(callback) {
       return;
     }
     if (isFinal) {
-      activeFixedStory = null;
+      if (currentCfg.mode === 'fixed') activeFixedStory = null;
+      if (currentCfg.mode === 'open')  activeOpenStory  = null;
     }
   }
   callback();
@@ -2387,12 +2009,13 @@ function actionSaveAndReturn() {
 function actionSaveAndStartAnother() {
   if (isProcessing) return;
   isProcessing = true;
+  const mode = currentCfg.mode;
   (async () => {
     if (biblePromise) { try { await biblePromise; } catch {} }
     saveCurrentQuiz(() => {
       clearStoryState();
-      isProcessing = false;
-      showStartAnotherModal();
+      if (mode === 'fixed') { isProcessing = false; showStartAnotherModal(); }
+      else doGenerate();
     });
   })();
 }
@@ -2465,19 +2088,14 @@ async function deleteStoryFromDrive(sid) {
 //  BIBLE GENERATION
 // ═══════════════════════════════════════════════
 async function generateBible(passage, cfg) {
-  // Apr 2026 — shrunk bible format. Previous version (~300 words with atmosphere
-  // and style notes) was too strong: it re-primed the model to restate mood in
-  // the next episode, causing the "recap opening" problem. This shorter format
-  // carries only what's needed for continuity across episodes.
-  const biblePrompt = `Lee este pasaje y escribe un documento de continuidad MUY compacto (máximo 120 palabras), con exactamente estas tres secciones:
+  const biblePrompt = `Lee este pasaje y escribe un documento de continuidad compacto (~300 palabras):
+- Personajes: nombres, relaciones, rasgos, situación actual
+- Lugar y atmósfera
+- Eventos clave ocurridos
+- Hilos narrativos sin resolver
+- Notas de registro (variedad: ${cfg.region}, registro: ${cfg.register})
 
-1. PERSONAJES: una línea por personaje importante, con el nombre y UNA frase de identidad (quién es, no biografía). Ejemplo: «Marcela — nueva inquilina, tres meses en el edificio, recelosa».
-
-2. ESTADO FÍSICO AL FINAL DE ESTE EPISODIO: una sola oración describiendo dónde está el personaje central y qué acaba de pasar. Ejemplo: «Marcela acaba de cerrar la puerta del 3B con la llave todavía en la mano; doña Elsa está en el pasillo».
-
-3. HILOS SIN RESOLVER: lista corta de preguntas que quedan vivas, en viñetas. Un hilo por línea. No más de 5.
-
-NO incluyas: resumen del pasaje, notas de atmósfera, descripción del lugar, notas de estilo, sugerencias de dirección narrativa. El desenlace ya está planeado por separado. Solo el estado actual, nada más.
+IMPORTANTE: Este documento captura QUÉ HA PASADO, no hacia dónde va la historia. No sugieras dirección narrativa ni giros futuros — el desenlace ya está planeado por separado. Limítate a describir el estado actual del mundo del relato.
 
 PASAJE:
 ${passage.replace(/\[SE:\w+\]([\s\S]*?)\[\/SE\]/g, '$1')}
@@ -2488,8 +2106,8 @@ Responde SOLO con el documento en texto plano.`;
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         password: sessionPw, model: 'claude-sonnet-4-20250514',
-        max_tokens: 400, stream: false,
-        system: 'Eres un asistente que crea documentos de continuidad narrativa compactos. Responde solo con el documento.',
+        max_tokens: 600, stream: false,
+        system: 'Eres un asistente que crea documentos de continuidad narrativa. Responde solo con el documento.',
         messages: [{ role: 'user', content: biblePrompt }]
       })
     });
@@ -2517,39 +2135,77 @@ function showTwoOptionModal(title, body, primaryLabel, primaryFn, secondaryLabel
 function showFixedConflictModal() {
   const s = activeFixedStory;
   storyCache[s.story_id] = s;
-  const displayTitle = s.title || 'Sin título';
+  const displayTitle = s.title || s.theme || 'Sin título';
   const epInfo = `episodio ${s.episode} de ${s.episode_target || '?'}`;
-  document.getElementById('conflictModalTitle').textContent = 'Historia en progreso';
+  document.getElementById('conflictModalTitle').textContent = 'Historia fija en progreso';
   document.getElementById('conflictModalBody').innerHTML    =
-    `Tienes una historia en progreso: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
+    `Tienes una historia fija en progreso: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
   document.getElementById('conflictModalBtns').innerHTML   = `
     <button class="btn-primary"   style="background:linear-gradient(135deg, #2ba87f, #34d399);color:#0a1628"  onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
-    <button class="btn-danger"    onclick="confirmDeleteActiveStory('${s.story_id}')">Eliminar historia completa</button>
+    <button class="btn-danger"    onclick="confirmDeleteActiveStory('${s.story_id}','fixed')">Eliminar historia completa</button>
     <button class="btn-primary" onclick="closeConflictModal()">Cancelar</button>`;
   document.getElementById('conflictModal').classList.remove('hidden');
 }
 
-// showOpenStoryModal() and setWrapUpAndContinue() removed Apr 2026 — open mode dropped.
+function showOpenStoryModal() {
+  const s = activeOpenStory;
+  storyCache[s.story_id] = s;
+  const hasWrapUp = s.episode_target > 0;
+  const epInfo = hasWrapUp
+    ? `episodio ${s.episode} · cierre en ${s.episode_target - s.episode} ep. más`
+    : `episodio ${s.episode} — historia abierta`;
+  const wrapUpOption = !hasWrapUp ? `
+    <div style="flex-basis:100%;display:flex;justify-content:center">
+      <button class="btn-primary" onclick="setWrapUpAndContinue()" style="width:50%;padding:13px 18px;background:linear-gradient(135deg, #d9a21f, #fbbf24);color:#0a1628;font-size:0.92rem;font-weight:600">Iniciar cierre (3 episodios)</button>
+    </div>
+    <div style="flex-basis:100%;text-align:center;font-size:0.78rem;color:var(--text-muted);margin-top:-4px">El generador aterrizará la historia en los próximos 3 episodios.</div>` : '';
+  const displayTitle = s.title || s.theme || 'Sin título';
+  document.getElementById('conflictModalTitle').textContent = 'Historia abierta en progreso';
+  document.getElementById('conflictModalBody').innerHTML    =
+    `Historia: <strong>${displayTitle}</strong> (${epInfo}).<br><br>¿Qué quieres hacer?`;
+  document.getElementById('conflictModalBtns').innerHTML   = `
+    <div style="flex-basis:100%;display:flex;justify-content:center">
+      <button class="btn-primary" style="width:50%;background:linear-gradient(135deg, #2ba87f, #34d399);color:#0a1628" onclick="closeConflictModal();resumeStory(storyCache['${s.story_id}'])">Continuar historia</button>
+    </div>
+    ${wrapUpOption}
+    <div style="flex-basis:100%;display:flex;justify-content:center">
+      <button class="btn-danger" style="width:50%" onclick="confirmDeleteActiveStory('${s.story_id}','open')">Eliminar historia completa</button>
+    </div>
+    <div style="flex-basis:100%;display:flex;justify-content:center">
+      <button class="btn-primary" style="width:50%" onclick="closeConflictModal()">Cancelar</button>
+    </div>`;
+  document.getElementById('conflictModal').classList.remove('hidden');
+}
+
+function setWrapUpAndContinue() {
+  // Standard closure: always 3 more episodes. This gives the generator
+  // enough room to land the planned ending (setup + convergence + landing)
+  // while keeping the closure consistent across all open stories.
+  episodeTarget = activeOpenStory.episode + 3;
+  resumeStory(activeOpenStory);
+  closeConflictModal();
+}
 
 function closeConflictModal() {
   document.getElementById('conflictModal').classList.add('hidden');
 }
 
-async function confirmDeleteActiveStory(sid) {
+async function confirmDeleteActiveStory(sid, type) {
   if (!confirm('Se eliminarán todos los episodios guardados. Esta acción es permanente.')) return;
   if (driveToken) await deleteStoryFromDrive(sid);
-  activeFixedStory = null;
+  if (type === 'fixed') activeFixedStory = null;
+  if (type === 'open')  activeOpenStory  = null;
   closeConflictModal();
   await loadActiveStories();
 }
 
 function showStartAnotherModal() {
-  document.getElementById('conflictModalTitle').textContent = 'Nueva historia';
+  document.getElementById('conflictModalTitle').textContent = 'Nueva historia fija';
   document.getElementById('conflictModalBody').innerHTML    = '¿Cuántos episodios para la nueva historia?';
   document.getElementById('conflictModalBtns').innerHTML   = `
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
       <label style="font-size:0.85rem;color:var(--text-muted)">Episodios:</label>
-      <input type="number" id="newEpCount" value="${episodeTarget || 5}" min="3" max="15" class="episode-input">
+      <input type="number" id="newEpCount" value="${episodeTarget || 5}" min="2" max="20" class="episode-input">
     </div>
     <button class="btn-primary"   onclick="startAnotherFixed()">Generar</button>
     <button class="btn-secondary" onclick="closeConflictModal()">Cancelar</button>`;
@@ -2557,12 +2213,8 @@ function showStartAnotherModal() {
 }
 
 function startAnotherFixed() {
-  const raw = parseInt(document.getElementById('newEpCount')?.value);
-  const n = isNaN(raw) ? 5 : Math.max(3, Math.min(15, raw));
-  // Reset to fresh-start state so doGenerate picks new seeds and starts ep 1.
-  storyId = null; episodeNum = 0;
+  const n = parseInt(document.getElementById('newEpCount')?.value) || 5;
   episodeTarget = n;
-  document.getElementById('epCount').value = n;
   closeConflictModal();
   doGenerate();
 }
@@ -2658,7 +2310,7 @@ function connectDrive() {
 
 function disconnectDrive() {
   if (driveToken) google.accounts.oauth2.revoke(driveToken, () => {});
-  driveToken = null; folderId = null; activeFixedStory = null;
+  driveToken = null; folderId = null; activeFixedStory = null; activeOpenStory = null;
   setDriveUI('disconnected', 'Google Drive: no conectado');
   document.getElementById('trackHub').classList.add('hidden');
 }
@@ -2757,18 +2409,14 @@ async function saveQuizToDrive(extraFields = {}) {
   if (!driveToken || !folderId || !currentQuiz) return false;
   setDriveUI('busy', 'Guardando en Drive…');
   const record = {
-    id: storyId || ('story-' + Date.now()),
+    id: storyId || ('ind-' + Date.now()),
     date: new Date().toISOString(),
     title: currentQuiz.title || null,
-    mode: 'fixed',  // frozen constant Apr 2026 — individual/open modes removed
-    story_id: storyId,
+    mode: currentCfg.mode, story_id: storyId,
     episode: episodeNum || null,
-    story_status: extraFields.story_status || 'in-progress',
+    story_status: extraFields.story_status || (currentCfg.mode === 'individual' ? null : 'in-progress'),
     level: currentCfg.level, register: currentCfg.register, region: currentCfg.region,
-    setting: currentCfg.setting || null, mood: currentCfg.mood || null,
-    seed_id:         (chosenSeed    && chosenSeed.id)    || null,
-    opening_seed_id: (chosenOpening && chosenOpening.id) || null,
-    narrative_framing: currentCfg.narrative_framing || 'ai_decide',
+    theme: currentCfg.theme || null, grammar_focus: currentCfg.grammar || null,
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
     questions: currentQuiz.questions, story_bible: storyBible || null,
     planned_ending: plannedEnding || null,
@@ -2819,7 +2467,7 @@ async function saveQuizToDrive(extraFields = {}) {
 // ═══════════════════════════════════════════════
 async function loadActiveStories() {
   if (!driveToken || !folderId) return;
-  activeFixedStory = null;
+  activeFixedStory = null; activeOpenStory = null;
   document.getElementById('trackHub').classList.add('hidden');
   document.getElementById('trackSlots').innerHTML = '';
   const loadingEl = document.getElementById('driveLoading');
@@ -2840,10 +2488,7 @@ async function loadActiveStories() {
     }
     const stories = Object.values(allStories).filter(s => s.story_status === 'in-progress');
     if (!stories.length) return;
-    // All in-progress stories are now fixed-mode. Track the most recent as the
-    // active fixed story (legacy records with mode 'open' or 'individual' fold
-    // into this path too; they resume in fixed-mode flow).
-    activeFixedStory = stories[0];
+    stories.forEach(s => { if (s.mode==='fixed') activeFixedStory=s; if (s.mode==='open') activeOpenStory=s; });
     renderTrackHub(stories);
   } catch (e) { console.error('Load stories error:', e); }
   finally {
@@ -2856,21 +2501,24 @@ function renderTrackHub(stories) {
   slots.innerHTML = '';
   stories.forEach(s => {
     storyCache[s.story_id] = s;
-    // All stories are fixed-length (Apr 2026). Legacy saves with mode 'open' or 'individual'
-    // are displayed the same way and resume into the fixed-mode flow.
-    const epLabel = `Episodio ${s.episode} de ${s.episode_target || '?'}`;
-    const displayTitle = s.title || 'Sin título';
+    const modeLabel = s.mode === 'fixed' ? 'Historia Fija' : 'Historia Abierta';
+    const hasWrapUp = s.mode === 'open' && s.episode_target > 0;
+    let epLabel;
+    if      (s.mode === 'fixed')  epLabel = `Episodio ${s.episode} de ${s.episode_target || '?'}`;
+    else if (hasWrapUp)           { const r = s.episode_target - s.episode; epLabel = `${r} episodio${r!==1?'s':''} restante${r!==1?'s':''}`; }
+    else                          epLabel = `Episodio ${s.episode}`;
+    const displayTitle = s.title || s.theme || 'Sin título';
     const date = new Date(s.date).toLocaleDateString('es-ES', { day:'numeric', month:'short' });
     const div  = document.createElement('div');
     div.className = 'story-slot';
     div.innerHTML = `
       <div class="story-slot-info">
         <div class="story-slot-title">${displayTitle}</div>
-        <div class="story-slot-meta">${epLabel} · ${s.level} · ${s.register} · ${date}</div>
+        <div class="story-slot-meta">${modeLabel} · ${epLabel} · ${s.level} · ${s.register} · ${date}</div>
       </div>
       <div class="story-slot-btns">
         <button class="btn-slot-continue" onclick="handleHubContinue('${s.story_id}')">Continuar</button>
-        <button class="btn-slot-discard"  onclick="hubDeleteStory('${s.story_id}',this.closest('.story-slot'))">Eliminar</button>
+        <button class="btn-slot-discard"  onclick="hubDeleteStory('${s.story_id}','${s.mode}',this.closest('.story-slot'))">Eliminar</button>
       </div>`;
     slots.appendChild(div);
   });
@@ -2880,15 +2528,17 @@ function renderTrackHub(stories) {
 function handleHubContinue(storyIdKey) {
   const s = storyCache[storyIdKey];
   if (!s) { alert('No se encontró la historia. Reconecta Drive e intenta de nuevo.'); return; }
-  resumeStory(s);
+  if (s.mode === 'open' && !(s.episode_target > 0)) { activeOpenStory = s; showOpenStoryModal(); }
+  else resumeStory(s);
 }
 
-async function hubDeleteStory(sid, slotEl) {
+async function hubDeleteStory(sid, type, slotEl) {
   if (!confirm('Se eliminarán todos los episodios guardados. ¿Confirmar?')) return;
   slotEl.style.opacity = '0.4'; slotEl.style.pointerEvents = 'none';
   if (driveToken) await deleteStoryFromDrive(sid);
   slotEl.remove();
-  activeFixedStory = null;
+  if (type === 'fixed') activeFixedStory = null;
+  if (type === 'open')  activeOpenStory  = null;
   if (!document.getElementById('trackSlots').children.length)
     document.getElementById('trackHub').classList.add('hidden');
 }
@@ -2897,44 +2547,21 @@ async function resumeStory(s) {
   storyId = s.story_id; episodeNum = s.episode;
   episodeTarget = s.episode_target || episodeTarget || 0;
   storyBible = s.story_bible || null; prevBible = null; biblePromise = null; regenerating = false;
-  // Restore planned ending (with beat_plan) from the saved record.
+  // Restore planned ending if the saved record has one (pre-planned-ending-update records won't).
   plannedEnding = (s.planned_ending && typeof s.planned_ending === 'object') ? s.planned_ending : null;
-  // Restore chosen ending seed by looking up seed_id in the pool. If the pool
-  // failed to load OR the seed_id is missing/stale, chosenSeed falls to null
-  // and subsequent episodes use the seedless prompt branch.
-  chosenSeed = null;
-  if (s.seed_id && seedPool && Array.isArray(seedPool.seeds)) {
-    chosenSeed = seedPool.seeds.find(sd => sd.id === s.seed_id) || null;
-  }
-  // Restore chosen opening seed similarly.
-  chosenOpening = null;
-  if (s.opening_seed_id && openingPool && Array.isArray(openingPool.openings)) {
-    chosenOpening = openingPool.openings.find(o => o.id === s.opening_seed_id) || null;
-  }
-  // Restore previousPassage from the saved record's passage — this is the tail
-  // the next episode will use as its handoff anchor.
-  previousPassage = s.passage || null;
-  // Migrate old register values from legacy saves:
-  //  conversational/formal — 5-option era (pre-April 2026)
-  //  news — 3-option era "Periodístico" (removed April 2026)
-  const REGISTER_MIGRATE = { conversational: 'everyday', formal: 'literary', news: 'literary' };
+  // Migrate old register values from pre-April-2026 saves (5-option era → 3-option era)
+  const REGISTER_MIGRATE = { conversational: 'everyday', formal: 'literary' };
   const savedRegister = s.register ? (REGISTER_MIGRATE[s.register] || s.register) : null;
   cfg.level=s.level||cfg.level; cfg.register=savedRegister||cfg.register;
-  cfg.region=s.region||cfg.region;
-  cfg.mode='fixed';  // frozen Apr 2026 — never read mode from saves
-  cfg.setting = s.setting || 'surprise';
-  cfg.mood    = s.mood    || 'surprise';
-  // narrative_framing (Apr 2026 Batch 2): restored from save, defaulting to 'ai_decide' for legacy saves.
-  cfg.narrative_framing = s.narrative_framing || 'ai_decide';
-  ['level','register','region','setting','mood','narrative_framing'].forEach(key =>
+  cfg.region=s.region||cfg.region; cfg.mode=s.mode||cfg.mode;
+  ['level','register','region','mode'].forEach(key =>
     document.querySelectorAll(`[data-key="${key}"]`).forEach(b =>
       b.classList.toggle('selected', b.dataset.val === cfg[key])
     )
   );
-  // Sync the episode count input to the saved target
-  const epInp = document.getElementById('epCount');
-  if (epInp && episodeTarget) epInp.value = episodeTarget;
-  // narrative_framing restore is handled by the button-click toggle loop above (Apr 2026 Batch 2).
+  // Populate theme and grammar from saved record
+  if (s.theme) { document.getElementById('themeInput').value = s.theme; document.getElementById('surpriseMe').checked = false; document.getElementById('themeInput').disabled = false; }
+  if (s.grammar_focus) { document.getElementById('grammarInput').value = s.grammar_focus; document.getElementById('noGrammar').checked = false; document.getElementById('grammarInput').disabled = false; }
   lockParams();
   requirePw(doGenerate);
 }
@@ -2943,14 +2570,16 @@ function lockParams() {
   document.querySelectorAll('#sParams .btn-option').forEach(b => {
     b.style.pointerEvents = 'none'; b.style.opacity = '0.5';
   });
-  // grammarInput / noGrammar removed Apr 2026 Batch 2 — narrative_framing uses the btn-option
-  // pattern and is locked by the loop above alongside level/register/region/setting/mood.
-  ['seCheck'].forEach(id => {
+  ['themeInput','grammarInput'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.disabled = true; el.style.opacity = '0.5'; }
   });
-  const epInp = document.getElementById('epCount');
-  if (epInp) { epInp.disabled = true; epInp.style.opacity = '0.5'; }
+  ['surpriseMe','noGrammar','seCheck'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.disabled = true; el.style.opacity = '0.5'; }
+  });
+  const epRow = document.getElementById('episodeRow');
+  if (epRow) { const inp = document.getElementById('epCount'); if (inp) { inp.disabled = true; inp.style.opacity = '0.5'; } }
   // Show a lock indicator
   let lockMsg = document.getElementById('paramLockMsg');
   if (!lockMsg) {
@@ -2967,8 +2596,11 @@ function unlockParams() {
   document.querySelectorAll('#sParams .btn-option').forEach(b => {
     b.style.pointerEvents = ''; b.style.opacity = '';
   });
-  // grammarInput / noGrammar removed Apr 2026 Batch 2.
-  ['seCheck'].forEach(id => {
+  ['themeInput','grammarInput'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.style.opacity = ''; if (!document.getElementById(id === 'themeInput' ? 'surpriseMe' : 'noGrammar').checked) el.disabled = false; }
+  });
+  ['surpriseMe','noGrammar','seCheck'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.disabled = false; el.style.opacity = ''; }
   });

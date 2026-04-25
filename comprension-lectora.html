@@ -531,7 +531,26 @@
       border: 1px solid var(--border);
       color: var(--text-muted);
     }
-
+    .tag-reveal {
+      cursor: pointer;
+      user-select: none;
+      min-width: 210px;
+      text-align: center;
+      transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+    }    .tag-reveal:not(.is-revealed) {
+      font-style: italic;
+      text-transform: none;
+      letter-spacing: 0.02em;
+    }
+    .tag-reveal:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+      background: var(--bg-card-hover);
+    }
+    .tag-reveal.is-revealed {
+      color: var(--text-secondary);
+      border-color: var(--border-focus);
+    }
     /* ── Password modal ── */
     .modal-overlay {
       position: fixed;
@@ -2078,16 +2097,35 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
 //  RENDER QUIZ
 // ═══════════════════════════════════════════════
 const LETTERS = ['A','B','C','D'];
-
+// ── Click-to-reveal handler for the seed/apertura tags.
+//    Swaps between the masked hint and the actual value on each click.
+function toggleRevealTag(el) {
+  if (el.classList.contains('is-revealed')) {
+    el.textContent = el.dataset.masked;
+    el.classList.remove('is-revealed');
+  } else {
+    el.textContent = el.dataset.value;
+    el.classList.add('is-revealed');
+  }
+}
 function renderQuiz(quiz, seOn) {
   document.getElementById('qTitle').textContent = quiz.title;
   const tags = [currentCfg.level, currentCfg.register];
   if (currentCfg.region !== 'neutral') tags.push(currentCfg.region.replace('_',' '));
   if (currentCfg.setting && currentCfg.setting !== 'surprise') tags.push(currentCfg.setting.replace('_',' '));
   if (currentCfg.mood    && currentCfg.mood    !== 'surprise') tags.push(currentCfg.mood);
-  if (chosenSeed) tags.push(`🌱 ${chosenSeed.name}`);
-  document.getElementById('qTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
-
+  // Regular plain tags first
+  let tagsHtml = tags.map(t => `<span class="tag">${t}</span>`).join('');
+  // Then the click-to-reveal seed and apertura tags — grouped with the others in the same row
+  if (chosenSeed) {
+    const masked = '🌱 Semilla — toca';
+    tagsHtml += `<span class="tag tag-reveal" data-masked="${masked}" data-value="🌱 ${chosenSeed.name}" onclick="toggleRevealTag(this)">${masked}</span>`;
+  }
+  if (chosenOpening) {
+    const masked = '🚪 Apertura — toca';
+    tagsHtml += `<span class="tag tag-reveal" data-masked="${masked}" data-value="🚪 ${chosenOpening.name}" onclick="toggleRevealTag(this)">${masked}</span>`;
+  }
+  document.getElementById('qTags').innerHTML = tagsHtml;
   const epEl = document.getElementById('qEpisode');
   if (episodeNum > 0) {
     epEl.style.display = 'block';

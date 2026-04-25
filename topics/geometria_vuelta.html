@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Geometry of "Vuelta" — Mi Proyecto Español</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+
+      /* Trio 3 — Teal / Orange / Violet + Coral for 4th section */
+      --accent-alpha: #4ecdc4;
+      --accent-beta:  #FF9F1C;
+      --accent-gamma: #c084fc;
+      --accent-delta: #FF6B6B; 
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Option A — Interlocking circles */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%234a90d9' stroke-width='0.8'><circle cx='0' cy='0' r='20'/><circle cx='80' cy='0' r='20'/><circle cx='0' cy='80' r='20'/><circle cx='80' cy='80' r='20'/><circle cx='40' cy='40' r='20'/></svg>");
+      background-size: 80px 80px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center;
+      padding: 44px 24px 48px;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px auto 10px;
+      color: var(--accent);
+      opacity: 0.65;
+      max-width: 280px;
+    }
+    .ornament::before, .ornament::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .ornament-symbol { font-size: 1.1rem; }
+
+    .title-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      font-style: italic;
+    }
+
+    .intro-paragraph {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+      padding: 0 12px;
+    }
+
+    .intro-paragraph strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      padding: 28px 28px 22px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+    .grammar-card:hover {
+      border-top-color: #2a4a75;
+      border-right-color: #2a4a75;
+      border-bottom-color: #2a4a75;
+    }
+
+    /* Accent color assignments */
+    .card-alpha   { border-left-color: var(--accent-alpha); }
+    .card-beta    { border-left-color: var(--accent-beta); }
+    .card-gamma   { border-left-color: var(--accent-gamma); }
+    .card-delta   { border-left-color: var(--accent-delta); }
+
+    .card-alpha  .card-number { color: var(--accent-alpha);  opacity: 0.85; }
+    .card-beta   .card-number { color: var(--accent-beta);   opacity: 0.85; }
+    .card-gamma  .card-number { color: var(--accent-gamma);  opacity: 0.85; }
+    .card-delta  .card-number { color: var(--accent-delta);  opacity: 0.85; }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 12px;
+      flex-wrap: nowrap;
+    }
+    .card-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .card-title-group { flex: 1; min-width: 200px; }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .card-title .qualifier {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62em;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-left: 8px;
+    }
+    .card-title-en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+    .card-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 64px; 
+    }
+    
+    /* Image default and magnified states */
+    .card-icon img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: zoom-in;
+      position: relative;
+      z-index: 1;
+      transform-origin: right center; /* Expands to the left so it doesn't break the border */
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .card-icon img.magnified {
+      transform: scale(2.5); /* 2.5x magnification */
+      z-index: 10;
+      cursor: zoom-out;
+      box-shadow: -8px 8px 24px rgba(0, 0, 0, 0.5);
+      border-color: var(--accent);
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+    .explanation em     { color: var(--text-primary); font-style: italic; }
+    .explanation strong { color: var(--text-primary); font-weight: 600; }
+
+    .examples { list-style: none; padding: 0; margin: 0; }
+    .examples li {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    .es {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      display: block;
+      line-height: 1.3;
+    }
+    .en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .en em { color: var(--text-secondary); font-style: normal; }
+
+    .note-box {
+      background: rgba(74, 144, 217, 0.06);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 22px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.93rem;
+    }
+    .note-label {
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .note-box em { color: var(--text-primary); font-style: italic; }
+
+    @media (max-width: 600px) {
+      .title-card   { padding: 32px 18px 36px; }
+      .grammar-card { padding: 22px 20px 18px; }
+      .note-box { padding: 22px; }
+      .card-header { align-items: flex-start; }
+      .card-icon { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <div class="overline">Vocabulario & Estructura</div>
+    <h1>La geometría de «Vuelta»</h1>
+    <div class="ornament"><span class="ornament-symbol">✦</span></div>
+    <div class="title-subtitle">Stop Translating, Start Rotating</div>
+  </header>
+
+  <p class="intro-paragraph">
+    The English brain attempts to map "dar una vuelta" to highly specific verbs like walk, turn, or bother. This creates artificial complexity. In Spanish, a vuelta is purely physical geometry: it is a rotation, a spin, a loop, or a flip. By applying this spatial logic to the sentence context, every idiom immediately reveals its mechanical meaning without rote memorization.
+  </p>
+
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Dar una vuelta<span class="qualifier">(The Loop)</span></div>
+        <div class="card-title-en">TO GO FOR A WALK / DRIVE</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/vuelta_loop.png" alt="Cartoon showing driving and walking">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>Geometry:</strong> Completing a circuit / returning to origin. You traverse a path and end up back where you started.
+    </p>
+    <ul class="examples">
+      <li>
+        <span class="es">Vamos a dar una vuelta por el parque.</span>
+        <span class="en">Let's go for a walk through the park.</span>
+      </li>
+      <li>
+        <span class="es">Necesito dar una vuelta para despejar la cabeza.</span>
+        <span class="en">I need to take a walk to clear my head.</span>
+      </li>
+      <li>
+        <span class="es">El domingo fuimos a dar una vuelta en auto.</span>
+        <span class="en">On Sunday we went for a drive.</span>
+      </li>
+      <li>
+        <span class="es">¿Damos una vuelta a la manzana?</span>
+        <span class="en">Shall we walk around the block? <em>— Literal: "Shall we give a loop to the block?"</em></span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Dar(se) la vuelta<span class="qualifier">(The 180° Pivot)</span></div>
+        <div class="card-title-en">TO TURN AROUND</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/vuelta_pivot.png" alt="Cartoon showing turning around in a hall and looking back">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>Geometry:</strong> A half-rotation on an axis. <em>Meaning:</em> To physically turn around or look back. It often takes the reflexive "se" because a person is turning their own body.
+    </p>
+    <ul class="examples">
+      <li>
+        <span class="es">Se dio la vuelta cuando escuchó su nombre.</span>
+        <span class="en">He turned around when he heard his name.</span>
+      </li>
+      <li>
+        <span class="es">Date la vuelta, quiero ver cómo te queda el abrigo.</span>
+        <span class="en">Turn around, I want to see how the coat looks on you. <em>— Note: "Date" is the imperative command (Da+te).</em></span>
+      </li>
+      <li>
+        <span class="es">El perro dio la vuelta y se fue corriendo.</span>
+        <span class="en">The dog turned around and ran away.</span>
+      </li>
+      <li>
+        <span class="es">Me di la vuelta para no ver el accidente.</span>
+        <span class="en">I turned away (turned myself around) so as not to see the accident.</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Darle vueltas<span class="qualifier">(The Spinning Head)</span></div>
+        <div class="card-title-en">TO OVERTHINK / RUMINATE</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/vuelta_ruminate.png" alt="Cartoon showing overthinking and ruminating">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>Geometry:</strong> Continuous, relentless spinning inside the mind. <em>Meaning:</em> To overthink, to ruminate, to obsess over a problem. A thought is trapped in your head, spinning in circles, causing distress. Notice the plural <em>vueltas</em> (multiple spins) and the IOP <em>le</em> (applying the spins to the topic/head).
+    </p>
+    <ul class="examples">
+      <li>
+        <span class="es">Lo del ruido era lo que más le daba vueltas.</span>
+        <span class="en">The noise thing was what was bothering him the most. <em>— Literal: "was giving him the most spins."</em></span>
+      </li>
+      <li>
+        <span class="es">¡No le des más vueltas al asunto!</span>
+        <span class="en">Stop overthinking the matter! / Let it go!</span>
+      </li>
+      <li>
+        <span class="es">Llevo días dándole vueltas a tu propuesta.</span>
+        <span class="en">I've been mulling over your proposal for days. <em>— Literal: "giving spins to your proposal."</em></span>
+      </li>
+      <li>
+        <span class="es">El problema seguía dándome vueltas en la cabeza.</span>
+        <span class="en">The problem kept spinning around in my head.</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Dar vuelta<span class="qualifier">(The Flip)</span></div>
+        <div class="card-title-en">TO FLIP OVER / INVERT</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/vuelta_flip.png" alt="Cartoon showing flipping a burger and searching frantically">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>Geometry:</strong> Top-to-bottom inversion / flipping over. <em>Meaning:</em> To turn something upside down, inside out, or flip it over.
+    </p>
+    <ul class="examples">
+      <li>
+        <span class="es">Hay que dar vuelta la carne en la parrilla.</span>
+        <span class="en">You have to flip the meat on the grill.</span>
+      </li>
+      <li>
+        <span class="es">Dimos vuelta la casa buscando esas llaves.</span>
+        <span class="en">We turned the house upside down looking for those keys.</span>
+      </li>
+      <li>
+        <span class="es">Di vuelta el colchón esta mañana.</span>
+        <span class="en">I flipped the mattress this morning.</span>
+      </li>
+      <li>
+        <span class="es">Es hora de dar vuelta la página.</span>
+        <span class="en">It's time to turn the page (literally or metaphorically).</span>
+      </li>
+    </ul>
+  </article>
+
+  <section class="note-box">
+    <span class="note-label">Nota · Rioplatense Detail</span>
+    In Argentina and Uruguay, it is extremely common to drop the article <em>"la"</em> for this specific physical action (saying <em>dar vuelta</em> instead of <em>dar la vuelta</em> when flipping something).
+  </section>
+
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const images = document.querySelectorAll('.card-icon img');
+    let activeImage = null;
+
+    // Reset currently magnified image
+    const resetZoom = () => {
+      if (activeImage) {
+        activeImage.classList.remove('magnified');
+        activeImage = null;
+      }
+    };
+
+    images.forEach(img => {
+      img.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevents the document click event from firing immediately
+        
+        if (activeImage === img) {
+          // If clicking the already magnified image, zoom it back out
+          img.classList.remove('magnified');
+          activeImage = null;
+        } else {
+          // Reset any previously zoomed image, then zoom the new one
+          resetZoom();
+          img.classList.add('magnified');
+          activeImage = img;
+        }
+      });
+    });
+
+    // Zoom out if the user scrolls
+    window.addEventListener('scroll', resetZoom, { passive: true });
+
+    // Zoom out if the user clicks anywhere else on the page
+    document.addEventListener('click', resetZoom);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrenador de Verbos II</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:#0a1628;--bg-card:#111d35;--bg-card-hover:#162544;
+  --bg-input:#0d1a2f;--border:#1e3355;--border-focus:#3b6cb5;
+  --text-primary:#e2e8f0;--text-secondary:#8a9bb8;--text-muted:#5a6f8e;
+  --accent:#4a90d9;--accent-glow:rgba(74,144,217,0.15);
+  --correct:#34d399;--wrong:#f87171;--warn:#fbbf24;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{background:var(--bg-deep);}
+body{
+  font-family:'Outfit',sans-serif;
+  color:var(--text-primary);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+
+/* ── Background: Guernica photo ── */
+.bg-photo{
+  position:fixed;inset:0;
+  background:url('../assets/Guernica.webp') center/cover no-repeat;
+  filter:brightness(0.55);
+  z-index:0;
+}
+.bg-overlay{
+  position:fixed;inset:0;
+  background:rgba(10,22,40,0.55);
+  z-index:0;
+}
+
+.wrap{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:16px 16px 80px;}
+
+/* Header / back link / title */
+header.top{display:flex;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap;}
+.back{color:var(--text-muted);text-decoration:none;font-size:14px;transition:color .2s;}
+.back:hover{color:var(--accent);}
+.back::before{content:'← ';}
+h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-style:italic;}
+
+/* Screens */
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ── Speed selector (compact) ── */
+.speed-bar{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(17,29,53,0.7);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:5px 10px;
+  margin-bottom:18px;
+}
+.speed-label{
+  font-size:10px;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1px;
+  font-weight:500;
+}
+.speed-btns{display:flex;gap:4px;}
+.speed-btn{
+  padding:3px 9px;border-radius:999px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text-secondary);
+  font-family:'Outfit',sans-serif;
+  font-size:11px;font-weight:500;
+  cursor:pointer;transition:all .15s;
+}
+.speed-btn:hover{border-color:var(--border-focus);color:var(--text-primary);}
+.speed-btn.active{
+  background:linear-gradient(135deg,#3b6cb5,#4a90d9);
+  border-color:#4a90d9;
+  color:#fff;
+}
+
+/* ── Stats bar ── */
+.stats-bar{
+  padding:16px;border-radius:10px;
+  background:var(--bg-card);border:1px solid var(--border);margin-bottom:20px;
+  font-size:13px;color:var(--text-secondary);
+}
+.stats-context{
+  font-size:11px;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:0.6px;
+  margin-bottom:10px;font-weight:500;
+}
+.stats-context strong{color:var(--accent);font-weight:600;}
+.stats-main{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+.stats-main .stat-num{font-weight:600;color:var(--text-primary);font-size:18px;display:block;}
+.stats-modes{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.stats-mode-item{
+  flex:1;min-width:110px;padding:8px 10px;border-radius:8px;
+  background:var(--bg-input);border:1px solid var(--border);font-size:12px;
+}
+.stats-mode-item .mode-label{color:var(--text-muted);font-size:10px;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px;}
+.stats-mode-item .mode-pct{font-weight:600;color:var(--text-primary);font-size:15px;}
+.stats-mode-item .mode-count{color:var(--text-muted);font-size:11px;}
+.stats-footer{display:flex;justify-content:flex-end;margin-top:10px;}
+.btn-reset{
+  padding:6px 14px;border-radius:8px;border:1px solid rgba(248,113,113,0.3);
+  background:transparent;color:var(--wrong);font-family:'Outfit',sans-serif;
+  font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;
+}
+.btn-reset:hover{background:rgba(248,113,113,0.1);border-color:var(--wrong);}
+
+/* ── Menu config sections ── */
+.config-section{margin-bottom:20px;}
+.config-label{
+  font-size:13px;color:var(--text-secondary);
+  margin-bottom:8px;font-weight:500;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-opt{
+  padding:10px 18px;border-radius:10px;border:1px solid var(--border);
+  background:rgba(13,26,47,0.85);color:var(--text-secondary);
+  font-family:'Outfit',sans-serif;
+  font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;
+  backdrop-filter:blur(4px);
+}
+.btn-opt:hover:not(:disabled){border-color:#2a4a75;color:var(--text-primary);}
+.btn-opt:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-opt.sel{
+  background:linear-gradient(135deg,#3b6cb5,#4a90d9);
+  color:#fff;border-color:transparent;
+}
+
+/* ── Filter row: grouped with dividers ── */
+.filter-row{
+  display:flex;align-items:center;
+  flex-wrap:wrap;gap:6px;
+}
+.filter-group{
+  display:inline-flex;
+  gap:8px;flex-wrap:wrap;
+}
+.filter-divider{
+  width:1px;height:24px;
+  background:var(--border);
+  margin:0 8px;
+  flex-shrink:0;
+}
+.filter-group .btn-opt{
+  padding:8px 14px;
+  font-size:13px;
+}
+
+/* ── Comenzar button ── */
+.btn-start{
+  display:block;width:100%;padding:14px;
+  border:none;border-radius:10px;
+  background:linear-gradient(135deg,#3b6cb5,#4a90d9);color:#fff;
+  font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;
+  cursor:pointer;margin-top:28px;transition:opacity .2s;
+}
+.btn-start:hover{opacity:0.9;}
+.btn-start:disabled{opacity:0.4;cursor:not-allowed;}
+.start-warning{
+  font-size:12px;color:var(--warn);
+  text-align:center;margin-top:10px;
+  font-style:italic;
+}
+
+/* ── Score bar (quiz) ── */
+.score-bar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:10px 16px;border-radius:10px;background:var(--bg-card);
+  border:1px solid var(--border);margin-bottom:16px;font-size:14px;
+}
+.score-bar .counter{color:var(--text-secondary);}
+.score-bar .pct{font-weight:600;color:var(--accent);}
+.mode-indicator{
+  font-size:11px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--accent);font-weight:600;text-align:center;
+  padding:6px 12px;border-radius:8px;background:var(--accent-glow);
+  border:1px solid rgba(74,144,217,0.2);
+}
+
+/* ── Question card ── */
+.q-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:24px;margin-bottom:16px;
+}
+.q-mode-label{
+  font-size:11px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--text-muted);margin-bottom:12px;
+}
+.q-prompt{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;line-height:1.4;
+  margin-bottom:20px;
+  color:var(--text-primary);
+}
+.q-prompt.italic{font-style:italic;}
+.q-prompt .blank{
+  display:inline-block;min-width:120px;
+  border-bottom:2px dashed var(--accent);
+  margin:0 4px;
+}
+.q-helper{
+  font-size:13px;color:var(--text-muted);
+  font-style:italic;margin-bottom:16px;
+}
+
+/* ── Answer options ── */
+.options{display:flex;flex-direction:column;gap:10px;}
+.opt-btn{
+  padding:14px 18px;border-radius:10px;
+  border:1px solid var(--border);
+  background:var(--bg-input);
+  color:var(--text-primary);
+  font-family:'Outfit',sans-serif;
+  font-size:15px;font-weight:400;
+  cursor:pointer;transition:all .15s;
+  text-align:left;position:relative;
+}
+.opt-btn:hover:not(.locked){
+  border-color:#2a4a75;
+  background:var(--bg-card-hover);
+}
+.opt-btn.locked{cursor:default;}
+.opt-btn.correct-pick{
+  border-color:var(--correct);
+  background:rgba(52,211,153,0.12);
+  color:var(--correct);
+}
+.opt-btn.wrong-pick{
+  border-color:var(--wrong);
+  background:rgba(248,113,113,0.12);
+  color:var(--wrong);
+}
+.opt-btn.correct-reveal{
+  border-color:var(--correct);
+  background:rgba(52,211,153,0.06);
+}
+
+/* ── Detail-page reveal animation ── */
+@keyframes slideUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+#qDetailContainer.show{
+  animation:slideUp .25s ease;
+}
+
+/* ── Siguiente button ── */
+.btn-next{
+  display:block;width:100%;padding:14px;
+  border:none;border-radius:10px;
+  background:linear-gradient(135deg,#3b6cb5,#4a90d9);
+  color:#fff;
+  font-family:'Outfit',sans-serif;
+  font-size:15px;font-weight:600;
+  cursor:pointer;
+  margin-top:8px;
+  transition:opacity .2s;
+}
+.btn-next:hover{opacity:0.9;}
+
+/* ── Summary screen ── */
+.summary-card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:32px 24px;margin-bottom:16px;
+  text-align:center;
+}
+.summary-score{
+  font-family:'DM Serif Display',serif;
+  font-size:52px;font-style:italic;
+  margin-bottom:6px;line-height:1;
+  color:var(--text-primary);
+}
+.summary-pct{
+  font-size:24px;font-weight:600;
+  color:var(--accent);
+  margin-bottom:14px;
+}
+.summary-sub{
+  color:var(--text-secondary);
+  font-size:14px;margin-bottom:8px;
+}
+.summary-time{
+  color:var(--text-muted);font-size:12px;
+  font-style:italic;
+}
+.missed-list{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;margin-bottom:16px;
+}
+.missed-title{
+  font-size:11px;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1.2px;
+  font-weight:500;margin-bottom:14px;
+}
+.missed-item{
+  padding:12px 14px;border-radius:10px;
+  background:var(--bg-input);
+  border:1px solid var(--border);
+  margin-bottom:8px;
+}
+.missed-item:last-child{margin-bottom:0;}
+.missed-phrase{
+  font-family:'DM Serif Display',serif;
+  font-size:17px;font-style:italic;
+  color:var(--wrong);
+  margin-bottom:3px;
+}
+.missed-en{
+  font-size:13px;
+  color:var(--text-secondary);
+}
+.summary-btns{
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.summary-btns button{
+  flex:1;min-width:140px;padding:12px;
+  border-radius:10px;
+  font-family:'Outfit',sans-serif;
+  font-size:14px;font-weight:500;
+  cursor:pointer;transition:all .2s;
+}
+.btn-primary{
+  background:linear-gradient(135deg,#3b6cb5,#4a90d9);
+  color:#fff;border:none;
+}
+.btn-primary:hover{opacity:0.9;}
+.btn-ghost{
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--text-secondary);
+}
+.btn-ghost:hover{border-color:#2a4a75;color:var(--text-primary);}
+
+/* ── Verb header card (preserved from step 1) ── */
+.verb-header{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:14px;
+}
+.verb-title{
+  font-family:'DM Serif Display',serif;
+  font-size:40px;font-weight:400;font-style:italic;
+  color:var(--text-primary);line-height:1;
+}
+.audio-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(74,144,217,0.12);
+  border:1px solid rgba(74,144,217,0.3);
+  color:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;font-size:16px;
+  font-family:'Outfit',sans-serif;
+}
+.audio-btn:hover{background:rgba(74,144,217,0.22);}
+.audio-btn:disabled{opacity:0.3;cursor:not-allowed;}
+.irreg-badge{
+  margin-left:auto;
+  padding:6px 12px;border-radius:8px;
+  font-size:12px;font-weight:500;
+  font-family:'Outfit',sans-serif;
+  transition:all .15s;
+}
+.irreg-badge.regular{
+  background:rgba(138,155,184,0.1);
+  border:1px solid rgba(138,155,184,0.25);
+  color:var(--text-muted);cursor:default;
+}
+.irreg-badge.irregular{
+  background:rgba(74,144,217,0.15);
+  border:1px solid rgba(74,144,217,0.4);
+  color:var(--accent);cursor:pointer;
+}
+.irreg-badge.irregular:hover{background:rgba(74,144,217,0.22);}
+
+/* ── Generic card ── */
+.card{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px 22px;
+  margin-bottom:14px;
+}
+.card-label{
+  font-size:11px;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1.2px;
+  font-weight:500;margin-bottom:10px;
+}
+
+/* ── Context box ── */
+.context-card{
+  border:1px solid rgba(74,144,217,0.35);
+  box-shadow:0 0 0 3px rgba(74,144,217,0.04) inset;
+}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.pill{
+  font-size:11px;font-weight:500;
+  padding:4px 10px;border-radius:999px;
+  text-transform:uppercase;letter-spacing:0.5px;
+}
+.pill.grammar{background:rgba(74,144,217,0.15);color:var(--accent);border:1px solid rgba(74,144,217,0.3);}
+.pill.register{background:rgba(52,211,153,0.12);color:#6ee7b7;border:1px solid rgba(52,211,153,0.25);}
+.pill.register.colloquial{background:rgba(251,146,60,0.1);color:#fdba74;border:1px solid rgba(251,146,60,0.25);}
+.pill.register.vulgar{background:rgba(248,113,113,0.1);color:#fca5a5;border:1px solid rgba(248,113,113,0.25);}
+.pill.register.standard{background:rgba(99,102,241,0.1);color:#a5b4fc;border:1px solid rgba(99,102,241,0.25);}
+.pill.register.formal,
+.pill.register.literary,
+.pill.register.journalistic,
+.pill.register.archaic{background:rgba(192,132,252,0.1);color:#d8b4fe;border:1px solid rgba(192,132,252,0.25);}
+.pill.region{background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25);}
+
+.context-phrase{
+  font-size:12px;color:var(--text-muted);
+  font-weight:500;letter-spacing:0.3px;
+  margin-bottom:4px;
+}
+.context-phrase em{
+  font-style:normal;color:var(--text-secondary);
+  font-family:'DM Serif Display',serif;font-style:italic;
+  font-size:14px;margin-left:4px;
+}
+.ctx-phrase-en{
+  color:var(--text-muted);
+  font-size:13px;margin-left:8px;
+  font-style:italic;font-weight:400;letter-spacing:0;
+}
+.context-meaning{
+  font-family:'DM Serif Display',serif;
+  font-size:22px;font-style:italic;
+  color:var(--text-primary);
+  margin-bottom:10px;line-height:1.3;
+}
+.context-explanation{
+  font-size:14.5px;line-height:1.6;
+  color:var(--text-secondary);margin-bottom:14px;
+}
+.context-notes{
+  font-size:12.5px;line-height:1.5;
+  color:var(--text-muted);font-style:italic;
+  padding:10px 12px;
+  background:rgba(13,26,47,0.5);
+  border-left:2px solid var(--border-focus);
+  border-radius:6px;
+  margin-bottom:14px;
+}
+.context-synonyms{
+  font-size:13px;color:var(--text-muted);
+  padding-top:12px;border-top:1px solid var(--border);
+}
+.context-synonyms strong{color:var(--text-secondary);font-weight:500;margin-right:6px;}
+.syn-chip{
+  display:inline-block;padding:2px 8px;margin:0 2px;
+  border-radius:6px;
+  background:rgba(13,26,47,0.7);
+  border:1px solid var(--border);
+  color:var(--text-primary);font-style:italic;
+}
+
+/* ── Significados y usos ── */
+.usos-blurb{
+  font-size:14px;line-height:1.6;
+  color:var(--text-secondary);
+  margin-bottom:16px;padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+.use-item{
+  padding:12px 0;
+  border-bottom:1px solid rgba(30,51,85,0.5);
+}
+.use-item:last-child{border-bottom:none;padding-bottom:0;}
+.use-item:first-of-type{padding-top:4px;}
+.use-meaning{
+  display:flex;align-items:center;gap:8px;
+  font-size:15px;font-weight:500;
+  color:var(--text-primary);margin-bottom:6px;flex-wrap:wrap;
+}
+.use-meaning .reg-tag{
+  font-size:10px;padding:2px 7px;border-radius:5px;
+  background:rgba(52,211,153,0.1);color:#6ee7b7;
+  font-weight:500;text-transform:uppercase;letter-spacing:0.4px;
+}
+.use-meaning .reg-tag.colloquial{background:rgba(251,146,60,0.1);color:#fdba74;}
+.use-meaning .reg-tag.vulgar{background:rgba(248,113,113,0.1);color:#fca5a5;}
+.use-meaning .reg-tag.standard{background:rgba(99,102,241,0.1);color:#a5b4fc;}
+.use-meaning .reg-tag.formal,
+.use-meaning .reg-tag.literary,
+.use-meaning .reg-tag.journalistic,
+.use-meaning .reg-tag.archaic{background:rgba(192,132,252,0.1);color:#d8b4fe;}
+.use-example{
+  font-size:13px;color:var(--text-muted);
+  font-style:italic;
+  display:flex;align-items:flex-start;gap:8px;
+  padding-left:2px;
+}
+.use-example .audio-btn.use-audio{
+  width:24px;height:24px;font-size:11px;flex-shrink:0;margin-top:1px;
+}
+.use-example-text{flex:1;}
+.use-example-en{
+  font-size:12px;color:var(--text-muted);
+  font-style:italic;line-height:1.5;
+  padding-left:32px;margin-top:2px;
+}
+.pronominal-note{
+  margin-top:16px;padding:12px 14px;
+  background:rgba(74,144,217,0.06);
+  border-left:3px solid var(--accent);
+  border-radius:6px;
+  font-size:13.5px;line-height:1.55;
+  color:var(--text-secondary);
+}
+.pronominal-note-label{
+  font-size:10px;color:var(--accent);
+  text-transform:uppercase;letter-spacing:1px;
+  font-weight:600;margin-bottom:6px;display:block;
+}
+
+/* ── Example sentence ── */
+.example-card{
+  border:1px solid rgba(74,144,217,0.35);
+  box-shadow:0 0 0 3px rgba(74,144,217,0.04) inset;
+}
+.example-es{
+  font-family:'DM Serif Display',serif;
+  font-size:19px;font-style:italic;
+  color:var(--text-primary);
+  margin-bottom:8px;line-height:1.45;
+  display:flex;align-items:flex-start;gap:10px;
+}
+.example-es .audio-btn{width:28px;height:28px;font-size:13px;flex-shrink:0;margin-top:4px;}
+.example-es span.es-text{flex:1;}
+.example-en{
+  font-size:14px;color:var(--text-muted);
+  font-style:italic;padding-left:38px;
+}
+
+/* ── Irregularity popup ── */
+.irreg-popup{
+  display:none;position:fixed;inset:0;
+  background:rgba(10,22,40,0.85);
+  z-index:100;align-items:center;justify-content:center;padding:20px;
+  overflow-y:auto;
+}
+.irreg-popup.show{display:flex;}
+.irreg-popup-inner{
+  background:var(--bg-card);
+  border:1px solid var(--border-focus);
+  border-radius:14px;padding:24px;
+  max-width:560px;width:100%;
+  max-height:90vh;overflow-y:auto;
+}
+.irreg-popup h3{
+  font-family:'DM Serif Display',serif;
+  font-size:24px;color:var(--accent);margin-bottom:4px;
+  font-weight:400;font-style:italic;
+}
+.irreg-popup .sub{
+  font-size:12px;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:18px;
+}
+.conj-block{
+  margin-bottom:18px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+}
+.conj-block:last-of-type{border-bottom:none;margin-bottom:8px;padding-bottom:0;}
+.conj-tense{
+  font-family:'DM Serif Display',serif;
+  font-size:17px;font-style:italic;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+.conj-table{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:6px 14px;
+  font-size:14px;
+}
+.conj-subj{
+  color:var(--text-muted);
+  font-size:12.5px;
+  text-align:right;
+  align-self:center;
+}
+.conj-form{
+  color:var(--text-primary);
+  font-family:'DM Serif Display',serif;
+  font-style:italic;
+}
+.conj-single{
+  font-family:'DM Serif Display',serif;
+  font-style:italic;
+  font-size:18px;
+  color:var(--text-primary);
+}
+.conj-note{
+  font-size:13px;
+  color:var(--text-muted);
+  font-style:italic;
+  line-height:1.5;
+}
+.close-btn{
+  margin-top:6px;
+  padding:9px 20px;border-radius:8px;
+  background:transparent;border:1px solid var(--border);
+  color:var(--text-secondary);cursor:pointer;
+  font-family:'Outfit',sans-serif;font-size:13px;
+  transition:all .15s;
+}
+.close-btn:hover{border-color:var(--accent);color:var(--accent);}
+</style>
+</head>
+<body>
+
+<!-- Background image + overlay -->
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="wrap">
+
+  <!--
+    Back link target — TODO Phase 4: switch href to "entrenadores.html"
+    once the trainer hub page exists (also in interactive/ per project plan).
+    Pointing at ../index.html in the interim so the link doesn't 404.
+
+    Note the back link is screen-aware: from start → goes home; from quiz → returns to start.
+  -->
+  <header class="top">
+    <a href="../entrenadores.html" class="back" id="backLink">Entrenadores</a>
+    <h1>Entrenador de Verbos II</h1>
+  </header>
+
+  <!-- ── SPEED SELECTOR (lives outside screens — available everywhere) ── -->
+  <div class="speed-bar">
+    <span class="speed-label">Velocidad</span>
+    <div class="speed-btns" id="speed-btns">
+      <button class="speed-btn" data-rate="0.7">Lento</button>
+      <button class="speed-btn" data-rate="0.9">Normal</button>
+      <button class="speed-btn" data-rate="1.1">Rápido</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       START SCREEN
+       ════════════════════════════════════════════════ -->
+  <div id="sStart" class="screen active">
+
+    <!-- Stats bar — repaints whenever filter or view-mode changes -->
+    <div id="statsBar" class="stats-bar" style="display:none;"></div>
+
+    <!-- Verbos: view mode (todos / difíciles / sin ver) -->
+    <div class="config-section">
+      <div class="config-label">Verbos</div>
+      <div class="btn-row" id="filterBtns">
+        <button class="btn-opt sel" data-val="all">Todos</button>
+        <button class="btn-opt" data-val="trouble">Difíciles</button>
+        <button class="btn-opt" data-val="unseen">Sin ver</button>
+      </div>
+    </div>
+
+    <!-- Filtro: 9 mutually-exclusive bucket selectors, grouped by category -->
+    <div class="config-section">
+      <div class="config-label">Filtro</div>
+      <div class="filter-row" id="bucketBtns">
+        <div class="filter-group">
+          <button class="btn-opt sel" data-val="none">Sin filtro</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <button class="btn-opt" data-val="neutral">Neutral</button>
+          <button class="btn-opt" data-val="regional">Regional</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <button class="btn-opt" data-val="pronominal">Pronominal</button>
+          <button class="btn-opt" data-val="gustar">Gustar</button>
+          <button class="btn-opt" data-val="phrase">Frases</button>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <button class="btn-opt" data-val="casual">Casual</button>
+          <button class="btn-opt" data-val="elevated">Elevado</button>
+          <button class="btn-opt" data-val="general">General</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <div class="config-label">Duración de sesión</div>
+      <div class="btn-row" id="lenBtns">
+        <button class="btn-opt" data-val="10">10</button>
+        <button class="btn-opt sel" data-val="20">20</button>
+        <button class="btn-opt" data-val="40">40</button>
+      </div>
+    </div>
+
+    <div class="config-section">
+      <div class="config-label">Modo de pregunta</div>
+      <div class="btn-row" id="modeBtns">
+        <button class="btn-opt sel" data-val="rotating">Rotación</button>
+        <button class="btn-opt" data-val="en2es">EN→ES</button>
+        <button class="btn-opt" data-val="es2en">ES→EN</button>
+        <button class="btn-opt" data-val="context">Contexto</button>
+        <button class="btn-opt" data-val="oddout">Intruso</button>
+      </div>
+    </div>
+
+    <button class="btn-start" id="startBtn" onclick="startSession()">Comenzar</button>
+    <div class="start-warning" id="startWarning" style="display:none;"></div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       QUIZ SCREEN — placeholder for step 3
+       ════════════════════════════════════════════════ -->
+  <div id="sQuiz" class="screen">
+
+    <!-- Score bar (real values land in step 3) -->
+    <div class="score-bar">
+      <span class="counter" id="qCounter">— / —</span>
+      <span class="mode-indicator" id="qMode">—</span>
+      <span class="pct" id="qPct">—</span>
+    </div>
+
+    <!-- Question card — replaced by showQuestion() per question -->
+    <div id="qCard"></div>
+
+    <!--
+      Detail-page render containers — revealed by the answer handler after
+      each question. Same containers from step 1; the quiz feedback flow
+      calls render(idx) into these.
+    -->
+    <div id="qDetailContainer" style="display:none;">
+      <div class="verb-header">
+        <span class="verb-title" id="verb-title"></span>
+        <button class="audio-btn" id="verb-audio" aria-label="Pronunciar verbo">🔊</button>
+        <span class="irreg-badge" id="irreg-badge"></span>
+      </div>
+
+      <div class="card context-card">
+        <div class="card-label">Contexto</div>
+        <div class="pills" id="ctx-pills"></div>
+        <div class="context-phrase" id="ctx-phrase"></div>
+        <div class="context-meaning" id="ctx-meaning"></div>
+        <div class="context-explanation" id="ctx-explanation"></div>
+        <div class="context-notes" id="ctx-notes" style="display:none"></div>
+        <div class="context-synonyms" id="ctx-synonyms"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Significados y usos</div>
+        <div class="usos-blurb" id="usos-blurb"></div>
+        <div id="usos-list"></div>
+        <div class="pronominal-note" id="pron-note" style="display:none">
+          <span class="pronominal-note-label">Nota sobre el pronominal</span>
+          <span id="pron-note-text"></span>
+        </div>
+      </div>
+
+      <div class="card example-card">
+        <div class="card-label">Ejemplo</div>
+        <div class="example-es">
+          <button class="audio-btn" id="ex-audio" aria-label="Pronunciar ejemplo">🔊</button>
+          <span class="es-text" id="ex-es"></span>
+        </div>
+        <div class="example-en" id="ex-en"></div>
+      </div>
+    </div>
+
+    <!-- Siguiente button — revealed after answering -->
+    <div id="qNextWrap" style="display:none;">
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">Siguiente →</button>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       SUMMARY SCREEN
+       ════════════════════════════════════════════════ -->
+  <div id="sSummary" class="screen">
+    <div class="summary-card">
+      <div class="summary-score" id="summaryScore">0 / 0</div>
+      <div class="summary-pct" id="summaryPct">0%</div>
+      <div class="summary-sub" id="summarySub"></div>
+      <div class="summary-time" id="summaryTime"></div>
+    </div>
+    <div class="missed-list" id="missedList" style="display:none;">
+      <div class="missed-title">Verbos que necesitan más práctica</div>
+      <div id="missedItems"></div>
+    </div>
+    <div class="summary-btns">
+      <button class="btn-primary" onclick="restartSession()">Otra vez</button>
+      <button class="btn-ghost" onclick="backToMenu()">Menú</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- Irregularity popup — global, available from any screen -->
+<div class="irreg-popup" id="irreg-popup">
+  <div class="irreg-popup-inner">
+    <h3 id="irreg-verb"></h3>
+    <div class="sub">Tiempos irregulares</div>
+    <div id="irreg-body"></div>
+    <button class="close-btn" onclick="closeIrregPopup()">Cerrar</button>
+  </div>
+</div>
+
+<!-- ───────── Data loading ───────── -->
+<!--
+  Future letter files load here in order:
+    <script src="../datos/verbos/verbos-a-d.js"></script>
+    <script src="../datos/verbos/verbos-e-l.js"></script>
+    <script src="../datos/verbos/verbos-m-q.js"></script>
+    <script src="../datos/verbos/verbos-r-z.js"></script>
+    <script src="../datos/verbos/verbos-nuevos-1.js"></script>
+  Adding a file: one new tag here, one new spread in the combine block below.
+-->
+<script src="../datos/verbos/verbos-a-d.js"></script>
+
+<script>
+// ═══════════════════════════════════════════════
+//  Combine + index
+// ═══════════════════════════════════════════════
+const VERB_PROFILES = [
+  ...(typeof VERB_PROFILES_AD !== 'undefined' ? VERB_PROFILES_AD : [])
+];
+const VERB_CONTEXTS = [
+  ...(typeof VERB_CONTEXTS_AD !== 'undefined' ? VERB_CONTEXTS_AD : [])
+];
+const PROFILE_BY_VERB = Object.fromEntries(
+  VERB_PROFILES.map(p => [p.verb, p])
+);
+
+// Stable ID per context: array index. Stays valid as long as files load in
+// the same order, which they always do (script tags are deterministic).
+function ctxId(idx) { return idx; }
+
+// ═══════════════════════════════════════════════
+//  Filter definitions — 9 mutually-exclusive buckets
+// ═══════════════════════════════════════════════
+const FILTER_DEFS = {
+  none:       { label: 'Sin filtro',  group: null,       matches: () => true },
+  neutral:    { label: 'Neutral',     group: 'region',   matches: c => c.region === 'neutral' },
+  regional:   { label: 'Regional',    group: 'region',   matches: c => c.region === 'spain' || c.region === 'lat-am' || c.region === 'rioplatense' },
+  pronominal: { label: 'Pronominal',  group: 'grammar',  matches: c => c.grammar === 'PRON' || c.grammar === 'REFL' || c.grammar === 'RECIP' },
+  gustar:     { label: 'Gustar',      group: 'grammar',  matches: c => c.grammar === 'GUSTAR' },
+  phrase:     { label: 'Frases',      group: 'grammar',  matches: c => c.grammar === 'PHRASE' },
+  casual:     { label: 'Casual',      group: 'register', matches: c => c.register === 'everyday' || c.register === 'colloquial' || c.register === 'vulgar' },
+  elevated:   { label: 'Elevado',     group: 'register', matches: c => c.register === 'formal' || c.register === 'literary' || c.register === 'archaic' || c.register === 'journalistic' },
+  general:    { label: 'General',     group: 'register', matches: c => c.register === 'standard' || c.register === 'everyday' || c.register === 'colloquial' || c.register === 'vulgar' }
+};
+
+// Indices of contexts that match a filter. Cached because contexts don't change at runtime.
+const _poolCache = {};
+function bucketPool(filterKey) {
+  if (_poolCache[filterKey]) return _poolCache[filterKey];
+  const def = FILTER_DEFS[filterKey];
+  if (!def) return [];
+  const indices = [];
+  VERB_CONTEXTS.forEach((c, i) => { if (def.matches(c)) indices.push(i); });
+  _poolCache[filterKey] = indices;
+  return indices;
+}
+
+// ═══════════════════════════════════════════════
+//  Session config (resets when leaving the page)
+// ═══════════════════════════════════════════════
+const cfg = {
+  view:   'all',      // 'all' | 'trouble' | 'unseen' — view mode (Verbos row)
+  filter: 'none',     // one of the FILTER_DEFS keys (Filtro row)
+  len:    20,         // 10 | 20 | 40
+  mode:   'rotating'  // 'rotating' | 'en2es' | 'es2en' | 'context' | 'oddout'
+};
+
+// ═══════════════════════════════════════════════
+//  localStorage — 9-bucket stats
+// ═══════════════════════════════════════════════
+const LS_DATA = 'entrenador2_data_v1';
+const DIF_THRESHOLD = 10;   // bucket needs this many difíciles before trouble mode unlocks
+
+function _load(k, def) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; } }
+function _save(k, v)   { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+
+const emptyView  = () => ({ en2es:{t:0,c:0}, es2en:{t:0,c:0}, context:{t:0,c:0}, oddout:{t:0,c:0} });
+const emptyTodos = () => ({ views: 0, ...emptyView() });
+
+function emptyBucket() {
+  return {
+    todos: emptyTodos(),
+    dificiles: emptyView(),
+    sinver: emptyView(),
+    difPool: [],   // array of context indices (deduped at write time)
+    seen: []       // array of context indices (deduped at write time)
+  };
+}
+
+function loadAllBuckets() {
+  const data = _load(LS_DATA, null);
+  const buckets = (data && data.buckets) ? data.buckets : {};
+  // Ensure every defined filter has a bucket — adding a new filter later won't crash older saves
+  Object.keys(FILTER_DEFS).forEach(k => {
+    if (!buckets[k]) buckets[k] = emptyBucket();
+  });
+  return buckets;
+}
+function saveAllBuckets(buckets) {
+  _save(LS_DATA, { buckets });
+}
+function loadBucket(filterKey) {
+  return loadAllBuckets()[filterKey];
+}
+function saveBucket(filterKey, bucket) {
+  const all = loadAllBuckets();
+  all[filterKey] = bucket;
+  saveAllBuckets(all);
+}
+
+// Quiz hook (will be invoked from step-3 quiz logic). Records a single answer
+// against the active filter bucket. Wrong answers feed the bucket's difPool.
+// Sin-ver mode also marks the context as seen.
+function recordAnswer(filterKey, viewMode, ctxIdx, qMode, wasCorrect) {
+  const bucket = loadBucket(filterKey);
+  const record = (viewMode === 'all') ? bucket.todos
+              : (viewMode === 'trouble') ? bucket.dificiles
+              : bucket.sinver;
+
+  if (viewMode === 'all') record.views = (record.views || 0) + 1;
+  if (!record[qMode]) record[qMode] = {t:0,c:0};
+  record[qMode].t++;
+  if (wasCorrect) record[qMode].c++;
+
+  if (viewMode === 'unseen') {
+    if (!bucket.seen.includes(ctxIdx)) bucket.seen.push(ctxIdx);
+  }
+  if (!wasCorrect) {
+    if (!bucket.difPool.includes(ctxIdx)) bucket.difPool.push(ctxIdx);
+  }
+  saveBucket(filterKey, bucket);
+}
+
+// Reset only the active filter+view combination — surgical, leaves other buckets untouched.
+function resetCurrentView() {
+  const bucket = loadBucket(cfg.filter);
+  const fLabel = FILTER_DEFS[cfg.filter].label;
+  const vLabel = ({ all: 'Todos', trouble: 'Difíciles', unseen: 'Sin ver' })[cfg.view];
+
+  if (!confirm(`¿Reiniciar las estadísticas de ${vLabel} en el filtro "${fLabel}"?`)) return;
+
+  if (cfg.view === 'all')      bucket.todos = emptyTodos();
+  if (cfg.view === 'trouble')  { bucket.dificiles = emptyView(); bucket.difPool = []; }
+  if (cfg.view === 'unseen')   { bucket.sinver = emptyView(); bucket.seen = []; }
+  saveBucket(cfg.filter, bucket);
+  showStats();
+}
+
+// ═══════════════════════════════════════════════
+//  Stats bar painting
+// ═══════════════════════════════════════════════
+const VIEW_LABELS = { all: 'Todos', trouble: 'Difíciles', unseen: 'Sin ver' };
+const Q_MODE_LABELS = { en2es: 'EN→ES', es2en: 'ES→EN', context: 'Contexto', oddout: 'Intruso' };
+
+function anyModeHasData(record) {
+  return Object.keys(Q_MODE_LABELS).some(k => (record[k] || {t:0}).t > 0);
+}
+
+function showStats() {
+  const bar = document.getElementById('statsBar');
+  const bucket = loadBucket(cfg.filter);
+  const fLabel = FILTER_DEFS[cfg.filter].label;
+  const vLabel = VIEW_LABELS[cfg.view];
+
+  // Update Difíciles button enable/disable for the active bucket BEFORE deciding what to draw
+  updateDifBtn();
+
+  // Pick the right record + decide if there's anything to show
+  let record, hasData = false;
+  if (cfg.view === 'all') {
+    record = bucket.todos;
+    hasData = (record.views || 0) > 0;
+  } else if (cfg.view === 'trouble') {
+    record = bucket.dificiles;
+    hasData = anyModeHasData(record) || bucket.difPool.length > 0;
+  } else {
+    record = bucket.sinver;
+    hasData = bucket.seen.length > 0;
+  }
+
+  // The bar is visible if EITHER this view has activity OR the bucket has any difíciles
+  // (so users can see the difíciles count even when in Todos view with no answers yet).
+  if (!hasData && bucket.difPool.length === 0) {
+    bar.style.display = 'none';
+    return;
+  }
+
+  // Per-question-mode rows
+  let modesHtml = '';
+  for (const [key, lbl] of Object.entries(Q_MODE_LABELS)) {
+    const m = record[key] || { t:0, c:0 };
+    if (m.t === 0) continue;
+    const pct = Math.round(m.c / m.t * 100);
+    modesHtml += `<div class="stats-mode-item">
+      <div class="mode-label">${lbl}</div>
+      <div class="mode-pct">${pct}%</div>
+      <div class="mode-count">${m.c}/${m.t}</div>
+    </div>`;
+  }
+
+  // Main stats line
+  let mainHtml = '';
+  if (cfg.view === 'all' && (record.views || 0) > 0) {
+    mainHtml += `<div><span class="stat-num">${record.views}</span>vistas</div>`;
+  } else if (cfg.view === 'unseen') {
+    const poolSize = bucketPool(cfg.filter).length;
+    mainHtml += `<div><span class="stat-num">${bucket.seen.length} / ${poolSize}</span>progreso</div>`;
+  }
+  if (bucket.difPool.length > 0) {
+    mainHtml += `<div><span class="stat-num">${bucket.difPool.length}</span>difíciles</div>`;
+  }
+
+  // Reset button — scoped to active filter+view combination
+  let resetHtml = '';
+  let canReset = false;
+  if (cfg.view === 'all'     && (record.views || 0) > 0) canReset = true;
+  if (cfg.view === 'trouble' && (anyModeHasData(record) || bucket.difPool.length > 0)) canReset = true;
+  if (cfg.view === 'unseen'  && bucket.seen.length > 0) canReset = true;
+  if (canReset) {
+    const lbl = (cfg.view === 'trouble') ? 'Reiniciar Difíciles'
+              : (cfg.view === 'unseen')  ? 'Reiniciar Sin Ver'
+              : 'Reiniciar Todos';
+    resetHtml = `<button class="btn-reset" onclick="resetCurrentView()">${lbl}</button>`;
+  }
+
+  bar.style.display = 'block';
+  bar.innerHTML = `
+    <div class="stats-context">
+      Filtro: <strong>${fLabel}</strong> · Vista: <strong>${vLabel}</strong>
+    </div>
+    ${mainHtml ? `<div class="stats-main">${mainHtml}</div>` : ''}
+    ${modesHtml ? `<div class="stats-modes">${modesHtml}</div>` : ''}
+    ${resetHtml ? `<div class="stats-footer">${resetHtml}</div>` : ''}
+  `;
+}
+
+// Difíciles button: disabled per-bucket if difPool below threshold.
+// If currently in trouble view AND bucket goes below threshold (e.g. user
+// just switched filter to a fresh bucket), auto-revert to 'all'.
+function updateDifBtn() {
+  const bucket = loadBucket(cfg.filter);
+  const btn = document.querySelector('#filterBtns .btn-opt[data-val="trouble"]');
+  if (!btn) return;
+  if (bucket.difPool.length < DIF_THRESHOLD) {
+    btn.disabled = true;
+    if (cfg.view === 'trouble') {
+      // Snap back to all
+      btn.classList.remove('sel');
+      const allBtn = document.querySelector('#filterBtns .btn-opt[data-val="all"]');
+      if (allBtn) allBtn.classList.add('sel');
+      cfg.view = 'all';
+    }
+  } else {
+    btn.disabled = false;
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  Comenzar gating — disabled if filter pool is empty
+// ═══════════════════════════════════════════════
+function updateStartBtn() {
+  const startBtn = document.getElementById('startBtn');
+  const warning = document.getElementById('startWarning');
+  const poolSize = bucketPool(cfg.filter).length;
+  if (poolSize === 0) {
+    startBtn.disabled = true;
+    warning.style.display = 'block';
+    warning.textContent = 'No hay verbos que coincidan con este filtro.';
+    return;
+  }
+  // For sin-ver, also check there are unseen contexts left in the bucket
+  if (cfg.view === 'unseen') {
+    const bucket = loadBucket(cfg.filter);
+    const remaining = poolSize - bucket.seen.length;
+    if (remaining <= 0) {
+      startBtn.disabled = true;
+      warning.style.display = 'block';
+      warning.textContent = 'Has visto todos los verbos de este filtro. Reinicia "Sin ver" para empezar de nuevo.';
+      return;
+    }
+  }
+  // For difíciles, check there are entries in difPool
+  if (cfg.view === 'trouble') {
+    const bucket = loadBucket(cfg.filter);
+    if (bucket.difPool.length === 0) {
+      startBtn.disabled = true;
+      warning.style.display = 'block';
+      warning.textContent = 'No hay verbos difíciles aún en este filtro.';
+      return;
+    }
+  }
+  startBtn.disabled = false;
+  warning.style.display = 'none';
+}
+
+// ═══════════════════════════════════════════════
+//  Mutex button-row binding
+// ═══════════════════════════════════════════════
+function bindOptionRow(rowId, onChange) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  row.querySelectorAll('.btn-opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      row.querySelectorAll('.btn-opt').forEach(b => b.classList.remove('sel'));
+      btn.classList.add('sel');
+      onChange(btn.dataset.val, btn);
+    });
+  });
+}
+
+bindOptionRow('filterBtns', val => {
+  cfg.view = val;
+  showStats();
+  updateStartBtn();
+});
+bindOptionRow('bucketBtns', val => {
+  cfg.filter = val;
+  showStats();           // repaints bar with this bucket's data
+  updateStartBtn();
+});
+bindOptionRow('lenBtns', val => { cfg.len = +val; });
+bindOptionRow('modeBtns', val => { cfg.mode = val; });
+
+// ═══════════════════════════════════════════════
+//  Screen switching
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(id);
+  if (target) target.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function backToMenu() {
+  showScreen('sStart');
+  // The stats bar may have changed during a quiz session — repaint
+  showStats();
+  updateStartBtn();
+}
+
+// Back-link smart behavior: from start, follow the href; from quiz/summary, return to menu.
+document.getElementById('backLink').addEventListener('click', (e) => {
+  if (!document.getElementById('sStart').classList.contains('active')) {
+    e.preventDefault();
+    backToMenu();
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  Quiz engine block — defined below.
+//  Builds questions on the fly from VERB_CONTEXTS; no pre-generated question
+//  data, no per-card storage. The engine is data-shape-stable: when Sonnet
+//  enriches the master list and we swap in real letter files, this block
+//  doesn't change.
+// ═══════════════════════════════════════════════
+// ═══════════════════════════════════════════════
+//  Quiz engine — session, queue, question generators, answer handling
+// ═══════════════════════════════════════════════
+const session = {
+  active: false,
+  queue: [],         // array of context indices to drill
+  idx: 0,            // current position in queue
+  correct: 0,        // running correct count
+  total: 0,          // running total answered count
+  missed: [],        // [{ctxIdx, qMode}] for summary
+  startTime: 0,
+  filterKey: null,   // frozen at session start
+  viewMode: null,    // frozen at session start
+  qMode: null,       // 'rotating' or a specific mode — frozen at session start
+  currentQ: null     // current question object (built fresh each showQuestion)
+};
+
+const Q_MODE_DISPLAY = {
+  en2es:    'Inglés → Español',
+  es2en:    'Español → Inglés',
+  context:  'Completa la oración',
+  oddout:   '¿Cuál es el intruso?',
+  rotating: 'Rotación'
+};
+
+// ── Utilities ──
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+function pickN(arr, n) { return shuffle(arr).slice(0, n); }
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+// ── Distractor source pool, per spec ──
+// Pronominal filter → pronominal distractors. PHRASE filter → phrase distractors.
+// All other filters (including Sin filtro) → full unfiltered pool.
+function distractorSourcePool(filterKey) {
+  if (filterKey === 'pronominal') return bucketPool('pronominal');
+  if (filterKey === 'phrase')     return bucketPool('phrase');
+  return bucketPool('none');
+}
+
+// Pick `n` distractors for a target. Excludes the target and (preferentially)
+// other contexts of the same verb. If the strict pool is too small after
+// exclusions, relax the same-verb rule.
+function pickDistractors(targetIdx, n, filterKey) {
+  const target = VERB_CONTEXTS[targetIdx];
+  const source = distractorSourcePool(filterKey);
+  let pool = source.filter(i => i !== targetIdx && VERB_CONTEXTS[i].verb !== target.verb);
+  if (pool.length < n) {
+    pool = source.filter(i => i !== targetIdx);
+  }
+  if (pool.length < n) return null;
+  return pickN(pool, n);
+}
+
+// For ES→EN: prefer distractors whose English meanings differ from target's
+// and from each other so the four buttons show four distinct texts.
+function pickEs2EnDistractors(targetIdx, n, filterKey) {
+  const target = VERB_CONTEXTS[targetIdx];
+  const source = distractorSourcePool(filterKey);
+  let candidates = source.filter(i => i !== targetIdx && VERB_CONTEXTS[i].verb !== target.verb);
+  if (candidates.length < n) {
+    candidates = source.filter(i => i !== targetIdx);
+  }
+  if (candidates.length < n) return null;
+  candidates = shuffle(candidates);
+
+  const used = new Set([target.english.toLowerCase()]);
+  const picked = [];
+  for (const c of candidates) {
+    const en = VERB_CONTEXTS[c].english.toLowerCase();
+    if (used.has(en)) continue;
+    used.add(en);
+    picked.push(c);
+    if (picked.length === n) break;
+  }
+  // Fill remainder if we couldn't get n distinct-English picks
+  if (picked.length < n) {
+    for (const c of candidates) {
+      if (picked.includes(c)) continue;
+      picked.push(c);
+      if (picked.length === n) break;
+    }
+  }
+  return picked.length === n ? picked : null;
+}
+
+// ── Verb-form blanker for Context mode ──
+function regularParticiple(verb) {
+  const ending = verbEnding(verb);
+  if (!ending) return null;
+  const stem = simpleStem(verb);
+  return ending === 'ar' ? stem + 'ado' : stem + 'ido';
+}
+function regularGerund(verb) {
+  const ending = verbEnding(verb);
+  if (!ending) return null;
+  const stem = simpleStem(verb);
+  return ending === 'ar' ? stem + 'ando' : stem + 'iendo';
+}
+
+function allVerbForms(verb) {
+  const forms = new Set();
+  const head = verb.endsWith('se') ? verb.slice(0, -2) : verb;
+  const headFirst = head.split(/\s+/)[0];
+  forms.add(headFirst);
+
+  const headOnly = (formArr) => formArr ? formArr.map(f => f.split(/\s+/)[0]) : [];
+
+  for (const tense of ['presente','pretérito','imperfecto','futuro','condicional']) {
+    headOnly(regularForms(headFirst, tense)).forEach(f => forms.add(f));
+  }
+  for (const [from, to] of [['o','ue'], ['e','ie'], ['e','i']]) {
+    headOnly(presentStemChange(headFirst, from, to)).forEach(f => forms.add(f));
+  }
+  const part = regularParticiple(headFirst);
+  const ger = regularGerund(headFirst);
+  if (part) forms.add(part);
+  if (ger) forms.add(ger);
+
+  return [...forms].filter(f => f && f.length >= 2).sort((a, b) => b.length - a.length);
+}
+
+const SP_CLITICS = ['lo','la','los','las','le','les','me','te','se','nos','os'];
+// Spanish letter class — JS \b uses ASCII [a-zA-Z0-9_] only, which breaks on
+// accented forms (\bacogió\b never matches because "ó" isn't a "word char" in JS,
+// so there's no boundary between "ó" and the following space). We define our
+// own letter class and use lookbehind/lookahead for Spanish-aware boundaries.
+const SP_LETTER = 'A-Za-záéíóúüñÁÉÍÓÚÜÑ';
+
+function blankVerbForm(sentence, verb) {
+  if (!sentence) return null;
+  const forms = allVerbForms(verb);
+  const escapeRe = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const lb = '(?<![' + SP_LETTER + '])';   // Spanish-aware left boundary
+  const la = '(?![' + SP_LETTER + '])';    // Spanish-aware right boundary
+
+  // Pass 1: strict boundary match against each candidate form (longest-first)
+  for (const form of forms) {
+    const re = new RegExp(lb + escapeRe(form) + la, 'i');
+    if (re.test(sentence)) return sentence.replace(re, '___');
+  }
+  // Pass 2: form followed by an attached clitic ("Dale" = "da" + "le")
+  const cliticAlt = SP_CLITICS.join('|');
+  for (const form of forms) {
+    if (!/[aeiouáéíóú]$/i.test(form)) continue;
+    const re = new RegExp(lb + escapeRe(form) + '(' + cliticAlt + ')' + la, 'i');
+    if (re.test(sentence)) return sentence.replace(re, '___');
+  }
+  // Pass 3: stem-prefix fallback — extends to the full Spanish-letter run
+  // (catches vos imperatives like "Agarrá", and irregulars not in our generator)
+  const head = verb.endsWith('se') ? verb.slice(0, -2) : verb;
+  const headFirst = head.split(/\s+/)[0];
+  const stem = headFirst.length > 2 ? headFirst.slice(0, -2) : headFirst;
+  for (let n = stem.length; n >= 2; n--) {
+    const prefix = stem.slice(0, n);
+    const re = new RegExp(lb + escapeRe(prefix) + '[' + SP_LETTER + ']*', 'i');
+    if (re.test(sentence)) return sentence.replace(re, '___');
+  }
+  return null;
+}
+
+// ── Question builders. Each returns a question object or null if it can't be built. ──
+function buildEn2Es(targetIdx, filterKey) {
+  const distractors = pickDistractors(targetIdx, 3, filterKey);
+  if (!distractors) return null;
+  const target = VERB_CONTEXTS[targetIdx];
+  const optionIdxs = shuffle([targetIdx, ...distractors]);
+  return {
+    mode: 'en2es',
+    label: Q_MODE_DISPLAY.en2es,
+    promptText: target.english,
+    promptItalic: false,
+    options: optionIdxs.map(i => ({ idx: i, text: VERB_CONTEXTS[i].phrase })),
+    correctIdx: targetIdx
+  };
+}
+
+function buildEs2En(targetIdx, filterKey) {
+  const distractors = pickEs2EnDistractors(targetIdx, 3, filterKey);
+  if (!distractors) return null;
+  const target = VERB_CONTEXTS[targetIdx];
+  const optionIdxs = shuffle([targetIdx, ...distractors]);
+  return {
+    mode: 'es2en',
+    label: Q_MODE_DISPLAY.es2en,
+    promptText: target.phrase,
+    promptItalic: true,
+    options: optionIdxs.map(i => ({ idx: i, text: VERB_CONTEXTS[i].english })),
+    correctIdx: targetIdx
+  };
+}
+
+function buildContext(targetIdx, filterKey) {
+  const target = VERB_CONTEXTS[targetIdx];
+  const blanked = blankVerbForm(target.example.spanish, target.verb);
+  if (!blanked) return null;
+  const distractors = pickDistractors(targetIdx, 3, filterKey);
+  if (!distractors) return null;
+  const optionIdxs = shuffle([targetIdx, ...distractors]);
+  return {
+    mode: 'context',
+    label: Q_MODE_DISPLAY.context,
+    promptText: blanked.replace('___', '<span class="blank"></span>'),
+    promptItalic: false,
+    promptIsHtml: true,
+    helperText: target.example.english,
+    options: optionIdxs.map(i => ({ idx: i, text: VERB_CONTEXTS[i].phrase })),
+    correctIdx: targetIdx
+  };
+}
+
+// Intruso: 3 contexts of the target's verb shown, plus 1 from a different verb.
+// User picks the intruder. Requires the target's verb to have ≥3 contexts in
+// the available pool; otherwise this question can't be built.
+function buildOddout(targetIdx, filterKey) {
+  const target = VERB_CONTEXTS[targetIdx];
+  const sourcePool = distractorSourcePool(filterKey);
+  const siblings = sourcePool.filter(i => VERB_CONTEXTS[i].verb === target.verb);
+  if (siblings.length < 3) return null;
+  const otherSiblings = siblings.filter(i => i !== targetIdx);
+  if (otherSiblings.length < 2) return null;
+  const sameVerbGroup = [targetIdx, ...pickN(otherSiblings, 2)];
+  const intruderPool = sourcePool.filter(i => VERB_CONTEXTS[i].verb !== target.verb);
+  if (intruderPool.length === 0) return null;
+  const intruderIdx = pickRandom(intruderPool);
+
+  const optionIdxs = shuffle([...sameVerbGroup, intruderIdx]);
+  return {
+    mode: 'oddout',
+    label: Q_MODE_DISPLAY.oddout,
+    promptText: '¿Cuál de estas frases <em>no</em> es un sentido del mismo verbo?',
+    promptItalic: false,
+    promptIsHtml: true,
+    options: optionIdxs.map(i => ({ idx: i, text: VERB_CONTEXTS[i].phrase })),
+    correctIdx: intruderIdx,
+    isOddout: true
+  };
+}
+
+const QUESTION_BUILDERS = {
+  en2es:   buildEn2Es,
+  es2en:   buildEs2En,
+  context: buildContext,
+  oddout:  buildOddout
+};
+const ROTATION_ORDER = ['en2es','es2en','context','oddout'];
+
+function buildQuestionForTarget(targetIdx, sessionMode, filterKey, attemptIdx) {
+  if (sessionMode !== 'rotating') {
+    return QUESTION_BUILDERS[sessionMode](targetIdx, filterKey);
+  }
+  // Rotación: stagger the starting mode based on queue position so consecutive
+  // questions vary even when most builders succeed.
+  const start = attemptIdx % ROTATION_ORDER.length;
+  for (let off = 0; off < ROTATION_ORDER.length; off++) {
+    const m = ROTATION_ORDER[(start + off) % ROTATION_ORDER.length];
+    const q = QUESTION_BUILDERS[m](targetIdx, filterKey);
+    if (q) return q;
+  }
+  return null;
+}
+
+// ── Queue building ──
+function buildQueue(filterKey, viewMode, qMode, len) {
+  const filterPool = bucketPool(filterKey);
+  let pool;
+  if (viewMode === 'all') {
+    pool = filterPool.slice();
+  } else if (viewMode === 'trouble') {
+    const bucket = loadBucket(filterKey);
+    const filterSet = new Set(filterPool);
+    pool = bucket.difPool.filter(i => filterSet.has(i));
+  } else { // unseen
+    const bucket = loadBucket(filterKey);
+    const seenSet = new Set(bucket.seen);
+    pool = filterPool.filter(i => !seenSet.has(i));
+  }
+
+  // Oddout-only mode: restrict targets to verbs with ≥3 siblings in source pool
+  if (qMode === 'oddout') {
+    const sourcePool = distractorSourcePool(filterKey);
+    const verbCount = {};
+    sourcePool.forEach(i => {
+      const v = VERB_CONTEXTS[i].verb;
+      verbCount[v] = (verbCount[v] || 0) + 1;
+    });
+    pool = pool.filter(i => verbCount[VERB_CONTEXTS[i].verb] >= 3);
+  }
+
+  return shuffle(pool).slice(0, Math.min(len, pool.length));
+}
+
+// ═══════════════════════════════════════════════
+//  Session lifecycle
+// ═══════════════════════════════════════════════
+function startSession() {
+  const queue = buildQueue(cfg.filter, cfg.view, cfg.mode, cfg.len);
+  if (queue.length === 0) {
+    alert('No se pudo construir un quiz con esta combinación. Ajusta el filtro o la vista.');
+    return;
+  }
+  session.active = true;
+  session.queue = queue;
+  session.idx = 0;
+  session.correct = 0;
+  session.total = 0;
+  session.missed = [];
+  session.startTime = Date.now();
+  session.filterKey = cfg.filter;
+  session.viewMode = cfg.view;
+  session.qMode = cfg.mode;
+  session.currentQ = null;
+
+  showScreen('sQuiz');
+  showQuestion();
+}
+
+function restartSession() {
+  startSession();   // Otra vez: re-run with the still-current cfg
+}
+
+function showQuestion() {
+  if (session.idx >= session.queue.length) {
+    showSummary();
+    return;
+  }
+
+  // Reset detail + Siguiente from any previous question
+  document.getElementById('qDetailContainer').style.display = 'none';
+  document.getElementById('qDetailContainer').classList.remove('show');
+  document.getElementById('qNextWrap').style.display = 'none';
+
+  const targetIdx = session.queue[session.idx];
+  const q = buildQuestionForTarget(targetIdx, session.qMode, session.filterKey, session.idx);
+
+  if (!q) {
+    // Couldn't build — drop this target from the queue and try the next
+    session.queue.splice(session.idx, 1);
+    if (session.queue.length === 0) {
+      showSummary();
+      return;
+    }
+    showQuestion();
+    return;
+  }
+
+  session.currentQ = q;
+
+  // Score bar
+  document.getElementById('qCounter').textContent = `${session.idx + 1} / ${session.queue.length}`;
+  document.getElementById('qMode').textContent = (session.qMode === 'rotating')
+    ? Q_MODE_DISPLAY.rotating
+    : (Q_MODE_DISPLAY[q.mode] || q.mode);
+  document.getElementById('qPct').textContent = session.total
+    ? Math.round(session.correct / session.total * 100) + '%'
+    : '0%';
+
+  // Render the question card
+  const promptHtml = q.promptIsHtml ? q.promptText : escapeHtml(q.promptText);
+  const helperHtml = q.helperText ? `<div class="q-helper">${escapeHtml(q.helperText)}</div>` : '';
+  document.getElementById('qCard').innerHTML = `
+    <div class="q-card">
+      <div class="q-mode-label">${q.label}</div>
+      <div class="q-prompt${q.promptItalic ? ' italic' : ''}">${promptHtml}</div>
+      ${helperHtml}
+      <div class="options" id="qOptions">
+        ${q.options.map((o, btnIdx) => `
+          <button class="opt-btn" data-btn-idx="${btnIdx}" data-ctx-idx="${o.idx}">${escapeHtml(o.text)}</button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  document.querySelectorAll('#qOptions .opt-btn').forEach(btn => {
+    btn.addEventListener('click', () => handleAnswer(btn));
+  });
+
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function handleAnswer(btn) {
+  const q = session.currentQ;
+  if (!q) return;
+  const optBtns = document.querySelectorAll('#qOptions .opt-btn');
+  if ([...optBtns].some(b => b.classList.contains('locked'))) return; // already answered
+
+  const pickedCtxIdx = parseInt(btn.dataset.ctxIdx, 10);
+  const wasCorrect = (pickedCtxIdx === q.correctIdx);
+
+  // Lock and color
+  optBtns.forEach(b => {
+    b.classList.add('locked');
+    const ctxIdx = parseInt(b.dataset.ctxIdx, 10);
+    if (ctxIdx === q.correctIdx) {
+      b.classList.add(b === btn ? 'correct-pick' : 'correct-reveal');
+    } else if (b === btn) {
+      b.classList.add('wrong-pick');
+    }
+  });
+
+  // Stats credit goes to the SESSION TARGET (the queue entry).
+  // For Intruso, the target is one of the same-verb group; the picked answer is
+  // the intruder. recordAnswer credits the target either way.
+  const targetIdx = session.queue[session.idx];
+  recordAnswer(session.filterKey, session.viewMode, targetIdx, q.mode, wasCorrect);
+
+  session.total++;
+  if (wasCorrect) session.correct++;
+  else session.missed.push({ ctxIdx: targetIdx, qMode: q.mode });
+
+  document.getElementById('qPct').textContent =
+    Math.round(session.correct / session.total * 100) + '%';
+
+  // Reveal target's detail page (we always show the queue-entry context, even
+  // when Intruso's "right answer" was the intruder)
+  render(targetIdx);
+  const detailEl = document.getElementById('qDetailContainer');
+  detailEl.style.display = 'block';
+  detailEl.classList.remove('show');
+  void detailEl.offsetWidth;   // re-trigger animation
+  detailEl.classList.add('show');
+
+  const isLast = session.idx === session.queue.length - 1;
+  document.getElementById('btnNext').textContent = isLast ? 'Resumen →' : 'Siguiente →';
+  document.getElementById('qNextWrap').style.display = 'block';
+}
+
+function nextQuestion() {
+  session.idx++;
+  showQuestion();
+}
+
+// ═══════════════════════════════════════════════
+//  Summary screen
+// ═══════════════════════════════════════════════
+function showSummary() {
+  const total = session.total;
+  const correct = session.correct;
+  const pct = total ? Math.round(correct / total * 100) : 0;
+  const elapsedMs = Date.now() - session.startTime;
+  const mins = Math.floor(elapsedMs / 60000);
+  const secs = Math.floor((elapsedMs % 60000) / 1000);
+
+  document.getElementById('summaryScore').textContent = `${correct} / ${total}`;
+  document.getElementById('summaryPct').textContent = pct + '%';
+
+  const subBits = [];
+  subBits.push(`Filtro: ${FILTER_DEFS[session.filterKey].label}`);
+  subBits.push(`Vista: ${VIEW_LABELS[session.viewMode]}`);
+  if (session.qMode !== 'rotating') subBits.push(`Modo: ${Q_MODE_DISPLAY[session.qMode]}`);
+  document.getElementById('summarySub').textContent = subBits.join(' · ');
+
+  const timeStr = mins > 0 ? `${mins} min ${secs}s` : `${secs}s`;
+  document.getElementById('summaryTime').textContent = `Tiempo: ${timeStr}`;
+
+  const missedList = document.getElementById('missedList');
+  const missedItems = document.getElementById('missedItems');
+  if (session.missed.length === 0) {
+    missedList.style.display = 'none';
+  } else {
+    missedItems.innerHTML = session.missed.map(m => {
+      const c = VERB_CONTEXTS[m.ctxIdx];
+      return `<div class="missed-item">
+        <div class="missed-phrase">${escapeHtml(c.phrase)}</div>
+        <div class="missed-en">${escapeHtml(c.english)}</div>
+      </div>`;
+    }).join('');
+    missedList.style.display = 'block';
+  }
+
+  session.active = false;
+  showScreen('sSummary');
+}
+
+// ═══════════════════════════════════════════════
+//  TTS: speed selector + voice helper
+// ═══════════════════════════════════════════════
+const SPEED_KEY = 'entrenador_speech_rate';
+const DEFAULT_RATE = 0.9;
+const VALID_RATES = [0.7, 0.9, 1.1];
+
+function getRate() {
+  const stored = parseFloat(localStorage.getItem(SPEED_KEY));
+  return VALID_RATES.includes(stored) ? stored : DEFAULT_RATE;
+}
+function setRate(rate) {
+  if (!VALID_RATES.includes(rate)) return;
+  localStorage.setItem(SPEED_KEY, String(rate));
+  paintSpeedButtons();
+}
+function paintSpeedButtons() {
+  const current = getRate();
+  document.querySelectorAll('.speed-btn').forEach(btn => {
+    const r = parseFloat(btn.dataset.rate);
+    btn.classList.toggle('active', r === current);
+  });
+}
+document.querySelectorAll('.speed-btn').forEach(btn => {
+  btn.addEventListener('click', () => setRate(parseFloat(btn.dataset.rate)));
+});
+paintSpeedButtons();
+
+let voices = [];
+function loadVoices() { voices = speechSynthesis.getVoices(); }
+loadVoices();
+speechSynthesis.onvoiceschanged = loadVoices;
+
+function speak(text) {
+  if (!text || text.startsWith('[')) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  const preferred = voices.find(v => v.lang === 'es-AR')
+                 || voices.find(v => v.lang === 'es-419')
+                 || voices.find(v => v.lang === 'es-MX')
+                 || voices.find(v => v.lang && v.lang.startsWith('es'));
+  if (preferred) {
+    u.voice = preferred;
+    u.lang = preferred.lang;
+  } else {
+    u.lang = 'es-ES';
+  }
+  u.rate = getRate();
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Conjugator (preserved from step 1 — unchanged)
+// ═══════════════════════════════════════════════
+const CONJ_SUBJ = ['yo','tú','él/ella/ud.','nosotros','vosotros','ellos/ellas/uds.'];
+
+const REG_END = {
+  presente:    { ar:['o','as','a','amos','áis','an'],
+                 er:['o','es','e','emos','éis','en'],
+                 ir:['o','es','e','imos','ís','en'] },
+  pretérito:   { ar:['é','aste','ó','amos','asteis','aron'],
+                 er:['í','iste','ió','imos','isteis','ieron'],
+                 ir:['í','iste','ió','imos','isteis','ieron'] },
+  imperfecto:  { ar:['aba','abas','aba','ábamos','abais','aban'],
+                 er:['ía','ías','ía','íamos','íais','ían'],
+                 ir:['ía','ías','ía','íamos','íais','ían'] },
+  futuro:      { ar:['é','ás','á','emos','éis','án'],
+                 er:['é','ás','á','emos','éis','án'],
+                 ir:['é','ás','á','emos','éis','án'] },
+  condicional: { ar:['ía','ías','ía','íamos','íais','ían'],
+                 er:['ía','ías','ía','íamos','íais','ían'],
+                 ir:['ía','ías','ía','íamos','íais','ían'] }
+};
+
+function stripPron(verb) {
+  return verb.endsWith('se') ? verb.slice(0, -2) : verb;
+}
+function splitPhrase(verb) {
+  const stripped = stripPron(verb);
+  const parts = stripped.split(/\s+/);
+  return { head: parts[0], tail: parts.length > 1 ? ' ' + parts.slice(1).join(' ') : '' };
+}
+function verbEnding(verb) {
+  const head = splitPhrase(verb).head;
+  const last2 = head.slice(-2);
+  return ['ar','er','ir'].includes(last2) ? last2 : null;
+}
+function simpleStem(verb) { return splitPhrase(verb).head.slice(0, -2); }
+function fullStem(verb)   { return splitPhrase(verb).head; }
+
+function regularForms(verb, tense) {
+  const ending = verbEnding(verb);
+  if (!ending || !REG_END[tense]) return null;
+  const stem = (tense === 'futuro' || tense === 'condicional') ? fullStem(verb) : simpleStem(verb);
+  const tail = splitPhrase(verb).tail;
+  return REG_END[tense][ending].map(e => stem + e + tail);
+}
+
+function presentStemChange(verb, fromV, toV) {
+  const ending = verbEnding(verb);
+  if (!ending) return null;
+  const baseStem = simpleStem(verb);
+  const tail = splitPhrase(verb).tail;
+  const idx = baseStem.lastIndexOf(fromV);
+  const changedStem = idx >= 0
+    ? baseStem.slice(0, idx) + toV + baseStem.slice(idx + fromV.length)
+    : baseStem;
+  const endings = REG_END.presente[ending];
+  return endings.map((e, i) => {
+    const stressed = [0,1,2,5].includes(i);
+    return (stressed ? changedStem : baseStem) + e + tail;
+  });
+}
+
+function yoZcoForm(verb) {
+  const head = splitPhrase(verb).head;
+  if (head.endsWith('cer')) return head.slice(0, -3) + 'zco';
+  if (head.endsWith('cir')) return head.slice(0, -3) + 'zco';
+  return null;
+}
+
+const FULLY_IRREGULAR = {
+  dar: {
+    presente:  ['doy','das','da','damos','dais','dan'],
+    pretérito: ['di','diste','dio','dimos','disteis','dieron']
+  },
+  ser: {
+    presente:   ['soy','eres','es','somos','sois','son'],
+    pretérito:  ['fui','fuiste','fue','fuimos','fuisteis','fueron'],
+    imperfecto: ['era','eras','era','éramos','erais','eran']
+  },
+  ir: {
+    presente:   ['voy','vas','va','vamos','vais','van'],
+    pretérito:  ['fui','fuiste','fue','fuimos','fuisteis','fueron'],
+    imperfecto: ['iba','ibas','iba','íbamos','ibais','iban']
+  },
+  haber: {
+    presente:   ['he','has','ha','hemos','habéis','han'],
+    pretérito:  ['hube','hubiste','hubo','hubimos','hubisteis','hubieron']
+  },
+  // Common bases below — derivatives use prefix logic in buildConjugationPlan,
+  // so e.g. `convenir` → `irregular (venir)` renders as `convengo, convienes, ...`
+  poner: {
+    presente:    ['pongo','pones','pone','ponemos','ponéis','ponen'],
+    pretérito:   ['puse','pusiste','puso','pusimos','pusisteis','pusieron'],
+    futuro:      ['pondré','pondrás','pondrá','pondremos','pondréis','pondrán'],
+    condicional: ['pondría','pondrías','pondría','pondríamos','pondríais','pondrían'],
+    participio:  'puesto'
+  },
+  venir: {
+    presente:    ['vengo','vienes','viene','venimos','venís','vienen'],
+    pretérito:   ['vine','viniste','vino','vinimos','vinisteis','vinieron'],
+    futuro:      ['vendré','vendrás','vendrá','vendremos','vendréis','vendrán'],
+    condicional: ['vendría','vendrías','vendría','vendríamos','vendríais','vendrían'],
+    gerundio:    'viniendo'
+  },
+  hacer: {
+    presente:    ['hago','haces','hace','hacemos','hacéis','hacen'],
+    pretérito:   ['hice','hiciste','hizo','hicimos','hicisteis','hicieron'],
+    futuro:      ['haré','harás','hará','haremos','haréis','harán'],
+    condicional: ['haría','harías','haría','haríamos','haríais','harían'],
+    participio:  'hecho'
+  },
+  // Sonnet has used `irregular (deshacer)` for deshacerse — handle as separate
+  // entry so the derivative path doesn't have to chain through hacer + des-
+  deshacer: {
+    presente:    ['deshago','deshaces','deshace','deshacemos','deshacéis','deshacen'],
+    pretérito:   ['deshice','deshiciste','deshizo','deshicimos','deshicisteis','deshicieron'],
+    futuro:      ['desharé','desharás','deshará','desharemos','desharéis','desharán'],
+    condicional: ['desharía','desharías','desharía','desharíamos','desharíais','desharían'],
+    participio:  'deshecho'
+  },
+  decir: {
+    presente:    ['digo','dices','dice','decimos','decís','dicen'],
+    pretérito:   ['dije','dijiste','dijo','dijimos','dijisteis','dijeron'],
+    futuro:      ['diré','dirás','dirá','diremos','diréis','dirán'],
+    condicional: ['diría','dirías','diría','diríamos','diríais','dirían'],
+    gerundio:    'diciendo',
+    participio:  'dicho'
+  },
+  tener: {
+    presente:    ['tengo','tienes','tiene','tenemos','tenéis','tienen'],
+    pretérito:   ['tuve','tuviste','tuvo','tuvimos','tuvisteis','tuvieron'],
+    futuro:      ['tendré','tendrás','tendrá','tendremos','tendréis','tendrán'],
+    condicional: ['tendría','tendrías','tendría','tendríamos','tendríais','tendrían']
+  },
+  traer: {
+    presente:   ['traigo','traes','trae','traemos','traéis','traen'],
+    pretérito:  ['traje','trajiste','trajo','trajimos','trajisteis','trajeron'],
+    gerundio:   'trayendo'
+  }
+};
+
+function tenseLabel(t) {
+  return ({
+    presente: 'Presente', pretérito: 'Pretérito', imperfecto: 'Imperfecto',
+    futuro: 'Futuro', condicional: 'Condicional',
+    participio: 'Participio pasado', gerundio: 'Gerundio'
+  })[t] || t;
+}
+function normalizeTense(s) {
+  s = s.trim().toLowerCase();
+  if (s.startsWith('pres')) return 'presente';
+  if (s.startsWith('pret')) return 'pretérito';
+  if (s.startsWith('imp'))  return 'imperfecto';
+  if (s.startsWith('fut'))  return 'futuro';
+  if (s.startsWith('cond')) return 'condicional';
+  if (s.startsWith('part') || s === 'pp' || s === 'pdo') return 'participio';
+  if (s.startsWith('ger'))  return 'gerundio';
+  return null;
+}
+
+function applyRule(verb, tense, rule) {
+  const tail = splitPhrase(verb).tail;
+
+  // 6-form direct enumeration — when Sonnet writes all 6 forms inline.
+  // Used for irregularities the engine has no specific handler for: accent-shift
+  // verbs (actuar/continuar), -uir verbs (contribuyo), -guar verbs (averigüé),
+  // boot-pattern variants (advirtió), etc.
+  // Allowed for any indicative tense including imperfecto/futuro/condicional.
+  const commaForms = rule.split(',').map(s => s.trim()).filter(Boolean);
+  if (commaForms.length === 6 &&
+      ['presente','pretérito','imperfecto','futuro','condicional'].includes(tense)) {
+    return commaForms.map(f => f + tail);
+  }
+
+  // "yo X" overlay — e.g. "pres: yo doy", "pret: yo dije", "pres: yo conozco".
+  // Replaces just the yo slot; fills the other 5 slots from the regular table.
+  // For verbs whose other slots are also irregular, Sonnet writes a longer rule
+  // (multiple comma-separated forms or pattern notation) — those don't match here
+  // and fall through to specific handlers below.
+  const yoMatch = rule.match(/^yo\s+([^\s,;()]+)\s*$/i);
+  if (yoMatch && (tense === 'presente' || tense === 'pretérito')) {
+    const reg = regularForms(verb, tense);
+    if (reg) {
+      const out = reg.slice();
+      out[0] = yoMatch[1] + tail;
+      return out;
+    }
+  }
+
+  if (tense === 'presente') {
+    if (/^o\s*→\s*ue/.test(rule))  return presentStemChange(verb, 'o', 'ue');
+    if (/^e\s*→\s*ie/.test(rule))  return presentStemChange(verb, 'e', 'ie');
+    if (/^e\s*→\s*i\b/.test(rule)) return presentStemChange(verb, 'e', 'i');
+    if (/^yo\s*-?\s*zco/i.test(rule)) {
+      const reg = regularForms(verb, 'presente');
+      if (!reg) return null;
+      const yo = yoZcoForm(verb);
+      if (!yo) return null;
+      const out = reg.slice(); out[0] = yo + tail; return out;
+    }
+    if (/^g\s*→\s*j\s*\(yo\)/.test(rule)) {
+      const reg = regularForms(verb, 'presente');
+      if (!reg) return null;
+      const out = reg.slice(); out[0] = out[0].replace(/g(o)(\b|\s|$)/, 'j$1$2'); return out;
+    }
+  }
+  if (tense === 'pretérito') {
+    if (/^z\s*→\s*c\s*\(yo\)/.test(rule)) {
+      const reg = regularForms(verb, 'pretérito');
+      if (!reg) return null;
+      const out = reg.slice(); out[0] = out[0].replace(/z(é|í)(\b|\s|$)/, 'c$1$2'); return out;
+    }
+    if (/^g\s*→\s*gu\s*\(yo\)/.test(rule)) {
+      const reg = regularForms(verb, 'pretérito');
+      if (!reg) return null;
+      const out = reg.slice(); out[0] = out[0].replace(/g(é|í)(\b|\s|$)/, 'gu$1$2'); return out;
+    }
+    if (/^c\s*→\s*qu\s*\(yo\)/.test(rule)) {
+      const reg = regularForms(verb, 'pretérito');
+      if (!reg) return null;
+      const out = reg.slice(); out[0] = out[0].replace(/c(é|í)(\b|\s|$)/, 'qu$1$2'); return out;
+    }
+  }
+  return null;
+}
+
+function buildConjugationPlan(verb, pattern) {
+  if (!pattern || pattern === 'regular') return [];
+  const fullMatch = pattern.match(/^irregular\s*\(([^)]+)\)/i);
+  if (fullMatch) {
+    const ref = fullMatch[1].trim().toLowerCase();
+    const refData = FULLY_IRREGULAR[ref];
+    const head = splitPhrase(verb).head;
+    const tail = splitPhrase(verb).tail;
+    if (refData) {
+      // Compute prefix: how much of the verb's head precedes the reference verb?
+      // `convenir` ref `venir` → prefix 'con' → forms become 'convengo, convienes, ...'
+      // `dar` ref `dar` → prefix '' → forms unchanged
+      const prefix = head.endsWith(ref) ? head.slice(0, head.length - ref.length) : '';
+      const out = [];
+      for (const t of ['presente','pretérito','imperfecto','futuro','condicional','gerundio','participio']) {
+        if (refData[t]) {
+          const value = refData[t];
+          const forms = Array.isArray(value)
+            ? value.map(f => prefix + f + tail)
+            : prefix + value + tail;
+          out.push({ tense: t, label: tenseLabel(t), forms, note: null });
+        }
+      }
+      const introNote = prefix
+        ? `Sigue la conjugación irregular de <em>${ref}</em>, con prefijo <em>${prefix}-</em>.`
+        : `Sigue la conjugación irregular de <em>${ref}</em>.`;
+      out.unshift({ tense: null, label: null, forms: null, note: introNote });
+      return out;
+    }
+    return [{ tense: null, label: null, forms: null, note: `Conjugación irregular siguiendo el patrón de <em>${ref}</em>.` }];
+  }
+  const out = [];
+  const chunks = pattern.split(';').map(s => s.trim()).filter(Boolean);
+  for (const chunk of chunks) {
+    const colon = chunk.indexOf(':');
+    if (colon < 0) continue;
+    const tenseRaw = chunk.slice(0, colon);
+    const rule = chunk.slice(colon + 1).trim();
+    const tense = normalizeTense(tenseRaw);
+    if (!tense) {
+      out.push({ tense: null, label: tenseRaw.trim(), forms: null, note: rule });
+      continue;
+    }
+    if (tense === 'participio' || tense === 'gerundio') {
+      out.push({ tense, label: tenseLabel(tense), forms: rule, note: null });
+      continue;
+    }
+    const forms = applyRule(verb, tense, rule);
+    if (forms) {
+      out.push({ tense, label: tenseLabel(tense), forms, note: null });
+    } else {
+      out.push({ tense, label: tenseLabel(tense), forms: null, note: rule });
+    }
+  }
+  return out;
+}
+
+function renderConjugationPlan(plan) {
+  if (!plan.length) return '<div class="conj-note">Conjugación regular.</div>';
+  return plan.map(entry => {
+    if (!entry.tense && entry.note) {
+      return `<div class="conj-block"><div class="conj-note">${entry.note}</div></div>`;
+    }
+    if (entry.forms === null) {
+      return `<div class="conj-block">
+        <div class="conj-tense">${entry.label}</div>
+        <div class="conj-note">${entry.note || 'Patrón irregular no enumerado en la tabla automática.'}</div>
+      </div>`;
+    }
+    if (typeof entry.forms === 'string') {
+      return `<div class="conj-block">
+        <div class="conj-tense">${entry.label}</div>
+        <div class="conj-single">${entry.forms}</div>
+      </div>`;
+    }
+    const rows = entry.forms.map((f, i) =>
+      `<div class="conj-subj">${CONJ_SUBJ[i]}</div><div class="conj-form">${f}</div>`
+    ).join('');
+    return `<div class="conj-block">
+      <div class="conj-tense">${entry.label}</div>
+      <div class="conj-table">${rows}</div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  Detail page rendering (preserved from step 1, not yet invoked in step 2).
+//  Step 3 will call render(idx) from the quiz feedback flow after each answer.
+// ═══════════════════════════════════════════════
+function render(idx) {
+  const ctx = VERB_CONTEXTS[idx];
+  const profile = PROFILE_BY_VERB[ctx.verb];
+  if (!profile) { console.error('No profile for verb:', ctx.verb); return; }
+
+  document.getElementById('verb-title').textContent =
+    ctx.verb.charAt(0).toUpperCase() + ctx.verb.slice(1);
+  const audioBtn = document.getElementById('verb-audio');
+  audioBtn.onclick = () => speak(ctx.verb);
+
+  const badge = document.getElementById('irreg-badge');
+  if (profile.irregularity === 'regular') {
+    badge.className = 'irreg-badge regular';
+    badge.textContent = 'Regular';
+    badge.onclick = null;
+  } else {
+    badge.className = 'irreg-badge irregular';
+    badge.textContent = 'Irregular';
+    badge.onclick = () => showIrregPopup(ctx.verb, profile.irregularity);
+  }
+
+  document.getElementById('ctx-pills').innerHTML = `
+    <span class="pill grammar">${ctx.grammar}</span>
+    <span class="pill register ${ctx.register}">${ctx.register}</span>
+    <span class="pill region">${ctx.region}</span>
+  `;
+
+  const phraseEl = document.getElementById('ctx-phrase');
+  const meaningEl = document.getElementById('ctx-meaning');
+  if (ctx.phrase && ctx.phrase !== ctx.verb) {
+    // Phrase + English meaning side-by-side on the Frase line
+    phraseEl.innerHTML = `Frase: <em>${ctx.phrase}</em><span class="ctx-phrase-en">· ${ctx.english}</span>`;
+    phraseEl.style.display = 'block';
+    meaningEl.style.display = 'none';
+  } else {
+    // No separate phrase — show English meaning standalone in its own line
+    phraseEl.style.display = 'none';
+    meaningEl.textContent = ctx.english;
+    meaningEl.style.display = 'block';
+  }
+  document.getElementById('ctx-explanation').textContent = ctx.contextExplanation;
+
+  const notesEl = document.getElementById('ctx-notes');
+  if (ctx.notes && ctx.notes.trim()) {
+    notesEl.textContent = ctx.notes;
+    notesEl.style.display = 'block';
+  } else { notesEl.style.display = 'none'; }
+
+  const synEl = document.getElementById('ctx-synonyms');
+  if (ctx.synonyms && ctx.synonyms.length) {
+    synEl.innerHTML = `<strong>Sinónimos:</strong>` +
+      ctx.synonyms.map(s => `<span class="syn-chip">${s}</span>`).join('');
+    synEl.style.display = 'block';
+  } else { synEl.style.display = 'none'; }
+
+  document.getElementById('usos-blurb').textContent = profile.summary.blurb;
+  const usosList = document.getElementById('usos-list');
+  usosList.innerHTML = profile.summary.uses.map((use, i) => {
+    // use.example may be a string (legacy A-D shape) or {spanish, english}
+    const exSpanish = (typeof use.example === 'string') ? use.example : (use.example?.spanish || '');
+    const exEnglish = (typeof use.example === 'string') ? '' : (use.example?.english || '');
+    return `
+    <div class="use-item">
+      <div class="use-meaning">
+        ${use.meaning}
+        <span class="reg-tag ${use.register}">${use.register}</span>
+      </div>
+      <div class="use-example">
+        <button class="audio-btn use-audio" data-use-idx="${i}" aria-label="Pronunciar ejemplo">🔊</button>
+        <span class="use-example-text">${exSpanish}</span>
+      </div>
+      ${exEnglish ? `<div class="use-example-en">${exEnglish}</div>` : ''}
+    </div>
+  `;
+  }).join('');
+  usosList.querySelectorAll('.use-audio').forEach(btn => {
+    const useIdx = parseInt(btn.dataset.useIdx, 10);
+    btn.onclick = () => {
+      const ex = profile.summary.uses[useIdx].example;
+      speak(typeof ex === 'string' ? ex : (ex?.spanish || ''));
+    };
+  });
+
+  const pronNote = document.getElementById('pron-note');
+  if (profile.summary.pronominalNote) {
+    document.getElementById('pron-note-text').textContent = profile.summary.pronominalNote;
+    pronNote.style.display = 'block';
+  } else { pronNote.style.display = 'none'; }
+
+  const esText = ctx.example.spanish;
+  const enText = ctx.example.english;
+  document.getElementById('ex-es').textContent = esText;
+  document.getElementById('ex-en').textContent = enText;
+  const exAudio = document.getElementById('ex-audio');
+  if (esText.startsWith('[')) {
+    exAudio.disabled = true; exAudio.onclick = null;
+  } else {
+    exAudio.disabled = false; exAudio.onclick = () => speak(esText);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  Irregularity popup
+// ═══════════════════════════════════════════════
+function showIrregPopup(verb, pattern) {
+  document.getElementById('irreg-verb').textContent =
+    verb.charAt(0).toUpperCase() + verb.slice(1);
+  const plan = buildConjugationPlan(verb, pattern);
+  document.getElementById('irreg-body').innerHTML = renderConjugationPlan(plan);
+  document.getElementById('irreg-popup').classList.add('show');
+}
+function closeIrregPopup() {
+  document.getElementById('irreg-popup').classList.remove('show');
+}
+document.getElementById('irreg-popup').addEventListener('click', (e) => {
+  if (e.target.id === 'irreg-popup') closeIrregPopup();
+});
+
+// ═══════════════════════════════════════════════
+//  Init
+// ═══════════════════════════════════════════════
+showStats();
+updateStartBtn();
+</script>
+
+</body>
+</html>

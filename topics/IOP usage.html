@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>El Pronombre Objetivo: Beyond People — Mi Proyecto Español</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+
+      /* Trio 1 — Violet / Amber / Teal + Coral */
+      --accent-alpha: #c084fc;
+      --accent-beta:  #fbbf24;
+      --accent-gamma: #4ecdc4;
+      --accent-delta: #FF6B6B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M0,30 L30,0 L60,30 L30,60 Z'/><circle cx='30' cy='30' r='10'/></svg>");
+      background-size: 60px 60px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center;
+      padding: 44px 24px 48px;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+
+    .title-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      font-style: italic;
+    }
+
+    /* TTS Audio Controls */
+    .audio-controls {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 6px 16px;
+      margin-top: 24px;
+      gap: 12px;
+    }
+    .audio-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .speed-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .speed-btn:hover { color: var(--text-primary); }
+    .speed-btn.active {
+      color: var(--accent);
+      background: var(--accent-glow);
+      font-weight: 500;
+    }
+
+    .intro-paragraph {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 1.05rem;
+      margin-bottom: 32px;
+      padding: 0 12px;
+    }
+    .intro-paragraph strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      padding: 28px 28px 22px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+    .grammar-card:hover {
+      border-top-color: #2a4a75;
+      border-right-color: #2a4a75;
+      border-bottom-color: #2a4a75;
+    }
+
+    .card-alpha   { border-left-color: var(--accent-alpha); }
+    .card-beta    { border-left-color: var(--accent-beta); }
+    .card-gamma   { border-left-color: var(--accent-gamma); }
+    .card-delta   { border-left-color: var(--accent-delta); }
+
+    .card-alpha  .card-number { color: var(--accent-alpha);  opacity: 0.85; }
+    .card-beta   .card-number { color: var(--accent-beta);   opacity: 0.85; }
+    .card-gamma  .card-number { color: var(--accent-gamma);  opacity: 0.85; }
+    .card-delta  .card-number { color: var(--accent-delta);  opacity: 0.85; }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 12px;
+      flex-wrap: nowrap;
+    }
+    .card-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .card-title-group { flex: 1; min-width: 200px; }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .card-title .qualifier {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62em;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-left: 8px;
+    }
+    .card-title-en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+    .card-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 64px; 
+    }
+    .card-icon img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: zoom-in;
+      position: relative;
+      z-index: 1;
+      transform-origin: right center;
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .card-icon img.magnified {
+      transform: scale(2.5);
+      z-index: 10;
+      cursor: zoom-out;
+      box-shadow: -8px 8px 24px rgba(0, 0, 0, 0.5);
+      border-color: var(--accent);
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+    }
+    .explanation em     { color: var(--text-primary); font-style: italic; }
+    .explanation strong { color: var(--text-primary); font-weight: 600; }
+
+    .examples { list-style: none; padding: 0; margin: 0; }
+    .examples li {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    
+    .es-wrapper {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .speaker-icon {
+      width: 18px;
+      height: 18px;
+      margin-top: 4px;
+      fill: var(--text-muted);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: fill 0.2s, transform 0.1s;
+    }
+    .speaker-icon:hover { fill: var(--accent); transform: scale(1.1); }
+    .speaker-icon.playing { fill: var(--accent-gamma); }
+    
+    .es {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      display: block;
+      line-height: 1.3;
+    }
+    .en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.5;
+      padding-left: 28px;
+    }
+    .en em { color: var(--text-secondary); font-style: normal; }
+
+    /* Verb Groups & Pills */
+    .verb-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+      margin-bottom: 16px;
+    }
+    .verb-group {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .group-title {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      padding-bottom: 6px;
+    }
+    .card-alpha .group-title { color: var(--accent-alpha); }
+    .card-beta .group-title { color: var(--accent-beta); }
+    
+    .verb-list-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .verb-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 4px 12px;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+      font-style: italic;
+    }
+
+    /* Button/Badge */
+    .badge-btn {
+      background: rgba(78, 205, 196, 0.15);
+      border: 1px solid var(--accent-gamma);
+      color: var(--accent-gamma);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: all 0.2s;
+      margin-left: 12px;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .badge-btn:hover {
+      background: var(--accent-gamma);
+      color: #000;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 22, 40, 0.85);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--accent-gamma);
+      border-radius: 14px;
+      padding: 32px;
+      max-width: 600px;
+      width: 100%;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-overlay.active .modal-content {
+      transform: translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.8rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover {
+      color: var(--text-primary);
+    }
+    .modal-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      color: var(--accent-gamma);
+      margin-bottom: 8px;
+    }
+    .modal-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+    .tense-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-gamma);
+      margin-bottom: 6px;
+      display: block;
+      margin-top: 16px;
+    }
+
+    .note-box {
+      background: rgba(74, 144, 217, 0.06);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 22px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.93rem;
+    }
+    .note-label {
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .title-card   { padding: 32px 18px 36px; }
+      .grammar-card { padding: 22px 20px 18px; }
+      .note-box { padding: 22px; }
+      .card-header { align-items: flex-start; }
+      .card-icon { display: none; }
+      .modal-content { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <div class="overline">Mecánicas de Gramática</div>
+    <h1>El Pronombre Objetivo: Beyond People</h1>
+    <div class="title-subtitle">Shifting from "To Whom" to "The Target"</div>
+    
+    <div class="audio-controls">
+      <span class="audio-label">Velocidad:</span>
+      <button class="speed-btn" data-speed="0.75">0.75x</button>
+      <button class="speed-btn active" data-speed="1">1.0x</button>
+      <button class="speed-btn" data-speed="1.25">1.25x</button>
+    </div>
+  </header>
+
+  <p class="intro-paragraph">
+    In early Spanish learning, we are taught that Indirect Object Pronouns (IOPs like <em>me, te, le</em>) represent people. This creates an artificial limitation. In reality, the IOP simply represents <strong>the target receiving the action</strong>. Once you realize you can aim verbs at inanimate objects, systems, and concepts just as easily as you aim them at people, entire categories of native phrasing and idioms immediately unlock.
+  </p>
+
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">The Active Director<span class="qualifier">(Targeting People)</span></div>
+        <div class="card-title-en">COMMUNICATION & EXCHANGE</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/iop_target_person.png" alt="Person handing a document to another person">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>The Baseline:</strong> You are the subject generating the action. The pronoun points that action at a person. This is the traditional use pattern, heavily triggered by verbs of communication and exchange.
+    </p>
+
+    <div class="verb-groups">
+      <div class="verb-group">
+        <span class="group-title">💬 Comunicación</span>
+        <div class="verb-list-inline">
+          <span class="verb-pill">decir</span> <span class="verb-pill">contar</span> <span class="verb-pill">explicar</span> <span class="verb-pill">preguntar</span> <span class="verb-pill">responder</span>
+        </div>
+      </div>
+      <div class="verb-group">
+        <span class="group-title">🎁 Dar / Intercambiar</span>
+        <div class="verb-list-inline">
+          <span class="verb-pill">dar</span> <span class="verb-pill">prestar</span> <span class="verb-pill">regalar</span> <span class="verb-pill">mandar</span> <span class="verb-pill">entregar</span>
+        </div>
+      </div>
+      <div class="verb-group">
+        <span class="group-title">👁 Mostrar / Ofrecer</span>
+        <div class="verb-list-inline">
+          <span class="verb-pill">mostrar</span> <span class="verb-pill">enseñar</span> <span class="verb-pill">ofrecer</span> <span class="verb-pill">recomendar</span>
+        </div>
+      </div>
+    </div>
+
+    <ul class="examples">
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Le expliqué la situación a mi compañero.</span>
+        </div>
+        <span class="en">I explained the situation to my colleague.</span>
+      </li>
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Le mandé los archivos a Julia.</span>
+        </div>
+        <span class="en">I sent the files to Julia.</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">The System Modifier<span class="qualifier">(Targeting Things)</span></div>
+        <div class="card-title-en">MAINTENANCE & MODIFICATION</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/iop_target_system.png" alt="Person making adjustments to a machine or code">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>The Breakthrough:</strong> You are still the active subject, but now you are aiming the verb at a project, a machine, or a recipe. Notice that the <strong>Spanish Redundancy Rule</strong> still applies: you use the pronoun <em>"le"</em> alongside the specific <em>"a + target"</em>.
+    </p>
+
+    <div class="verb-groups">
+      <div class="verb-group">
+        <span class="group-title">🔧 Mantenimiento & Reparación</span>
+        <div class="verb-list-inline">
+          <span class="verb-pill">cambiar</span> <span class="verb-pill">arreglar</span> <span class="verb-pill">revisar</span>
+        </div>
+      </div>
+      <div class="verb-group">
+        <span class="group-title">⚙️ Ajuste & Modificación</span>
+        <div class="verb-list-inline">
+          <span class="verb-pill">hacer</span> <span class="verb-pill">poner</span> <span class="verb-pill">bajar</span> <span class="verb-pill">subir</span>
+        </div>
+      </div>
+      <div class="verb-group">
+        <span class="group-title">🧪 Adición & Extracción</span>
+        <div class="verb-list-inline">
+          <span class="verb-pill">agregar</span> <span class="verb-pill">quitar</span> <span class="verb-pill">sacar</span> <span class="verb-pill">añadir</span>
+        </div>
+      </div>
+    </div>
+
+    <ul class="examples">
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Voy a cambiarle la batería al control.</span>
+        </div>
+        <span class="en">I'm going to change the battery on the remote. <em>— Literal: "Change the battery to it, to the remote."</em></span>
+      </li>
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Le hice un cambio al código fuente.</span>
+        </div>
+        <span class="en">I made a change to the source code.</span>
+      </li>
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Le falta sabor, voy a agregarle sal a la salsa.</span>
+        </div>
+        <span class="en">It lacks flavor, I am going to add salt to the sauce.</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">The Idiomatic Target<span class="qualifier">(Regional Engine)</span></div>
+        <div class="card-title-en">ABSTRACT CONCEPTS & VIBES</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/iop_target_idioms.png" alt="Person putting good energy into a tough situation">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>The Cultural Application:</strong> This exact grammatical engine—aiming the verb at an abstract concept—powers idioms all over the Spanish-speaking world. The vocabulary changes by region, but the <em>"le + concept"</em> structure remains identical.
+    </p>
+    <ul class="examples">
+      <li>
+        <div class="es-wrapper" style="align-items: center;">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">No le des más vueltas al problema.</span>
+          <button class="badge-btn" onclick="openModal('modal-vueltas')">🔍 Explorar: Darle vueltas</button>
+        </div>
+        <span class="en">Don't overthink the problem anymore. <em>— (Universal)</em></span>
+      </li>
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Hay que ponerle onda al viaje.</span>
+        </div>
+        <span class="en">We have to put good vibes into the trip. <em>— (Rioplatense)</em></span>
+      </li>
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Ya le pillé el truco a este nivel.</span>
+        </div>
+        <span class="en">I already got the hang of this level. <em>— (Peninsular/Spain)</em></span>
+      </li>
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">¡Échale ganas a tus estudios!</span>
+        </div>
+        <span class="en">Put effort/guts into your studies! <em>— (LatAm/Mexico)</em></span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">The Passive Receiver<span class="qualifier">(The Exception)</span></div>
+        <div class="card-title-en">REACTIONS & GUSTAR</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/iop_target_passive.png" alt="A person being startled by a loud noise or giant object">
+      </div>
+    </div>
+    <p class="explanation">
+      <strong>The Flip:</strong> Here, the dynamic reverses. You are no longer in the driver's seat generating the action. The <em>object or situation</em> is the subject doing the verb, and you (the IOP) are simply standing in the splash zone receiving the effect.
+    </p>
+
+    <div style="margin-bottom: 20px;">
+      <span class="group-title" style="color: var(--accent-delta);">Common Verbs in this Family:</span>
+      <div class="verb-list-inline">
+        <span class="verb-pill">encantar</span> <span class="verb-pill">molestar</span> <span class="verb-pill">importar</span> <span class="verb-pill">faltar</span> <span class="verb-pill">doler</span> <span class="verb-pill">quedar</span> <span class="verb-pill">parecer</span> <span class="verb-pill">sobrar</span>
+      </div>
+    </div>
+
+    <ul class="examples">
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Me encanta el diseño de esta página.</span>
+        </div>
+        <span class="en">I love the design of this page. <em>— Literal: "The design enchants me."</em></span>
+      </li>
+      <li>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">A Juan le molesta el ruido del tráfico.</span>
+        </div>
+        <span class="en">The traffic noise bothers Juan. <em>— Literal: "The noise bothers to him, to Juan."</em></span>
+      </li>
+    </ul>
+  </article>
+
+  <section class="note-box">
+    <span class="note-label">Nota · Visualizing the Difference</span>
+    If you see a pronoun attached to the end of an infinitive (like <strong>agregarle</strong> vs <strong>gustarle</strong>), it doesn't change the dynamic. It is simply a placement rule. You must know whether the verb is an <em>Active Director</em> verb or a <em>Passive Receiver</em> verb to know who is really in the driver's seat.
+  </section>
+
+</div>
+
+<div class="modal-overlay" id="modal-vueltas">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('modal-vueltas')">&times;</button>
+    <div class="modal-title">Darle vueltas</div>
+    <div class="modal-subtitle">
+      <strong>Grammar Breakdown:</strong> <em>Dar</em> (verb) + <em>le</em> (the situation/IOP) + <em>vueltas</em> (spins/direct object). <br>Literally: To give spins to it. Idiomatically: To overthink or dwell on a situation.
+    </div>
+
+    <ul class="examples">
+      <li>
+        <span class="tense-label">Presente</span>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Siempre le das demasiadas vueltas a todo.</span>
+        </div>
+        <span class="en">You always overthink everything.</span>
+      </li>
+      <li>
+        <span class="tense-label">Pretérito</span>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Le di mil vueltas al asunto, pero no encontré solución.</span>
+        </div>
+        <span class="en">I dwelled on the matter a thousand times, but I didn't find a solution.</span>
+      </li>
+      <li>
+        <span class="tense-label">Imperfecto</span>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Mientras más le daba vueltas, menos entendía.</span>
+        </div>
+        <span class="en">The more I overthought it, the less I understood.</span>
+      </li>
+      <li>
+        <span class="tense-label">Subjuntivo</span>
+        <div class="es-wrapper">
+          <svg class="speaker-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+          <span class="es">Te aconsejo que no le des más vueltas.</span>
+        </div>
+        <span class="en">I advise you not to dwell on it anymore.</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  // Modal Functions
+  function openModal(modalId) {
+    document.getElementById(modalId).classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+
+  function closeModal(modalId) {
+    document.getElementById(modalId).classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Close modal when clicking outside of the content box
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal(this.id);
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // --- ZOOM LOGIC ---
+    const images = document.querySelectorAll('.card-icon img');
+    let activeImage = null;
+
+    const resetZoom = () => {
+      if (activeImage) {
+        activeImage.classList.remove('magnified');
+        activeImage = null;
+      }
+    };
+
+    images.forEach(img => {
+      img.addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        if (activeImage === img) {
+          img.classList.remove('magnified');
+          activeImage = null;
+        } else {
+          resetZoom();
+          img.classList.add('magnified');
+          activeImage = img;
+        }
+      });
+    });
+
+    window.addEventListener('scroll', resetZoom, { passive: true });
+    document.addEventListener('click', resetZoom);
+
+    // --- TEXT TO SPEECH LOGIC ---
+    const synth = window.speechSynthesis;
+    let preferredVoice = null;
+    let currentSpeed = 1.0;
+
+    const loadVoices = () => {
+      const voices = synth.getVoices();
+      if (voices.length === 0) return;
+
+      preferredVoice = voices.find(v => v.name.includes('Google') && v.lang === 'es-AR');
+      
+      if (!preferredVoice) {
+        preferredVoice = voices.find(v => v.name.includes('Google') && v.lang.startsWith('es'));
+      }
+      
+      if (!preferredVoice) {
+        preferredVoice = voices.find(v => v.lang.startsWith('es'));
+      }
+    };
+
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    loadVoices(); 
+
+    const speedBtns = document.querySelectorAll('.speed-btn');
+    speedBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        speedBtns.forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentSpeed = parseFloat(e.target.getAttribute('data-speed'));
+      });
+    });
+
+    const speakers = document.querySelectorAll('.speaker-icon');
+    speakers.forEach(speaker => {
+      speaker.addEventListener('click', function() {
+        synth.cancel();
+        
+        speakers.forEach(s => s.classList.remove('playing'));
+        
+        const textToRead = this.nextElementSibling.innerText;
+        
+        const utterThis = new SpeechSynthesisUtterance(textToRead);
+        if (preferredVoice) {
+          utterThis.voice = preferredVoice;
+        }
+        utterThis.lang = 'es-AR'; 
+        utterThis.rate = currentSpeed;
+        utterThis.pitch = 1.0;
+
+        this.classList.add('playing');
+        utterThis.onend = () => {
+          this.classList.remove('playing');
+        };
+        utterThis.onerror = () => {
+          this.classList.remove('playing');
+        };
+
+        synth.speak(utterThis);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

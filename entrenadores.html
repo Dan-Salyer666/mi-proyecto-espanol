@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Entrenadores · Mi Proyecto de Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg-deep:       #0a1628;
+  --bg-card:       #111d35;
+  --bg-card-hover: #162544;
+  --bg-input:      #0d1a2f;
+  --border:        #1e3355;
+  --border-focus:  #3b6cb5;
+  --text-primary:  #e2e8f0;
+  --text-secondary:#8a9bb8;
+  --text-muted:    #5a6f8e;
+  --accent:        #4a90d9;
+  --accent-glow:   rgba(74,144,217,0.15);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family:'Outfit',sans-serif;
+  background-color:var(--bg-deep);
+  color:var(--text-primary);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── Background: azulejos pattern, processed to match the deep blue palette ── */
+body::before {
+  content:''; position:fixed; inset:0;
+  background: rgba(5, 12, 26, 0.55);
+  pointer-events:none; z-index:0;
+}
+body::after {
+  content:''; position:fixed; inset:0;
+  background-image: url('assets/azulejos.webp');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  filter: brightness(0.6) saturate(0.85) hue-rotate(-8deg);
+  opacity: 0.18;
+  pointer-events:none; z-index:0;
+}
+
+@keyframes fadeSlideIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+.page {
+  position:relative; z-index:1;
+  max-width:780px; margin:0 auto;
+  padding:24px 24px 80px;
+  animation:fadeSlideIn 0.4s ease both;
+}
+
+/* ── Back link ── */
+.nav {
+  margin-bottom:32px;
+}
+.back-link {
+  color:var(--text-muted); text-decoration:none;
+  font-size:0.85rem; font-weight:400;
+  display:inline-flex; align-items:center; gap:6px;
+  transition:color 0.2s;
+}
+.back-link:hover { color:var(--accent); }
+
+/* ── Hero ── */
+.hero {
+  text-align:center; margin-bottom:48px;
+}
+.hero-eyebrow {
+  font-size:0.68rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:0.18em; color:var(--accent); margin-bottom:14px;
+}
+.hero-title {
+  font-family:'DM Serif Display',serif; font-size:3rem;
+  font-weight:400; font-style:italic;
+  background:linear-gradient(135deg,#e2e8f0 0%,#8ab4f0 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  line-height:1.15; margin-bottom:14px;
+}
+.hero-subtitle {
+  color:var(--text-secondary); font-size:0.95rem; font-weight:400;
+  margin-bottom:18px; letter-spacing:0.02em;
+}
+.hero-blurb {
+  color:var(--text-muted); font-size:0.85rem; font-weight:300;
+  max-width:520px; margin:0 auto; line-height:1.6;
+}
+
+/* ── Section label ── */
+.section-label {
+  font-size:0.65rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.14em; color:var(--text-muted);
+  margin-bottom:14px; padding:0 4px;
+  display:flex; align-items:center; gap:10px;
+}
+.section-label::after {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+
+/* ── Trainer cards ── */
+.trainer-grid {
+  display:flex; flex-direction:column; gap:14px;
+  margin-bottom:36px;
+}
+.trainer-card {
+  display:flex; flex-direction:column;
+  padding:22px 24px; border-radius:14px;
+  background:var(--bg-card); border:1px solid var(--border);
+  text-decoration:none; color:inherit;
+  transition:all 0.2s ease;
+  position:relative;
+}
+.trainer-card:hover {
+  background:var(--bg-card-hover);
+  border-color:#2a4a75;
+  transform:translateY(-1px);
+}
+.trainer-head {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  gap:14px; margin-bottom:6px;
+}
+.trainer-title {
+  font-family:'DM Serif Display',serif; font-size:1.45rem;
+  font-weight:400; color:var(--text-primary);
+  line-height:1.2;
+}
+.trainer-arrow {
+  color:var(--text-muted); font-size:1.1rem; flex-shrink:0;
+  transition:transform 0.2s, color 0.2s;
+}
+.trainer-card:hover .trainer-arrow {
+  color:var(--accent); transform:translateX(4px);
+}
+.trainer-desc {
+  color:var(--text-secondary); font-size:0.88rem;
+  font-weight:300; line-height:1.55;
+  margin-bottom:12px;
+}
+.trainer-meta {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.trainer-badge {
+  font-size:0.62rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:0.1em; padding:3px 9px; border-radius:4px;
+}
+.badge-new {
+  background:rgba(74,144,217,0.12); color:var(--accent);
+  border:1px solid rgba(74,144,217,0.3);
+}
+.badge-classic {
+  background:rgba(138,184,64,0.1); color:#8ab840;
+  border:1px solid rgba(138,184,64,0.25);
+}
+.badge-status {
+  background:transparent; color:var(--text-muted);
+  border:1px solid var(--border);
+}
+
+/* ── Coming-soon tile ── */
+.coming-soon {
+  display:flex; align-items:center; gap:12px;
+  padding:18px 22px; border-radius:12px;
+  background:rgba(74,144,217,0.04);
+  border:1px dashed rgba(74,144,217,0.2);
+  color:var(--text-muted);
+  font-size:0.85rem; font-weight:300; font-style:italic;
+}
+.coming-soon-icon { font-size:1.05rem; opacity:0.6; }
+
+/* ── Footer ── */
+.footer {
+  text-align:center; margin-top:56px;
+  color:var(--text-muted); font-size:0.72rem; font-weight:300;
+  letter-spacing:0.04em; opacity:0.6;
+}
+
+@media(max-width:600px){
+  .hero-title { font-size:2.2rem; }
+  .page { padding:18px 16px 60px; }
+  .trainer-card { padding:18px; }
+  .trainer-title { font-size:1.25rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <nav class="nav">
+    <a href="index.html" class="back-link">← Volver al inicio</a>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-eyebrow">Entrenamiento Independiente</div>
+    <h1 class="hero-title">Entrenadores</h1>
+    <p class="hero-subtitle">Práctica autónoma de vocabulario y verbos</p>
+    <p class="hero-blurb">
+      Espacio dedicado a las herramientas de práctica que no requieren IA ni contraseña.
+      Trabaja a tu ritmo, repite los verbos difíciles, y haz seguimiento de tu progreso.
+    </p>
+  </header>
+
+  <div class="section-label">Entrenadores de verbos</div>
+
+  <div class="trainer-grid">
+
+    <a class="trainer-card" href="interactive/entrenador-de-verbos2.html">
+      <div class="trainer-head">
+        <div class="trainer-title">Entrenador de Verbos 2</div>
+        <span class="trainer-arrow">›</span>
+      </div>
+      <p class="trainer-desc">
+        Nueva versión refactorizada con filtros por región, gramática y registro,
+        datos externos por archivo, y modo Intruso. Detalle de contexto debajo de
+        cada respuesta con conjugaciones generadas al vuelo.
+      </p>
+      <div class="trainer-meta">
+        <span class="trainer-badge badge-new">novedad</span>
+        <span class="trainer-badge badge-status">vista previa · datos parciales</span>
+      </div>
+    </a>
+
+    <a class="trainer-card" href="interactive/entrenador-de-verbos.html">
+      <div class="trainer-head">
+        <div class="trainer-title">Entrenador de Verbos (Original)</div>
+        <span class="trainer-arrow">›</span>
+      </div>
+      <p class="trainer-desc">
+        Versión original. 701 verbos · 4 modos de pregunta · seguimiento de
+        progreso · pronunciación. Se mantiene activa hasta que la nueva versión
+        esté completamente lista.
+      </p>
+      <div class="trainer-meta">
+        <span class="trainer-badge badge-classic">original</span>
+        <span class="trainer-badge badge-status">701 verbos</span>
+      </div>
+    </a>
+
+    <div class="coming-soon">
+      <span class="coming-soon-icon">＋</span>
+      Más entrenadores en camino — vocabulario, conjugaciones, ejercicios temáticos
+    </div>
+
+  </div>
+
+  <footer class="footer">
+    mi proyecto de español &nbsp;·&nbsp; entrenadores &nbsp;·&nbsp; en progreso continuo
+  </footer>
+
+</div>
+</body>
+</html>

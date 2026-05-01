@@ -1599,6 +1599,14 @@ function handleAnswer(btn) {
   document.getElementById('qPct').textContent =
     Math.round(session.correct / session.total * 100) + '%';
 
+  // Auto-pronounce the Spanish phrase the user was being drilled on.
+  // For Intruso, that's the target (the queue entry's verb) — NOT the picked
+  // intruder. For all other modes, the target's phrase IS the correct answer.
+  // We skip ES→EN mode since playing the English answer has no value.
+  if (q.mode !== 'es2en') {
+    speak(VERB_CONTEXTS[targetIdx].phrase);
+  }
+
   // Reveal target's detail page (we always show the queue-entry context, even
   // when Intruso's "right answer" was the intruder)
   render(targetIdx);
@@ -1695,18 +1703,20 @@ speechSynthesis.onvoiceschanged = loadVoices;
 
 function speak(text) {
   if (!text || text.startsWith('[')) return;
+  if (!window.speechSynthesis) return;
   speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  const preferred = voices.find(v => v.lang === 'es-AR')
-                 || voices.find(v => v.lang === 'es-419')
-                 || voices.find(v => v.lang === 'es-MX')
-                 || voices.find(v => v.lang && v.lang.startsWith('es'));
-  if (preferred) {
-    u.voice = preferred;
-    u.lang = preferred.lang;
-  } else {
-    u.lang = 'es-ES';
-  }
+  // Strip parentheticals like "(yo)" and " + infinitive" patterns before speaking —
+  // these are reading hints, not part of the spoken phrase.
+  const clean = text.replace(/\s*\(.*?\)/g, '').replace(/\s*\+\s*\w+/g, '').trim();
+  if (!clean) return;
+  const u = new SpeechSynthesisUtterance(clean);
+  u.lang = 'es-AR';
+  // Prefer Latin American voices; explicitly avoid Castilian Spain (lispy theta
+  // sounds robotic on Edge/Windows).
+  const latam = voices.find(v => /^es-(AR|MX|US|CO|CL|PE|419)/.test(v.lang));
+  const anyEs = voices.find(v => v.lang.startsWith('es') && !/es-ES/.test(v.lang));
+  const spain = voices.find(v => v.lang.startsWith('es'));
+  u.voice = latam || anyEs || spain || null;
   u.rate = getRate();
   speechSynthesis.speak(u);
 }

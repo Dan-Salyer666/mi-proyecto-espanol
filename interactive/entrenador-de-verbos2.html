@@ -266,6 +266,26 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
 }
 .btn-next:hover{opacity:0.9;}
 
+/* ── Todas las opciones review box ── */
+.review-box{
+  background:var(--bg-card);border:1px solid var(--border);border-radius:14px;
+  padding:16px;margin-top:16px;animation:slideUp .25s ease;
+}
+.review-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:10px;font-weight:600;display:flex;align-items:center;gap:10px;}
+.result-badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;letter-spacing:0.3px;}
+.result-badge.correct{background:rgba(52,211,153,0.15);color:var(--correct);border:1px solid rgba(52,211,153,0.3);}
+.result-badge.incorrect{background:rgba(248,113,113,0.15);color:var(--wrong);border:1px solid rgba(248,113,113,0.3);}
+.review-item{
+  display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;
+  background:var(--bg-input);border:1px solid var(--border);margin-bottom:6px;
+  font-size:13px;
+}
+.review-item.is-correct{border-color:var(--correct);background:rgba(52,211,153,0.06);}
+.review-item .rv-verb{font-weight:600;color:var(--text-primary);min-width:100px;}
+.review-item.is-correct .rv-verb{color:var(--correct);}
+.review-item .rv-def{color:var(--text-secondary);flex:1;}
+.review-item .rv-speak{background:none;border:none;cursor:pointer;font-size:14px;padding:2px 4px;}
+
 /* ── Summary screen ── */
 .summary-card{
   background:var(--bg-card);
@@ -780,6 +800,9 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
         <div class="example-en" id="ex-en"></div>
       </div>
     </div>
+
+    <!-- Todas las opciones review — revealed after answering -->
+    <div id="qAllOptions" style="display:none;"></div>
 
     <!-- Siguiente button — revealed after answering -->
     <div id="qNextWrap" style="display:none;">
@@ -1518,6 +1541,7 @@ function showQuestion() {
   document.getElementById('qDetailContainer').style.display = 'none';
   document.getElementById('qDetailContainer').classList.remove('show');
   document.getElementById('qNextWrap').style.display = 'none';
+  document.getElementById('qAllOptions').style.display = 'none';
 
   const targetIdx = session.queue[session.idx];
   const q = buildQuestionForTarget(targetIdx, session.qMode, session.filterKey, session.idx);
@@ -1615,6 +1639,24 @@ function handleAnswer(btn) {
   detailEl.classList.remove('show');
   void detailEl.offsetWidth;   // re-trigger animation
   detailEl.classList.add('show');
+
+  // ── Todas las opciones review (skip for Intruso which has its own group logic) ──
+  if (q.mode !== 'oddout') {
+    const reviewEl = document.getElementById('qAllOptions');
+    const reviewItems = q.options.map(o => {
+      const ctx = VERB_CONTEXTS[o.idx];
+      const isCor = o.idx === q.correctIdx;
+      return `<div class="review-item ${isCor ? 'is-correct' : ''}">
+        <span class="rv-verb">${escapeHtml(ctx.phrase)} <button class="rv-speak" onclick="speak('${ctx.phrase.replace(/'/g, "\\'")}')" title="Escuchar">🔊</button></span>
+        <span class="rv-def">${escapeHtml(ctx.english)}</span>
+      </div>`;
+    }).join('');
+    reviewEl.innerHTML = `<div class="review-box">
+      <div class="review-title">Todas las opciones <span class="result-badge ${wasCorrect ? 'correct' : 'incorrect'}">${wasCorrect ? '✓ Correcta' : '✗ Incorrecta'}</span></div>
+      ${reviewItems}
+    </div>`;
+    reviewEl.style.display = 'block';
+  }
 
   const isLast = session.idx === session.queue.length - 1;
   document.getElementById('btnNext').textContent = isLast ? 'Resumen →' : 'Siguiente →';

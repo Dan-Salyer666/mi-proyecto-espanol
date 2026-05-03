@@ -286,6 +286,23 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
 .review-item .rv-def{color:var(--text-secondary);flex:1;}
 .review-item .rv-speak{background:none;border:none;cursor:pointer;font-size:14px;padding:2px 4px;}
 
+/* ── Quitar de difíciles button ── */
+.btn-dif-remove{
+  display:block;width:100%;padding:12px;margin-top:8px;
+  border:2px solid var(--correct);border-radius:10px;
+  background:rgba(52,211,153,0.1);color:var(--correct);
+  font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;transition:all .2s;
+}
+.btn-dif-remove:hover{background:rgba(52,211,153,0.2);}
+.dif-removed-msg{
+  text-align:center;padding:12px;margin-top:8px;
+  font-size:13px;color:var(--correct);font-weight:600;
+}
+.summary-dif{
+  margin-top:8px;font-size:13px;color:var(--correct);font-weight:500;
+}
+
 /* ── Summary screen ── */
 .summary-card{
   background:var(--bg-card);
@@ -804,6 +821,9 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
     <!-- Todas las opciones review — revealed after answering -->
     <div id="qAllOptions" style="display:none;"></div>
 
+    <!-- Quitar de difíciles button — revealed if mastery streak ≥ 3 -->
+    <div id="qDifRemove" style="display:none;"></div>
+
     <!-- Siguiente button — revealed after answering -->
     <div id="qNextWrap" style="display:none;">
       <button class="btn-next" id="btnNext" onclick="nextQuestion()">Siguiente →</button>
@@ -820,6 +840,7 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
       <div class="summary-pct" id="summaryPct">0%</div>
       <div class="summary-sub" id="summarySub"></div>
       <div class="summary-time" id="summaryTime"></div>
+      <div class="summary-dif" id="summaryDif" style="display:none;"></div>
     </div>
     <div class="missed-list" id="missedList" style="display:none;">
       <div class="missed-title">Verbos que necesitan más práctica</div>
@@ -915,9 +936,12 @@ const cfg = {
 // ═══════════════════════════════════════════════
 const LS_DATA = 'entrenador2_data_v1';
 const DIF_THRESHOLD = 10;   // bucket needs this many difíciles before trouble mode unlocks
+const DIF_MASTERY_KEY = 'entrenador2_dif_mastery_v1';
 
 function _load(k, def) { try { return JSON.parse(localStorage.getItem(k)) || def; } catch { return def; } }
 function _save(k, v)   { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+function loadDifMastery() { return _load(DIF_MASTERY_KEY, {}); }
+function saveDifMastery(m) { _save(DIF_MASTERY_KEY, m); }
 
 const emptyView  = () => ({ en2es:{t:0,c:0}, es2en:{t:0,c:0}, context:{t:0,c:0}, oddout:{t:0,c:0} });
 const emptyTodos = () => ({ views: 0, ...emptyView() });
@@ -985,7 +1009,13 @@ function resetCurrentView() {
   if (!confirm(`¿Reiniciar las estadísticas de ${vLabel} en el filtro "${fLabel}"?`)) return;
 
   if (cfg.view === 'all')      bucket.todos = emptyTodos();
-  if (cfg.view === 'trouble')  { bucket.dificiles = emptyView(); bucket.difPool = []; }
+  if (cfg.view === 'trouble')  {
+    // Clear mastery streaks for this bucket's verbs
+    const mastery = loadDifMastery();
+    bucket.difPool.forEach(i => delete mastery[String(i)]);
+    saveDifMastery(mastery);
+    bucket.dificiles = emptyView(); bucket.difPool = [];
+  }
   if (cfg.view === 'unseen')   { bucket.sinver = emptyView(); bucket.seen = []; }
   saveBucket(cfg.filter, bucket);
   showStats();
@@ -1100,6 +1130,32 @@ function updateDifBtn() {
   }
 }
 
+// Grey out length selector when in difíciles mode (always runs full pool)
+function updateLenBtns() {
+  const btns = document.querySelectorAll('#lenBtns .btn-opt');
+  if (cfg.view === 'trouble') {
+    btns.forEach(b => { b.disabled = true; b.style.opacity = '0.4'; b.style.cursor = 'not-allowed'; });
+  } else {
+    btns.forEach(b => { b.disabled = false; b.style.opacity = ''; b.style.cursor = ''; });
+  }
+}
+
+// Remove a single verb from difíciles pool (called from mid-session button)
+function removeDifVerb(ctxIdx) {
+  const bucket = loadBucket(session.filterKey);
+  bucket.difPool = bucket.difPool.filter(i => i !== ctxIdx);
+  saveBucket(session.filterKey, bucket);
+  // Clear mastery streak for this verb
+  const mastery = loadDifMastery();
+  delete mastery[String(ctxIdx)];
+  saveDifMastery(mastery);
+  session.removedCount = (session.removedCount || 0) + 1;
+  const btn = document.getElementById('difRemoveBtn');
+  if (btn) btn.replaceWith(Object.assign(document.createElement('div'), {
+    className: 'dif-removed-msg', textContent: '✓ Eliminado de difíciles'
+  }));
+}
+
 // ═══════════════════════════════════════════════
 //  Comenzar gating — disabled if filter pool is empty
 // ═══════════════════════════════════════════════
@@ -1156,6 +1212,7 @@ function bindOptionRow(rowId, onChange) {
 
 bindOptionRow('filterBtns', val => {
   cfg.view = val;
+  updateLenBtns();
   showStats();
   updateStartBtn();
 });
@@ -1499,6 +1556,8 @@ function buildQueue(filterKey, viewMode, qMode, len) {
     pool = pool.filter(i => verbCount[VERB_CONTEXTS[i].verb] >= 3);
   }
 
+  // Difíciles always runs the full pool
+  if (viewMode === 'trouble') return shuffle(pool);
   return shuffle(pool).slice(0, Math.min(len, pool.length));
 }
 
@@ -1521,6 +1580,7 @@ function startSession() {
   session.filterKey = cfg.filter;
   session.viewMode = cfg.view;
   session.qMode = cfg.mode;
+  session.removedCount = 0;
   session.currentQ = null;
 
   showScreen('sQuiz');
@@ -1542,6 +1602,7 @@ function showQuestion() {
   document.getElementById('qDetailContainer').classList.remove('show');
   document.getElementById('qNextWrap').style.display = 'none';
   document.getElementById('qAllOptions').style.display = 'none';
+  document.getElementById('qDifRemove').style.display = 'none';
 
   const targetIdx = session.queue[session.idx];
   const q = buildQuestionForTarget(targetIdx, session.qMode, session.filterKey, session.idx);
@@ -1661,6 +1722,25 @@ function handleAnswer(btn) {
   const isLast = session.idx === session.queue.length - 1;
   document.getElementById('btnNext').textContent = isLast ? 'Resumen →' : 'Siguiente →';
   document.getElementById('qNextWrap').style.display = 'block';
+
+  // ── Mastery streak + remove button (difíciles mode only) ──
+  if (session.viewMode === 'trouble') {
+    const mastery = loadDifMastery();
+    const mKey = String(targetIdx);
+    if (wasCorrect) {
+      mastery[mKey] = (mastery[mKey] || 0) + 1;
+    } else {
+      mastery[mKey] = 0;
+    }
+    saveDifMastery(mastery);
+    const removeWrap = document.getElementById('qDifRemove');
+    if (wasCorrect && mastery[mKey] >= 3) {
+      removeWrap.innerHTML = `<button class="btn-dif-remove" id="difRemoveBtn" onclick="removeDifVerb(${targetIdx})">✓ Quitar de difíciles</button>`;
+      removeWrap.style.display = 'block';
+    } else {
+      removeWrap.style.display = 'none';
+    }
+  }
 }
 
 function nextQuestion() {
@@ -1707,6 +1787,26 @@ function showSummary() {
   }
 
   session.active = false;
+
+  // Difíciles summary stats
+  const difEl = document.getElementById('summaryDif');
+  if (session.viewMode === 'trouble') {
+    const bucket = loadBucket(session.filterKey);
+    const mastery = loadDifMastery();
+    const readyCount = bucket.difPool.filter(i => (mastery[String(i)] || 0) >= 3).length;
+    const bits = [];
+    if (session.removedCount > 0) bits.push(`${session.removedCount} eliminado${session.removedCount > 1 ? 's' : ''}`);
+    if (readyCount > 0) bits.push(`${readyCount} listo${readyCount > 1 ? 's' : ''} para quitar`);
+    if (bits.length) {
+      difEl.textContent = bits.join(' · ');
+      difEl.style.display = 'block';
+    } else {
+      difEl.style.display = 'none';
+    }
+  } else {
+    difEl.style.display = 'none';
+  }
+
   showScreen('sSummary');
 }
 

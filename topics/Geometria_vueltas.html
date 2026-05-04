@@ -240,6 +240,48 @@
     .explanation em     { color: var(--text-primary); font-style: italic; }
     .explanation strong { color: var(--text-primary); font-weight: 600; }
 
+    /* New Formula Box Styles */
+    .formula-box {
+      background: rgba(192, 132, 252, 0.05); /* Faint gamma background */
+      border: 1px dashed rgba(192, 132, 252, 0.4);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .formula-structure {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      letter-spacing: 0.03em;
+    }
+    .formula-structure span.highlight {
+      color: var(--accent-gamma);
+      font-weight: 700;
+    }
+    .formula-example {
+      border-top: 1px solid rgba(192, 132, 252, 0.15);
+      padding-top: 12px;
+    }
+    .formula-example .es {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .formula-example .es strong {
+      color: var(--accent-gamma);
+    }
+    .formula-example .en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
     .examples { list-style: none; padding: 0; margin: 0; }
     .examples li {
       background: var(--bg-input);
@@ -394,6 +436,17 @@
     <p class="explanation">
       <strong>Geometry:</strong> Continuous, relentless spinning inside the mind. <em>Meaning:</em> To overthink, to ruminate, to obsess over a problem. A thought is trapped in your head, spinning in circles, causing distress. Notice the plural <em>vueltas</em> (multiple spins) and the IOP <em>le</em> (applying the spins to the topic/head).
     </p>
+
+    <div class="formula-box">
+      <div class="formula-structure">
+        <span class="highlight">[IOP]</span> + dar <em>(conjugated)</em> + vueltas + a + <span class="highlight">[Indirect Object]</span>
+      </div>
+      <div class="formula-example">
+        <span class="es">Marisol no podía dormir. <strong>Le</strong> daba vueltas <strong>a la cosa</strong>.</span>
+        <span class="en">Marisol couldn't sleep. She kept thinking about the thing.</span>
+      </div>
+    </div>
+
     <ul class="examples">
       <li>
         <span class="es">Lo del ruido era lo que más le daba vueltas.</span>

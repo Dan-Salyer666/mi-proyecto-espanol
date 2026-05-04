@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Los Usos Extendidos de "De" - Mi Proyecto Español</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+      
+      /* Trio 3 + extra palette colors for 5 sections */
+      --accent-alpha:   #4ecdc4; /* Teal */
+      --accent-beta:    #FF9F1C; /* Orange */
+      --accent-gamma:   #c084fc; /* Violet */
+      --accent-delta:   #4a90d9; /* Blue */
+      --accent-epsilon: #FF6B6B; /* Coral */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Option C — Eight-point stars */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M30,5 L35,25 L55,30 L35,35 L30,55 L25,35 L5,30 L25,25 Z'/><circle cx='30' cy='30' r='3'/></svg>");
+      background-size: 60px 60px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left-width: 6px;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      transition: background 0.2s;
+    }
+    .grammar-card:hover { background: var(--bg-card-hover); }
+
+    .card-alpha   { border-left-color: var(--accent-alpha); }
+    .card-beta    { border-left-color: var(--accent-beta); }
+    .card-gamma   { border-left-color: var(--accent-gamma); }
+    .card-delta   { border-left-color: var(--accent-delta); }
+    .card-epsilon { border-left-color: var(--accent-epsilon); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--text-muted);
+    }
+
+    .card-title-group { flex: 1; }
+
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .qualifier {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-left: 12px;
+      font-style: italic;
+    }
+
+    .card-title-en {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    code.formula {
+      display: block;
+      background: var(--bg-input);
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 24px;
+      letter-spacing: 0.03em;
+    }
+
+    .explanation {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    
+    .explanation strong { color: var(--text-primary); }
+    .explanation em { color: var(--text-primary); }
+
+    ul.examples {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    ul.examples li {
+      background: var(--bg-input);
+      padding: 16px 20px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    span.es {
+      display: block;
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+
+    span.en {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .title-card { padding: 32px 18px 36px; }
+      .grammar-card { padding: 22px 20px 18px; }
+      h1 { font-size: 2.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <h1>Los Usos Extendidos de "De"</h1>
+    <p class="subtitle">Connecting nouns, expressing traits, and defining roles in Spanish.</p>
+  </header>
+
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Expresiones y apariencia <span class="qualifier">cara de...</span></div>
+        <div class="card-title-en">Physical Attributes & Vibe</div>
+      </div>
+    </div>
+    
+    <code class="formula">[Atributo físico / Pinta] + de + [Persona / Estado]</code>
+    
+    <p class="explanation">
+      Use <strong>de</strong> to describe the "look," "sound," or "vibe" of a person or thing, rather than a direct physical description. It conveys that the subject has the characteristics <em>of</em> a certain type of person or state. 
+    </p>
+
+    <ul class="examples">
+      <li>
+        <span class="es">El paciente me miró con cara de susto.</span>
+        <span class="en">The patient looked at me with a frightened expression. <em>— Literally: Face of fright.</em></span>
+      </li>
+      <li>
+        <span class="es">Tiene voz de enfermo.</span>
+        <span class="en">He sounds sick. <em>— He has the voice of a sick person.</em></span>
+      </li>
+      <li>
+        <span class="es">Ese nuevo hardware tiene pinta de caro.</span>
+        <span class="en">That new hardware looks expensive. <em>— It gives off the "vibe" of being expensive.</em></span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Propósito y función <span class="qualifier">sustantivos compuestos</span></div>
+        <div class="card-title-en">Noun Stacking & Purpose</div>
+      </div>
+    </div>
+
+    <code class="formula">[Sustantivo principal] + de + [Sustantivo de propósito]</code>
+
+    <p class="explanation">
+      Spanish cannot stack nouns to create new concepts (like the English "winter coat"). You must use <strong>de</strong> to connect them, essentially translating to "for the purpose of" or "made for."
+    </p>
+
+    <ul class="examples">
+      <li>
+        <span class="es">Compré ropa de trabajo nueva.</span>
+        <span class="en">I bought new work clothes.</span>
+      </li>
+      <li>
+        <span class="es">¿Dónde guardas la prensa de tofu?</span>
+        <span class="en">Where do you keep the tofu press? <em>— Distinguishes the tool's purpose.</em></span>
+      </li>
+      <li>
+        <span class="es">Es un juego de supervivencia muy difícil.</span>
+        <span class="en">It is a very difficult survival game.</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Roles y profesiones <span class="qualifier">trabajar de...</span></div>
+        <div class="card-title-en">Acting As & Temporary Roles</div>
+      </div>
+    </div>
+
+    <code class="formula">[Trabajar / Hacer / Ir] + de + [Rol / Profesión]</code>
+
+    <p class="explanation">
+      When using verbs to denote working in a specific capacity, acting a part in a narrative, or dressing up, <strong>de</strong> is used to mean "in the role of" or "acting as."
+    </p>
+
+    <ul class="examples">
+      <li>
+        <span class="es">Actualmente trabaja de cirujano en el hospital.</span>
+        <span class="en">He is currently working as a surgeon at the hospital.</span>
+      </li>
+      <li>
+        <span class="es">En esa película, John Wayne hace de vaquero rudo.</span>
+        <span class="en">In that movie, John Wayne plays the role of a tough cowboy.</span>
+      </li>
+      <li>
+        <span class="es">En la convención, fue disfrazado de oficial de la Flota Estelar.</span>
+        <span class="en">At the convention, he went dressed as a Starfleet officer.</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Estados temporales <span class="qualifier">estar de...</span></div>
+        <div class="card-title-en">States of Being</div>
+      </div>
+    </div>
+
+    <code class="formula">Estar + de + [Estado]</code>
+
+    <p class="explanation">
+      The verb <em>estar</em> frequently pairs with <strong>de</strong> to indicate a temporary condition, mood, or operational state.
+    </p>
+
+    <ul class="examples">
+      <li>
+        <span class="es">Ella va a estar de viaje por Argentina.</span>
+        <span class="en">She is going to be traveling through Argentina.</span>
+      </li>
+      <li>
+        <span class="es">Hoy estoy de muy buen humor.</span>
+        <span class="en">I am in a very good mood today.</span>
+      </li>
+      <li>
+        <span class="es">El sistema de seguridad está de prueba.</span>
+        <span class="en">The security system is in a testing state.</span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-epsilon">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Características inherentes <span class="qualifier">género y material</span></div>
+        <div class="card-title-en">Inherent Traits & Genres</div>
+      </div>
+    </div>
+
+    <code class="formula">[Sustantivo] + de + [Material / Género / Naturaleza]</code>
+
+    <p class="explanation">
+      Use <strong>de</strong> to classify the fundamental nature, defining genre, or core material that makes up a noun.
+    </p>
+
+    <ul class="examples">
+      <li>
+        <span class="es">Es un hombre de palabra.</span>
+        <span class="en">He is a man of his word. <em>— An inherent character trait.</em></span>
+      </li>
+      <li>
+        <span class="es">Ayer vimos una excelente película del oeste.</span>
+        <span class="en">Yesterday we watched an excellent Western movie. <em>— Defining the genre.</em></span>
+      </li>
+      <li>
+        <span class="es">Es una colección de música clásica inmensa.</span>
+        <span class="en">It is a huge classical music collection.</span>
+      </li>
+    </ul>
+  </article>
+
+</div>
+
+</body>
+</html>

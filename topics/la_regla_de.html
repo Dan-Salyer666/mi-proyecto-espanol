@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The "De + Adjective" Rule</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+      
+      /* Accent Trio 1 + 4th color for 4 sections */
+      --accent-alpha:   #c084fc;
+      --accent-beta:    #fbbf24;
+      --accent-gamma:   #4ecdc4;
+      --accent-delta:   #FF6B6B;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
+    
+    html, body { 
+      min-height: 100%; 
+    }
+
+    body {
+      font-family: 'Outfit';
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80' fill='none' stroke='%234a90d9' stroke-width='0.8'><circle cx='0' cy='0' r='20'/><circle cx='80' cy='0' r='20'/><circle cx='0' cy='80' r='20'/><circle cx='80' cy='80' r='20'/><circle cx='40' cy='40' r='20'/></svg>");
+      background-size: 80px 80px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    
+    .back-nav:hover { 
+      color: var(--accent); 
+    }
+
+    .title-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    .page-title {
+      font-family: 'DM Serif Display';
+      font-size: 2.5rem;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .card-alpha { border-left-color: var(--accent-alpha); }
+    .card-beta  { border-left-color: var(--accent-beta); }
+    .card-gamma { border-left-color: var(--accent-gamma); }
+    .card-delta { border-left-color: var(--accent-delta); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: nowrap;
+    }
+
+    .card-number {
+      font-family: 'DM Serif Display';
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      line-height: 1;
+      margin-top: 4px;
+    }
+
+    .card-title-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-title {
+      font-family: 'DM Serif Display';
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .card-title-en {
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .formula {
+      display: block;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'Outfit';
+      font-weight: 600;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 1.1rem;
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 1.05rem;
+    }
+    
+    .explanation strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+    
+    .explanation em {
+      color: var(--text-primary);
+    }
+
+    ul.bullet-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    ul.bullet-list li {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    ul.bullet-list li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      color: var(--text-muted);
+      font-size: 0.8em;
+      top: 4px;
+    }
+    
+    ul.bullet-list strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .examples {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .examples li {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .es {
+      font-family: 'DM Serif Display';
+      font-size: 1.1rem;
+      color: var(--text-primary);
+    }
+
+    .en {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    
+    .en em {
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .title-card   { padding: 32px 18px 36px; }
+      .grammar-card { padding: 22px 20px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <h1 class="page-title">La regla de «De + Adjetivo»</h1>
+    <p class="explanation" style="margin-bottom: 0;">In Spanish, when you want to describe an indefinite amount of a quality, you cannot attach an adjective directly to indefinite pronouns. You must use the preposition <strong>de</strong> to bridge the gap. This is highly common with verbs that denote possession or existence, specifically <strong>tener</strong> (to have) and <strong>hay</strong> (there is/there are).</p>
+  </header>
+
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Las palabras desencadenantes</div>
+        <div class="card-title-en">THE TRIGGER WORDS</div>
+      </div>
+    </div>
+    
+    <code class="formula">[Verb: Tener / Hay] + [Pronoun] + de + [Adjective]</code>
+    
+    <p class="explanation">This rule is triggered by five specific words that represent an indefinite "amount" or "thing". These words sit in the "pronoun slot" as the direct object of the verb.</p>
+    
+    <ul class="bullet-list">
+      <li><strong>Qué</strong> (What) <em>— Used for questions/interrogations.</em></li>
+      <li><strong>Algo</strong> (Something) <em>— Used for affirmative statements.</em></li>
+      <li><strong>Nada</strong> (Nothing) <em>— Used for negative statements.</em></li>
+      <li><strong>Mucho</strong> (A lot / Much) <em>— Used for quantification.</em></li>
+      <li><strong>Poco</strong> (Little) <em>— Used for quantification.</em></li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">El uso de «Qué»</div>
+        <div class="card-title-en">UNDERSTANDING THE "PRONOUN SLOT"</div>
+      </div>
+    </div>
+    
+    <p class="explanation">To understand how <strong>qué</strong> works, we must look at how it replaces <strong>algo</strong>. They do the exact same grammatical job: they act as the direct object of the verb (what is being "had").</p>
+    
+    <ul class="examples">
+      <li>
+        <span class="es">El libro tiene algo de interesante.</span>
+        <span class="en">The book has something interesting about it. <em>— Affirmative: The book possesses an unknown "something" (algo).</em></span>
+      </li>
+      <li>
+        <span class="es">¿Qué tiene de interesante el libro?</span>
+        <span class="en">What is interesting about the book? <em>— Interrogative: "algo" is replaced with "qué" and moved to the front.</em></span>
+      </li>
+    </ul>
+    
+    <p class="explanation" style="margin-top: 24px; margin-bottom: 0;"><strong>Conclusion:</strong> <em>Qué</em> is not an invisible addition. It completely occupies the "pronoun slot," acting as the object that possesses the adjective through the bridge <em>de</em>.</p>
+  </article>
+
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Ejemplos con «Tener»</div>
+        <div class="card-title-en">EXAMPLES USING TENER (TO HAVE)</div>
+      </div>
+    </div>
+    
+    <p class="explanation">When used with <strong>tener</strong>, this structure expresses what qualities a subject possesses. It translates best to English as "What does [subject] have that is [adjective]?" or "What is [adjective] about [subject]?"</p>
+    
+    <ul class="examples">
+      <li>
+        <span class="es">¿Qué tiene de malo el plan?</span>
+        <span class="en">What is bad about the plan? <em>— (What does it have of bad?)</em></span>
+      </li>
+      <li>
+        <span class="es">¿Qué tienen de especial estas herramientas?</span>
+        <span class="en">What is special about these tools?</span>
+      </li>
+      <li>
+        <span class="es">Esta ciudad tiene algo de mágico.</span>
+        <span class="en">This city has something magical about it.</span>
+      </li>
+      <li>
+        <span class="es">La historia tiene algo de cierto.</span>
+        <span class="en">The story has some truth to it. <em>— (something of true)</em></span>
+      </li>
+      <li>
+        <span class="es">El diseño no tiene nada de raro.</span>
+        <span class="en">There is nothing weird about the design.</span>
+      </li>
+      <li>
+        <span class="es">Esta situación no tiene nada de gracioso.</span>
+        <span class="en">There is nothing funny about this situation.</span>
+      </li>
+      <li>
+        <span class="es">Ese argumento tiene mucho de válido.</span>
+        <span class="en">That argument is very valid. <em>— (has much of valid)</em></span>
+      </li>
+      <li>
+        <span class="es">La película tiene poco de original.</span>
+        <span class="en">The movie has very little originality. <em>— (little of original)</em></span>
+      </li>
+    </ul>
+  </article>
+
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Ejemplos con «Hay»</div>
+        <div class="card-title-en">EXAMPLES USING HAY (THERE IS / THERE ARE)</div>
+      </div>
+    </div>
+    
+    <p class="explanation">When used with <strong>hay</strong>, the structure expresses the existence of a quality within a general setting or subject. It translates best to English as "There is [pronoun] [adjective] about..."</p>
+    
+    <ul class="examples">
+      <li>
+        <span class="es">¿Qué hay de nuevo?</span>
+        <span class="en">What's new? <em>— (What is there of new?)</em></span>
+      </li>
+      <li>
+        <span class="es">¿Qué hay de bueno en la televisión hoy?</span>
+        <span class="en">What is good on TV today?</span>
+      </li>
+      <li>
+        <span class="es">Hay algo de triste en su mirada.</span>
+        <span class="en">There is something sad in his/her look.</span>
+      </li>
+      <li>
+        <span class="es">Hay algo de peligroso en este viaje.</span>
+        <span class="en">There is something dangerous about this trip.</span>
+      </li>
+      <li>
+        <span class="es">No hay nada de malo en preguntar.</span>
+        <span class="en">There is nothing wrong with asking.</span>
+      </li>
+      <li>
+        <span class="es">No hay nada de extraño aquí.</span>
+        <span class="en">There is nothing strange here.</span>
+      </li>
+      <li>
+        <span class="es">Hay mucho de verdad en lo que dices.</span>
+        <span class="en">There is a lot of truth in what you say.</span>
+      </li>
+      <li>
+        <span class="es">Hay poco de divertido en lavar los platos.</span>
+        <span class="en">There is little fun in washing the dishes.</span>
+      </li>
+    </ul>
+  </article>
+
+</div>
+
+</body>
+</html>

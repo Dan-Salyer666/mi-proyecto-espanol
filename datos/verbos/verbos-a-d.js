@@ -5707,7 +5707,7 @@ const VERB_CONTEXTS_AD = [
   english: "to get used to",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] very common; acostumbrarse a + noun/infinitive",
+  notes: "  very common; acostumbrarse a + noun/infinitive",
   contextExplanation: "To get used to something through a gradual process of habituation. Always followed by 'a' + noun or infinitive.",
   synonyms: ["habituarse a", "adaptarse a"],
   example: {
@@ -5962,7 +5962,7 @@ const VERB_CONTEXTS_AD = [
   english: "to loosen, to slacken",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] base verb more common than aflojarse alone",
+  notes: "  base verb more common than aflojarse alone",
   contextExplanation: "To deliberately loosen or slacken something — a bolt, a rope, a grip. Colloquially also means to ease up or back off.",
   synonyms: ["soltar", "destensar"],
   example: {
@@ -6082,7 +6082,7 @@ const VERB_CONTEXTS_AD = [
   english: "to run out, to become exhausted",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] se agotaron las entradas = tickets sold out",
+  notes: "  se agotaron las entradas = tickets sold out",
   contextExplanation: "To sell out, run out, or become exhausted — spontaneously rather than through deliberate depletion.",
   synonyms: ["terminarse", "acabarse"],
   example: {
@@ -6232,7 +6232,7 @@ const VERB_CONTEXTS_AD = [
   english: "to anger, to infuriate",
   register: "archaic",
   region: "neutral",
-  notes: "[RESTORED] archaic — everyday speakers use enojar or enfadar",
+  notes: "  archaic — everyday speakers use enojar or enfadar",
   contextExplanation: "To anger or infuriate. Archaic in modern Spanish — contemporary speakers use enojar or enfadar instead.",
   synonyms: ["enojar", "enfadar", "irritar"],
   example: {
@@ -6247,7 +6247,7 @@ const VERB_CONTEXTS_AD = [
   english: "to be busy, to bustle about",
   register: "colloquial",
   region: "neutral",
-  notes: "[RESTORED] uncommon in most regions but Daniel encountered it",
+  notes: "  uncommon in most regions but Daniel encountered it",
   contextExplanation: "To bustle about or be busy in a hectic, rushed way. Uncommon in most regions but encountered in Argentine and some Peninsular speech.",
   synonyms: ["trajinar", "agitarse"],
   example: {
@@ -6307,7 +6307,7 @@ const VERB_CONTEXTS_AD = [
   english: "to be enough",
   register: "everyday",
   region: "lat-am",
-  notes: "[ADDED] no me alcanza la plata = I don't have enough money",
+  notes: "  no me alcanza la plata = I don't have enough money",
   contextExplanation: "Latin American intransitive use: the verb stands alone to mean 'to be enough.' Different from the gustar construction in that no indirect object is required.",
   synonyms: ["bastar", "ser suficiente"],
   example: {
@@ -6322,7 +6322,7 @@ const VERB_CONTEXTS_AD = [
   english: "to be enough (money/time)",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] como gustar: 'no me alcanza el dinero' = I don't have enough money",
+  notes: "  como gustar: 'no me alcanza el dinero' = I don't have enough money",
   contextExplanation: "Gustar-type construction: the resource (money, time) is the grammatical subject and the person who does or doesn't have enough of it takes an indirect object pronoun.",
   synonyms: ["bastar"],
   example: {
@@ -6397,7 +6397,7 @@ const VERB_CONTEXTS_AD = [
   english: "to eat, to nourish oneself, to feed on",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED] alimentarse bien = to eat well",
+  notes: "  alimentarse bien = to eat well",
   contextExplanation: "To eat or nourish oneself, or to feed on something (+ de). Frequently used in health and diet contexts.",
   synonyms: ["nutrirse", "comer"],
   example: {
@@ -6517,7 +6517,7 @@ const VERB_CONTEXTS_AD = [
   english: "to become bitter, to get upset",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] no te amargues = don't get upset",
+  notes: "  no te amargues = don't get upset",
   contextExplanation: "To become bitter or get upset about something. Commonly used in the imperative as advice not to stress over something minor.",
   synonyms: ["disgustarse", "resentirse"],
   example: {
@@ -6652,7 +6652,7 @@ const VERB_CONTEXTS_AD = [
   english: "to narrow, to make narrower",
   register: "literary",
   region: "neutral",
-  notes: "[RESTORED] uncommon; everyday speakers use hacer más angosto or estrechar",
+  notes: "  uncommon; everyday speakers use hacer más angosto or estrechar",
   contextExplanation: "To narrow or make narrower. Literary and uncommon — everyday speakers use hacer más angosto or estrechar instead.",
   synonyms: ["estrechar"],
   example: {
@@ -6742,7 +6742,7 @@ const VERB_CONTEXTS_AD = [
   english: "to crave, to feel like",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] requires se + IO: 'se me antoja una pizza' = I'm craving pizza",
+  notes: "  requires se + IO: 'se me antoja una pizza' = I'm craving pizza",
   contextExplanation: "Gustar-type construction expressing a sudden craving or whim. Always uses reflexive se plus indirect object pronoun: 'se me antoja una pizza.'",
   synonyms: ["apetecer", "tener ganas de"],
   example: {
@@ -6877,7 +6877,7 @@ const VERB_CONTEXTS_AD = [
   english: "to be passionate about",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED] 'me apasiona la historia' = I'm passionate about history",
+  notes: "  'me apasiona la historia' = I'm passionate about history",
   contextExplanation: "Gustar-type construction for deep, driving enthusiasm. The thing one is passionate about is the grammatical subject.",
   synonyms: ["entusiasmar", "apasionar"],
   example: {
@@ -7147,7 +7147,7 @@ const VERB_CONTEXTS_AD = [
   english: "to hurry up",
   register: "everyday",
   region: "lat-am",
-  notes: "[ADDED] ¡apurate! = hurry up! — extremely common",
+  notes: "  ¡apurate! = hurry up! — extremely common",
   contextExplanation: "Extremely common in Latin America: to hurry up. The equivalent of Spain's darse prisa. The imperative ¡apurate! is used constantly.",
   synonyms: ["darse prisa", "apresurarse"],
   example: {
@@ -7177,7 +7177,7 @@ const VERB_CONTEXTS_AD = [
   english: "to make a scene",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "Fixed phrase: to make a scene or cause a public commotion.",
   synonyms: ["hacer un escándalo", "montar una escena"],
   example: {
@@ -7192,7 +7192,7 @@ const VERB_CONTEXTS_AD = [
   english: "to break out, to kick off (chaos/scene)",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'se armó un lío' = chaos broke out",
+  notes: "  'se armó un lío' = chaos broke out",
   contextExplanation: "For chaos, confusion, or an argument to suddenly break out. Also appears in fixed phrases like armarse de paciencia.",
   synonyms: ["desatarse", "estallar"],
   example: {
@@ -7207,7 +7207,7 @@ const VERB_CONTEXTS_AD = [
   english: "to arm oneself with patience",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "Fixed phrase: to brace oneself with patience before tackling something difficult or tedious.",
   synonyms: [],
   example: {
@@ -7357,7 +7357,7 @@ const VERB_CONTEXTS_AD = [
   english: "to take a risk",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'se arriesgó y le salió bien' = he took a risk and it worked out",
+  notes: "  'se arriesgó y le salió bien' = he took a risk and it worked out",
   contextExplanation: "To take a personal risk or go for something despite uncertainty.",
   synonyms: ["jugársela", "atreverse"],
   example: {
@@ -7537,7 +7537,7 @@ const VERB_CONTEXTS_AD = [
   english: "to lean out, to peek",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'se asomó por la ventana' = she leaned out the window",
+  notes: "  'se asomó por la ventana' = she leaned out the window",
   contextExplanation: "Duplicate entry in master list — same construction as above. Covers the same leaning-out or peeking-out action.",
   synonyms: [],
   example: {
@@ -7717,7 +7717,7 @@ const VERB_CONTEXTS_AD = [
   english: "to attract, to appeal",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED] como gustar: 'me atrae la idea' = the idea appeals to me",
+  notes: " como gustar: 'me atrae la idea' = the idea appeals to me",
   contextExplanation: "Gustar-type construction: the thing that appeals is the grammatical subject. 'Me atrae la idea' = the idea appeals to me.",
   synonyms: ["gustar", "interesar"],
   example: {
@@ -7777,7 +7777,7 @@ const VERB_CONTEXTS_AD = [
   english: "to howl",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED]",
+  notes: " ",
   contextExplanation: "To howl — wolves, dogs, or by extension a howling wind or a person crying out in pain.",
   synonyms: ["ulular"],
   example: {
@@ -7912,7 +7912,7 @@ const VERB_CONTEXTS_AD = [
   english: "to be ashamed, to feel embarrassed",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED] avergonzarse de",
+  notes: "  avergonzarse de",
   contextExplanation: "To feel ashamed or embarrassed about something. Always followed by 'de.'",
   synonyms: ["sentir vergüenza", "abochornarse"],
   example: {
@@ -8032,7 +8032,7 @@ const VERB_CONTEXTS_AD = [
   english: "to whip, to lash, to batter",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED] also: weather battering (el viento azotó la costa)",
+  notes: "  also: weather battering (el viento azotó la costa)",
   contextExplanation: "To whip or lash — used for physical punishment and for weather battering a coast or region.",
   synonyms: ["flagelar", "golpear"],
   example: {
@@ -8080,7 +8080,7 @@ const VERB_CONTEXTS_AD = [
   english: "to download",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] bajar una app = download an app; very current usage",
+  notes: "  bajar una app = download an app; very current usage",
   contextExplanation: "Colloquial but extremely common in Latin America: to download a file, app, or content from the internet.",
   synonyms: ["descargar"],
   example: {
@@ -8110,7 +8110,7 @@ const VERB_CONTEXTS_AD = [
   english: "to get off (transport)",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'me bajo en la próxima' = I'm getting off at the next stop",
+  notes: "  'me bajo en la próxima' = I'm getting off at the next stop",
   contextExplanation: "Duplicate entry in master list — same construction as above. Both entries reinforce this extremely common usage.",
   synonyms: ["apearse"],
   example: {
@@ -8185,7 +8185,7 @@ const VERB_CONTEXTS_AD = [
   english: "to be based on",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] ¿en qué te basás? = what are you basing that on?",
+  notes: "  ¿en qué te basás? = what are you basing that on?",
   contextExplanation: "To be based on or draw on as evidence or foundation. The question '¿en qué te basás?' is very common in argument.",
   synonyms: ["apoyarse en", "fundamentarse en"],
   example: {
@@ -8275,7 +8275,7 @@ const VERB_CONTEXTS_AD = [
   english: "to kiss each other",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "Reciprocal: two people kissing each other.",
   synonyms: [],
   example: {
@@ -8380,7 +8380,7 @@ const VERB_CONTEXTS_AD = [
   english: "to offer, to provide",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED] brindar una oportunidad = to offer an opportunity",
+  notes: "  brindar una oportunidad = to offer an opportunity",
   contextExplanation: "Transitive: to offer or provide something — an opportunity, support, information.",
   synonyms: ["ofrecer", "proporcionar"],
   example: {
@@ -8548,7 +8548,7 @@ const VERB_CONTEXTS_AD = [
   english: "to realize, to catch on",
   register: "everyday",
   region: "lat-am",
-  notes: "[ADDED] caí en cuenta de que = I realized that",
+  notes: "  caí en cuenta de que = I realized that",
   contextExplanation: "Latin American phrasal expression: to realize or suddenly understand something. Equivalent to darse cuenta de.",
   synonyms: ["darse cuenta de", "caer en la cuenta"],
   example: {
@@ -8728,7 +8728,7 @@ const VERB_CONTEXTS_AD = [
   english: "to change clothes",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] me voy a cambiar = I'm going to change (clothes)",
+  notes: "  me voy a cambiar = I'm going to change (clothes)",
   contextExplanation: "Reflexive: to change one's own clothes before going somewhere.",
   synonyms: ["mudarse de ropa"],
   example: {
@@ -8773,7 +8773,7 @@ const VERB_CONTEXTS_AD = [
   english: "to tire, to wear out",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] como gustar: 'me cansa esta situación' = this situation tires me out",
+  notes: "  como gustar: 'me cansa esta situación' = this situation tires me out",
   contextExplanation: "Gustar-type construction: the thing that causes fatigue is the grammatical subject. 'Me cansa' = it wears me out.",
   synonyms: ["agotar", "hartar"],
   example: {
@@ -9313,7 +9313,7 @@ const VERB_CONTEXTS_AD = [
   english: "to eat",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] included for completeness; base for comerse",
+  notes: "  included for completeness; base for comerse",
   contextExplanation: "To eat — the fundamental verb for consuming food. In Latin America it often refers specifically to the main meal of the day.",
   synonyms: ["alimentarse"],
   example: {
@@ -9328,7 +9328,7 @@ const VERB_CONTEXTS_AD = [
   english: "to eat up, to devour",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] me comí todo el plato; also: comerse una letra = to skip a letter",
+  notes: "  me comí todo el plato; also: comerse una letra = to skip a letter",
   contextExplanation: "To eat something up completely or greedily. Also used colloquially for skipping or swallowing a letter or syllable when writing or speaking.",
   synonyms: ["devorar", "zamparse"],
   example: {
@@ -9418,7 +9418,7 @@ const VERB_CONTEXTS_AD = [
   english: "to get complicated",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] se complicó todo = everything got complicated",
+  notes: "  se complicó todo = everything got complicated",
   contextExplanation: "For a situation to get complicated spontaneously or unexpectedly.",
   synonyms: ["enredarse", "complicarse la vida"],
   example: {
@@ -9673,7 +9673,7 @@ const VERB_CONTEXTS_AD = [
   english: "to combine, to bring together",
   register: "formal",
   region: "neutral",
-  notes: "[RESTORED] everyday speakers use combinar or coordinar",
+  notes: "  everyday speakers use combinar or coordinar",
   contextExplanation: "To combine or bring elements together harmoniously. Formal — everyday speakers prefer combinar or coordinar.",
   synonyms: ["combinar", "coordinar"],
   example: {
@@ -9868,7 +9868,7 @@ const VERB_CONTEXTS_AD = [
   english: "to suit, to be in one's interest",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED] 'te conviene estudiar más' = it's in your interest to study more",
+  notes: "'te conviene estudiar más' = it's in your interest to study more",
   contextExplanation: "Gustar-type construction: what suits or benefits someone is the grammatical subject. 'Te conviene' = it's in your best interest.",
   synonyms: ["ser conveniente", "ser recomendable"],
   example: {
@@ -9958,7 +9958,7 @@ const VERB_CONTEXTS_AD = [
   english: "to correct",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "To correct — an error, a text, a behavior. Extensive stem-changes throughout.",
   synonyms: ["enmendar", "rectificar"],
   example: {
@@ -9988,7 +9988,7 @@ const VERB_CONTEXTS_AD = [
   english: "to move over, to scoot",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'correte un poco' = move over a bit. Also vulgar in some contexts",
+  notes: "  'correte un poco' = move over a bit. Also vulgar in some contexts",
   contextExplanation: "To move over or scoot — making room for others. Very common in everyday speech. Also has a vulgar sense in some regions.",
   synonyms: ["hacerse a un lado", "moverse"],
   example: {
@@ -10033,7 +10033,7 @@ const VERB_CONTEXTS_AD = [
   english: "to break up with",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'cortó con su novio' = she broke up with her boyfriend",
+  notes: "  'cortó con su novio' = she broke up with her boyfriend",
   contextExplanation: "Colloquial phrasal: to break up with a romantic partner.",
   synonyms: ["terminar con", "separarse de"],
   example: {
@@ -10048,7 +10048,7 @@ const VERB_CONTEXTS_AD = [
   english: "to cut oneself, to get cut off",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] se cortó la llamada = the call dropped; also: to become inhibited",
+  notes: "  se cortó la llamada = the call dropped; also: to become inhibited",
   contextExplanation: "Three uses: to cut oneself accidentally, for a call to drop, or to freeze up socially.",
   synonyms: [],
   example: {
@@ -10213,7 +10213,7 @@ const VERB_CONTEXTS_AD = [
   english: "to run into, to cross paths with",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] me crucé con María",
+  notes: "  me crucé con María",
   contextExplanation: "To run into or cross paths with someone by chance. Always with 'con.'",
   synonyms: ["encontrarse con", "toparse con"],
   example: {
@@ -10318,7 +10318,7 @@ const VERB_CONTEXTS_AD = [
   english: "to turn (an age), to have a birthday",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] mañana cumplo 30",
+  notes: "  mañana cumplo 30",
   contextExplanation: "Phrasal: to turn a certain age or to have one's birthday. 'Mañana cumplo treinta' = tomorrow I turn thirty.",
   synonyms: [],
   example: {
@@ -10411,7 +10411,7 @@ const VERB_CONTEXTS_AD = [
   english: "to disgust",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'me da asco' = it disgusts me",
+  notes: "  'me da asco' = it disgusts me",
   contextExplanation: "Gustar-type construction: the disgusting thing is the grammatical subject. 'Me da asco' is very common in everyday speech.",
   synonyms: ["repugnar", "asquear"],
   example: {
@@ -10456,7 +10456,7 @@ const VERB_CONTEXTS_AD = [
   english: "to feel like (defiant)",
   register: "colloquial",
   region: "neutral",
-  notes: "[ADDED] 'porque me da la gana' = because I feel like it",
+  notes: "  'porque me da la gana' = because I feel like it",
   contextExplanation: "Colloquial gustar-type construction expressing defiant willfulness. 'Porque me da la gana' = because I feel like it (and I don't need a better reason).",
   synonyms: [],
   example: {
@@ -10486,7 +10486,7 @@ const VERB_CONTEXTS_AD = [
   english: "to scare, to frighten",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'me da miedo la oscuridad' = the dark scares me",
+  notes: "  'me da miedo la oscuridad' = the dark scares me",
   contextExplanation: "Gustar-type construction: the frightening thing is the grammatical subject. 'Me da miedo' = it scares me.",
   synonyms: ["asustar", "aterrorizar"],
   example: {
@@ -10501,7 +10501,7 @@ const VERB_CONTEXTS_AD = [
   english: "to feel too lazy to",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'me da pereza cocinar' = I can't be bothered to cook",
+  notes: "  'me da pereza cocinar' = I can't be bothered to cook",
   contextExplanation: "Gustar-type construction expressing laziness or reluctance. 'Me da pereza' = I can't be bothered.",
   synonyms: [],
   example: {
@@ -10531,7 +10531,7 @@ const VERB_CONTEXTS_AD = [
   english: "to give up on, to write off as lost",
   register: "everyday",
   region: "neutral",
-  notes: "[RESTORED] dar algo por perdido",
+  notes: "  dar algo por perdido",
   contextExplanation: "Fixed phrase: to write something off as lost or hopeless. Perdido does not inflect in this fixed use.",
   synonyms: ["abandonar", "resignarse a perder"],
   example: {
@@ -10591,7 +10591,7 @@ const VERB_CONTEXTS_AD = [
   english: "to embarrass",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'me da vergüenza' = I'm embarrassed",
+  notes: "  'me da vergüenza' = I'm embarrassed",
   contextExplanation: "Gustar-type construction: the embarrassing thing is the grammatical subject. 'Me da vergüenza' = I'm embarrassed.",
   synonyms: ["avergonzar"],
   example: {
@@ -10651,7 +10651,7 @@ const VERB_CONTEXTS_AD = [
   english: "to hurry, to rush",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] ¡date prisa!; Spain/neutral; see also apurarse (lat-am)",
+  notes: "  ¡date prisa!; Spain/neutral; see also apurarse (lat-am)",
   contextExplanation: "To hurry up. More common in Spain; in Latin America apurarse is preferred. The imperative ¡Date prisa! is widely understood.",
   synonyms: ["apurarse", "apresurarse"],
   example: {
@@ -10786,7 +10786,7 @@ const VERB_CONTEXTS_AD = [
   english: "to make up one's mind",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] decidirse a/por; no me decido = I can't decide",
+  notes: "  decidirse a/por; no me decido = I can't decide",
   contextExplanation: "To make up one's mind or finally choose. Used with 'a' (to finally do something) or 'por' (to choose between options).",
   synonyms: ["determinarse", "optar por"],
   example: {
@@ -10831,7 +10831,7 @@ const VERB_CONTEXTS_AD = [
   english: "to do for a living, to work as",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] ¿a qué te dedicás?",
+  notes: "  ¿a qué te dedicás?",
   contextExplanation: "To do for a living or devote oneself to something. '¿A qué te dedicás?' is one of the most common conversation-opener questions in Latin America.",
   synonyms: ["trabajar como", "consagrarse a"],
   example: {
@@ -10861,7 +10861,7 @@ const VERB_CONTEXTS_AD = [
   english: "to taste, to savor",
   register: "formal",
   region: "neutral",
-  notes: "[RESTORED] formal/culinary; everyday speakers use probar",
+  notes: "  formal/culinary; everyday speakers use probar",
   contextExplanation: "To taste or savor — used in formal or culinary contexts. Everyday speakers use probar.",
   synonyms: ["probar", "saborear"],
   example: {
@@ -10921,7 +10921,7 @@ const VERB_CONTEXTS_AD = [
   english: "to leave alone",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] 'dejame en paz' = leave me alone",
+  notes: "  'dejame en paz' = leave me alone",
   contextExplanation: "Fixed phrase: to leave someone alone or stop bothering them. Very common in everyday speech.",
   synonyms: ["no molestar"],
   example: {
@@ -10951,7 +10951,7 @@ const VERB_CONTEXTS_AD = [
   english: "to go with the flow, to let oneself be carried",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "Fixed phrase: to go with the flow, to stop resisting and let events or emotions take you where they will.",
   synonyms: [],
   example: {
@@ -11011,7 +11011,7 @@ const VERB_CONTEXTS_AD = [
   english: "to take long, to be delayed",
   register: "everyday",
   region: "lat-am",
-  notes: "[ADDED] me demoré = I took a while",
+  notes: "  me demoré = I took a while",
   contextExplanation: "Pronominal and very common in Latin America: the subject takes longer than expected or is delayed.",
   synonyms: ["tardarse", "atrasarse"],
   example: {
@@ -11041,7 +11041,7 @@ const VERB_CONTEXTS_AD = [
   english: "to revile, to denounce harshly",
   register: "literary",
   region: "neutral",
-  notes: "[RESTORED] literary — everyday speakers use insultar",
+  notes: "  literary — everyday speakers use insultar",
   contextExplanation: "To revile or harshly denounce someone. Literary in register — everyday speakers use insultar or criticar duramente.",
   synonyms: ["insultar", "vituperar"],
   example: {
@@ -11086,7 +11086,7 @@ const VERB_CONTEXTS_AD = [
   english: "to get depressed, to become depressed",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "To get or become depressed. Always pronominal in this self-directed sense.",
   synonyms: ["decaer", "hundirse"],
   example: {
@@ -11116,7 +11116,7 @@ const VERB_CONTEXTS_AD = [
   english: "to melt something",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] base transitive form",
+  notes: "  base transitive form",
   contextExplanation: "Transitive: to melt something deliberately — chocolate, butter, ice. Stem-changes throughout.",
   synonyms: ["fundir"],
   example: {
@@ -11191,7 +11191,7 @@ const VERB_CONTEXTS_AD = [
   english: "to dull, to blunt",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED] specific: to dull a blade's edge",
+  notes: "  specific: to dull a blade's edge",
   contextExplanation: "To dull or blunt a blade's edge through use or misuse. The opposite of afilar.",
   synonyms: ["embotar"],
   example: {
@@ -11236,7 +11236,7 @@ const VERB_CONTEXTS_AD = [
   english: "to snub, to slight",
   register: "formal",
   region: "neutral",
-  notes: "[RESTORED] everyday speakers use despreciar or ignorar",
+  notes: "  everyday speakers use despreciar or ignorar",
   contextExplanation: "To snub or slight someone — treating them dismissively. Formal in register; everyday speakers use despreciar or ignorar.",
   synonyms: ["despreciar", "ignorar"],
   example: {
@@ -11281,7 +11281,7 @@ const VERB_CONTEXTS_AD = [
   english: "to develop, to unfold, to take place",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED] la historia se desarrolla en",
+  notes: "  la historia se desarrolla en",
   contextExplanation: "To develop, unfold, or take place — used for events, stories, and processes happening over time.",
   synonyms: ["transcurrir", "tener lugar"],
   example: {
@@ -11386,7 +11386,7 @@ const VERB_CONTEXTS_AD = [
   english: "to discard, to be ruled out",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED] descartarse de una carta = to discard a card",
+  notes: "  descartarse de una carta = to discard a card",
   contextExplanation: "To discard from one's hand in a card game, or for an option to be ruled out spontaneously.",
   synonyms: [],
   example: {
@@ -11431,7 +11431,7 @@ const VERB_CONTEXTS_AD = [
   english: "to break down (machine), to go bad (food)",
   register: "everyday",
   region: "lat-am",
-  notes: "[ADDED] lat-am: 'se descompuso el auto' = the car broke down",
+  notes: "  lat-am: 'se descompuso el auto' = the car broke down",
   contextExplanation: "Very common in Latin America: for a machine to break down or food to go bad spontaneously.",
   synonyms: ["averiarse", "estropearse"],
   example: {
@@ -11611,7 +11611,7 @@ const VERB_CONTEXTS_AD = [
   english: "to wear out, to become worn",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "To become worn out over time — physically or emotionally.",
   synonyms: ["agotarse", "deteriorarse"],
   example: {
@@ -11671,7 +11671,7 @@ const VERB_CONTEXTS_AD = [
   english: "to slide, to slip, to glide",
   register: "standard",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "To slide, slip, or glide — on a smooth surface or through a space.",
   synonyms: ["resbalarse", "patinar"],
   example: {
@@ -11701,7 +11701,7 @@ const VERB_CONTEXTS_AD = [
   english: "to tear apart, to tear to pieces",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED] more dramatic than romper; everyday speakers may use romper or destruir",
+  notes: "  more dramatic than romper; everyday speakers may use romper or destruir",
   contextExplanation: "To tear apart or tear to pieces — physically or figuratively. More dramatic in tone than simply romper.",
   synonyms: ["destrozar", "romper en pedazos"],
   example: {
@@ -11851,7 +11851,7 @@ const VERB_CONTEXTS_AD = [
   english: "to destroy",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "To destroy — a building, a relationship, an argument. Y-insertion throughout the present and preterite.",
   synonyms: ["arrasar", "demoler"],
   example: {
@@ -11866,7 +11866,7 @@ const VERB_CONTEXTS_AD = [
   english: "to faint, to fade away, to dissipate",
   register: "literary",
   region: "neutral",
-  notes: "[RESTORED] for \"faint\": desmayarse is everyday; for \"fade\": literary",
+  notes: "  for \"faint\": desmayarse is everyday; for \"fade\": literary",
   contextExplanation: "Literary: to faint or fade away and dissipate — used for disappearing hopes, sounds, or images rather than everyday fainting.",
   synonyms: ["desmayarse", "desaparecer", "esfumarse"],
   example: {
@@ -11926,7 +11926,7 @@ const VERB_CONTEXTS_AD = [
   english: "to stop, to come to a halt",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] se detuvo en la esquina",
+  notes: "  se detuvo en la esquina",
   contextExplanation: "Pronominal: the subject stops themselves — a vehicle, a person, or a process coming to a halt.",
   synonyms: ["pararse", "frenarse"],
   example: {
@@ -11971,7 +11971,7 @@ const VERB_CONTEXTS_AD = [
   english: "to dictate, to give (a class/lecture)",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED] dictar una clase = to give a class (lat-am)",
+  notes: "  dictar una clase = to give a class (lat-am)",
   contextExplanation: "To dictate text, or in Latin America to give or teach a class, lecture, or course.",
   synonyms: ["dar clase", "impartir"],
   example: {
@@ -12046,7 +12046,7 @@ const VERB_CONTEXTS_AD = [
   english: "to forgive, to excuse",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] disculpá = sorry/excuse me",
+  notes: "  disculpá = sorry/excuse me",
   contextExplanation: "To forgive or excuse. In Latin America, 'disculpá' is the standard everyday way to say 'sorry' or 'excuse me.'",
   synonyms: ["perdonar", "excusar"],
   example: {
@@ -12061,7 +12061,7 @@ const VERB_CONTEXTS_AD = [
   english: "to apologize",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED] disculparse por/con",
+  notes: "  disculparse por/con",
   contextExplanation: "To apologize — for a reason (por) or to a specific person (con).",
   synonyms: ["pedir disculpas", "pedir perdón"],
   example: {
@@ -12196,7 +12196,7 @@ const VERB_CONTEXTS_AD = [
   english: "to distract",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "Transitive: to distract someone from what they're doing. Follows traer's irregularity pattern.",
   synonyms: ["desconcentrar", "entretener"],
   example: {
@@ -12211,7 +12211,7 @@ const VERB_CONTEXTS_AD = [
   english: "to get distracted, to zone out",
   register: "everyday",
   region: "neutral",
-  notes: "[ADDED]",
+  notes: " ",
   contextExplanation: "Pronominal: the subject gets distracted or loses focus.",
   synonyms: ["desconcentrarse", "perder el hilo"],
   example: {
@@ -12286,7 +12286,7 @@ const VERB_CONTEXTS_AD = [
   english: "to tame, to break in",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED] domar un caballo",
+  notes: "  domar un caballo",
   contextExplanation: "To tame or break in a wild animal — typically a horse. Standard in equestrian and rural contexts.",
   synonyms: ["amansar", "domesticar"],
   example: {
@@ -12301,7 +12301,7 @@ const VERB_CONTEXTS_AD = [
   english: "to domesticate",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED]",
+  notes: " ",
   contextExplanation: "To domesticate a wild animal — making it accustomed to living alongside humans.",
   synonyms: ["amansar", "domar"],
   example: {
@@ -12361,7 +12361,7 @@ const VERB_CONTEXTS_AD = [
   english: "to gild, to cover with gold",
   register: "standard",
   region: "neutral",
-  notes: "[RESTORED] specialized metalworking sense",
+  notes: "  specialized metalworking sense",
   contextExplanation: "To gild or cover with gold leaf or gold plating. Specialized metalworking or decorative arts sense.",
   synonyms: ["recubrir de oro"],
   example: {

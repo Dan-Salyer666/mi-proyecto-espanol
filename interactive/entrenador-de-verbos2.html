@@ -1741,6 +1741,9 @@ function handleAnswer(btn) {
       removeWrap.style.display = 'none';
     }
   }
+
+  // Scroll Siguiente into view (helps on iPad with long feedback cards)
+  document.getElementById('btnNext').scrollIntoView({behavior:'smooth',block:'end'});
 }
 
 function nextQuestion() {

@@ -753,7 +753,6 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
         <button class="btn-opt" data-val="en2es">EN→ES</button>
         <button class="btn-opt" data-val="es2en">ES→EN</button>
         <button class="btn-opt" data-val="context">Contexto</button>
-        <button class="btn-opt" data-val="oddout">Intruso</button>
       </div>
     </div>
 
@@ -928,7 +927,7 @@ const cfg = {
   view:   'all',      // 'all' | 'trouble' | 'unseen' — view mode (Verbos row)
   filter: 'none',     // one of the FILTER_DEFS keys (Filtro row)
   len:    20,         // 10 | 20 | 40
-  mode:   'rotating'  // 'rotating' | 'en2es' | 'es2en' | 'context' | 'oddout'
+  mode:   'rotating'  // 'rotating' | 'en2es' | 'es2en' | 'context'
 };
 
 // ═══════════════════════════════════════════════
@@ -943,7 +942,7 @@ function _save(k, v)   { try { localStorage.setItem(k, JSON.stringify(v)); } cat
 function loadDifMastery() { return _load(DIF_MASTERY_KEY, {}); }
 function saveDifMastery(m) { _save(DIF_MASTERY_KEY, m); }
 
-const emptyView  = () => ({ en2es:{t:0,c:0}, es2en:{t:0,c:0}, context:{t:0,c:0}, oddout:{t:0,c:0} });
+const emptyView  = () => ({ en2es:{t:0,c:0}, es2en:{t:0,c:0}, context:{t:0,c:0} });
 const emptyTodos = () => ({ views: 0, ...emptyView() });
 
 function emptyBucket() {
@@ -1025,7 +1024,7 @@ function resetCurrentView() {
 //  Stats bar painting
 // ═══════════════════════════════════════════════
 const VIEW_LABELS = { all: 'Todos', trouble: 'Difíciles', unseen: 'Sin ver' };
-const Q_MODE_LABELS = { en2es: 'EN→ES', es2en: 'ES→EN', context: 'Contexto', oddout: 'Intruso' };
+const Q_MODE_LABELS = { en2es: 'EN→ES', es2en: 'ES→EN', context: 'Contexto' };
 
 function anyModeHasData(record) {
   return Object.keys(Q_MODE_LABELS).some(k => (record[k] || {t:0}).t > 0);
@@ -1277,7 +1276,6 @@ const Q_MODE_DISPLAY = {
   en2es:    'Inglés → Español',
   es2en:    'Español → Inglés',
   context:  'Completa la oración',
-  oddout:   '¿Cuál es el intruso?',
   rotating: 'Rotación'
 };
 
@@ -1478,41 +1476,12 @@ function buildContext(targetIdx, filterKey) {
   };
 }
 
-// Intruso: 3 contexts of the target's verb shown, plus 1 from a different verb.
-// User picks the intruder. Requires the target's verb to have ≥3 contexts in
-// the available pool; otherwise this question can't be built.
-function buildOddout(targetIdx, filterKey) {
-  const target = VERB_CONTEXTS[targetIdx];
-  const sourcePool = distractorSourcePool(filterKey);
-  const siblings = sourcePool.filter(i => VERB_CONTEXTS[i].verb === target.verb);
-  if (siblings.length < 3) return null;
-  const otherSiblings = siblings.filter(i => i !== targetIdx);
-  if (otherSiblings.length < 2) return null;
-  const sameVerbGroup = [targetIdx, ...pickN(otherSiblings, 2)];
-  const intruderPool = sourcePool.filter(i => VERB_CONTEXTS[i].verb !== target.verb);
-  if (intruderPool.length === 0) return null;
-  const intruderIdx = pickRandom(intruderPool);
-
-  const optionIdxs = shuffle([...sameVerbGroup, intruderIdx]);
-  return {
-    mode: 'oddout',
-    label: Q_MODE_DISPLAY.oddout,
-    promptText: '¿Cuál de estas frases <em>no</em> es un sentido del mismo verbo?',
-    promptItalic: false,
-    promptIsHtml: true,
-    options: optionIdxs.map(i => ({ idx: i, text: VERB_CONTEXTS[i].phrase })),
-    correctIdx: intruderIdx,
-    isOddout: true
-  };
-}
-
 const QUESTION_BUILDERS = {
   en2es:   buildEn2Es,
   es2en:   buildEs2En,
-  context: buildContext,
-  oddout:  buildOddout
+  context: buildContext
 };
-const ROTATION_ORDER = ['en2es','es2en','context','oddout'];
+const ROTATION_ORDER = ['en2es','es2en','context'];
 
 function buildQuestionForTarget(targetIdx, sessionMode, filterKey, attemptIdx) {
   if (sessionMode !== 'rotating') {
@@ -1543,17 +1512,6 @@ function buildQueue(filterKey, viewMode, qMode, len) {
     const bucket = loadBucket(filterKey);
     const seenSet = new Set(bucket.seen);
     pool = filterPool.filter(i => !seenSet.has(i));
-  }
-
-  // Oddout-only mode: restrict targets to verbs with ≥3 siblings in source pool
-  if (qMode === 'oddout') {
-    const sourcePool = distractorSourcePool(filterKey);
-    const verbCount = {};
-    sourcePool.forEach(i => {
-      const v = VERB_CONTEXTS[i].verb;
-      verbCount[v] = (verbCount[v] || 0) + 1;
-    });
-    pool = pool.filter(i => verbCount[VERB_CONTEXTS[i].verb] >= 3);
   }
 
   // Difíciles always runs the full pool
@@ -1661,15 +1619,13 @@ function handleAnswer(btn) {
   const wasCorrect = (pickedCtxIdx === q.correctIdx);
   const targetIdx = session.queue[session.idx];
 
-  // Auto-pronounce IMMEDIATELY — must run inside the user-gesture call stack,
-  // before any DOM mutation, localStorage I/O, or animation. iOS Safari and
-  // Edge silently drop utterances that are scheduled after class-list changes
-  // or smooth scrolls. For Intruso, this plays the target (the queue entry),
-  // NOT the picked intruder. We skip ES→EN since playing the English answer
-  // has no value.
-  if (q.mode !== 'es2en') {
-    speak(VERB_CONTEXTS[targetIdx].phrase);
-  }
+  // Audio feedback fires IMMEDIATELY — must run inside the user-gesture call
+  // stack, before any DOM mutation, localStorage I/O, or animation. iOS Safari
+  // and Edge silently drop utterances scheduled after class-list changes or
+  // smooth scrolls. Wrong answers get a soft beep first; both call paths run
+  // synchronously, and TTS startup latency naturally sequences beep → speech.
+  if (!wasCorrect) playBeep();
+  speak(VERB_CONTEXTS[targetIdx].phrase);
 
   // Lock and color
   optBtns.forEach(b => {
@@ -1683,8 +1639,6 @@ function handleAnswer(btn) {
   });
 
   // Stats credit goes to the SESSION TARGET (the queue entry).
-  // For Intruso, the target is one of the same-verb group; the picked answer is
-  // the intruder. recordAnswer credits the target either way.
   recordAnswer(session.filterKey, session.viewMode, targetIdx, q.mode, wasCorrect);
 
   session.total++;
@@ -1694,8 +1648,7 @@ function handleAnswer(btn) {
   document.getElementById('qPct').textContent =
     Math.round(session.correct / session.total * 100) + '%';
 
-  // Reveal target's detail page (we always show the queue-entry context, even
-  // when Intruso's "right answer" was the intruder)
+  // Reveal target's detail page
   render(targetIdx);
   const detailEl = document.getElementById('qDetailContainer');
   detailEl.style.display = 'block';
@@ -1703,8 +1656,8 @@ function handleAnswer(btn) {
   void detailEl.offsetWidth;   // re-trigger animation
   detailEl.classList.add('show');
 
-  // ── Todas las opciones review (skip for Intruso which has its own group logic) ──
-  if (q.mode !== 'oddout') {
+  // ── Todas las opciones review ──
+  {
     const reviewEl = document.getElementById('qAllOptions');
     const reviewItems = q.options.map(o => {
       const ctx = VERB_CONTEXTS[o.idx];
@@ -1866,6 +1819,32 @@ function speak(text) {
   u.voice = latam || anyEs || spain || null;
   u.rate = getRate();
   speechSynthesis.speak(u);
+}
+
+// ── Soft "wrong answer" beep (Web Audio API) ──
+// Brief 220 Hz sine with a gentle envelope. Cached AudioContext to avoid
+// per-call allocation. Silent fail on platforms without Web Audio.
+let _audioCtx = null;
+function playBeep() {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  if (!AC) return;
+  try {
+    if (!_audioCtx) _audioCtx = new AC();
+    if (_audioCtx.state === 'suspended') _audioCtx.resume();
+    const ctx = _audioCtx;
+    const t0 = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = 220;          // A3 — low and soft, not piercing
+    gain.gain.setValueAtTime(0, t0);
+    gain.gain.linearRampToValueAtTime(0.18, t0 + 0.02);  // gentle attack
+    gain.gain.linearRampToValueAtTime(0,    t0 + 0.22);  // gentle decay
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t0);
+    osc.stop(t0 + 0.25);
+  } catch (e) { /* silent */ }
 }
 
 // ═══════════════════════════════════════════════

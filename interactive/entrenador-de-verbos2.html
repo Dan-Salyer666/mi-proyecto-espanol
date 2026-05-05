@@ -281,8 +281,10 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
   font-size:13px;
 }
 .review-item.is-correct{border-color:var(--correct);background:rgba(52,211,153,0.06);}
+.review-item.is-wrong{border-color:var(--wrong);background:rgba(248,113,113,0.06);}
 .review-item .rv-verb{font-weight:600;color:var(--text-primary);min-width:100px;}
 .review-item.is-correct .rv-verb{color:var(--correct);}
+.review-item.is-wrong .rv-verb{color:var(--wrong);}
 .review-item .rv-def{color:var(--text-secondary);flex:1;}
 .review-item .rv-speak{background:none;border:none;cursor:pointer;font-size:14px;padding:2px 4px;}
 
@@ -1664,10 +1666,12 @@ function handleAnswer(btn) {
   // ── Todas las opciones review ──
   {
     const reviewEl = document.getElementById('qAllOptions');
-    const reviewItems = q.options.map(o => {
+   const reviewItems = q.options.map(o => {
       const ctx = VERB_CONTEXTS[o.idx];
       const isCor = o.idx === q.correctIdx;
-      return `<div class="review-item ${isCor ? 'is-correct' : ''}">
+      const isWrongPick = !wasCorrect && o.idx === pickedCtxIdx;
+      const cls = isCor ? 'is-correct' : (isWrongPick ? 'is-wrong' : '');
+      return `<div class="review-item ${cls}">
         <span class="rv-verb">${escapeHtml(ctx.phrase)} <button class="rv-speak" onclick="speak('${ctx.phrase.replace(/'/g, "\\'")}')" title="Escuchar">🔊</button></span>
         <span class="rv-def">${escapeHtml(ctx.english)}</span>
       </div>`;

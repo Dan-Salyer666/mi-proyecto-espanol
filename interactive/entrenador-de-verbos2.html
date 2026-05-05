@@ -1624,8 +1624,13 @@ function handleAnswer(btn) {
   // and Edge silently drop utterances scheduled after class-list changes or
   // smooth scrolls. Wrong answers get a soft beep first; both call paths run
   // synchronously, and TTS startup latency naturally sequences beep → speech.
-  if (!wasCorrect) playBeep();
-  speak(VERB_CONTEXTS[targetIdx].phrase);
+
+  if (wasCorrect) {
+    speak(VERB_CONTEXTS[targetIdx].phrase);
+  } else {
+    playBeep();
+    setTimeout(() => speak(VERB_CONTEXTS[targetIdx].phrase), 1000);
+  }
 
   // Lock and color
   optBtns.forEach(b => {

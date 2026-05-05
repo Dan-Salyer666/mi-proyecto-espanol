@@ -1657,8 +1657,19 @@ function handleAnswer(btn) {
   const optBtns = document.querySelectorAll('#qOptions .opt-btn');
   if ([...optBtns].some(b => b.classList.contains('locked'))) return; // already answered
 
-  const pickedCtxIdx = parseInt(btn.dataset.ctxIdx, 10);
+ const pickedCtxIdx = parseInt(btn.dataset.ctxIdx, 10);
   const wasCorrect = (pickedCtxIdx === q.correctIdx);
+  const targetIdx = session.queue[session.idx];
+
+  // Auto-pronounce IMMEDIATELY — must run inside the user-gesture call stack,
+  // before any DOM mutation, localStorage I/O, or animation. iOS Safari and
+  // Edge silently drop utterances that are scheduled after class-list changes
+  // or smooth scrolls. For Intruso, this plays the target (the queue entry),
+  // NOT the picked intruder. We skip ES→EN since playing the English answer
+  // has no value.
+  if (q.mode !== 'es2en') {
+    speak(VERB_CONTEXTS[targetIdx].phrase);
+  }
 
   // Lock and color
   optBtns.forEach(b => {
@@ -1674,7 +1685,6 @@ function handleAnswer(btn) {
   // Stats credit goes to the SESSION TARGET (the queue entry).
   // For Intruso, the target is one of the same-verb group; the picked answer is
   // the intruder. recordAnswer credits the target either way.
-  const targetIdx = session.queue[session.idx];
   recordAnswer(session.filterKey, session.viewMode, targetIdx, q.mode, wasCorrect);
 
   session.total++;
@@ -1683,14 +1693,6 @@ function handleAnswer(btn) {
 
   document.getElementById('qPct').textContent =
     Math.round(session.correct / session.total * 100) + '%';
-
-  // Auto-pronounce the Spanish phrase the user was being drilled on.
-  // For Intruso, that's the target (the queue entry's verb) — NOT the picked
-  // intruder. For all other modes, the target's phrase IS the correct answer.
-  // We skip ES→EN mode since playing the English answer has no value.
-  if (q.mode !== 'es2en') {
-    speak(VERB_CONTEXTS[targetIdx].phrase);
-  }
 
   // Reveal target's detail page (we always show the queue-entry context, even
   // when Intruso's "right answer" was the intruder)

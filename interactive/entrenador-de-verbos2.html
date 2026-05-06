@@ -112,6 +112,16 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
   font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;
 }
 .btn-reset:hover{background:rgba(248,113,113,0.1);border-color:var(--wrong);}
+.stats-dif-cell .stats-dif-label{display:inline-flex;align-items:center;gap:6px;}
+.btn-clear-dif{
+  width:18px;height:18px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;
+  color:var(--text-muted);font-family:'Outfit',sans-serif;
+  font-size:10px;font-weight:600;line-height:1;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:0;transition:all .2s;
+}
+.btn-clear-dif:hover{border-color:var(--wrong);color:var(--wrong);background:rgba(248,113,113,0.08);}
 
 /* ── Menu config sections ── */
 .config-section{margin-bottom:20px;}
@@ -297,6 +307,13 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
   cursor:pointer;transition:all .2s;
 }
 .btn-dif-remove:hover{background:rgba(52,211,153,0.2);}
+.btn-dif-remove.pending{
+  border-color:rgba(138,155,184,0.35);
+  background:rgba(138,155,184,0.05);
+  color:var(--text-secondary);
+  cursor:not-allowed;opacity:0.7;
+}
+.btn-dif-remove.pending:hover{background:rgba(138,155,184,0.05);}
 .dif-removed-msg{
   text-align:center;padding:12px;margin-top:8px;
   font-size:13px;color:var(--correct);font-weight:600;
@@ -867,25 +884,29 @@ h1{font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;font-styl
 
 <!-- ───────── Data loading ───────── -->
 <!--
-  Future letter files load here in order:
-    <script src="../datos/verbos/verbos-a-d.js"></script>
-    <script src="../datos/verbos/verbos-e-l.js"></script>
-    <script src="../datos/verbos/verbos-m-q.js"></script>
-    <script src="../datos/verbos/verbos-r-z.js"></script>
-    <script src="../datos/verbos/verbos-nuevos-1.js"></script>
-  Adding a file: one new tag here, one new spread in the combine block below.
+  Letter range files load in alphabetical order. To add another file:
+  one new tag here, one new spread in the combine block below.
 -->
 <script src="../datos/verbos/verbos-a-d.js"></script>
+<script src="../datos/verbos/verbos-e-l.js"></script>
+<script src="../datos/verbos/verbos-m-q.js"></script>
+<script src="../datos/verbos/verbos-r-z.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════
 //  Combine + index
 // ═══════════════════════════════════════════════
 const VERB_PROFILES = [
-  ...(typeof VERB_PROFILES_AD !== 'undefined' ? VERB_PROFILES_AD : [])
+  ...(typeof VERB_PROFILES_AD !== 'undefined' ? VERB_PROFILES_AD : []),
+  ...(typeof VERB_PROFILES_EL !== 'undefined' ? VERB_PROFILES_EL : []),
+  ...(typeof VERB_PROFILES_MQ !== 'undefined' ? VERB_PROFILES_MQ : []),
+  ...(typeof VERB_PROFILES_RZ !== 'undefined' ? VERB_PROFILES_RZ : [])
 ];
 const VERB_CONTEXTS = [
-  ...(typeof VERB_CONTEXTS_AD !== 'undefined' ? VERB_CONTEXTS_AD : [])
+  ...(typeof VERB_CONTEXTS_AD !== 'undefined' ? VERB_CONTEXTS_AD : []),
+  ...(typeof VERB_CONTEXTS_EL !== 'undefined' ? VERB_CONTEXTS_EL : []),
+  ...(typeof VERB_CONTEXTS_MQ !== 'undefined' ? VERB_CONTEXTS_MQ : []),
+  ...(typeof VERB_CONTEXTS_RZ !== 'undefined' ? VERB_CONTEXTS_RZ : [])
 ];
 const PROFILE_BY_VERB = Object.fromEntries(
   VERB_PROFILES.map(p => [p.verb, p])
@@ -1022,6 +1043,23 @@ function resetCurrentView() {
   showStats();
 }
 
+// Reset only the difíciles pool of the active filter — invoked by the inline ✕
+// next to the difíciles count, so it works regardless of which view is active.
+function resetDifPool() {
+  const bucket = loadBucket(cfg.filter);
+  const fLabel = FILTER_DEFS[cfg.filter].label;
+  if (bucket.difPool.length === 0) return;
+  if (!confirm(`¿Reiniciar las difíciles del filtro "${fLabel}"?`)) return;
+
+  const mastery = loadDifMastery();
+  bucket.difPool.forEach(i => delete mastery[String(i)]);
+  saveDifMastery(mastery);
+  bucket.dificiles = emptyView();
+  bucket.difPool = [];
+  saveBucket(cfg.filter, bucket);
+  showStats();
+}
+
 // ═══════════════════════════════════════════════
 //  Stats bar painting
 // ═══════════════════════════════════════════════
@@ -1083,7 +1121,7 @@ function showStats() {
     mainHtml += `<div><span class="stat-num">${bucket.seen.length} / ${poolSize}</span>progreso</div>`;
   }
   if (bucket.difPool.length > 0) {
-    mainHtml += `<div><span class="stat-num">${bucket.difPool.length}</span>difíciles</div>`;
+    mainHtml += `<div class="stats-dif-cell"><span class="stat-num">${bucket.difPool.length}</span><span class="stats-dif-label">difíciles<button class="btn-clear-dif" onclick="resetDifPool()" title="Reiniciar difíciles">✕</button></span></div>`;
   }
 
   // Reset button — scoped to active filter+view combination
@@ -1607,6 +1645,21 @@ function showQuestion() {
   document.querySelectorAll('#qOptions .opt-btn').forEach(btn => {
     btn.addEventListener('click', () => handleAnswer(btn));
   });
+
+  // ── Pre-answer greyed remove button (difíciles mode only) ──
+  // If this verb already has a mastery streak ≥ 3 from a prior session, surface
+  // a disabled "Quitar de difíciles" button so the user knows it's a returning
+  // candidate and needs one more correct answer to confirm. After answering,
+  // handleAnswer takes over the same slot — active on correct, hidden on wrong.
+  if (session.viewMode === 'trouble') {
+    const mastery = loadDifMastery();
+    const mKey = String(targetIdx);
+    if ((mastery[mKey] || 0) >= 3) {
+      const removeWrap = document.getElementById('qDifRemove');
+      removeWrap.innerHTML = `<button class="btn-dif-remove pending" disabled title="Acertá esta respuesta para poder quitar">Quitar de difíciles</button>`;
+      removeWrap.style.display = 'block';
+    }
+  }
 
   window.scrollTo({ top: 0, behavior: 'instant' });
 }

@@ -972,7 +972,8 @@ let answers          = [];
 // Story state
 let storyBible       = null;
 let prevBible        = null;
-let plannedEnding    = null;  // {thematic_core, final_beat, thread_resolution} — committed on ep 1, frozen thereafter
+let plannedEnding    = null;  // legacy: {thematic_core, final_beat, thread_resolution} — committed on ep 1 by the Opus call itself, frozen thereafter. Used when no storyPlan is present (legacy saves, prep-call failure).
+let storyPlan        = null;  // module-driven plan from Sonnet prep call: {central_question, ending_type, locked_ending, beat_plan, ...}. When present, takes precedence over plannedEnding for prompt injection.
 let episodeNum       = 0;
 let episodeTarget    = 0;
 let storyId          = null;
@@ -1067,18 +1068,180 @@ let driveReady     = false;
 let _connectResolve = null;  // for promisified re-auth
 
 // ═══════════════════════════════════════════════
-//  MODULE SPECS — UI scaffold only as of May 2026.
-//  These are placeholders. The actual spec strings live as task documents
-//  in the project folder (sorprendeme spec = universal lean spec; misterio
-//  spec = mystery module spec, cleaned). When the prep-call architecture
-//  is wired in the next batch, paste the active spec text into these
-//  constants and the prep call will read MODULE_SPECS[cfg.module].
-//  Keeping them as null prevents accidental injection into the existing
-//  generation prompt before the architecture is ready.
+//  MODULE SPECS — system prompts for the Sonnet prep call.
+//  These are passed verbatim as the `system` parameter to a Sonnet call
+//  that runs ONCE at story start (fresh stories only) and produces a
+//  structural plan in JSON. The plan is then injected into the per-episode
+//  Opus generation prompt as resolved data — never as a planning task.
+//  This separation is deliberate: holding planning structures inside
+//  Opus's context during prose generation is the failure mode that took
+//  down the seed system in April 2026. With prep extracted, the prose
+//  call sees only the resolved plan, not the planning vocabulary.
+//  If MODULE_SPECS[cfg.module] is null OR the prep call fails, the legacy
+//  inline-planning path takes over (see planningBlock in buildPrompt).
 // ═══════════════════════════════════════════════
 const MODULE_SPECS = {
-  sorprendeme: null,  // TODO: fill with universal lean spec text on prep-call wiring
-  misterio:    null,  // TODO: fill with mystery module spec text on prep-call wiring
+  sorprendeme: `You are a story planner for a Spanish-language reading-comprehension exercise. Your job is structural planning — not prose. Keep your output tight, plain, and constraint-shaped. Plain language only; no literary register in the plan itself, since elaborate planning vocabulary primes the eventual prose into the wrong key.
+
+INPUTS YOU WILL RECEIVE FROM THE USER:
+- Mode (individual / fixed)
+- Episode count (1 for individual; 3-15 for fixed)
+- Reading level (A2 / B1 / B2 / C1 / C2)
+- Register (everyday / literary / news)
+- Region (neutral / rioplatense / latinoamericano / spain)
+- Optional theme (free text, may be absent)
+
+OUTPUT — pure JSON, no preamble, no commentary:
+
+{
+  "central_question": "One sentence in plain English. The dramatic question driving the entire story.",
+  "ending_type": "one of: revelation | choice | confrontation | unmasking | sacrifice | return",
+  "locked_ending": "2-4 sentences in plain English describing what concretely happens at the climax. Must name a specific action, object, decision, or fact. Must NOT be metaphorical, abstract, vague, or ambiguous. If you cannot state it concretely, the plan is not ready — revise.",
+  "ending_concreteness_check": "One sentence listing the specific physical/factual anchors that make the ending concrete. If you cannot honestly complete this, the locked_ending needs to be rewritten.",
+  "beat_plan": [
+    {
+      "episode": 1,
+      "function": "One sentence: what this episode DOES narratively. Must be a distinct narrative job, not 'continue the story'.",
+      "ends_with": "One sentence: the physical or situational state at the moment this episode closes."
+    }
+  ]
+}
+
+HARD RULES:
+
+1. locked_ending is non-negotiable on concreteness. If the user's theme is vague, push toward a concrete resolution anyway. Resolutions like "she finally understood her place in the world" or "the truth was inside her all along" FAIL this rule.
+
+2. Each episode's function must be DIFFERENT and DISTINCT. No episode does the same job as another. "Establish setting" + "deepen mood" is two episodes wasted; combine them.
+
+3. The final episode's function must match the ending_type. If ending_type = "revelation", the final episode reveals the locked_ending. If "choice", the protagonist makes the named decision.
+
+4. beat_plan must contain exactly the number of entries the user specified.
+
+5. Match what the theme actually asks for. Don't bend every premise into the same shape.
+
+6. If no theme is given, invent one appropriate to the level and register. Avoid medical/clinical/doctor-patient scenarios.
+
+7. Avoid these ending failure modes: metaphysical realizations, "y así entendió que…", abstract truths in place of concrete facts, resolutions stated only through metaphor, the protagonist's feelings substituting for an action.
+
+8. For mode='individual' (1 episode), the single beat must encompass the full arc — establishment, complication, and resolution all happen within it.
+
+9. Total output should fit roughly within 400 tokens. Tight is good.
+
+EXAMPLE — input: Mode: fixed, Episodes: 4, Level: B1, Register: everyday, Region: neutral, Theme: "whether to take a job in another city":
+
+{
+  "central_question": "Will Sara accept the job in Mendoza, leaving her aging father behind, or stay in Buenos Aires and lose the opportunity?",
+  "ending_type": "choice",
+  "locked_ending": "Sara accepts the job. On her last evening in Buenos Aires she helps her father set up a tablet so they can video-call, walking him through the icons twice. He tells her, without prompting, that he is proud of her. The next morning her train leaves at 6:40.",
+  "ending_concreteness_check": "Names the specific decision (accept), the specific final shared action (tablet setup), the specific words from the father (proud), and a concrete departure detail (6:40 train).",
+  "beat_plan": [
+    { "episode": 1, "function": "Sara receives the offer and tells no one. A phone call from her sister surfaces the real stakes — their father's increasing forgetfulness.", "ends_with": "Sara has not yet told her father about the offer." },
+    { "episode": 2, "function": "Sara visits her father intending to tell him, but a small domestic moment — he cannot find his glasses — derails her resolve and she leaves having said nothing.", "ends_with": "Sara walks home from her father's apartment having said nothing about the job." },
+    { "episode": 3, "function": "Sara's sister confronts her over stalling; they argue. Sara learns the sister is willing to take on more direct care.", "ends_with": "Sara has committed to giving the company her answer in the morning." },
+    { "episode": 4, "function": "Sara accepts the job and spends a final evening with her father; the story closes on her departure.", "ends_with": "Sara boards the 6:40 train to Mendoza." }
+  ]
+}`,
+
+  misterio: `You are a story planner for a Spanish-language MYSTERY story. Your job is structural planning — not prose. Keep your output tight, plain, and constraint-shaped. Literary planning vocabulary primes the eventual prose into the wrong key; avoid it.
+
+GENRE COMMITMENT (this defines the kind of story you are planning):
+- A central question with a hidden answer drives the whole story.
+- The world contains the answer, whether that answer is physical, psychological, or supernatural. The fundamental nature of reality may shift at the end, but this shift MUST be fully supported by subtle, unsettling clues planted early. Nothing is pulled from thin air.
+- Information must be EARNED by the protagonist's actions, attention, or position. Coincidence is not a delivery mechanism.
+- Ordinary objects, gestures, and details can become evidence in retrospect.
+- The final image of the story is doing structural work; choose it deliberately.
+
+INPUTS YOU WILL RECEIVE FROM THE USER:
+- Mode (individual / fixed)
+- Episode count (1 for individual; 3-15 for fixed)
+- Reading level (A2 / B1 / B2 / C1 / C2)
+- Register (everyday / literary)
+- Region (neutral / rioplatense / latinoamericano / spain)
+- Theme (free text — the user's premise. Treat this not just as a setting, but as the moral foundation of the story. If the user provides a vague premise, you MUST extrapolate a sharp, specific moral lesson from it.)
+
+OUTPUT — pure JSON, no preamble, no commentary:
+
+{
+  "central_question": "One sentence in plain English. Names a specific person, object, event, or fact whose status is unknown to the protagonist (and the reader).",
+  "thematic_thesis": "One sentence explicitly stating the moral, philosophical, or cautionary point of the story (e.g., 'Greed for what is lost destroys what remains', 'Truth without compassion is just cruelty'). This is the story's purpose.",
+  "thematic_anchor": "One sentence defining how the central mystery or object physically embodies the thesis (e.g., a priceless artifact that is revealed to be worthless lead, a cure that accelerates the disease).",
+  "ending_type": "revelation | unmasking | reversal | tragic_gap | cosmic_irony | paradigm_shift | quiet_resolution",
+  "locked_ending": {
+    "what_protagonist_completes": "One concrete sentence. The specific action, decision, or discovery the protagonist makes by the end. Must be COMPLETE — not partial, not ambiguous, not metaphorical.",
+    "how_world_responds": "One concrete sentence. What the world does with that completion. Must MEAN SOMETHING DIFFERENT from what the protagonist's action accomplishes. The gap between these two sentences is where the ending earns its weight.",
+    "final_image": "One sentence. The literal last visible thing in the story — a physical object, a moment of stillness, a sound, a presence, an absence. Concrete and specific."
+  },
+  "ending_architecture_check": "One sentence confirming the relationship between what_protagonist_completes and how_world_responds. If they describe the exact same mundane outcome, the ending is inert and must be rewritten. The world's response CAN be a direct, devastating consequence of the protagonist's realization (especially in PARADIGM_SHIFT or COSMIC_IRONY).",
+  "beat_plan": [
+    {
+      "episode": 1,
+      "function": "One sentence: what this episode does narratively. Must be a DISTINCT job, not 'continue the story'.",
+      "ends_with": "One sentence: the physical or situational state when this episode closes."
+    }
+  ]
+}
+
+ENDING TYPE DEFINITIONS:
+- REVELATION — a hidden fact comes out; earlier scenes recontextualize.
+- UNMASKING — someone or something presented as X is shown to be Y.
+- REVERSAL — what seemed true is inverted.
+- TRAGIC_GAP — protagonist succeeds completely; the world responds in a way that makes the success bitter, late, or moot.
+- COSMIC_IRONY — the moral universe asserts itself, often darkly; the punishment fits the crime in an unexpected way (Twilight Zone classic).
+- PARADIGM_SHIFT — the fundamental nature of the protagonist's reality or existence is upended (e.g., they realize they are dead, trapped in a simulation, or out of time). The clues were there, but the reader and protagonist misinterpreted them.
+- QUIET_RESOLUTION — the answer is found, the world settles, something has shifted but no catastrophe arrives. RARE; never default to this.
+
+HARD RULES:
+
+1. locked_ending.what_protagonist_completes and locked_ending.how_world_responds must mean different things, EXCEPT for ending_type quiet_resolution. The how_world_responds must be the final, undeniable proof of the thematic_thesis. Inert endings — where both sentences describe the same outcome — FAIL.
+
+2. The locked_ending must be concrete throughout. "She finally understood herself" or "the truth was inside her all along" FAIL. Name actions, objects, facts.
+
+3. Each episode's function must be DIFFERENT and DISTINCT. "Establish setting" + "deepen mood" is two wasted episodes; combine them.
+
+4. Episode 1 must establish both the central question AND the information asymmetry — what does the protagonist NOT know that the reader will be tracking? This is the engine of the whole story.
+
+5. Middle episodes must escalate tension by introducing unsettling anomalies. The protagonist must encounter details that do not fit their understanding of reality, forcing the reader to question the true nature of the central mystery. They cannot be atmospheric filler.
+
+6. The final episode's function must produce the answer AND recontextualize at least one earlier scene. The final image of the final episode's ends_with must match locked_ending.final_image.
+
+7. beat_plan must contain exactly the number of entries the user specified.
+
+8. Mystery-specific failure modes to avoid:
+   - The answer is invented at the end rather than present in the world from the start.
+   - The protagonist is HANDED the answer by a coincidence rather than earning it.
+   - Premature reveal — the answer slips out in an early episode.
+   - "And then she noticed something strange" filler in place of real narrative work.
+   - Atmospheric mood substituting for plot motion.
+   - The final image is a feeling instead of a thing.
+
+9. If no theme is given, invent one appropriate to level and register. Avoid medical/clinical/doctor-patient scenarios.
+
+10. Total output should fit roughly within 500 tokens. Tight is good.
+
+11. The thematic_thesis must not be a gentle observation. It must be a definitive stance on the human condition (e.g., a parable, a tragedy, a cautionary tale).
+
+12. Do not be subtle with the theme. The thematic_anchor must ensure the 'point' of the story is structurally unavoidable by the final episode.
+
+EXAMPLE — input: Mode: fixed, Episodes: 4, Level: B2, Register: literary, Region: neutral, Theme: "a piano student suddenly stops practicing for an important audition":
+
+{
+  "central_question": "Why has Manuel — the teacher's most disciplined student — abruptly stopped preparing the audition piece three weeks before the competition?",
+  "thematic_thesis": "What we owe the dead can outweigh what we owe ourselves.",
+  "thematic_anchor": "The audition piece is the same piece Manuel's father — a disgraced former concert pianist — played at the concert that ended his career; performing it publicly would be a betrayal, and refusing it costs Manuel the future he has worked for.",
+  "ending_type": "tragic_gap",
+  "locked_ending": {
+    "what_protagonist_completes": "The teacher learns that Manuel's father is dying and asked Manuel not to play the piece publicly, and that Manuel has chosen his father over the audition.",
+    "how_world_responds": "Manuel's father dies the following week, and at the reception after the funeral, after the guests have gone, the teacher sees Manuel sit at the family piano and play three perfect minutes of the piece — alone, with no audience.",
+    "final_image": "Manuel at the family piano in the empty house, the last chord still in the air, no one listening but the teacher who was not invited to the lesson he is giving himself."
+  },
+  "ending_architecture_check": "What the teacher completes is understanding, and she arrives at it. What the world does is take Manuel's father, leaving Manuel free to play the piece — but only privately, only after, only for himself. The understanding does not save anything. The performance does not redeem anything. Both are total; neither reaches the other, and both prove the thesis.",
+  "beat_plan": [
+    { "episode": 1, "function": "Establish Manuel as exemplary and show this week's silence; the teacher's first attempts to engage him fail in a way that tells us something is being protected, not avoided.", "ends_with": "Manuel leaves the lesson early without explanation, and the teacher does not call him back." },
+    { "episode": 2, "function": "The teacher contacts Manuel's mother under the pretense of routine concern; the mother is evasive in a way that closes more doors than it opens.", "ends_with": "The teacher hangs up no closer to the answer, more sure something is wrong." },
+    { "episode": 3, "function": "Manuel arrives at his next lesson with sheet music he has chosen himself — unassigned. He plays it, perfectly, without speaking. The teacher recognizes the piece but cannot place where from.", "ends_with": "The teacher leaves Manuel at the piano without naming what she heard, and walks home humming a melody she does not yet know the history of." },
+    { "episode": 4, "function": "A colleague identifies the piece as Eduardo Vega's last public performance. The teacher visits Manuel; he explains. The story closes after the funeral.", "ends_with": "Manuel at the family piano in the empty house, the last chord still in the air, no one listening but the teacher who was not invited to the lesson he is giving himself." }
+  ]
+}`,
 };
 
 // ═══════════════════════════════════════════════
@@ -1101,12 +1264,11 @@ function pickMode(btn) {
 }
 
 // Module selector — Sorpréndeme (universal lean spec) vs Misterio (genre module).
-// UI scaffold only as of May 2026: state is captured here and the spec strings
-// are stored in MODULE_SPECS below for the next batch's prep-call wiring.
-// Story generation is unchanged in this batch — the system prompt sent to Opus
-// does not yet read cfg.module. Wiring will go through a separate Sonnet prep
-// call so the elaborate planning structures don't contaminate prose generation
-// (the failure mode that took down the seed system in April 2026).
+// Selection drives which spec is sent to the Sonnet prep call at story start
+// (see generateStoryPlan / doGenerate). The spec text itself lives in
+// MODULE_SPECS above. The Opus prose call never sees the spec — it only
+// sees the resolved plan, by design. Switching mid-story is blocked by
+// param-locking after the first episode is generated.
 function pickModule(btn) {
   const newModule = btn.dataset.module;
   document.querySelectorAll('[data-module]').forEach(b => b.classList.remove('selected'));
@@ -1375,16 +1537,24 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
   const isFinalEp     = p.epTarget > 0 && p.epNum === p.epTarget;
   const isMultiEpFirst= isFreshStart && (p.epNum === 1 || p.epTarget > 0);   // ep 1 of fija
   const isSoloStory   = p.epNum === 0;                                         // individual mode
-  const needsEndingPlan = isFreshStart && (isMultiEpFirst || isSoloStory);
-  const hasEndingPlan   = !!p.plannedEnding;
+  // hasStoryPlan: a Sonnet-supplied plan is on the run. When true, the legacy
+  // inline planning/ending blocks below are suppressed (the plan does that
+  // work) and storyPlanBlock injects the resolved plan as fixed input. When
+  // false (legacy save, prep-call failure, or null spec), the legacy path
+  // runs as before.
+  const hasStoryPlan    = !!p.storyPlan;
+  const needsEndingPlan = isFreshStart && (isMultiEpFirst || isSoloStory) && !hasStoryPlan;
+  const hasEndingPlan   = !!p.plannedEnding && !hasStoryPlan;
 
-  // Variation forcing: fires only for fresh stories when a theme is specified.
-  // Forces the model past the default/prototypical interpretation of the theme toward genuine structural variety.
+  // Variation forcing: fires only for fresh stories when a theme is specified
+  // AND no Sonnet plan is in play. The plan's central_question + ending_type
+  // already does the anti-prototype work — keeping the variation block on top
+  // of it would be a second structural commitment competing with the first.
   // NOTE: Item #4 (twist/hinge) was removed in the ending-planning rework — that commitment is now
   // captured explicitly in planned_ending JSON output instead of being left silent. The remaining four
   // items stay internal; they're about genre distinctiveness, complementary to the ending plan.
   const varSeed = Math.floor(Math.random() * 10000);
-  const variationBlock = (isFreshStart && p.theme) ? `
+  const variationBlock = (isFreshStart && p.theme && !hasStoryPlan) ? `
 
 VARIATION REQUIREMENT (seed: ${varSeed}):
 The theme «${p.theme}» has an obvious default version. Do NOT write that version.
@@ -1485,6 +1655,73 @@ Este es el último episodio. Da un cierre satisfactorio:
         : ` (Episodio ${p.epNum} — historia abierta)`)
     : '';
 
+  // ── storyPlanBlock: injects the Sonnet-supplied plan as resolved data when
+  //    one is on the run. Replaces (does not coexist with) the legacy
+  //    variationBlock + planningBlock + endingContext + finalExecutionBlock
+  //    chain — those are gated off above when hasStoryPlan is true.
+  //    Two shapes are supported:
+  //      • Sorpréndeme: locked_ending is a plain string (2-4 sentences).
+  //      • Misterio:    locked_ending is an object with what_protagonist_completes,
+  //                     how_world_responds, and final_image.
+  //    Detection is by typeof on locked_ending.
+  let storyPlanBlock = '';
+  if (hasStoryPlan) {
+    const sp = p.storyPlan;
+    // Resolve the current episode's beat. beat_plan is in episode order.
+    // For solo (epNum 0), there's one beat — use index 0.
+    // For ep N of fija, use index N-1 (with clamp).
+    const beatIdx = Math.max(0, Math.min((p.epNum || 1) - 1, (sp.beat_plan?.length || 1) - 1));
+    const beat = (Array.isArray(sp.beat_plan) && sp.beat_plan[beatIdx]) || null;
+
+    // Format locked_ending depending on shape.
+    let lockedStr = '';
+    if (typeof sp.locked_ending === 'string') {
+      lockedStr = sp.locked_ending.trim();
+    } else if (sp.locked_ending && typeof sp.locked_ending === 'object') {
+      const le = sp.locked_ending;
+      const parts = [];
+      if (le.what_protagonist_completes) parts.push(`  · Lo que completa el protagonista: ${le.what_protagonist_completes}`);
+      if (le.how_world_responds)         parts.push(`  · Cómo responde el mundo: ${le.how_world_responds}`);
+      if (le.final_image)                parts.push(`  · Imagen final: ${le.final_image}`);
+      lockedStr = '\n' + parts.join('\n');
+    }
+
+    const planLines = [
+      `· Pregunta central: ${sp.central_question || '(sin especificar)'}`,
+    ];
+    if (sp.thematic_thesis) planLines.push(`· Tesis temática: ${sp.thematic_thesis}`);
+    if (sp.thematic_anchor) planLines.push(`· Anclaje temático: ${sp.thematic_anchor}`);
+    if (sp.ending_type)     planLines.push(`· Tipo de desenlace: ${sp.ending_type}`);
+    if (lockedStr)          planLines.push(`· Desenlace fijado: ${lockedStr}`);
+    if (sp.ending_architecture_check) planLines.push(`· Arquitectura del final: ${sp.ending_architecture_check}`);
+
+    const beatLines = beat
+      ? `\n\nEPISODIO ACTUAL${p.epTarget > 0 ? ` (${p.epNum || 1} de ${p.epTarget})` : (p.epNum > 0 ? ` (episodio ${p.epNum})` : '')}:
+· Función narrativa: ${beat.function || '(sin especificar)'}
+· Estado al cerrar: ${beat.ends_with || '(sin especificar)'}`
+      : '';
+
+    const finalEpInstructions = isFinalEp ? `
+
+EPISODIO FINAL — ejecuta el desenlace EXACTAMENTE como fue fijado arriba:
+- Aterriza la pregunta central de forma concreta — sin ambigüedad, sin metáfora sustituyendo a la acción.
+- La imagen / acción / momento de cierre debe coincidir con el desenlace fijado. Si el plan especificó una imagen final, esa es la última cosa visible del relato.
+- Recontextualiza al menos un elemento previo del relato — algo que el lector entendió de una manera y al final significa otra cosa. Ese cambio de sentido es lo que hace que un final se quede con el lector.
+- No abras hilos nuevos. Todo lo que aparece aquí debe aportar al cierre.
+- El final debe sentirse INEVITABLE al mirar hacia atrás y ganado en el momento. No expliques la moraleja — deja que las imágenes y las decisiones hagan el trabajo.`
+      : `
+
+Haz exactamente la "Función narrativa" de este episodio y termina en el "Estado al cerrar". El desenlace fijado es la dirección hacia la que va la historia, NO el destino de este episodio. Siembra los elementos que el final va a necesitar; no los aterrices todavía. Cada escena debe aportar al desenlace planeado, sin alcanzarlo.`;
+
+    storyPlanBlock = `
+
+PLAN COMPROMETIDO AL INICIO DE LA HISTORIA (fijo — no modificar):
+
+${planLines.join('\n')}${beatLines}${finalEpInstructions}
+
+RECORDATORIO DE REGISTRO: este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt, no en el registro de este bloque. El plan dicta QUÉ pasa; el registro dicta CÓMO se escribe.`;
+  }
+
   // JSON schema: conditionally includes planned_ending on episodes that need to commit.
   const jsonSchema = needsEndingPlan
     ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"thematic_core":"una oración","final_beat":"dos o tres oraciones","thread_resolution":"qué se resuelve, qué queda abierto, qué se recontextualiza"},"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`
@@ -1496,7 +1733,7 @@ Nivel: ${levelMap[p.level] || p.level}
 Registro: ${registerMap[p.register] || p.register}
 Variedad: ${regionDesc[p.region] || p.region}
 ${themeStr}${epLabel}
-${bibleSection}${endingContext}${finalExecutionBlock}${variationBlock}${planningBlock}
+${bibleSection}${endingContext}${finalExecutionBlock}${variationBlock}${planningBlock}${storyPlanBlock}
 
 PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
 
@@ -1535,6 +1772,88 @@ function startGenerate() {
   }
 }
 
+// ═══════════════════════════════════════════════
+//  STORY PLAN PREP CALL (Sonnet)
+//  Fires once at the start of a fresh story when MODULE_SPECS[cfg.module]
+//  is non-null. The returned plan is stored on the story state and
+//  injected into every Opus episode call as resolved data — never as a
+//  planning task. If this call fails or returns invalid JSON, the caller
+//  treats it as a non-fatal miss and proceeds via the legacy inline
+//  planning path. The legacy plannedEnding mechanism is the safety net.
+// ═══════════════════════════════════════════════
+async function generateStoryPlan({ moduleKey, mode, level, register, region, theme, episodeCount }) {
+  const spec = MODULE_SPECS[moduleKey];
+  if (!spec) return null;  // No spec text → no prep call → legacy path runs.
+
+  // Map internal region keys to the names the specs use.
+  const regionForSpec = region === 'latin_american' ? 'latinoamericano'
+                      : region === 'rioplatense'    ? 'rioplatense'
+                      : region === 'spain'          ? 'spain'
+                      : 'neutral';
+  const modeForSpec   = (mode === 'individual') ? 'individual' : 'fixed';
+
+  const userPayload = {
+    mode:          modeForSpec,
+    episode_count: episodeCount,
+    reading_level: level,
+    register,
+    region:        regionForSpec,
+    theme:         theme || ''
+  };
+
+  try {
+    const res = await fetch('/api/claude', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        password:   sessionPw,
+        model:      'claude-sonnet-4-6',
+        max_tokens: 1500,
+        stream:     false,
+        system:     spec,
+        messages:   [{ role: 'user', content: JSON.stringify(userPayload, null, 2) }]
+      })
+    });
+    if (!res.ok) {
+      console.warn('[storyPlan] HTTP', res.status, '— falling back to legacy planning path');
+      return null;
+    }
+    const data = await res.json();
+    // Mirror the bible call's pattern: data.content is an array of blocks.
+    let text = '';
+    if (Array.isArray(data.content)) {
+      text = data.content.filter(b => b && b.type === 'text').map(b => b.text || '').join('\n');
+    } else if (typeof data.content === 'string') {
+      text = data.content;
+    }
+    text = text.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/, '').trim();
+
+    let plan;
+    try { plan = JSON.parse(text); }
+    catch (e) {
+      console.warn('[storyPlan] JSON parse failed — falling back to legacy path. Raw:', text.slice(0, 200));
+      return null;
+    }
+
+    // Minimal structural validation.
+    if (!plan || typeof plan !== 'object') return null;
+    if (!plan.central_question || !plan.locked_ending || !Array.isArray(plan.beat_plan)) {
+      console.warn('[storyPlan] missing required keys — falling back to legacy path');
+      return null;
+    }
+    // Beat-plan length is a soft check: warn but don't reject. The injection
+    // clamps by index, so a length mismatch only costs the off-end episode
+    // a less specific beat — better than dropping the whole plan.
+    if (plan.beat_plan.length !== episodeCount) {
+      console.warn('[storyPlan] beat_plan length', plan.beat_plan.length, 'vs episode_count', episodeCount, '— continuing with clamp');
+    }
+    return plan;
+  } catch (e) {
+    console.warn('[storyPlan] failed:', e, '— falling back to legacy path');
+    return null;
+  }
+}
+
 async function doGenerate() {
   const theme   = document.getElementById('surpriseMe').checked ? null : document.getElementById('themeInput').value.trim() || null;
   /* SE HIGHLIGHT DISABLED 2026-04-18 — flag forced false.
@@ -1547,10 +1866,11 @@ async function doGenerate() {
   const isContinuation = (cfg.mode !== 'individual') && storyId !== null;
 
   // Snapshot state so we can restore on auth failure
-  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, biblePromise, regenerating };
+  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, storyPlan, biblePromise, regenerating };
 
   if (!isContinuation) {
     storyBible   = null; prevBible = null; plannedEnding = null; biblePromise = null;
+    storyPlan    = null;  // Fresh story → reset; will be repopulated by the prep call below if a module spec is active.
     storyId      = cfg.mode === 'individual' ? null : 'story-' + Date.now();
     episodeNum   = cfg.mode === 'individual' ? 0 : 1;
     episodeTarget= cfg.mode === 'fixed' ? (parseInt(document.getElementById('epCount').value) || 5) : (episodeTarget || 0);
@@ -1564,13 +1884,33 @@ async function doGenerate() {
   } else if (regenerating) {
     regenerating = false;
     storyBible   = prevBible;
-    // episodeNum stays the same; plannedEnding stays the same (committed in ep 1)
+    // episodeNum stays the same; plannedEnding and storyPlan stay the same (committed at story start)
   } else {
     episodeNum++;
   }
 
+  // ── Story plan prep (Sonnet) — fires once at story start when a module
+  //    spec is loaded. Skipped on continuations (plan already on the run),
+  //    on regenerate (same story, plan stays), and when no spec is configured.
+  //    Failure is non-fatal: storyPlan stays null and the legacy planning
+  //    path runs as it did before this feature.
+  if (!isContinuation && !regenerating && MODULE_SPECS[cfg.module]) {
+    setProgress(0, 'Planeando la historia…', '');
+    showScreen('sLoading');
+    const epCountForPlan = cfg.mode === 'individual' ? 1 : episodeTarget;
+    storyPlan = await generateStoryPlan({
+      moduleKey:    cfg.module,
+      mode:         cfg.mode,
+      level:        cfg.level,
+      register:     cfg.register,
+      region:       cfg.region,
+      theme,
+      episodeCount: epCountForPlan
+    });
+  }
+
   currentCfg = { ...cfg, theme, seOn, voseo,
-    bible: storyBible, plannedEnding, epNum: episodeNum, epTarget: episodeTarget };
+    bible: storyBible, plannedEnding, storyPlan, epNum: episodeNum, epTarget: episodeTarget };
 
   const epMsg = episodeNum > 0
     ? (episodeTarget > 0 ? `Generando episodio ${episodeNum} de ${episodeTarget}…` : `Generando episodio ${episodeNum}…`)
@@ -1618,7 +1958,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       sessionPw = null;
       // Restore story state so next attempt starts clean
       storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; biblePromise = _snap.biblePromise;
+      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; biblePromise = _snap.biblePromise;
       regenerating = _snap.regenerating;
       showScreen('sParams'); alert('Contraseña incorrecta.'); return;
     }
@@ -1703,7 +2043,11 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     //    Once set, it's frozen for the rest of the story — subsequent episodes
     //    see it as context but never regenerate it. Remove from quiz object so
     //    it doesn't leak into render / save-as-quiz-content paths.
-    if (quiz.planned_ending && typeof quiz.planned_ending === 'object') {
+    //    When storyPlan is present (Sonnet-supplied plan on the run), the
+    //    schema didn't ask for planned_ending — but defensively skip capture
+    //    in case a stubborn model emits it anyway. The storyPlan is the
+    //    authoritative ending source for this story.
+    if (!storyPlan && quiz.planned_ending && typeof quiz.planned_ending === 'object') {
       const pe = quiz.planned_ending;
       if (pe.thematic_core || pe.final_beat || pe.thread_resolution) {
         plannedEnding = {
@@ -1712,8 +2056,8 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
           thread_resolution:(pe.thread_resolution || '').trim(),
         };
       }
-      delete quiz.planned_ending;
     }
+    if (quiz.planned_ending) delete quiz.planned_ending;
 
     // Strip letter prefixes (A. B. C. D.) and question numbers from AI output
     // Also strip any SE markup that leaked into non-passage fields (only passage should have markup)
@@ -1752,7 +2096,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     isProcessing = false;
     // Restore story state so retry starts from correct episode
     storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; biblePromise = _snap.biblePromise;
+    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; biblePromise = _snap.biblePromise;
     regenerating = _snap.regenerating;
     goParams();
     const canRetry = generateRetries < 3;
@@ -2093,7 +2437,7 @@ async function actionDeleteSeries() {
 }
 
 function clearStoryState() {
-  storyBible = null; prevBible = null; plannedEnding = null; storyId = null;
+  storyBible = null; prevBible = null; plannedEnding = null; storyPlan = null; storyId = null;
   episodeNum = 0; episodeTarget = 0; biblePromise = null;
   regenerating = false; currentStarRating = null;
 }
@@ -2421,6 +2765,7 @@ async function saveQuizToDrive(extraFields = {}) {
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
     questions: currentQuiz.questions, story_bible: storyBible || null,
     planned_ending: plannedEnding || null,
+    story_plan: storyPlan || null,
     score: { correct: lastScore?.correct??null, total: lastScore?.total??null, percent: lastScore?.percent??null },
     star_rating: extraFields.star_rating || null, ...extraFields
   };
@@ -2554,6 +2899,9 @@ async function resumeStory(s) {
   storyBible = s.story_bible || null; prevBible = null; biblePromise = null; regenerating = false;
   // Restore planned ending if the saved record has one (pre-planned-ending-update records won't).
   plannedEnding = (s.planned_ending && typeof s.planned_ending === 'object') ? s.planned_ending : null;
+  // Restore Sonnet-supplied story plan if the save has one (legacy saves pre-module-wiring won't).
+  // Falling back to null means the legacy planning path runs for this resume — fine, the bible carries continuity.
+  storyPlan = (s.story_plan && typeof s.story_plan === 'object') ? s.story_plan : null;
   // Migrate old register values from pre-April-2026 saves (5-option era → 3-option era)
   const REGISTER_MIGRATE = { conversational: 'everyday', formal: 'literary' };
   const savedRegister = s.register ? (REGISTER_MIGRATE[s.register] || s.register) : null;

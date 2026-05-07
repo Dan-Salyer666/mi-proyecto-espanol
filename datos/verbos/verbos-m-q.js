@@ -470,6 +470,26 @@ const VERB_PROFILES_MQ = [
       pronominalNote: "Meterse con means to mess with; meterse en means to get involved in. See separate meterse profiles."
     }
   },
+{
+    verb: "meterse",
+    irregularity: "regular",
+    summary: {
+      blurb: "Meterse shifts the base meaning of 'to put' to a more personal involvement, usually implying intrusion or conflict. It forms the core of everyday phrases like meterse en (to get involved in) and meterse con (to mess with).",
+      uses: [
+        {
+          meaning: "meterse en — to get involved in, to go into",
+          example: { spanish: "No te metas en ese lío, no es asunto tuyo.", english: "Don't get involved in that mess — it's none of your business." },
+          register: "everyday"
+        },
+        {
+          meaning: "meterse con — to mess with, to pick on",
+          example: { spanish: "No te metas conmigo hoy que estoy de muy mal humor.", english: "Don't mess with me today — I'm in a really bad mood." },
+          register: "everyday"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in these senses. Typically followed by the prepositions 'en' or 'con'."
+    }
+  },
   {
     verb: "mezclar",
     irregularity: "regular",
@@ -788,6 +808,21 @@ const VERB_PROFILES_MQ = [
         }
       ],
       pronominalNote: "Negarse a means to refuse to do something. See separate negarse profile."
+    }
+  },
+  {
+    verb: "negarse",
+    irregularity: "pres: e→ie; pret: g→gu (yo)",
+    summary: {
+      blurb: "Negarse a means to refuse to do something. It is extremely common in both everyday and formal speech as the standard way to express refusal.",
+      uses: [
+        {
+          meaning: "negarse a — to refuse to",
+          example: { spanish: "Se negó a firmar el documento hasta hablar con su abogado.", english: "She refused to sign the document until she had spoken to her lawyer." },
+          register: "everyday"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in this sense. Always followed by 'a' before an infinitive."
     }
   },
   {
@@ -1121,6 +1156,21 @@ const VERB_PROFILES_MQ = [
     }
   },
   {
+    verb: "oponerse",
+    irregularity: "irregular (poner)",
+    summary: {
+      blurb: "Oponerse a means to oppose or be against something. It is far more common in everyday speech than the base transitive verb 'oponer'. Follows the full poner conjugation pattern.",
+      uses: [
+        {
+          meaning: "oponerse a — to oppose, to be against",
+          example: { spanish: "Se opuso al cambio de planes porque no le habían consultado.", english: "She opposed the change of plans because she hadn't been consulted." },
+          register: "everyday"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in this sense. Always followed by 'a'."
+    }
+  },
+  {
     verb: "ordenar",
     irregularity: "regular",
     summary: {
@@ -1283,6 +1333,21 @@ const VERB_PROFILES_MQ = [
         }
       ],
       pronominalNote: "Parecerse a means to resemble or look like someone. See separate parecerse profile."
+    }
+  },
+  {
+    verb: "parecerse",
+    irregularity: "pres: yo -zco",
+    summary: {
+      blurb: "Parecerse a means to resemble or look like someone or something. It covers physical similarity as well as likeness in character or behavior.",
+      uses: [
+        {
+          meaning: "parecerse a — to look like, to resemble",
+          example: { spanish: "Se parece mucho a su padre, tienen la misma sonrisa y los mismos gestos.", english: "She really looks like her father — they have the same smile and the same gestures." },
+          register: "everyday"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in this sense. Followed by 'a' (parecerse a alguien)."
     }
   },
   {
@@ -1881,6 +1946,36 @@ const VERB_PROFILES_MQ = [
     }
   },
   {
+    verb: "ponerse",
+    irregularity: "irregular (poner)",
+    summary: {
+      blurb: "Ponerse is a high-frequency pronominal verb with several key functions: putting on clothing, undergoing a sudden change in emotional or physical state (ponerse nervioso), and starting an action (ponerse a). It also forms several fixed expressions.",
+      uses: [
+        {
+          meaning: "to put on (clothing) / to become (emotion/state)",
+          example: { spanish: "Se puso muy nervioso cuando le dijeron que era su turno de hablar.", english: "He got very nervous when they told him it was his turn to speak." },
+          register: "everyday"
+        },
+        {
+          meaning: "ponerse a — to start to, to begin to",
+          example: { spanish: "Se puso a reír cuando leyó el mensaje y no podía parar.", english: "She started laughing when she read the message and couldn't stop." },
+          register: "everyday"
+        },
+        {
+          meaning: "ponerse de acuerdo — to agree, to come to an agreement",
+          example: { spanish: "Tardaron un buen rato en ponerse de acuerdo sobre dónde comer.", english: "It took them a good while to agree on where to eat." },
+          register: "everyday"
+        },
+        {
+          meaning: "ponerse de pie — to stand up",
+          example: { spanish: "Todos se pusieron de pie cuando entró la directora al salón.", english: "Everyone stood up when the headteacher walked into the room." },
+          register: "everyday"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in these senses."
+    }
+  },
+  {
     verb: "portarse",
     irregularity: "regular",
     summary: {
@@ -2165,6 +2260,21 @@ const VERB_PROFILES_MQ = [
       pronominalNote: "Privarse de means to deprive oneself of or go without. See separate privarse profile."
     }
   },
+{
+    verb: "privarse",
+    irregularity: "regular",
+    summary: {
+      blurb: "Privarse means to deprive oneself of or go without something, usually a pleasure or comfort. It is always followed by the preposition 'de'.",
+      uses: [
+        {
+          meaning: "to deprive oneself of, to go without",
+          example: { spanish: "Se priva de muchas cosas para poder ahorrar y viajar al final del año.", english: "She goes without many things so she can save up and travel at the end of the year." },
+          register: "standard"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in this sense. Always followed by 'de'."
+    }
+  },
   {
     verb: "probar",
     irregularity: "pres: o→ue",
@@ -2198,6 +2308,26 @@ const VERB_PROFILES_MQ = [
         }
       ],
       pronominalNote: "Inherently pronominal in this sense."
+    }
+  },
+{
+    verb: "proceder",
+    irregularity: "regular",
+    summary: {
+      blurb: "Proceder has two main uses: to proceed with an action, and to come from or originate from (proceder de). The latter is a standard formal alternative to 'provenir'.",
+      uses: [
+        {
+          meaning: "to come from, to originate from",
+          example: { spanish: "Esta variedad de café procede de las montañas del norte del país.", english: "This variety of coffee comes from the mountains in the north of the country." },
+          register: "standard"
+        },
+        {
+          meaning: "to proceed",
+          example: { spanish: "El juez decidió proceder con el interrogatorio de los testigos.", english: "The judge decided to proceed with the questioning of the witnesses." },
+          register: "formal"
+        }
+      ],
+      pronominalNote: null
     }
   },
   {
@@ -3028,7 +3158,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "meter",
+    verb: "meterse",
     phrase: "meterse con",
     grammar: "PHRASE",
     english: "to mess with, to pick on",
@@ -3043,7 +3173,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "meter",
+    verb: "meterse",
     phrase: "meterse en",
     grammar: "PHRASE",
     english: "to get involved in, to go into",
@@ -3388,7 +3518,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "negar",
+    verb: "negarse",
     phrase: "negarse a",
     grammar: "PHRASE",
     english: "to refuse to",
@@ -3748,7 +3878,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "oponer",
+    verb: "oponerse",
     phrase: "oponerse a",
     grammar: "PHRASE",
     english: "to oppose, to be against",
@@ -3913,7 +4043,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "parecer",
+    verb: "parecerse",
     phrase: "parecerse a",
     grammar: "PHRASE",
     english: "to look like, to resemble",
@@ -4603,7 +4733,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "poner",
+    verb: "ponerse",
     phrase: "ponerse",
     grammar: "PRON",
     english: "to become (emotion/state), to put on (clothing)",
@@ -4618,7 +4748,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "poner",
+    verb: "ponerse",
     phrase: "ponerse a",
     grammar: "PHRASE",
     english: "to start to, to begin to",
@@ -4633,7 +4763,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "poner",
+    verb: "ponerse",
     phrase: "ponerse de acuerdo",
     grammar: "PHRASE",
     english: "to agree, to come to an agreement",
@@ -4648,7 +4778,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "poner",
+    verb: "ponerse",
     phrase: "ponerse de pie",
     grammar: "PHRASE",
     english: "to stand up",
@@ -4663,7 +4793,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "poner",
+    verb: "ponerse",
     phrase: "ponerse nervioso",
     grammar: "PHRASE",
     english: "to get nervous",
@@ -4888,7 +5018,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "privar",
+    verb: "privarse",
     phrase: "privarse",
     grammar: "PRON",
     english: "to deprive oneself of",
@@ -4918,7 +5048,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "probar",
+    verb: "probarse",
     phrase: "probarse",
     grammar: "PRON",
     english: "to try on (clothing)",
@@ -4963,7 +5093,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "producir",
+    verb: "producirse",
     phrase: "producirse",
     grammar: "PRON",
     english: "to take place, to occur",
@@ -5038,7 +5168,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "proponer",
+    verb: "proponerse",
     phrase: "proponerse",
     grammar: "PRON",
     english: "to set out to, to intend",
@@ -5128,7 +5258,7 @@ const VERB_CONTEXTS_MQ = [
     }
   },
   {
-    verb: "pudrir",
+    verb: "pudrirse",
     phrase: "pudrirse",
     grammar: "PRON",
     english: "to rot, to decay",

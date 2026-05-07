@@ -450,6 +450,11 @@ const VERB_PROFILES_AD = [
         register: "everyday" },
       { meaning: "to read (minds, future)", example: { spanish: "No puedo adivinar lo que estás pensando.", english: "I can't read your mind." },
         register: "everyday" },
+      {
+          meaning: "to predict, to foresee",
+          example: { spanish: "Nadie podía adivinar que el proyecto terminaría siendo un fracaso.", english: "Nobody could foresee that the project would end up being a failure." },
+          register: "standard"
+        }
     ],
     pronominalNote: null,
   },
@@ -1555,6 +1560,32 @@ const VERB_PROFILES_AD = [
     ],
     pronominalNote: "Describes the spontaneous eruption of confusion or conflict. Also appears in the fixed phrase armarse de paciencia/valor.",
   },
+},
+{
+  verb: "arrancar",
+  irregularity: "pret: c→qu (arranqué)",
+  summary: {
+    blurb: "Arrancar primarily means to pull out or extract by force. It is also widely used intransitively to indicate starting an engine, a machine, or abruptly beginning an activity.",
+    uses: [
+      { 
+        meaning: "to pull out, to extract, to rip out", 
+        example: { 
+          spanish: "Tuvo que arrancar las malas hierbas del jardín.", 
+          english: "He had to pull the weeds out of the garden." 
+        },
+        register: "everyday" 
+      },
+      { 
+        meaning: "to start (an engine, machine, or event)", 
+        example: { 
+          spanish: "El auto no arranca; me parece que la batería está muerta.", 
+          english: "The car won't start; I think the battery is dead." 
+        },
+        register: "everyday" 
+      }
+    ],
+    pronominalNote: null
+  }
 },
 {
   verb: "arrastrar",
@@ -5820,6 +5851,21 @@ const VERB_CONTEXTS_AD = [
     english: "Guess what I brought you as a gift.",
   },
 },
+{
+    verb: "adivinar",
+    phrase: "adivinar",
+    grammar: "TR",
+    english: "to predict, to foresee",
+    register: "standard",
+    region: "neutral",
+    notes: "distinct from blindly guessing; implies reading a situation or signs",
+    contextExplanation: "To predict or foresee an outcome or event. This implies using intuition, observation, or reading a situation, rather than making a blind guess.",
+    synonyms: ["predecir", "presentir", "vaticinar"],
+    example: {
+      spanish: "Era fácil adivinar lo que iba a pasar después de esa fuerte discusión.",
+      english: "It was easy to predict what was going to happen after that loud argument."
+    }
+  },
 {
   verb: "adorar",
   phrase: "adorar",

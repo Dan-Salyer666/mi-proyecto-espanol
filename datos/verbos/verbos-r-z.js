@@ -1174,6 +1174,21 @@ const VERB_PROFILES_RZ = [
       pronominalNote: "Salirse con la suya means to get one's own way. See separate salirse profile."
     }
   },
+{
+    verb: "salirse",
+    irregularity: "irregular (salir)",
+    summary: {
+      blurb: "Salirse is used in the fixed idiom 'salirse con la suya', meaning to get one's own way, often despite opposition, difficulty, or rules.",
+      uses: [
+        {
+          meaning: "salirse con la suya — to get one's own way",
+          example: { spanish: "Al final siempre se sale con la suya sin importar lo que opinen los demás.", english: "In the end she always gets her own way regardless of what others think." },
+          register: "everyday"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in this idiomatic phrase."
+    }
+  },
   {
     verb: "saltar",
     irregularity: "regular",
@@ -2420,6 +2435,21 @@ const VERB_PROFILES_RZ = [
     }
   },
   {
+    verb: "tratarse",
+    irregularity: "regular",
+    summary: {
+      blurb: "Tratarse de means to be about. It is inherently pronominal in this sense and is used to describe the subject, theme, or nature of a book, film, situation, or topic.",
+      uses: [
+        {
+          meaning: "to be about",
+          example: { spanish: "La novela se trata de un médico que pierde la memoria en plena guerra.", english: "The novel is about a doctor who loses his memory in the middle of a war." },
+          register: "everyday"
+        }
+      ],
+      pronominalNote: "Inherently pronominal in this sense. Always followed by 'de'."
+    }
+  },
+  {
     verb: "trocar",
     irregularity: "pret: c→qu (yo)",
     summary: {
@@ -3302,7 +3332,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "reducir",
+    verb: "reducirse",
     phrase: "reducirse a",
     grammar: "PHRASE",
     english: "to come down to, to be reduced to",
@@ -4171,6 +4201,81 @@ const VERB_CONTEXTS_RZ = [
       english: "The ball grazed the post and missed being a goal by centimeters."
     }
   },
+{
+    verb: "saber",
+    phrase: "saber",
+    grammar: "TR",
+    english: "to know (facts, information)",
+    register: "everyday",
+    region: "neutral",
+    notes: "",
+    contextExplanation: "To know facts, information, or to have knowledge about something.",
+    synonyms: ["tener conocimiento de", "conocer"],
+    example: {
+      spanish: "Sé que tiene razón, pero no quiero admitirlo.",
+      english: "I know she's right, but I don't want to admit it."
+    }
+  },
+  {
+    verb: "saber",
+    phrase: "saber a",
+    grammar: "GUSTAR",
+    english: "to taste like",
+    register: "everyday",
+    region: "neutral",
+    notes: "como gustar: 'sabe a limón' = it tastes like lemon",
+    contextExplanation: "To taste like something. Functions similarly to gustar where the food is the subject.",
+    synonyms: ["tener gusto a"],
+    example: {
+      spanish: "Esta crema sabe a vainilla, está buenísima.",
+      english: "This cream tastes like vanilla — it's delicious."
+    }
+  },
+  {
+    verb: "saber",
+    phrase: "saber + infinitivo",
+    grammar: "PHRASE",
+    english: "to know how to",
+    register: "everyday",
+    region: "neutral",
+    notes: "",
+    contextExplanation: "To know how to do something, expressing a learned skill.",
+    synonyms: ["poder", "tener la habilidad de"],
+    example: {
+      spanish: "¿Sabés cocinar o siempre pedís delivery?",
+      english: "Do you know how to cook or do you always order delivery?"
+    }
+  },
+  {
+    verb: "saberse",
+    phrase: "saberse",
+    grammar: "PRON",
+    english: "to know by heart",
+    register: "everyday",
+    region: "neutral",
+    notes: "'se sabe la letra' = she knows the lyrics by heart",
+    contextExplanation: "To know something completely by heart or memory.",
+    synonyms: ["conocer de memoria", "aprenderse"],
+    example: {
+      spanish: "Se sabe toda la letra de la canción de memoria.",
+      english: "She knows the whole song's lyrics by heart."
+    }
+  },
+  {
+    verb: "saberse",
+    phrase: "saberse",
+    grammar: "PRON",
+    english: "to become known",
+    register: "standard",
+    region: "neutral",
+    notes: "'se supo' = it came out / it became known",
+    contextExplanation: "For a secret, truth, or fact to come out or become widely known.",
+    synonyms: ["descubrirse", "hacerse público", "salir a la luz"],
+    example: {
+      spanish: "Se supo la verdad cuando salió el informe.",
+      english: "The truth came out when the report was released."
+    }
+  },
   {
     verb: "sacar",
     phrase: "sacar",
@@ -4232,7 +4337,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "sacar",
+    verb: "sacarse",
     phrase: "sacarse",
     grammar: "PRON",
     english: "to take off (clothing)",
@@ -4337,7 +4442,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "salir",
+    verb: "salirse",
     phrase: "salirse con la suya",
     grammar: "PHRASE",
     english: "to get one's own way",
@@ -4517,7 +4622,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "sentar",
+    verb: "sentarse",
     phrase: "sentarse",
     grammar: "PRON",
     english: "to sit down",
@@ -5732,7 +5837,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "tener",
+    verb: "tenerse",
     phrase: "tenerse en pie",
     grammar: "PHRASE",
     english: "to stand upright",
@@ -6122,7 +6227,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "tratar",
+    verb: "tratarse",
     phrase: "tratarse de",
     grammar: "PHRASE",
     english: "to be about",
@@ -6437,7 +6542,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "vencer",
+    verb: "vencerse",
     phrase: "vencerse",
     grammar: "PRON",
     english: "to expire, to run out",
@@ -6497,7 +6602,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "vengar",
+    verb: "vengarse",
     phrase: "vengarse de",
     grammar: "PHRASE",
     english: "to take revenge on",
@@ -6617,7 +6722,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "ver",
+    verb: "verse",
     phrase: "verse",
     grammar: "PRON",
     english: "to look, to appear",
@@ -6632,7 +6737,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "ver",
+    verb: "verse",
     phrase: "verse",
     grammar: "PRON",
     english: "to see each other",
@@ -6677,7 +6782,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "vestir",
+    verb: "vestirse",
     phrase: "vestirse",
     grammar: "PRON",
     english: "to get dressed",
@@ -6857,7 +6962,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "volver",
+    verb: "volverse",
     phrase: "volverse",
     grammar: "PRON",
     english: "to become (lasting change)",
@@ -6902,7 +7007,7 @@ const VERB_CONTEXTS_RZ = [
     }
   },
   {
-    verb: "zafar",
+    verb: "zafarse",
     phrase: "zafarse de",
     grammar: "PHRASE",
     english: "to get out of, to wriggle out of",

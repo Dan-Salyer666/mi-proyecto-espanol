@@ -139,7 +139,7 @@ body::after {
   overflow:hidden;
   max-height:0; transition:max-height 0.35s ease;
 }
-.hub.open .hub-body { max-height:800px; }
+.hub.open .hub-body { max-height:3000px; }
 
 .hub-items { padding:8px 12px 16px; }
 
@@ -193,6 +193,45 @@ body::after {
   color:var(--text-muted); font-size:0.8rem; font-weight:300; font-style:italic;
 }
 .coming-soon-icon { font-size:1rem; opacity:0.5; }
+
+/* ── SUB-HUB (nested accordion within a hub) ── */
+.sub-hub {
+  margin:6px 2px;
+  border-radius:10px;
+  overflow:hidden;
+  background:var(--bg-input);
+  border:1px solid var(--border);
+  transition:border-color 0.18s ease;
+}
+.sub-hub:hover { border-color:#2a4a75; }
+.sub-hub-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:11px 14px;
+  cursor:pointer; user-select:none;
+}
+.sub-hub-title {
+  font-family:'Outfit',sans-serif;
+  font-size:0.92rem; font-weight:500; color:var(--text-primary);
+  letter-spacing:0.02em;
+}
+.sub-hub-meta { display:flex; align-items:center; gap:8px; }
+.sub-hub-count {
+  font-size:0.62rem; font-weight:600; text-transform:uppercase;
+  letter-spacing:0.08em; color:var(--text-muted);
+  background:var(--bg-card); border:1px solid var(--border);
+  padding:2px 7px; border-radius:10px;
+}
+.sub-hub-chevron {
+  color:var(--text-muted); font-size:0.68rem;
+  transition:transform 0.25s ease;
+}
+.sub-hub.open .sub-hub-chevron { transform:rotate(180deg); }
+.sub-hub-body {
+  max-height:0; overflow:hidden;
+  transition:max-height 0.3s ease;
+}
+.sub-hub.open .sub-hub-body { max-height:1200px; }
+.sub-hub-items { padding:4px 6px 10px; }
 
 /* ── FOOTER ── */
 .site-footer {
@@ -323,122 +362,287 @@ body::after {
     </div>
   </div>
 
-  <div class="hub" id="hub-grammar">
-    <div class="hub-header" onclick="toggleHub('hub-grammar')">
+  <div class="hub" id="hub-vocab">
+    <div class="hub-header" onclick="toggleHub('hub-vocab')">
       <div class="hub-header-left">
-        <div class="hub-icon" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2)">📖</div>
+        <div class="hub-icon" style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2)">📚</div>
         <div>
-          <div class="hub-title">Gramática y Vocabulario</div>
-          <div class="hub-desc">Referencia interactiva · familias de palabras · gramática</div>
+          <div class="hub-title">Vocabulario</div>
+          <div class="hub-desc">Familias de verbos · sustantivos · adjetivos · y más</div>
         </div>
       </div>
       <div class="hub-meta">
-        <span class="hub-count">2 secciones</span>
+        <span class="hub-count">2 categorías</span>
         <span class="hub-chevron">▼</span>
       </div>
     </div>
     <div class="hub-body">
       <div class="hub-items">
 
-        <div class="hub-section">
-          <div class="hub-section-label">Vocabulario — Familias de palabras</div>
-          <a class="link-item" href="poner.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#a78bfa"></div>
-              <div>
-                <div class="link-title">Familia de Poner</div>
-                <div class="link-sub">componer · disponer · imponer · suponer · y más · árbol interactivo</div>
-              </div>
+        <div class="sub-hub" id="vocab-verbos">
+          <div class="sub-hub-header" onclick="toggleHub('vocab-verbos')">
+            <div class="sub-hub-title">Verbos</div>
+            <div class="sub-hub-meta">
+              <span class="sub-hub-count">5 páginas</span>
+              <span class="sub-hub-chevron">▼</span>
             </div>
-            <div class="link-right">
-              <span class="link-badge" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">interactivo</span>
-              <span class="link-arrow">›</span>
+          </div>
+          <div class="sub-hub-body">
+            <div class="sub-hub-items">
+              <a class="link-item" href="poner.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#a78bfa"></div>
+                  <div>
+                    <div class="link-title">Familia de Poner</div>
+                    <div class="link-sub">componer · disponer · imponer · suponer · y más · árbol interactivo</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-badge" style="background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.25)">interactivo</span>
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="que-verbos.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#e8637a"></div>
+                  <div>
+                    <div class="link-title">Verbos con Que-</div>
+                    <div class="link-sub">quedar · querer · quemar · quebrar · quitar · quejarse · patrones de uso</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-badge" style="background:rgba(232,99,122,0.1);color:#e8637a;border:1px solid rgba(232,99,122,0.25)">interactivo</span>
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="tema-del-movimiento.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">Tema del Movimiento</div>
+                    <div class="link-sub">30 verbos de movimiento · 5 categorías · patrones de uso · ejemplos con IA</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-badge" style="background:rgba(74,144,217,0.1);color:#4a90d9;border:1px solid rgba(74,144,217,0.25)">interactivo</span>
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="prestar-pedir.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#06b6d4"></div>
+                  <div>
+                    <div class="link-title">Prestar y Pedir Prestado</div>
+                    <div class="link-sub">Diferencias entre prestar, dejar y pedir prestado · guía de registro · casos especiales</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-badge" style="background:rgba(6,182,212,0.1);color:#06b6d4;border:1px solid rgba(6,182,212,0.25)">interactivo</span>
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="topics/Verbos_de_Demostracion.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">Los Verbos de Demostración</div>
+                    <div class="link-sub">Mostrar · enseñar · exhibir · presentar · y más · matices de uso</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
             </div>
-          </a>
-          <a class="link-item" href="que-verbos.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#e8637a"></div>
-              <div>
-                <div class="link-title">Verbos con Que-</div>
-                <div class="link-sub">quedar · querer · quemar · quebrar · quitar · quejarse · patrones de uso</div>
-              </div>
-            </div>
-            <div class="link-right">
-              <span class="link-badge" style="background:rgba(232,99,122,0.1);color:#e8637a;border:1px solid rgba(232,99,122,0.25)">interactivo</span>
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
-          <div class="coming-soon"><span class="coming-soon-icon">＋</span>Más familias de verbos · por añadir</div>
+          </div>
         </div>
 
-        <div class="hub-section">
-          <div class="hub-section-label">Gramática — Páginas de referencia</div>
-          <a class="link-item" href="oraciones-condicionales.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#fbbf24"></div>
-              <div>
-                <div class="link-title">Oraciones Condicionales</div>
-                <div class="link-sub">3 tipos de «si» · líneas de tiempo · conjugaciones · práctica con IA</div>
-              </div>
+        <div class="sub-hub" id="vocab-sustantivos">
+          <div class="sub-hub-header" onclick="toggleHub('vocab-sustantivos')">
+            <div class="sub-hub-title">Sustantivos</div>
+            <div class="sub-hub-meta">
+              <span class="sub-hub-count">1 página</span>
+              <span class="sub-hub-chevron">▼</span>
             </div>
-            <div class="link-right">
-              <span class="link-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)">5 páginas</span>
-              <span class="link-arrow">›</span>
+          </div>
+          <div class="sub-hub-body">
+            <div class="sub-hub-items">
+              <a class="link-item" href="topics/Geometria_vueltas.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">La geometría de «Vuelta»</div>
+                    <div class="link-sub">Los múltiples sentidos de «vuelta» · giros · regresos · cambios</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
             </div>
-          </a>
-          <a class="link-item" href="tema-del-movimiento.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#4a90d9"></div>
-              <div>
-                <div class="link-title">Tema del Movimiento</div>
-                <div class="link-sub">30 verbos de movimiento · 5 categorías · patrones de uso · ejemplos con IA</div>
-              </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="hub" id="hub-grammar">
+    <div class="hub-header" onclick="toggleHub('hub-grammar')">
+      <div class="hub-header-left">
+        <div class="hub-icon" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2)">📖</div>
+        <div>
+          <div class="hub-title">Gramática</div>
+          <div class="hub-desc">Verbos · estructuras · pronombres · preposiciones · y más</div>
+        </div>
+      </div>
+      <div class="hub-meta">
+        <span class="hub-count">4 categorías</span>
+        <span class="hub-chevron">▼</span>
+      </div>
+    </div>
+    <div class="hub-body">
+      <div class="hub-items">
+
+        <div class="sub-hub" id="gram-verbos">
+          <div class="sub-hub-header" onclick="toggleHub('gram-verbos')">
+            <div class="sub-hub-title">Verbos</div>
+            <div class="sub-hub-meta">
+              <span class="sub-hub-count">2 páginas</span>
+              <span class="sub-hub-chevron">▼</span>
             </div>
-            <div class="link-right">
-              <span class="link-badge" style="background:rgba(74,144,217,0.1);color:#4a90d9;border:1px solid rgba(74,144,217,0.25)">interactivo</span>
-              <span class="link-arrow">›</span>
+          </div>
+          <div class="sub-hub-body">
+            <div class="sub-hub-items">
+              <a class="link-item" href="topics/El_mundo_del_infinitivo.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">El Mundo del Infinitivo</div>
+                    <div class="link-sub">Formas, usos y patrones del infinitivo en español</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="topics/seven_usage_patterns.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">Patrones de Uso Verbal</div>
+                    <div class="link-sub">Siete patrones fundamentales del uso de verbos en español</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
             </div>
-          </a>
-          <a class="link-item" href="prestar-pedir.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#06b6d4"></div>
-              <div>
-                <div class="link-title">Prestar y Pedir Prestado</div>
-                <div class="link-sub">Diferencias entre prestar, dejar y pedir prestado · guía de registro · casos especiales</div>
-              </div>
+          </div>
+        </div>
+
+        <div class="sub-hub" id="gram-estructuras">
+          <div class="sub-hub-header" onclick="toggleHub('gram-estructuras')">
+            <div class="sub-hub-title">Estructuras y patrones</div>
+            <div class="sub-hub-meta">
+              <span class="sub-hub-count">2 páginas</span>
+              <span class="sub-hub-chevron">▼</span>
             </div>
-            <div class="link-right">
-              <span class="link-badge" style="background:rgba(6,182,212,0.1);color:#06b6d4;border:1px solid rgba(6,182,212,0.25)">interactivo</span>
-              <span class="link-arrow">›</span>
+          </div>
+          <div class="sub-hub-body">
+            <div class="sub-hub-items">
+              <a class="link-item" href="oraciones-condicionales.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#fbbf24"></div>
+                  <div>
+                    <div class="link-title">Oraciones Condicionales</div>
+                    <div class="link-sub">3 tipos de «si» · líneas de tiempo · conjugaciones · práctica con IA</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)">5 páginas</span>
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="topics/se-pasiva-impersonal.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">Se Pasiva vs. Se Impersonal</div>
+                    <div class="link-sub">Diferencias entre la pasiva refleja y la impersonal con SE</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
             </div>
-          </a>
-          <a class="link-item" href="https://mis-materiales-espanol.netlify.app/gramatica.html" target="_blank" rel="noopener">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#8ab840"></div>
-              <div>
-                <div class="link-title">Gramática</div>
-                <div class="link-sub">Adverbios -mente · Pronombres IOP & DOP · Interrogativas</div>
-              </div>
+          </div>
+        </div>
+
+        <div class="sub-hub" id="gram-pronombres">
+          <div class="sub-hub-header" onclick="toggleHub('gram-pronombres')">
+            <div class="sub-hub-title">Pronombres</div>
+            <div class="sub-hub-meta">
+              <span class="sub-hub-count">1 página</span>
+              <span class="sub-hub-chevron">▼</span>
             </div>
-            <div class="link-right">
-              <span class="link-badge" style="background:rgba(138,184,64,0.1);color:#8ab840;border:1px solid rgba(138,184,64,0.25)">estático</span>
-              <span class="link-arrow">›</span>
+          </div>
+          <div class="sub-hub-body">
+            <div class="sub-hub-items">
+              <a class="link-item" href="topics/IOP%20usage.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">El Pronombre Objetivo</div>
+                    <div class="link-sub">Usos del pronombre de objeto indirecto más allá de personas</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
             </div>
-          </a>
-          <a class="link-item" href="https://mis-materiales-espanol.netlify.app/vocabulario.html" target="_blank" rel="noopener">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#fbbf24"></div>
-              <div>
-                <div class="link-title">Vocabulario</div>
-                <div class="link-sub">Lunfardo · Palabras tramposas · Tal · Préstamos · Verbos nominalizados</div>
-              </div>
+          </div>
+        </div>
+
+        <div class="sub-hub" id="gram-preposiciones">
+          <div class="sub-hub-header" onclick="toggleHub('gram-preposiciones')">
+            <div class="sub-hub-title">Preposiciones</div>
+            <div class="sub-hub-meta">
+              <span class="sub-hub-count">2 páginas</span>
+              <span class="sub-hub-chevron">▼</span>
             </div>
-            <div class="link-right">
-              <span class="link-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)">estático</span>
-              <span class="link-arrow">›</span>
+          </div>
+          <div class="sub-hub-body">
+            <div class="sub-hub-items">
+              <a class="link-item" href="topics/Uso_de_DE.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">Los Usos Extendidos de «De»</div>
+                    <div class="link-sub">Patrones, relaciones y matices de la preposición «de»</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="topics/la_regla_de.html">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#4a90d9"></div>
+                  <div>
+                    <div class="link-title">La regla de «De + Adjetivo»</div>
+                    <div class="link-sub">El patrón «de + adjetivo» y cuándo usarlo</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
             </div>
-          </a>
-          <div class="coming-soon"><span class="coming-soon-icon">＋</span>Subjuntivo · Ser vs Estar · más por añadir</div>
+          </div>
         </div>
 
       </div>
@@ -455,7 +659,7 @@ body::after {
         </div>
       </div>
       <div class="hub-meta">
-        <span class="hub-count">1 página</span>
+        <span class="hub-count">2 secciones</span>
         <span class="hub-chevron">▼</span>
       </div>
     </div>
@@ -477,6 +681,46 @@ body::after {
               <span class="link-arrow">›</span>
             </div>
           </a>
+        </div>
+
+        <div class="sub-hub" id="materials-legado">
+          <div class="sub-hub-header" onclick="toggleHub('materials-legado')">
+            <div class="sub-hub-title">Legado</div>
+            <div class="sub-hub-meta">
+              <span class="sub-hub-count">2 páginas</span>
+              <span class="sub-hub-chevron">▼</span>
+            </div>
+          </div>
+          <div class="sub-hub-body">
+            <div class="sub-hub-items">
+              <a class="link-item" href="https://mis-materiales-espanol.netlify.app/gramatica.html" target="_blank" rel="noopener">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#8ab840"></div>
+                  <div>
+                    <div class="link-title">Gramática (sitio antiguo)</div>
+                    <div class="link-sub">Adverbios -mente · Pronombres IOP &amp; DOP · Interrogativas</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-badge" style="background:rgba(138,184,64,0.1);color:#8ab840;border:1px solid rgba(138,184,64,0.25)">estático</span>
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+              <a class="link-item" href="https://mis-materiales-espanol.netlify.app/vocabulario.html" target="_blank" rel="noopener">
+                <div class="link-item-left">
+                  <div class="link-dot" style="background:#fbbf24"></div>
+                  <div>
+                    <div class="link-title">Vocabulario (sitio antiguo)</div>
+                    <div class="link-sub">Lunfardo · Palabras tramposas · Tal · Préstamos · Verbos nominalizados</div>
+                  </div>
+                </div>
+                <div class="link-right">
+                  <span class="link-badge" style="background:rgba(251,191,36,0.1);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)">estático</span>
+                  <span class="link-arrow">›</span>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
 
       </div>

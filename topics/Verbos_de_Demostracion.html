@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verbos de Demostración — Mi Proyecto Español</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+      
+      /* Trio 2: Blue / Coral / Lime + Violet & Amber for 5 sections */
+      --accent-alpha:   #4a90d9;
+      --accent-beta:    #FF6B6B;
+      --accent-gamma:   #C7F464;
+      --accent-delta:   #c084fc;
+      --accent-epsilon: #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    /* Strict font enforcement - no system fallbacks per spec */
+    body {
+      font-family: 'Outfit'; 
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Background Pattern: Option B — Quatrefoil */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.9'><circle cx='30' cy='0' r='15'/><circle cx='0' cy='30' r='15'/><circle cx='60' cy='30' r='15'/><circle cx='30' cy='60' r='15'/><circle cx='30' cy='30' r='6'/></svg>");
+      background-size: 60px 60px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 48px 40px;
+      margin-bottom: 32px;
+    }
+    .page-overline {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .page-title {
+      font-family: 'DM Serif Display';
+      font-size: 2.8rem;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+    .page-subtitle {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 600px;
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 36px 40px;
+      margin-bottom: 24px;
+      border-left-width: 4px;
+      border-left-style: solid;
+      transition: background 0.2s;
+    }
+    .grammar-card:hover { background: var(--bg-card-hover); }
+
+    .card-alpha   { border-left-color: var(--accent-alpha); }
+    .card-beta    { border-left-color: var(--accent-beta); }
+    .card-gamma   { border-left-color: var(--accent-gamma); }
+    .card-delta   { border-left-color: var(--accent-delta); }
+    .card-epsilon { border-left-color: var(--accent-epsilon); }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: nowrap;
+    }
+    .card-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+      font-size: 1.1rem;
+    }
+    .card-title-group { flex-grow: 1; }
+    .card-title {
+      font-family: 'DM Serif Display';
+      font-size: 2rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .qualifier {
+      font-family: 'Outfit';
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-left: 12px;
+      font-weight: 400;
+    }
+    .card-title-en {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .card-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 64px; 
+    }
+    .card-icon img {
+      height: 100%;
+      width: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: zoom-in;
+      position: relative;
+      z-index: 1;
+      transform-origin: right center;
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+    .card-icon img.magnified {
+      transform: scale(2.5);
+      z-index: 10;
+      cursor: zoom-out;
+      box-shadow: -8px 8px 24px rgba(0, 0, 0, 0.5);
+      border-color: var(--accent);
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      font-size: 1.1rem;
+    }
+    .explanation strong { color: var(--text-primary); font-weight: 600; }
+    .explanation em { color: var(--text-primary); font-style: italic; }
+
+    .examples {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .examples li {
+      background: var(--bg-input);
+      padding: 18px 24px;
+      border-radius: 8px;
+      border-left: 2px solid var(--border);
+    }
+    .examples .es {
+      display: block;
+      font-family: 'DM Serif Display';
+      font-size: 1.3rem;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .examples .en {
+      display: block;
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .note-box {
+      background: rgba(251, 191, 36, 0.05);
+      border: 1px solid rgba(251, 191, 36, 0.2);
+      border-left: 3px solid var(--accent-epsilon);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 28px;
+    }
+    .note-title {
+      color: var(--accent-epsilon);
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    .note-content {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+    }
+    .note-content strong { color: var(--text-primary); }
+
+    @media (max-width: 600px) {
+      .title-card { padding: 32px 24px; }
+      .grammar-card { padding: 28px 24px; }
+      .card-header { flex-direction: column; gap: 12px; }
+      .card-icon { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+    <header class="title-card">
+      <div class="page-overline">Vocabulario y Mecánica</div>
+      <h1 class="page-title">Los Verbos de Demostración</h1>
+      <p class="page-subtitle">A structural breakdown of the verbs used to display, direct, and instruct, with a specific focus on Rioplatense regional usage.</p>
+    </header>
+
+    <article class="grammar-card card-alpha">
+      <div class="card-header">
+        <div class="card-number">①</div>
+        <div class="card-title-group">
+          <div class="card-title">Mostrar <span class="qualifier">el acto de exhibir</span></div>
+          <div class="card-title-en">To Display / To Manifest</div>
+        </div>
+        <div class="card-icon">
+          <img src="../assets/mostrar_concept.png" alt="Illustrating the physical act of displaying an object">
+        </div>
+      </div>
+      <p class="explanation">
+        The broadest and most common verb in the category. <strong>Mostrar</strong> is used when you are bringing an object or concept into someone's immediate field of vision or awareness. It handles both the physical display of objects and the abstract display of emotions or states.
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">¿Me mostrás ese mate de calabaza?</span>
+          <span class="en">Will you show me that gourd mate? <em>— Standard Rioplatense request in a shop.</em></span>
+        </li>
+        <li>
+          <span class="es">El paciente no muestra síntomas de infección.</span>
+          <span class="en">The patient shows no symptoms of infection. <em>— Abstract/clinical usage.</em></span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-beta">
+      <div class="card-header">
+        <div class="card-number">②</div>
+        <div class="card-title-group">
+          <div class="card-title">Enseñar <span class="qualifier">el acto de instruir</span></div>
+          <div class="card-title-en">To Teach / To Instruct</div>
+        </div>
+        <div class="card-icon">
+          <img src="../assets/ensenar_concept.png" alt="Illustrating the act of teaching or passing on knowledge">
+        </div>
+      </div>
+      <p class="explanation">
+        While often taught as a synonym for <em>mostrar</em> in textbooks, its mechanical function is to impart knowledge or demonstrate a process. Outside of Spain and Mexico, it is strictly bound to the concept of education or training.
+      </p>
+      <div class="note-box">
+        <div class="note-title">Nota: Uso Rioplatense</div>
+        <div class="note-content">
+          In Buenos Aires and throughout Argentina, the division between <em>mostrar</em> and <em>enseñar</em> is absolute. <strong>Do not use enseñar to mean "show me an object."</strong> Reserve it entirely for requests regarding instruction or learning a new skill.
+        </div>
+      </div>
+      <ul class="examples" style="margin-top: 24px;">
+        <li>
+          <span class="es">Él me enseñó a preparar un buen asado.</span>
+          <span class="en">He taught me how to prepare a good barbecue.</span>
+        </li>
+        <li>
+          <span class="es">Estoy buscando a alguien que me enseñe el dialecto local.</span>
+          <span class="en">I am looking for someone to teach me the local dialect.</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-gamma">
+      <div class="card-header">
+        <div class="card-number">③</div>
+        <div class="card-title-group">
+          <div class="card-title">Señalar <span class="qualifier">el acto de apuntar</span></div>
+          <div class="card-title-en">To Point Out / To Highlight</div>
+        </div>
+        <div class="card-icon">
+          <img src="../assets/senalar_concept.png" alt="Illustrating the physical act of pointing a finger">
+        </div>
+      </div>
+      <p class="explanation">
+        Derived from the noun <em>señal</em> (a sign/signal). Use <strong>señalar</strong> when directing someone's eyes toward an object that already exists in the environment, rather than bringing the object to them. It is the mechanical equivalent of pointing a finger, and is also used to highlight specific facts in dialogue.
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">Me señaló la estación de subte desde la esquina.</span>
+          <span class="en">He pointed out the subway station to me from the corner.</span>
+        </li>
+        <li>
+          <span class="es">El autor señala un problema importante en el código.</span>
+          <span class="en">The author points out an important problem in the code.</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-delta">
+      <div class="card-header">
+        <div class="card-number">④</div>
+        <div class="card-title-group">
+          <div class="card-title">Indicar <span class="qualifier">el acto de guiar</span></div>
+          <div class="card-title-en">To Indicate / To Direct</div>
+        </div>
+      </div>
+      <p class="explanation">
+        The polite, logistical cousin to <em>señalar</em>. While pointing is purely physical, <strong>indicar</strong> provides procedural information or guidance. This is the optimal verb to use when asking locals for directions or clarifying a logistical process.
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">¿Me podría indicar cómo llegar a la Plaza de Mayo?</span>
+          <span class="en">Could you show me (direct me) how to get to the Plaza de Mayo?</span>
+        </li>
+        <li>
+          <span class="es">El manual indica que debemos reiniciar el sistema.</span>
+          <span class="en">The manual indicates that we must restart the system.</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-epsilon">
+      <div class="card-header">
+        <div class="card-number">⑤</div>
+        <div class="card-title-group">
+          <div class="card-title">Presentar y Exhibir <span class="qualifier">el contexto formal</span></div>
+          <div class="card-title-en">To Present / To Exhibit</div>
+        </div>
+      </div>
+      <p class="explanation">
+        These verbs do not change the physical mechanics of showing, but elevate the formality. <strong>Presentar</strong> is strictly for showing documents to authorities or checkpoints. <strong>Exhibir</strong> is for passive public display, commonly seen in retail or museum contexts.
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">Por favor, presente su pasaporte en la aduana.</span>
+          <span class="en">Please present your passport at customs. <em>— Official requirement.</em></span>
+        </li>
+        <li>
+          <span class="es">Los artículos de cuero están exhibidos en la vidriera.</span>
+          <span class="en">The leather goods are displayed in the shop window. <em>— Passive display.</em></span>
+        </li>
+      </ul>
+    </article>
+
+  </div>
+
+  <script>
+    // Interactive Image Zoom Script
+    document.addEventListener('DOMContentLoaded', () => {
+      const images = document.querySelectorAll('.card-icon img');
+      let activeImage = null;
+
+      const resetZoom = () => {
+        if (activeImage) {
+          activeImage.classList.remove('magnified');
+          activeImage = null;
+        }
+      };
+
+      images.forEach(img => {
+        img.addEventListener('click', (e) => {
+          e.stopPropagation(); 
+          if (activeImage === img) {
+            img.classList.remove('magnified');
+            activeImage = null;
+          } else {
+            resetZoom();
+            img.classList.add('magnified');
+            activeImage = img;
+          }
+        });
+      });
+
+      window.addEventListener('scroll', resetZoom, { passive: true });
+      document.addEventListener('click', resetZoom);
+    });
+  </script>
+</body>
+</html>

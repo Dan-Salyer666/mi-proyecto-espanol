@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern 2: The Reactive Pattern</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+      
+      /* Trio 3 — Teal / Orange / Violet */
+      --accent-alpha: #4ecdc4;
+      --accent-beta:  #FF9F1C;
+      --accent-gamma: #c084fc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Option B — Quatrefoil */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.9'><circle cx='30' cy='0' r='15'/><circle cx='0' cy='30' r='15'/><circle cx='60' cy='30' r='15'/><circle cx='30' cy='60' r='15'/><circle cx='30' cy='30' r='6'/></svg>");
+      background-size: 60px 60px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center;
+      padding: 44px 24px 48px;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    h1 .vs {
+      display: block;
+      font-style: italic;
+      color: var(--accent);
+      font-size: 0.6em;
+      margin: 4px 0;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px auto 10px;
+      color: var(--accent);
+      opacity: 0.65;
+      max-width: 280px;
+    }
+    .ornament::before, .ornament::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .ornament-symbol { font-size: 1.1rem; }
+
+    .title-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      font-style: italic;
+    }
+
+    .intro-paragraph {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 0 20px;
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 28px 22px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+    .grammar-card:hover {
+      border-top-color: #2a4a75;
+      border-right-color: #2a4a75;
+      border-bottom-color: #2a4a75;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .card-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      line-height: 1;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .card-title-group { flex: 1; min-width: 240px; }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .card-title .qualifier {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62em;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-left: 6px;
+    }
+    .card-title-en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    .formula {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      background: var(--bg-input);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin: 14px 0 16px;
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+    .explanation em { color: var(--text-primary); font-style: italic; }
+    .explanation strong { color: var(--text-primary); font-weight: 600; }
+
+    .examples { list-style: none; padding: 0; margin: 0; }
+    .examples li {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    .es {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      display: block;
+      line-height: 1.3;
+    }
+    .en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .en em { color: var(--text-secondary); font-style: normal; }
+
+    /* Accent Card Colors */
+    .card-alpha { border-left: 4px solid var(--accent-alpha); }
+    .card-alpha .card-number { color: var(--accent-alpha); opacity: 0.75; }
+
+    .card-beta { border-left: 4px solid var(--accent-beta); }
+    .card-beta .card-number { color: var(--accent-beta); opacity: 0.75; }
+
+    .card-gamma { border-left: 4px solid var(--accent-gamma); }
+    .card-gamma .card-number { color: var(--accent-gamma); opacity: 0.75; }
+
+    .note-box {
+      background: rgba(74, 144, 217, 0.06);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 22px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.93rem;
+    }
+    .note-label {
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .note-box em { color: var(--text-primary); font-style: italic; }
+
+    @media (max-width: 600px) {
+      .title-card { padding: 32px 18px 36px; }
+      .grammar-card { padding: 22px 20px 18px; }
+      .note-box { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="../seven_usage_patterns.html" class="back-nav">← Volver al menú de patrones</a>
+
+    <header class="title-card">
+      <div class="overline">Patrón 2</div>
+      <h1>The Reactive Pattern <span class="vs">gustar</span> Verbs of Reaction</h1>
+      <div class="ornament"><span class="ornament-symbol">◆</span></div>
+      <div class="title-subtitle">Reverse-engineering English logic for emotions and states</div>
+    </header>
+
+    <p class="intro-paragraph">
+      In English, humans "do" emotions. You like coffee, you love dogs, you struggle with grammar. In Spanish, emotions and reactions are passive states imposed upon you. The object or concept causes a reaction within a receiver.
+    </p>
+
+    <article class="grammar-card card-alpha">
+      <div class="card-header">
+        <div class="card-number">①</div>
+        <div class="card-title-group">
+          <div class="card-title">Core Mechanics<span class="qualifier">the reverse logic</span></div>
+          <div class="card-title-en">THE OBJECT IS THE SUBJECT</div>
+        </div>
+      </div>
+      <code class="formula">[IOP] + Verb (3rd Person Singular/Plural) + Subject</code>
+      <p class="explanation">
+        The verb always conjugates to match the <strong>thing causing the reaction</strong>, not the person feeling it. Because of this, these verbs almost exclusively exist in the 3rd person singular (he/she/it) or 3rd person plural (they).
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">Me gusta el café.</span>
+          <span class="en">I like coffee. <em>— Literally: The coffee is pleasing to me. "Café" dictates the singular verb "gusta".</em></span>
+        </li>
+        <li>
+          <span class="es">Nos encantan los perros.</span>
+          <span class="en">We love dogs. <em>— Literally: The dogs are enchanting to us. "Perros" dictates the plural verb "encantan".</em></span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-beta">
+      <div class="card-header">
+        <div class="card-number">②</div>
+        <div class="card-title-group">
+          <div class="card-title">Common Verbs List<span class="qualifier">beyond gustar</span></div>
+          <div class="card-title-en">STATES OF FRICTION & PLEASURE</div>
+        </div>
+      </div>
+      <p class="explanation">
+        This structural blueprint applies to dozens of verbs that describe physical pain, mental friction, or emotional reactions. Crucially, entire concepts (infinitives) can act as singular subjects.
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">Me cuesta mucho el subjuntivo.</span>
+          <span class="en">The subjunctive is very difficult for me. <em>— The subject "subjuntivo" causes friction.</em></span>
+        </li>
+        <li>
+          <span class="es">Le duele la pierna.</span>
+          <span class="en">His leg hurts. <em>— The leg causes pain to him.</em></span>
+        </li>
+        <li>
+          <span class="es">Me falta dinero.</span>
+          <span class="en">I am short on money. <em>— Money is lacking to me.</em></span>
+        </li>
+        <li>
+          <span class="es">Nos molesta esperar.</span>
+          <span class="en">Waiting bothers us. <em>— The infinitive "esperar" acts as a singular, 3rd-person subject.</em></span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-gamma">
+      <div class="card-header">
+        <div class="card-number">③</div>
+        <div class="card-title-group">
+          <div class="card-title">Clarifiers<span class="qualifier">adding the "A"</span></div>
+          <div class="card-title-en">EMPHASIS & DISAMBIGUATION</div>
+        </div>
+      </div>
+      <code class="formula">(A + Prepositional Pronoun/Noun) + [IOP] + Verb</code>
+      <p class="explanation">
+        Because the pronoun <strong>le</strong> can mean "to him," "to her," or "to you (formal)," Spanish uses the preposition <em>"A"</em> + a noun/pronoun to clarify exactly who is receiving the reaction. You can also use it with "me" and "te" purely for emphasis.
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">A Juan le gusta este libro.</span>
+          <span class="en">Juan likes this book. <em>— Clarifies that "le" refers specifically to Juan.</em></span>
+        </li>
+        <li>
+          <span class="es">A mí me importa mucho.</span>
+          <span class="en">It matters to <strong>me</strong> a lot. <em>— Used for heavy emphasis, contrasting your feeling against someone else's.</em></span>
+        </li>
+      </ul>
+    </article>
+
+    <section class="note-box">
+      <span class="note-label">Nota · Uso Rioplatense</span>
+      When applying the "A + Pronoun" clarifier in the Rioplatense dialect, the standard prepositional pronoun <em>"ti"</em> is completely replaced by <strong>vos</strong>.
+      <br><br>
+      Instead of the peninsular or standard Latin American <em>"A ti te gusta,"</em> you will exclusively hear and use <strong>"A vos te gusta."</strong> The accompanying Indirect Object Pronoun remains <em>"te"</em>.
+    </section>
+
+  </div>
+
+</body>
+</html>

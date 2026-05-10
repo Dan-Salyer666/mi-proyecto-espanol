@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pattern 4: The Pronominal Pattern</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+      
+      /* Trio 1 — Violet / Amber / Teal */
+      --accent-alpha: #c084fc;
+      --accent-beta:  #fbbf24;
+      --accent-gamma: #4ecdc4;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Option D — Diamond lattice with inscribed circles */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M0,30 L30,0 L60,30 L30,60 Z'/><circle cx='30' cy='30' r='10'/></svg>");
+      background-size: 60px 60px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center;
+      padding: 44px 24px 48px;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    h1 .vs {
+      display: block;
+      font-style: italic;
+      color: var(--accent);
+      font-size: 0.6em;
+      margin: 4px 0;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px auto 10px;
+      color: var(--accent);
+      opacity: 0.65;
+      max-width: 280px;
+    }
+    .ornament::before, .ornament::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .ornament-symbol { font-size: 1.1rem; }
+
+    .title-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      font-style: italic;
+    }
+
+    .intro-paragraph {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 0 20px;
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 28px 22px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+    .grammar-card:hover {
+      border-top-color: #2a4a75;
+      border-right-color: #2a4a75;
+      border-bottom-color: #2a4a75;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .card-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      line-height: 1;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .card-title-group { flex: 1; min-width: 240px; }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .card-title .qualifier {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62em;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-left: 6px;
+    }
+    .card-title-en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    .formula {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      background: var(--bg-input);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin: 14px 0 16px;
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+    .explanation em { color: var(--text-primary); font-style: italic; }
+    .explanation strong { color: var(--text-primary); font-weight: 600; }
+
+    .examples { list-style: none; padding: 0; margin: 0; }
+    .examples li {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin-bottom: 10px;
+    }
+    .es {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      display: block;
+      line-height: 1.3;
+    }
+    .en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.5;
+    }
+    .en em { color: var(--text-secondary); font-style: normal; }
+
+    /* Accent Card Colors */
+    .card-alpha { border-left: 4px solid var(--accent-alpha); }
+    .card-alpha .card-number { color: var(--accent-alpha); opacity: 0.75; }
+
+    .card-beta { border-left: 4px solid var(--accent-beta); }
+    .card-beta .card-number { color: var(--accent-beta); opacity: 0.75; }
+
+    .card-gamma { border-left: 4px solid var(--accent-gamma); }
+    .card-gamma .card-number { color: var(--accent-gamma); opacity: 0.75; }
+
+    .note-box {
+      background: rgba(74, 144, 217, 0.06);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 22px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.93rem;
+    }
+    .note-label {
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .note-box em { color: var(--text-primary); font-style: italic; }
+
+    @media (max-width: 600px) {
+      .title-card { padding: 32px 18px 36px; }
+      .grammar-card { padding: 22px 20px 18px; }
+      .note-box { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="../seven_usage_patterns.html" class="back-nav">← Volver al menú de patrones</a>
+
+    <header class="title-card">
+      <div class="overline">Patrón 4</div>
+      <h1>The Pronominal Pattern</h1>
+      <div class="ornament"><span class="ornament-symbol">※</span></div>
+      <div class="title-subtitle">Reflecting, reciprocating, and shifting meaning</div>
+    </header>
+
+    <p class="intro-paragraph">
+      Pronominal verbs require a reflexive pronoun (<em>me, te, se, nos, os, se</em>) to be complete. While they are often called "reflexive verbs," reflection is only one of the three mechanical ways this pattern operates. 
+    </p>
+
+    <article class="grammar-card card-alpha">
+      <div class="card-header">
+        <div class="card-number">①</div>
+        <div class="card-title-group">
+          <div class="card-title">True Reflexive<span class="qualifier">doing to oneself</span></div>
+          <div class="card-title-en">SUBJECT = RECEIVER</div>
+        </div>
+      </div>
+      <code class="formula">(Subject) + Reflexive Pronoun + Verb</code>
+      <p class="explanation">
+        The most literal use. The subject and the object are the exact same person. The subject performs an active verb, and the action reflects directly back onto them.
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">Me lavo las manos.</span>
+          <span class="en">I wash my hands. <em>— I wash the hands to myself.</em></span>
+        </li>
+        <li>
+          <span class="es">Él se afeita cada mañana.</span>
+          <span class="en">He shaves (himself) every morning.</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-beta">
+      <div class="card-header">
+        <div class="card-number">②</div>
+        <div class="card-title-group">
+          <div class="card-title">Reciprocal<span class="qualifier">doing to each other</span></div>
+          <div class="card-title-en">MUTUAL ACTION</div>
+        </div>
+      </div>
+      <code class="formula">(Plural Subject) + nos/se + Verb (Plural)</code>
+      <p class="explanation">
+        Requires a plural subject. Two or more actors perform the verb upon one another simultaneously. The pronoun acts as the English phrase "each other."
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">Nos vemos mañana.</span>
+          <span class="en">We will see each other tomorrow. <em>— Often used as a standard farewell.</em></span>
+        </li>
+        <li>
+          <span class="es">Ellos se hablan todos los días.</span>
+          <span class="en">They talk to each other every day.</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="grammar-card card-gamma">
+      <div class="card-header">
+        <div class="card-number">③</div>
+        <div class="card-title-group">
+          <div class="card-title">Idiomatic Shift<span class="qualifier">changing definitions</span></div>
+          <div class="card-title-en">PRONOMINAL ALTERATION</div>
+        </div>
+      </div>
+      <p class="explanation">
+        Sometimes, adding the pronoun completely changes the core definition of the verb. It is no longer reflecting an action; it is creating an entirely new, idiomatic meaning. 
+      </p>
+      <ul class="examples">
+        <li>
+          <span class="es">Ir vs. Irse</span>
+          <span class="en"><em>Voy a la tienda</em> (I go to the store) vs. <em>Me voy de la fiesta</em> (I am leaving the party).</span>
+        </li>
+        <li>
+          <span class="es">Dormir vs. Dormirse</span>
+          <span class="en"><em>Duermo ocho horas</em> (I sleep eight hours) vs. <em>Me duermo rápido</em> (I fall asleep quickly).</span>
+        </li>
+        <li>
+          <span class="es">Parecer vs. Parecerse</span>
+          <span class="en"><em>Parece caro</em> (It seems expensive) vs. <em>Se parece a su padre</em> (He looks like his father).</span>
+        </li>
+      </ul>
+    </article>
+
+    <section class="note-box">
+      <span class="note-label">Nota · Uso Rioplatense</span>
+      When dealing with reflexive verbs under the Rioplatense <em>voseo</em>, the verb conjugation shifts, but the reflexive pronoun <strong>te</strong> remains exactly the same as in standard Spanish. 
+      <br><br>
+      • <strong>Tú</strong> (Standard): <em>Tú te levantas temprano.</em><br>
+      • <strong>Vos</strong> (Rioplatense): <em>Vos te levantás temprano.</em><br><br>
+      Note that the emphasis shifts to the final syllable (levant<strong>ás</strong>), but the structural pronoun (<em>te</em>) does not change to <em>vos</em>. 
+    </section>
+
+  </div>
+
+</body>
+</html>

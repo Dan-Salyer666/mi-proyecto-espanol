@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spanish Verbal Usage Patterns</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+      
+      /* Trio 1 — Violet / Amber / Teal */
+      --accent-alpha: #c084fc;
+      --accent-beta:  #fbbf24;
+      --accent-gamma: #4ecdc4;
+      /* 4th color for rotation */
+      --accent-delta: #FF6B6B; 
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M0,30 L30,0 L60,30 L30,60 Z'/><circle cx='30' cy='30' r='10'/></svg>");
+      background-size: 60px 60px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center;
+      padding: 44px 24px 48px;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px auto 10px;
+      color: var(--accent);
+      opacity: 0.65;
+      max-width: 280px;
+    }
+    .ornament::before, .ornament::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .ornament-symbol { font-size: 1.1rem; }
+
+    .title-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      font-style: italic;
+    }
+
+    .intro-paragraph {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 0 20px;
+    }
+
+    .note-box {
+      background: rgba(74, 144, 217, 0.06);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 40px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.93rem;
+    }
+    .note-label {
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .note-box em { color: var(--text-primary); font-style: italic; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .grid-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      text-decoration: none;
+    }
+    
+    .grid-card:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .grid-card-inner {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      line-height: 1;
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+
+    .card-title-group { flex: 1; }
+    
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .formula {
+      display: block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      background: var(--bg-input);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      flex-grow: 1;
+    }
+
+    /* Color Assignments */
+    .card-alpha { border-left: 4px solid var(--accent-alpha); }
+    .card-alpha:hover { border-color: var(--accent-alpha); }
+    .card-alpha .card-number { color: var(--accent-alpha); }
+
+    .card-beta { border-left: 4px solid var(--accent-beta); }
+    .card-beta:hover { border-color: var(--accent-beta); }
+    .card-beta .card-number { color: var(--accent-beta); }
+
+    .card-gamma { border-left: 4px solid var(--accent-gamma); }
+    .card-gamma:hover { border-color: var(--accent-gamma); }
+    .card-gamma .card-number { color: var(--accent-gamma); }
+
+    .card-delta { border-left: 4px solid var(--accent-delta); }
+    .card-delta:hover { border-color: var(--accent-delta); }
+    .card-delta .card-number { color: var(--accent-delta); }
+
+    @media (max-width: 600px) {
+      .title-card { padding: 32px 18px 36px; }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .grid-card-inner { padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="../index.html" class="back-nav">← Inicio</a>
+
+    <header class="title-card">
+      <div class="overline">Referencia Gramatical</div>
+      <h1>Patrones de Uso Verbal</h1>
+      <div class="ornament"><span class="ornament-symbol">✦</span></div>
+      <div class="title-subtitle">Structural blueprints for decoding Spanish syntax</div>
+    </header>
+
+    <p class="intro-paragraph">
+      Categorizing syntax into structural blueprints moves you away from translating word-for-word and trains you to instinctively feel how the language fits together. Select a pattern below to explore its mechanics.
+    </p>
+
+    <section class="note-box">
+      <span class="note-label">Aviso · The "-le" Suffix Warning Label</span>
+      Attaching "-le" to an infinitive (e.g., <em>darle, gustarle, caerle</em>) is <strong>not</strong> a grammatical structure itself. It is a shorthand warning label used in grammar guides indicating the verb requires an Indirect Object Pronoun (receiver) to function properly in context. It does not dictate the structural pattern or subject placement.
+    </section>
+
+    <div class="dashboard-grid">
+      
+      <a href="subpages/pattern-1.html" class="grid-card card-alpha">
+        <div class="grid-card-inner">
+          <div class="card-header">
+            <div class="card-number">①</div>
+            <div class="card-title-group">
+              <div class="card-title">The Standard Action</div>
+            </div>
+          </div>
+          <code class="formula">(Subject) + [IOP] + [DOP] + Verb + (Direct Object)</code>
+          <p class="explanation">A subject performs an action, transferring it directly to an object or a receiver. This is your standard SVO active framework.</p>
+        </div>
+      </a>
+
+      <a href="subpages/pattern-2.html" class="grid-card card-beta">
+        <div class="grid-card-inner">
+          <div class="card-header">
+            <div class="card-number">②</div>
+            <div class="card-title-group">
+              <div class="card-title">The Reactive Pattern</div>
+            </div>
+          </div>
+          <code class="formula">(A + Pronoun) + IOP + Verb (3rd Person) + Subject</code>
+          <p class="explanation">The <em>Gustar</em> logic. An external object or concept functions as the subject, causing a reaction or feeling within a receiver.</p>
+        </div>
+      </a>
+
+      <a href="subpages/pattern-3.html" class="grid-card card-gamma">
+        <div class="grid-card-inner">
+          <div class="card-header">
+            <div class="card-number">③</div>
+            <div class="card-title-group">
+              <div class="card-title">The Impression Pattern</div>
+            </div>
+          </div>
+          <code class="formula">(Subject) + IOP + Intrans. Verb + Adverb/Adjective</code>
+          <p class="explanation">The <em>Caer bien</em> logic. A subject projects a vibe or an outcome that is subsequently judged or experienced by a receiver.</p>
+        </div>
+      </a>
+
+      <a href="subpages/pattern-4.html" class="grid-card card-delta">
+        <div class="grid-card-inner">
+          <div class="card-header">
+            <div class="card-number">④</div>
+            <div class="card-title-group">
+              <div class="card-title">The Pronominal Pattern</div>
+            </div>
+          </div>
+          <code class="formula">(Subject) + Reflexive Pronoun + Verb</code>
+          <p class="explanation">The action reflects directly back onto the subject, occurs mutually between subjects, or alters the verb's core definition entirely.</p>
+        </div>
+      </a>
+
+      <a href="subpages/pattern-5.html" class="grid-card card-alpha">
+        <div class="grid-card-inner">
+          <div class="card-header">
+            <div class="card-number">⑤</div>
+            <div class="card-title-group">
+              <div class="card-title">The Copular Pattern</div>
+            </div>
+          </div>
+          <code class="formula">(Subject) + Ser/Estar/Parecer + Adjective/Noun</code>
+          <p class="explanation">The verb acts purely as an equals sign, linking a subject to its location, temporary condition, or permanent description.</p>
+        </div>
+      </a>
+
+      <a href="subpages/pattern-6.html" class="grid-card card-beta">
+        <div class="grid-card-inner">
+          <div class="card-header">
+            <div class="card-number">⑥</div>
+            <div class="card-title-group">
+              <div class="card-title">The Impersonal "Se"</div>
+            </div>
+          </div>
+          <code class="formula">Se + Verb (3rd person) + (Noun)</code>
+          <p class="explanation">Removes the specific actor to establish general facts, societal rules, or universal habits where the driver is irrelevant.</p>
+        </div>
+      </a>
+
+      <a href="subpages/pattern-7.html" class="grid-card card-gamma">
+        <div class="grid-card-inner">
+          <div class="card-header">
+            <div class="card-number">⑦</div>
+            <div class="card-title-group">
+              <div class="card-title">The Compound Pattern</div>
+            </div>
+          </div>
+          <code class="formula">Helper Verb (Conjugated) + [Prep] + Infinitive/Gerund</code>
+          <p class="explanation">Periphrastic structures where two verbs fuse to form a single idea; the first sets tense, the second delivers the action.</p>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</body>
+</html>

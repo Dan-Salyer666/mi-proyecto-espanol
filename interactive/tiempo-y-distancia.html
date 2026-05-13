@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expresar Tiempo y Distancia — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Regional badge palette */
+  --reg-spain:      #94a3b8;
+  --reg-latam:      #4a90d9;
+  --reg-rio:        #14b8a6;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background image (iOS-friendly real <div> pattern) ── */
+.bg-photo {
+  position: fixed;
+  inset: 0;
+  background: url('../assets/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 22, 40, 0.55);
+  z-index: 0;
+}
+
+/* ── Page wrap ── */
+.page-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 8px 0 22px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.6rem);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+.page-header .thesis {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+.page-header .thesis em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* ── Image placeholder / image figure ── */
+.figure {
+  margin: 24px auto 8px;
+  max-width: 720px;
+}
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+}
+.figure-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 180px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  background: rgba(74, 144, 217, 0.03);
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-style: italic;
+  padding: 24px;
+  line-height: 1.5;
+}
+.figure-placeholder code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-style: normal;
+}
+
+/* ── NOTA* box ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota.nota-expanded {
+  padding: 18px 22px;
+}
+.nota.nota-expanded h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 12px 0 6px;
+}
+.nota.nota-expanded h4:first-of-type { margin-top: 8px; }
+.nota.nota-expanded ul {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 8px;
+}
+.nota.nota-expanded ul li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+}
+.nota.nota-expanded ul li::before {
+  content: '›';
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Register flip switch ── */
+.register-bar {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 26px;
+}
+.register-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  user-select: none;
+}
+.register-toggle .rt-label {
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.register-toggle .rt-label.active {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.rt-track {
+  position: relative;
+  width: 42px;
+  height: 22px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+.rt-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  transition: left 0.2s;
+}
+.rt-track.on .rt-thumb { left: 22px; }
+.rt-track.on { border-color: var(--accent); }
+
+/* ── Tab bar ── */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 14px 18px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn.active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent);
+}
+
+.tab-content { display: none; }
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.35s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Rate bar for TTS ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover {
+  border-color: #2a4a75;
+  color: var(--text-primary);
+}
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── Construction section card ── */
+.construction {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 26px;
+  margin-bottom: 22px;
+}
+.construction h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.45rem;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+.construction .prose {
+  font-size: 0.96rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.construction .prose strong { color: var(--text-primary); font-weight: 600; }
+.construction .prose em { color: var(--accent); font-style: italic; }
+
+/* ── Example list ── */
+.examples-block {
+  margin: 14px 0 8px;
+}
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:last-child { border-bottom: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es .hl { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+
+/* ── Speaker button ── */
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.speak-btn.playing {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+/* ── Regional badges ── */
+.reg-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 20px;
+  margin-left: 6px;
+  vertical-align: middle;
+  border: 1px solid;
+}
+.reg-spain { color: var(--reg-spain); border-color: rgba(148, 163, 184, 0.35); background: rgba(148, 163, 184, 0.08); }
+.reg-latam { color: var(--reg-latam); border-color: rgba(74, 144, 217, 0.35); background: rgba(74, 144, 217, 0.08); }
+.reg-rio   { color: var(--reg-rio);   border-color: rgba(20, 184, 166, 0.4);  background: rgba(20, 184, 166, 0.08); }
+
+/* ── "Más ejemplos" inert button (Phase 1 placeholder) ── */
+.btn-mas {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+.btn-mas:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.btn-mas:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ── Register filter visibility (data-driven, no JS loop) ──
+   The page root carries data-filter="cotidiano" or "todo".
+   Each content block tagged with data-register="cotidiano" | "formal" | "both".
+   When filter is cotidiano, formal blocks hide. When todo, all show. */
+[data-filter="cotidiano"] [data-register="formal"] {
+  display: none;
+}
+
+/* ── Distancia placeholder card ── */
+.distancia-placeholder {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+.distancia-placeholder .icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+/* ── Image lightbox modal ── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 10, 20, 0.92);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  cursor: zoom-out;
+}
+.lightbox.open { display: flex; }
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-header h1 { font-size: 1.7rem; }
+  .construction { padding: 18px 18px; }
+  .construction h3 { font-size: 1.2rem; }
+  .tab-btn { padding: 12px 12px; font-size: 0.88rem; }
+  .rate-bar { padding: 8px 10px; }
+  .example-es { font-size: 1rem; }
+}
+</style>
+</head>
+<body data-filter="todo">
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <a href="../index.html" class="back-link">← Inicio</a>
+
+  <!-- ─────────────────────────────────────
+       HEADER
+  ────────────────────────────────────── -->
+  <header class="page-header">
+    <h1>Expresar Tiempo y Distancia</h1>
+    <p class="thesis">
+      El español trata el tiempo y la distancia como una misma medida. Decimos <em>está a tres cuadras</em>,
+      <em>está a cinco minutos</em> y <em>está a una hora en auto</em> usando la misma estructura. Esta página
+      recorre las construcciones de duración y distancia, marcando dónde la simetría se sostiene y dónde se rompe.
+    </p>
+  </header>
+
+  <!-- Image 1 — unifying diagram placeholder -->
+  <figure class="figure" id="figIntro">
+    <div class="figure-placeholder">
+      Imagen no disponible — aparecerá cuando se agregue <code>tiempo-distancia-medicion.webp</code> a <code>/assets/</code>
+    </div>
+  </figure>
+
+  <!-- Opening NOTA* -->
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    This page is built around one observation: Spanish often expresses time and distance through the same structural
+    frame — <code>estar a + amount</code> works for physical distance, time-as-distance, and hybrids. Question forms
+    mirror across the two domains (<em>¿A qué distancia?</em> · <em>¿A cuánto tiempo?</em> · <em>¿Cuánto falta?</em>).
+    Read the Spanish narrative for the constructions; these NOTA boxes flag the mechanical points where English and
+    Spanish diverge.
+  </div>
+
+  <!-- ─────────────────────────────────────
+       REGISTER FLIP SWITCH
+  ────────────────────────────────────── -->
+  <div class="register-bar">
+    <div class="register-toggle" role="group" aria-label="Filtro de registro">
+      <span class="rt-label" id="rtCotidiano" onclick="setRegister('cotidiano')">Cotidiano</span>
+      <div class="rt-track" id="rtTrack" onclick="toggleRegister()" role="switch" aria-checked="true" tabindex="0"
+           onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleRegister();}">
+        <div class="rt-thumb"></div>
+      </div>
+      <span class="rt-label active" id="rtTodo" onclick="setRegister('todo')">Mostrar todo</span>
+    </div>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       RATE TOGGLE (shared TTS speed)
+  ────────────────────────────────────── -->
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ─────────────────────────────────────
+       TAB BAR
+  ────────────────────────────────────── -->
+  <nav class="tab-bar" role="tablist">
+    <button class="tab-btn active" data-tab="tiempo" onclick="switchTab('tiempo')" role="tab">Tiempo</button>
+    <button class="tab-btn" data-tab="distancia" onclick="switchTab('distancia')" role="tab">Distancia</button>
+  </nav>
+
+  <!-- ═════════════════════════════════════
+       TAB 1 — TIEMPO
+  ═════════════════════════════════════ -->
+  <section class="tab-content active" id="tab-tiempo" role="tabpanel">
+
+    <!-- ── Intro narrative for Tiempo ── -->
+    <div class="construction" data-register="both">
+      <h3>Cómo el español expresa la duración</h3>
+      <p class="prose">
+        El español dispone de varias construcciones para hablar de duración, y cada una ilumina un ángulo distinto:
+        <strong>cuánto tiempo pasó</strong> desde un punto, <strong>cuánto tiempo lleva</strong> ocurriendo algo en
+        este momento, <strong>cuánto falta</strong> para que algo termine, y <strong>cuánto tiempo</strong> sin que
+        algo ocurra. Las secciones que siguen recorren estas construcciones en ese orden. La mayoría conviven en el
+        habla cotidiana; algunas son más propias del registro literario o periodístico y se marcan como tales.
+      </p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Spanish handles duration through several angles: <strong>elapsed time</strong> (how long ago),
+        <strong>ongoing time</strong> (since when / for how long it's been happening), <strong>remaining time</strong>
+        (how much longer), and <strong>negative duration</strong> (how long without). The sections on this tab cover
+        all four. The biggest shift from English is that Spanish typically uses the simple present where English
+        uses the present perfect: <em>Vivo acá desde hace seis años</em> = "I have lived here for six years."
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         SECTION 1 — Cuándo · Presente simple
+         (Pattern template — fully wired example for Phase 1a)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Cuándo · presente simple</h3>
+      <p class="prose">
+        Antes de entrar en las construcciones de duración, vale la pena recordar que el español usa el
+        <strong>presente simple</strong> para hablar de acciones habituales o situaciones que son ciertas ahora.
+        Esta es la base sobre la que se montan casi todas las construcciones de duración: <em>desde</em>,
+        <em>desde hace</em>, <em>hace … que</em> y <em>llevar</em> piden el presente cuando la acción sigue
+        ocurriendo en el momento en que se habla.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Yo <span class="hl">vivo</span> en Tacoma.</div>
+            <div class="example-en">I live in Tacoma. <em>— A current fact about where I live; present simple is enough.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Ella <span class="hl">trabaja</span> en un hospital del centro.</div>
+            <div class="example-en">She works at a hospital downtown. <em>— Ongoing situation, no duration marker yet.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿Vos <span class="hl">estudiás</span> español? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">Do you study Spanish? <em>— Voseo conjugation; same present tense.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Acá <span class="hl">tomamos</span> mate todos los días. <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">Here we drink mate every day. <em>— Habitual present.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        The Spanish present tense covers what English splits across <em>simple present</em> ("I live")
+        and <em>present continuous</em> ("I'm living"). Spanish uses the simple present for both unless there's a
+        reason to emphasize the action is in progress right now — in which case it switches to <code>estar + gerundio</code>
+        (<em>estoy viviendo</em>). For duration constructions, the simple present is almost always the right call.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- More Tiempo sections (#2–#13) ship in Phase 1b and 1c -->
+    <div style="text-align:center;padding:40px 24px;color:var(--text-muted);font-size:0.88rem;font-style:italic;border:1px dashed var(--border);border-radius:12px;margin-top:8px">
+      Las construcciones <em>desde · desde hace · hace que · llevar · tardar · faltar</em> y la sección de
+      <em>hace vs hacía</em> se agregan en las siguientes fases.
+    </div>
+
+  </section>
+
+  <!-- ═════════════════════════════════════
+       TAB 2 — DISTANCIA (placeholder)
+  ═════════════════════════════════════ -->
+  <section class="tab-content" id="tab-distancia" role="tabpanel">
+    <div class="construction" data-register="both">
+      <div class="distancia-placeholder">
+        <div class="icon">📐</div>
+        <div>La pestaña <strong style="color:var(--text-secondary)">Distancia</strong> se construye en la Fase 2.</div>
+        <div style="margin-top:6px;font-size:0.82rem">Incluirá <em>estar a · quedar a · cerca/lejos de · faltar · acercarse/alejarse · por · hasta</em> y un cierre que conecta las dos pestañas.</div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-wrap -->
+
+<!-- Image lightbox modal -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" alt="">
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  REGISTER FLIP SWITCH
+//  Local to this page only — does NOT read or write
+//  the index page dialect toggle. Persists to:
+//    localStorage.tiempoDistanciaFilter
+//    values: "cotidiano" | "todo"   default: "todo"
+//  CSS does the actual show/hide via [data-filter] on <body>.
+// ═══════════════════════════════════════════════
+const REGISTER_KEY = 'tiempoDistanciaFilter';
+
+function readRegister() {
+  const v = localStorage.getItem(REGISTER_KEY);
+  return (v === 'cotidiano' || v === 'todo') ? v : 'todo';
+}
+function applyRegister(value) {
+  document.body.setAttribute('data-filter', value);
+  const track = document.getElementById('rtTrack');
+  const cot = document.getElementById('rtCotidiano');
+  const todo = document.getElementById('rtTodo');
+  if (value === 'todo') {
+    track.classList.add('on');
+    track.setAttribute('aria-checked', 'true');
+    todo.classList.add('active');
+    cot.classList.remove('active');
+  } else {
+    track.classList.remove('on');
+    track.setAttribute('aria-checked', 'false');
+    cot.classList.add('active');
+    todo.classList.remove('active');
+  }
+}
+function setRegister(value) {
+  if (value !== 'cotidiano' && value !== 'todo') return;
+  localStorage.setItem(REGISTER_KEY, value);
+  applyRegister(value);
+}
+function toggleRegister() {
+  setRegister(readRegister() === 'cotidiano' ? 'todo' : 'cotidiano');
+}
+applyRegister(readRegister());
+
+// ═══════════════════════════════════════════════
+//  TAB SWITCHING
+// ═══════════════════════════════════════════════
+function switchTab(name) {
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === name);
+  });
+  document.querySelectorAll('.tab-content').forEach(c => {
+    c.classList.toggle('active', c.id === 'tab-' + name);
+  });
+  // Stop any TTS playing when switching tabs
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+}
+
+// ═══════════════════════════════════════════════
+//  TTS — DUAL VOICE POOL
+//  Default voice (everywhere unless tagged rioplatense):
+//    es-419 → es-MX → es-US → es-CO → any es-* except AR/UY → any es
+//  Rioplatense voice (only for data-region="rioplatense" content):
+//    es-AR → es-UY → es-419 → any es
+//  Per-example region is read from data-region on .example-row.
+//  This page does NOT read the index page dialect toggle.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let rioVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  // Neutral Lat-Am preference chain
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  // Rioplatense preference chain
+  rioVoice =
+       voices.find(v => v.lang === 'es-AR')
+    || voices.find(v => v.lang === 'es-UY')
+    || voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  // Chrome loads voices async — listen for the event
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices(); // Synchronous attempt in case voices already loaded
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) {
+        clearInterval(iv);
+        resolve();
+      }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// Strip emoji and zero-width junk that can leak in from button text or badges
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const region = (row.dataset.region || 'neutral').toLowerCase();
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  // Strip regional badges out of the spoken text
+  const clone = esEl.cloneNode(true);
+  clone.querySelectorAll('.reg-badge').forEach(el => el.remove());
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  // If this button is already playing, toggle off
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  // Otherwise, cancel any other in-flight and play this one
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  const v = region === 'rioplatense' ? rioVoice : neutralVoice;
+  if (v) {
+    u.voice = v;
+    u.lang = v.lang;
+  } else {
+    u.lang = region === 'rioplatense' ? 'es-AR' : 'es-419';
+  }
+  u.rate = ttsRate;
+  btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  IMAGE LIGHTBOX
+// ═══════════════════════════════════════════════
+document.querySelectorAll('.figure img').forEach(img => {
+  img.addEventListener('click', () => {
+    const lb = document.getElementById('lightbox');
+    const lbi = document.getElementById('lightboxImg');
+    lbi.src = img.src;
+    lbi.alt = img.alt || '';
+    lb.classList.add('open');
+  });
+});
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+// ═══════════════════════════════════════════════
+//  IMAGE FALLBACK (when files arrive later)
+//  When Daniel adds the real .webp to /assets/, the page tries to load it
+//  and swaps from placeholder to <img> automatically on next load — but
+//  for now the placeholder is shown directly in the HTML, no probe needed.
+//  When we wire actual <img> tags in later phases, add onerror swap-to-
+//  placeholder logic at that point.
+// ═══════════════════════════════════════════════
+</script>
+</body>
+</html>

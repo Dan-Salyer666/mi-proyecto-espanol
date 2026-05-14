@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adjetivos No Graduables — Mi Proyecto Español</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+      
+      /* Trio 4 — Blue / Violet / Gold */
+      --accent-alpha:   #4a90d9;
+      --accent-beta:    #c084fc;
+      --accent-gamma:   #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    /* Background Pattern Option C — Eight-point stars */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M30,5 L35,25 L55,30 L35,35 L30,55 L25,35 L5,30 L25,25 Z'/><circle cx='30' cy='30' r='3'/></svg>");
+      background-size: 60px 60px;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center;
+      padding: 44px 24px 48px;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .overline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px auto 10px;
+      color: var(--accent);
+      opacity: 0.65;
+      max-width: 280px;
+    }
+    .ornament::before, .ornament::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+    .ornament-symbol { font-size: 1.1rem; }
+    .title-subtitle {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      font-style: italic;
+    }
+
+    .intro-prose {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: -8px 4px 22px;
+      padding: 0 6px;
+    }
+    .intro-prose strong { color: var(--text-primary); font-weight: 600; }
+    .intro-prose em     { color: var(--accent); font-style: italic; }
+
+    .rate-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 0 0 18px;
+      padding: 10px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .rate-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+    .rate-btn {
+      padding: 4px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+    .rate-btn.active {
+      background: rgba(74, 144, 217, 0.15);
+      color: var(--accent);
+      border-color: rgba(74, 144, 217, 0.3);
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 14px;
+      padding: 28px 28px 22px;
+      margin-bottom: 18px;
+      transition: border-color 0.2s;
+    }
+    .grammar-card:hover {
+      border-top-color: #2a4a75;
+      border-right-color: #2a4a75;
+      border-bottom-color: #2a4a75;
+    }
+
+    .card-alpha  { border-left-color: var(--accent-alpha); }
+    .card-beta   { border-left-color: var(--accent-beta); }
+    .card-gamma  { border-left-color: var(--accent-gamma); }
+    .card-alpha .card-number { color: var(--accent-alpha); opacity: 0.75; }
+    .card-beta  .card-number { color: var(--accent-beta);  opacity: 0.75; }
+    .card-gamma .card-number { color: var(--accent-gamma); opacity: 0.75; }
+    .card-delta  { border-left-color: #4ecdc4; }
+    .card-delta .card-number { color: #4ecdc4; opacity: 0.75; }
+
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .card-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      line-height: 1;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+    .card-title-group { flex: 1; min-width: 240px; }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .card-title .qualifier {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.62em;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-left: 6px;
+    }
+    .card-title-en {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 4px;
+    }
+
+    .formula {
+      display: inline-block;
+      font-family: 'Courier New', monospace;
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      background: var(--bg-input);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin: 14px 0 16px;
+    }
+
+    .explanation {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+    .explanation em     { color: var(--text-primary); font-style: italic; }
+    .explanation strong { color: var(--text-primary); font-weight: 600; }
+
+    .examples-block { margin: 14px 0 8px; }
+    .example-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+    }
+    .example-row:last-child { border-bottom: none; }
+    .example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+    .example-row .example-body { flex: 1; min-width: 0; }
+    .example-es {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+    .example-es .hl { color: var(--accent); font-weight: 600; font-style: italic; }
+    .example-en {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin-top: 3px;
+      line-height: 1.5;
+    }
+    .example-en em { color: var(--text-secondary); font-style: normal; }
+
+    .speak-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .speak-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+    .speak-btn.playing {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .nota {
+      background: rgba(74, 144, 217, 0.08);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .nota .nota-label {
+      display: inline-block;
+      font-weight: 600;
+      color: var(--accent);
+      margin-right: 6px;
+      letter-spacing: 0.02em;
+    }
+    .nota strong { color: var(--text-primary); font-weight: 600; }
+    .nota em     { color: var(--accent); font-style: italic; }
+    .nota code {
+      font-family: ui-monospace, 'SF Mono', monospace;
+      background: var(--bg-input);
+      color: var(--text-primary);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+
+    /* Vocabulary grid presentation */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 8px 24px;
+      margin-top: 16px;
+    }
+    .vocab-grid .example-row {
+      border-bottom: 1px solid rgba(30, 51, 85, 0.2);
+    }
+
+    @media (max-width: 600px) {
+      .title-card        { padding: 32px 18px 36px; }
+      .grammar-card      { padding: 22px 20px 18px; }
+      .nota              { padding: 22px; }
+      .rate-bar          { padding: 8px 10px; }
+      .vocab-grid        { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <div class="overline">Referencia Gramatical</div>
+    <h1>Adjetivos No Graduables</h1>
+    <div class="ornament"><span class="ornament-symbol">✦</span></div>
+    <div class="title-subtitle">También conocidos como adjetivos de grado extremo</div>
+  </header>
+
+  <p class="intro-prose">
+    Algunos adjetivos en español ya expresan el nivel máximo de una cualidad o describen un estado binario. Estos adjetivos no existen en una escala, por lo que su gramática funciona de manera ligeramente distinta.
+  </p>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">El Concepto</div>
+        <div class="card-title-en">THE RULE</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Un <strong>adjetivo no graduable</strong> (o de <em>grado extremo</em>) describe una condición absoluta. Puesto que ya contienen la idea de "el más" o el límite superior de una característica, es gramaticalmente incorrecto intentar cuantificarlos con palabras de grado como <em>muy</em>, <em>más</em> o <em>poco</em>.
+    </p>
+    
+    <p class="explanation">
+      Si algo ya es lo máximo, no puede ser "más máximo". El adjetivo debe usarse por sí solo.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">De todos los colores, el azul es mi <span class="hl">favorito</span>.</div>
+          <div class="example-en">Out of all the colors, blue is my favorite. <em>— Never "más favorito" or "muy favorito"</em></div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Vocabulario Esencial</div>
+        <div class="card-title-en">THE ADJECTIVES</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Esta es la lista de los adjetivos de grado extremo más comunes que rechazan el uso de intensificadores estándar.
+    </p>
+
+    <div class="examples-block vocab-grid">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Excelente</div>
+          <div class="example-en">Excellent</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Perfecto</div>
+          <div class="example-en">Perfect</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Único</div>
+          <div class="example-en">Unique</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Horrible</div>
+          <div class="example-en">Horrible</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Maravilloso</div>
+          <div class="example-en">Marvelous / Wonderful</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Fatal</div>
+          <div class="example-en">Terrible / Disastrous</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Muerto</div>
+          <div class="example-en">Dead</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Inmenso</div>
+          <div class="example-en">Immense</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Absoluto</div>
+          <div class="example-en">Absolute</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Esencial</div>
+          <div class="example-en">Essential</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Cómo Enfatizar</div>
+        <div class="card-title-en">ADDING INTENSITY</div>
+      </div>
+    </div>
+
+    <code class="formula">adverbio de totalidad + adjetivo extremo</code>
+
+    <p class="explanation">
+      Si es absolutamente necesario darle énfasis a uno de estos adjetivos, la estructura requiere un <strong>adverbio de totalidad</strong> en lugar de un modificador de grado. Los más comunes son <em>totalmente</em>, <em>absolutamente</em> y <em>completamente</em>.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ese detalle es <span class="hl">absolutamente esencial</span> para el proyecto.</div>
+          <div class="example-en">That detail is absolutely essential to the project.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El plan que propusiste fue <span class="hl">totalmente perfecto</span>.</div>
+          <div class="example-en">The plan you proposed was totally perfect.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span> In casual English, we frequently rely on language transfer errors, combining degree modifiers with extreme adjectives (e.g., saying "my most favorite" or "that is very perfect"). While English conversation tolerates this semantic redundancy, Spanish grammar strictly enforces the logic: an adjective that already represents a conceptual ceiling cannot be quantified by "more" or "very". You must switch to an adverb of totality (totally, completely, absolutely) to emphasize them.
+    </div>
+  </article>
+
+<article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Adverbios de Totalidad</div>
+        <div class="card-title-en">THE ADVERBS</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Estos son los adverbios más comunes que se utilizan para dar énfasis a los adjetivos de grado extremo.
+    </p>
+
+    <div class="examples-block vocab-grid">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Totalmente</div>
+          <div class="example-en">Totally</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Absolutamente</div>
+          <div class="example-en">Absolutely</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Completamente</div>
+          <div class="example-en">Completely</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Enteramente</div>
+          <div class="example-en">Entirely</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Plenamente</div>
+          <div class="example-en">Fully</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Rotundamente</div>
+          <div class="example-en">Categorically / Flatly</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+
+
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — DUAL VOICE POOL
+//  Default voice (everywhere unless tagged rioplatense):
+//    es-419 → es-MX → es-US → es-CO → any es-* except AR/UY/ES → any es
+//  Rioplatense voice (only for data-region="rioplatense" content):
+//    es-AR → es-UY → es-419 → any es
+//  Per-example region is read from data-region on .example-row.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let rioVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  rioVoice =
+       voices.find(v => v.lang === 'es-AR')
+    || voices.find(v => v.lang === 'es-UY')
+    || voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row') || btn.closest('.vocab-row');
+  if (!row) return;
+  const region = (row.dataset.region || 'neutral').toLowerCase();
+  const esEl = row.querySelector('.example-es') || row.querySelector('.vocab-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  clone.querySelectorAll('.reg-badge').forEach(el => el.remove());
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  const v = region === 'rioplatense' ? rioVoice : neutralVoice;
+  if (v) { u.voice = v; u.lang = v.lang; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+</script>
+</body>
+</html>

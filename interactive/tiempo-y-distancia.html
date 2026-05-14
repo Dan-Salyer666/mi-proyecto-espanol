@@ -345,6 +345,23 @@ body {
 .construction .prose strong { color: var(--text-primary); font-weight: 600; }
 .construction .prose em { color: var(--accent); font-style: italic; }
 
+/* ── Sub-construction headings (used inside callout blocks like Llevar) ──
+   More specific selectors (.nota.nota-expanded h4) override this for NOTA
+   internals, so expanded NOTA h4s keep their existing white-text styling. */
+.construction h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 26px 0 8px;
+  letter-spacing: 0.01em;
+}
+.construction h4:first-of-type { margin-top: 16px; }
+.construction h4 em {
+  font-style: italic;
+  color: var(--text-primary);
+}
+
 /* ── Example list ── */
 .examples-block {
   margin: 14px 0 8px;
@@ -592,17 +609,17 @@ body {
     </div>
 
     <!-- ═════════════════════════════════════
-         SECTION 1 — Cuándo · Presente simple
-         (Pattern template — fully wired example for Phase 1a)
+         CONSTRUCTION 1 — Desde + presente
+         (Pattern template for Phase 1a — additional constructions
+          ship in Phase 1b)
     ═════════════════════════════════════ -->
     <div class="construction" data-register="both">
-      <h3>Cuándo · presente simple</h3>
+      <h3>Desde + presente</h3>
       <p class="prose">
-        Antes de entrar en las construcciones de duración, vale la pena recordar que el español usa el
-        <strong>presente simple</strong> para hablar de acciones habituales o situaciones que son ciertas ahora.
-        Esta es la base sobre la que se montan casi todas las construcciones de duración: <em>desde</em>,
-        <em>desde hace</em>, <em>hace … que</em> y <em>llevar</em> piden el presente cuando la acción sigue
-        ocurriendo en el momento en que se habla.
+        La construcción más directa del grupo: <em>desde</em> seguido de un <strong>punto fijo en el tiempo</strong> —
+        una fecha, un mes, un evento — marca el momento en que algo empezó. El verbo se queda en
+        <strong>presente</strong> porque la acción sigue ocurriendo ahora. El inglés, en cambio, exige el
+        presente perfecto en este mismo contexto: <em>I have lived…</em>
       </p>
 
       <div class="examples-block">
@@ -610,32 +627,32 @@ body {
         <div class="example-row" data-region="neutral">
           <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
           <div class="example-body">
-            <div class="example-es">Yo <span class="hl">vivo</span> en Tacoma.</div>
-            <div class="example-en">I live in Tacoma. <em>— A current fact about where I live; present simple is enough.</em></div>
+            <div class="example-es">Vivo acá <span class="hl">desde 2018</span>.</div>
+            <div class="example-en">I've lived here since 2018. <em>— Punto fijo: el año en que empezó la acción.</em></div>
           </div>
         </div>
 
         <div class="example-row" data-region="neutral">
           <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
           <div class="example-body">
-            <div class="example-es">Ella <span class="hl">trabaja</span> en un hospital del centro.</div>
-            <div class="example-en">She works at a hospital downtown. <em>— Ongoing situation, no duration marker yet.</em></div>
+            <div class="example-es">Trabajo en el hospital <span class="hl">desde marzo</span>.</div>
+            <div class="example-en">I've worked at the hospital since March. <em>— Punto fijo: el mes; el verbo sigue en presente.</em></div>
           </div>
         </div>
 
         <div class="example-row" data-region="neutral">
           <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
           <div class="example-body">
-            <div class="example-es">¿Vos <span class="hl">estudiás</span> español? <span class="reg-badge reg-rio">Rioplatense</span></div>
-            <div class="example-en">Do you study Spanish? <em>— Voseo conjugation; same present tense.</em></div>
+            <div class="example-es">No comemos carne <span class="hl">desde el año pasado</span>.</div>
+            <div class="example-en">We haven't eaten meat since last year. <em>— Forma negativa; misma estructura.</em></div>
           </div>
         </div>
 
         <div class="example-row" data-region="rioplatense">
           <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
           <div class="example-body">
-            <div class="example-es">Acá <span class="hl">tomamos</span> mate todos los días. <span class="reg-badge reg-rio">Rioplatense</span></div>
-            <div class="example-en">Here we drink mate every day. <em>— Habitual present.</em></div>
+            <div class="example-es">¿<span class="hl">Estudiás</span> español desde la pandemia? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">Have you been studying Spanish since the pandemic? <em>— Voseo: <code>estudiás</code> en lugar de <code>estudias</code>.</em></div>
           </div>
         </div>
 
@@ -643,10 +660,9 @@ body {
 
       <div class="nota">
         <span class="nota-label">NOTA*</span>
-        The Spanish present tense covers what English splits across <em>simple present</em> ("I live")
-        and <em>present continuous</em> ("I'm living"). Spanish uses the simple present for both unless there's a
-        reason to emphasize the action is in progress right now — in which case it switches to <code>estar + gerundio</code>
-        (<em>estoy viviendo</em>). For duration constructions, the simple present is almost always the right call.
+        The big shift from English: Spanish keeps the verb in simple <strong>present</strong>, where English forces
+        the present perfect ("have lived / have worked / have been studying"). Same time relationship, different
+        tense. The <em>desde</em> phrase carries all the temporal weight; the verb just states the ongoing state.
       </div>
 
       <button class="btn-mas" disabled title="Disponible en una fase futura">
@@ -654,10 +670,553 @@ body {
       </button>
     </div>
 
-    <!-- More Tiempo sections (#2–#13) ship in Phase 1b and 1c -->
+    <!-- Image 2 — desde / desde hace / hace que timeline placeholder -->
+    <figure class="figure" id="figDesde">
+      <div class="figure-placeholder">
+        Imagen no disponible — aparecerá cuando se agregue <code>tiempo-distancia-desde.webp</code> a <code>/assets/</code>
+      </div>
+    </figure>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 2 — Desde hace + presente
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Desde hace + presente</h3>
+      <p class="prose">
+        El segundo molde toma el mismo eje temporal pero lo expresa de otra forma: en lugar de un punto fijo,
+        <em>desde hace</em> introduce <strong>la cantidad de tiempo que ha pasado</strong> desde el inicio de
+        la acción. El verbo se mantiene en presente. Es probablemente la construcción más usada para hablar
+        de duraciones en español hablado.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Vivo acá <span class="hl">desde hace seis años</span>.</div>
+            <div class="example-en">I've lived here for six years. <em>— Cantidad transcurrida, sin fecha de inicio.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Conozco a Marta <span class="hl">desde hace mucho tiempo</span>.</div>
+            <div class="example-en">I've known Marta for a long time. <em>— Cantidad imprecisa pero válida.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Mi madre <span class="hl">trabaja</span> en ese banco <span class="hl">desde hace veinte años</span>.</div>
+            <div class="example-en">My mother has worked at that bank for twenty years. <em>— Verbo en presente aunque la acción empezó hace mucho.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        <strong>Desde</strong> vs. <strong>desde hace</strong>: same construction, two ways to fill the slot.
+        <em>Desde 2018</em> = a fixed point on the calendar. <em>Desde hace seis años</em> = the amount of time
+        that has elapsed. They cover the same situation from different angles, and which one you reach for
+        depends on whether you know the start date or just the duration.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 3 — Hace + tiempo + que + presente
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Hace + tiempo + que + presente</h3>
+      <p class="prose">
+        Misma idea que la anterior pero con la información reordenada: el <strong>tiempo transcurrido</strong>
+        se pone primero, seguido de <em>que</em> y el verbo en presente. Es una construcción muy frecuente en
+        el habla y permite enfatizar la duración al ponerla al principio de la frase.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hace seis años que</span> vivo acá.</div>
+            <div class="example-en">It's been six years since I moved here / I've lived here for six years. <em>— Mismo significado que «vivo acá desde hace seis años», con la duración fronted.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hace dos horas que</span> espero la llamada.</div>
+            <div class="example-en">I've been waiting for the call for two hours. <em>— Énfasis en lo largo que se ha hecho la espera.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">Hace cuánto que</span> estudiás español? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">How long have you been studying Spanish? <em>— Forma de pregunta natural en cualquier registro; voseo en <code>estudiás</code>.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        <em>Hace seis años que vivo acá</em> and <em>vivo acá desde hace seis años</em> mean the same thing —
+        just different word order. The <em>hace … que</em> version fronts the time, which tends to feel more
+        emphatic. In English both land naturally as <em>"I've lived here for six years"</em> or
+        <em>"It's been six years since…"</em>
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 4 — Hace + tiempo + que no + presente
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Hace + tiempo + que no + presente</h3>
+      <p class="prose">
+        Versión negativa de la construcción anterior. Mantiene la misma forma pero introduce <em>no</em>
+        antes del verbo: marca <strong>cuánto tiempo ha pasado sin que algo ocurra</strong>. En inglés
+        corresponde a <em>"I haven't … in / for …"</em>.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hace tres años que no</span> lo veo.</div>
+            <div class="example-en">I haven't seen him in three years. <em>— Negación de la acción durante el período indicado.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hace meses que no</span> recibo noticias suyas.</div>
+            <div class="example-en">I haven't heard from him/her in months. <em>— «Meses» como cantidad imprecisa.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hace mucho que no</span> como tan bien.</div>
+            <div class="example-en">I haven't eaten this well in a long time. <em>— «Mucho» abreviado de «mucho tiempo».</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        The verb stays in <strong>simple present</strong> even though English reaches for the present perfect
+        ("I haven't seen"). Same tense pattern as the positive version — only <em>no</em> is added.
+        Note that <em>hace mucho</em> (without <em>tiempo</em>) is a fixed shorthand for <em>hace mucho tiempo</em>.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 5 — Hacía + tiempo + que + imperfecto
+         (Tense interaction callout — most important teaching
+          moment per spec; Image 3 + expanded NOTA)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Hacía + tiempo + que + imperfecto</h3>
+      <p class="prose">
+        El espejo de la construcción anterior en el pasado narrativo. <em>Hacía</em> reemplaza a <em>hace</em>,
+        y el verbo se mueve del presente al <strong>imperfecto</strong>. La estructura es idéntica; lo único
+        que cambia es el tiempo verbal. Esta forma expresa <strong>cuánto tiempo llevaba ocurriendo algo</strong>
+        en un momento del pasado, típicamente apuntando hacia otro evento ya situado en la narración.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hacía dos años que vivía</span> allá cuando me cambié de trabajo.</div>
+            <div class="example-en">I had been living there for two years when I changed jobs. <em>— El anclaje es el momento del cambio de trabajo, no el ahora.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hacía mucho tiempo que no</span> nos <span class="hl">veíamos</span>.</div>
+            <div class="example-en">We hadn't seen each other in a long time. <em>— Versión pasada de «hace mucho tiempo que no nos vemos».</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hacía meses que esperaba</span> esa noticia cuando finalmente llegó.</div>
+            <div class="example-en">I had been waiting months for that news when it finally arrived. <em>— Anclaje doble: la llegada de la noticia fija el momento de referencia.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Image 3 placeholder — hace vs hacía split-panel timeline -->
+      <figure class="figure" id="figHaceHacia">
+        <div class="figure-placeholder">
+          Imagen no disponible — aparecerá cuando se agregue <code>tiempo-distancia-hace-hacia.webp</code> a <code>/assets/</code>
+        </div>
+      </figure>
+
+      <!-- Expanded NOTA — the page's central teaching moment -->
+      <div class="nota nota-expanded">
+        <span class="nota-label">NOTA*</span>
+
+        <h4>The shift from hace to hacía</h4>
+        In present-anchored duration, <em>hace</em> sets a relationship between an action and the moment of
+        speaking — <em>hace seis años que vivo acá</em> describes a stretch of time extending up to now.
+        <em>Hacía</em> moves the entire anchor one tense back: <em>hacía seis años que vivía acá</em>
+        describes a stretch of time extending up to <strong>some moment in the past</strong>. The "now" of
+        the construction is no longer the present; it's a past reference point the narrative has already set up.
+
+        <h4>Identical construction, shifted tense</h4>
+        The mechanical structure is the same in both versions:
+        <ul>
+          <li><em>hace</em> + tiempo + <em>que</em> + <strong>presente</strong></li>
+          <li><em>hacía</em> + tiempo + <em>que</em> + <strong>imperfecto</strong></li>
+        </ul>
+        The <em>hace</em>/<em>hacía</em> swap pulls the verb tense with it — present indicative becomes
+        imperfect. Word order, the role of <em>que</em>, everything else stays put.
+
+        <h4>Where this form lives</h4>
+        The past-anchored version almost always appears alongside another clause that fixes the moment of
+        reference — typically a preterite (<em>cuando me mudé · cuando llegué · cuando empezó la pandemia</em>).
+        Without that anchor the construction floats; in isolation it sounds like the sentence is missing
+        something. English does the same work with the past perfect continuous: <em>"I had been living…"</em>,
+        <em>"we hadn't seen each other in…"</em>
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 6 — Desde + imperfecto
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Desde + imperfecto</h3>
+      <p class="prose">
+        La contraparte pasada de <em>desde + presente</em>. Funciona igual — un punto fijo en el tiempo marca
+        el inicio de la acción — pero el anclaje se mueve al pasado y el verbo va en <strong>imperfecto</strong>.
+        Como la construcción anterior, vive sobre todo en contextos narrativos donde otra cláusula establece el
+        momento de referencia.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Vivía allá desde el 2010</span> cuando empezó todo.</div>
+            <div class="example-en">I had been living there since 2010 when it all started. <em>— Punto fijo en el pasado; el imperfecto marca la situación en curso.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Trabajaba</span> en esa empresa <span class="hl">desde 1998</span>; ya tenía mucha antigüedad.</div>
+            <div class="example-en">I'd been working at that company since 1998; I had a lot of seniority. <em>— Sin <em>cuando</em>, pero con una segunda cláusula que da contexto.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Estudiaba</span> español <span class="hl">desde la secundaria</span>, así que ya tenía bastante base.</div>
+            <div class="example-en">I'd been studying Spanish since high school, so I had a solid base. <em>— Punto fijo expresado como evento (la secundaria) en vez de fecha.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        The relationship between <em>desde + presente</em> and <em>desde + imperfecto</em> is the same as
+        between <em>hace que + presente</em> and <em>hacía que + imperfecto</em>: the whole anchor shifts
+        from present to past, and the verb tense moves with it. The starting point can be a date, a year,
+        a month, or a generic event in the past (<em>la secundaria · la pandemia · la guerra</em>).
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 7 — Hace + tiempo (sin "que")
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Hace + tiempo (sin <em>que</em>)</h3>
+      <p class="prose">
+        Hasta aquí hemos visto <em>hace</em> como parte de construcciones con <em>que</em> y un verbo en
+        presente. Pero <em>hace + cantidad de tiempo</em> también funciona <strong>solo</strong>, como
+        marcador puntual: equivale al inglés <em>"X ago"</em>. Sin <em>que</em> y normalmente acompañado
+        de un verbo en pretérito o imperfecto, no expresa duración ongoing; <strong>apunta a un momento
+        del pasado</strong>.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Lo <span class="hl">vi</span> <span class="hl">hace una semana</span>.</div>
+            <div class="example-en">I saw him a week ago. <em>— Pretérito + hace = momento puntual en el pasado.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Llegué</span> a Buenos Aires <span class="hl">hace dos meses</span>.</div>
+            <div class="example-en">I arrived in Buenos Aires two months ago. <em>— Misma estructura: pretérito + cantidad de tiempo.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Hace mucho tiempo</span>, <span class="hl">vivía</span> en Chile.</div>
+            <div class="example-en">A long time ago, I lived in Chile. <em>— Forma fronted; el imperfecto da el contexto de "back then".</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">—¿Cuándo te mudaste? —<span class="hl">Hace tres años</span>.</div>
+            <div class="example-en">"When did you move?" "Three years ago." <em>— Respuesta independiente; el contexto da el verbo implícito.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Same word, different mechanism. <em>Hace tres años <strong>que</strong> vivo acá</em> (with <em>que</em>
+        + present) = "I've been living here for three years" — ongoing. <em>Vivía acá <strong>hace</strong>
+        tres años</em> (no <em>que</em>, past verb) = "I was living here three years ago" — a snapshot of
+        a past moment. The presence or absence of <em>que</em> and the verb tense are the two markers that
+        tell these apart.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 8 — Llevar (cuatro construcciones)
+         (Callout block: single card, four sub-sections,
+          one short NOTA per variant)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Llevar + tiempo — cuatro construcciones</h3>
+      <p class="prose">
+        <em>Llevar + tiempo</em> es una de las formas más versátiles que tiene el español para hablar de
+        duración. Lo que cambia entre las cuatro variantes es <strong>qué ocupa el segundo hueco</strong> —
+        un gerundio, un infinitivo, un infinitivo precedido de <em>sin</em>, o un objeto indirecto con
+        <em>llevar</em> en pretérito. Cada combinación produce un significado distinto.
+      </p>
+
+      <!-- ─── Variante 1: Llevar + tiempo + gerundio ─── -->
+      <h4>Llevar + tiempo + <em>gerundio</em></h4>
+      <p class="prose">
+        Expresa <strong>cuánto tiempo lleva alguien haciendo algo</strong>. El sujeto de <em>llevar</em>
+        es la persona que realiza la acción; el gerundio describe lo que viene haciendo.
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Llevo dos horas estudiando</span>.</div>
+            <div class="example-en">I've been studying for two hours. <em>— «Yo» es el sujeto de llevar; el gerundio dice qué hago.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Llevamos tres meses esperando</span> esa respuesta.</div>
+            <div class="example-en">We've been waiting three months for that answer. <em>— Plural; la acción sigue en curso.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿Cuánto tiempo <span class="hl">llevás trabajando</span> acá? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">How long have you been working here? <em>— Voseo: <code>llevás</code> en lugar de <code>llevas</code>.</em></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Mechanically equivalent to <em>hace X que + presente</em> (<em>hace dos horas que estudio</em>),
+        but <em>llevar + gerundio</em> tends to feel a touch more conversational and is heavily used in
+        spoken Spanish.
+      </div>
+
+      <!-- ─── Variante 2: Llevar + tiempo + infinitivo (impersonal) ─── -->
+      <h4>Llevar + tiempo + <em>infinitivo</em> (impersonal)</h4>
+      <p class="prose">
+        Misma forma de superficie, perspectiva invertida: ahora el sujeto es <strong>la tarea</strong>, no
+        la persona. <em>Llevar</em> deja de ser personal y pasa a significar <em>"tomar/requerir"</em> en
+        sentido impersonal.
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Solo <span class="hl">lleva diez minutos rellenar</span> el formulario.</div>
+            <div class="example-en">It only takes ten minutes to fill out the form. <em>— El formulario (implícito como sujeto) es lo que «lleva» el tiempo.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Lleva tiempo aprender</span> un idioma.</div>
+            <div class="example-en">Learning a language takes time. <em>— Sentencia general, sin objeto específico.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Esa receta <span class="hl">lleva dos horas hacer</span>la bien.</div>
+            <div class="example-en">That recipe takes two hours to do right. <em>— Sujeto explícito (la receta) en posición fronted.</em></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        The flip is subtle but important: in variant 1 the subject is the person and the gerund tells you
+        what they're doing; here the subject is the task and the infinitive tells you what action takes
+        the time. English handles both with "takes" but uses different syntax: <em>"I've been studying for
+        two hours"</em> vs. <em>"it takes two hours to study."</em>
+      </div>
+
+      <!-- ─── Variante 3: Me/te/le llevó + tiempo ─── -->
+      <h4>Me / te / le <em>llevó</em> + tiempo</h4>
+      <p class="prose">
+        Misma perspectiva que la variante anterior (la tarea es el sujeto) pero con un <strong>objeto
+        indirecto</strong> que ancla a quién le tomó ese tiempo, y con <em>llevar</em> en
+        <strong>pretérito</strong>. Cuenta una duración ya completada.
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Me llevó una hora</span> terminar el informe.</div>
+            <div class="example-en">It took me an hour to finish the report. <em>— «Me» = objeto indirecto; pretérito completado.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Le llevó tres meses</span> encontrar trabajo.</div>
+            <div class="example-en">It took him three months to find a job. <em>— «Le» referencia a otra persona; mismo molde.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Nos llevó toda la tarde</span> ordenar la casa.</div>
+            <div class="example-en">It took us the whole afternoon to tidy the house. <em>— «Nos» plural; expresión de tiempo no numérica.</em></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        This is the past-tense, person-marked version of variant 2. Spanish marks the experiencer with an
+        indirect object pronoun (<em>me · te · le · nos · les</em>) rather than turning it into the subject,
+        which is why <em>llevar</em> stays in the third person singular regardless of who experienced the time.
+      </div>
+
+      <!-- ─── Variante 4: Llevar + tiempo + sin + infinitivo ─── -->
+      <h4>Llevar + tiempo + <em>sin</em> + infinitivo</h4>
+      <p class="prose">
+        La variante negativa: <em>sin + infinitivo</em> reemplaza al gerundio de la variante 1 y marca
+        <strong>cuánto tiempo lleva alguien sin hacer algo</strong>. Equivale exactamente a
+        <em>hace X que no + presente</em>, que ya vimos en la sección 4.
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Llevo dos años sin verlo</span>.</div>
+            <div class="example-en">I haven't seen him in two years. <em>— Equivalente a «hace dos años que no lo veo».</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Lleva semanas sin contestar</span> los mensajes.</div>
+            <div class="example-en">He's gone weeks without answering messages. <em>— Tercera persona; mismo molde.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Llevamos meses sin hablar</span>nos.</div>
+            <div class="example-en">We haven't talked in months. <em>— Plural; el pronombre reflexivo va pegado al infinitivo.</em></div>
+          </div>
+        </div>
+
+      </div>
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Two ways to say exactly the same thing — <em>llevo dos años sin verlo</em> and <em>hace dos años
+        que no lo veo</em>. The <em>llevar</em> version puts the subject (the person) up front;
+        the <em>hace que</em> version puts the duration up front. Both are equally natural in conversation.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- Remaining Tiempo sections ship in subsequent Phase 1b batches -->
     <div style="text-align:center;padding:40px 24px;color:var(--text-muted);font-size:0.88rem;font-style:italic;border:1px dashed var(--border);border-radius:12px;margin-top:8px">
-      Las construcciones <em>desde · desde hace · hace que · llevar · tardar · faltar</em> y la sección de
-      <em>hace vs hacía</em> se agregan en las siguientes fases.
+      Aún por agregar: <em>tardar/demorar · faltar · aproximaciones · formas de pregunta</em>.
     </div>
 
   </section>

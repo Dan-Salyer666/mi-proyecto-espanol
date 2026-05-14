@@ -535,9 +535,7 @@ body {
 
   <!-- Image 1 — unifying diagram placeholder -->
   <figure class="figure" id="figIntro">
-    <div class="figure-placeholder">
-      Imagen no disponible — aparecerá cuando se agregue <code>tiempo-distancia-medicion.webp</code> a <code>/assets/</code>
-    </div>
+    <img src="/assets/tiempo-distancia-medicion.webp" alt="Diagrama: la misma estructura gramatical (estar a + X) acepta unidades de distancia, de tiempo y formas híbridas — cuadras, minutos, kilómetros, una hora en auto." />
   </figure>
 
   <!-- Opening NOTA* -->
@@ -672,9 +670,7 @@ body {
 
     <!-- Image 2 — desde / desde hace / hace que timeline placeholder -->
     <figure class="figure" id="figDesde">
-      <div class="figure-placeholder">
-        Imagen no disponible — aparecerá cuando se agregue <code>tiempo-distancia-desde.webp</code> a <code>/assets/</code>
-      </div>
+      <img src="/assets/tiempo-distancia-desde.webp" alt="Línea de tiempo con tres formas de expresar la misma duración: «desde 2018» ancla en una fecha; «desde hace seis años» marca la cantidad transcurrida; «hace seis años que» pone la duración al principio." loading="lazy" />
     </figure>
 
     <!-- ═════════════════════════════════════
@@ -1214,10 +1210,297 @@ body {
       </button>
     </div>
 
-    <!-- Remaining Tiempo sections ship in subsequent Phase 1b batches -->
-    <div style="text-align:center;padding:40px 24px;color:var(--text-muted);font-size:0.88rem;font-style:italic;border:1px dashed var(--border);border-radius:12px;margin-top:8px">
-      Aún por agregar: <em>tardar/demorar · faltar · aproximaciones · formas de pregunta</em>.
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 9 — Tardar / Demorar + (en) + infinitivo
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Tardar / Demorar + <em>(en)</em> + infinitivo</h3>
+      <p class="prose">
+        Para hablar de <strong>cuánto tarda en pasar algo</strong>, el español usa dos verbos prácticamente
+        intercambiables: <em>tardar</em> y <em>demorar</em>. La construcción es la misma —
+        <em>verbo + cantidad de tiempo + (en) + infinitivo</em> — y la elección entre ambos verbos es
+        cuestión de región. La preposición <em>en</em> se omite a veces cuando la acción está clara por
+        contexto.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El tren <span class="hl">tarda media hora en cruzar</span> la ciudad.</div>
+            <div class="example-en">The train takes half an hour to cross the city. <em>— Forma completa con <em>en + infinitivo</em>.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Me demoré dos horas</span> en terminar el informe.</div>
+            <div class="example-en">It took me two hours to finish the report. <em>— Pretérito con pronombre reflexivo; «demorarse» es una variante reflexiva común.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">¿Cuánto tarda</span> en llegar el pedido?</div>
+            <div class="example-en">How long does the order take to arrive? <em>— Forma de pregunta con tardar.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">¿Cuánto demora</span> el colectivo? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">How long does the bus take? <em>— Demorar + colectivo, ambos rasgos típicos del Río de la Plata.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        <em>Tardar</em> and <em>demorar</em> mean essentially the same thing in this construction. Spain
+        and Mexico lean strongly toward <em>tardar</em>; the Southern Cone (Argentina, Uruguay, Chile)
+        leans toward <em>demorar</em>; most of South America uses both. Either is understood everywhere.
+        The reflexive <em>demorarse</em> (and to a lesser extent <em>tardarse</em>) is very common in spoken
+        Spanish across Latin America.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
     </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 10 — Faltar (tiempo)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Faltar + tiempo</h3>
+      <p class="prose">
+        El espejo de <em>hace</em>: en lugar de marcar tiempo transcurrido, <em>faltar</em> marca
+        <strong>tiempo que queda</strong>. Se usa impersonalmente o con objeto indirecto, casi siempre
+        acompañado de <em>para</em> (cuánto falta para algo) o <em>para que</em> (cuánto falta para que
+        ocurra algo).
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Faltan veinte minutos</span> para que empiece la película.</div>
+            <div class="example-en">Twenty minutes until the movie starts. <em>— Impersonal: el sujeto gramatical es «veinte minutos».</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Me faltan cinco minutos</span> para terminar.</div>
+            <div class="example-en">I have five minutes left to finish. <em>— Con objeto indirecto «me»: la persona afectada por el tiempo que falta.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">—¿Cuánto <span class="hl">falta</span>? —<span class="hl">Falta poco</span>.</div>
+            <div class="example-en">"How much longer?" "Not much longer." <em>— Forma standalone muy común; «poco» implícito de «poco tiempo».</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Same verb appears later in the Distancia tab — <em>¿cuánto falta para llegar?</em> = how much
+        further to go? — which is one of the cleanest illustrations of why this page exists: the same
+        construction handles time remaining and distance remaining without changing shape.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 11 — Aproximaciones y hedges
+         (Register split — cotidiano + formal sub-block; the
+          formal sub-block hides when filter = cotidiano)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Aproximaciones y hedges</h3>
+      <p class="prose">
+        Cuando no se sabe el tiempo exacto, o cuando no hace falta ser preciso, el español ofrece varias
+        formas de «redondear». Lo importante es que existen <strong>dos registros</strong> con expresiones
+        distintas: lo que se dice entre amigos no es lo que se escribe en un documento oficial. Si tienes
+        el switch en <em>Cotidiano</em>, las opciones formales de abajo se ocultan.
+      </p>
+
+      <h4>Cotidiano</h4>
+      <p class="prose">
+        Las formas que se usan en conversación normal — sueltas, conversacionales, a veces redundantes
+        (decir <em>más o menos</em> después de un número aproximado es muy común).
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">La reunión dura <span class="hl">como dos horas</span>.</div>
+            <div class="example-en">The meeting lasts about two hours. <em>— «Como» + cantidad = aproximación rápida.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Llegamos <span class="hl">a eso de las tres</span>.</div>
+            <div class="example-en">We arrived around three. <em>— «A eso de» se usa con horas específicas.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Faltan <span class="hl">unos diez minutos</span>, <span class="hl">más o menos</span>.</div>
+            <div class="example-en">About ten minutes left, more or less. <em>— «Unos/unas» antepuesto al número + «más o menos» reforzando: muy típico.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Algo así como una hora</span>, no más.</div>
+            <div class="example-en">Something like an hour, no more. <em>— Hedge fuerte; transmite incertidumbre.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Formal sub-block — hides when [data-filter="cotidiano"] -->
+      <div data-register="formal">
+        <h4>Formal</h4>
+        <p class="prose">
+          Las formas que aparecen en documentos, comunicados, prensa, ámbitos profesionales. Son más
+          neutras y precisas; se evitan las redundancias del registro cotidiano.
+        </p>
+        <div class="examples-block">
+
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">La sesión durará <span class="hl">aproximadamente dos horas</span>.</div>
+              <div class="example-en">The session will last approximately two hours. <em>— Adverbio formal estándar.</em></div>
+            </div>
+          </div>
+
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">El procedimiento toma <span class="hl">alrededor de quince minutos</span>.</div>
+              <div class="example-en">The procedure takes around fifteen minutes. <em>— «Alrededor de» + cantidad.</em></div>
+            </div>
+          </div>
+
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">La conferencia se prolongará <span class="hl">en torno a tres horas</span>.</div>
+              <div class="example-en">The conference will run in the neighborhood of three hours. <em>— «En torno a» es marcadamente formal; típico de escritura periodística o académica.</em></div>
+            </div>
+          </div>
+
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">El acto concluirá <span class="hl">cerca de las seis</span> de la tarde.</div>
+              <div class="example-en">The event will end close to six in the evening. <em>— «Cerca de» funciona en ambos registros, pero combinado con sintaxis formal pertenece aquí.</em></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        The split between these two registers matters more in writing than in speech. A cotidiano hedge in
+        a formal document reads as careless; a formal hedge in casual conversation reads as stilted.
+        <em>Cerca de</em> is the most register-flexible of the bunch — it works in both contexts depending
+        on the surrounding syntax. <em>En torno a</em> is the most strongly marked as formal and almost
+        never appears in spoken Spanish outside of news anchors.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 12 — Formas de pregunta
+         (Closes the Tiempo tab; pairs each question form with
+          its matching construction from earlier sections.)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Formas de pregunta</h3>
+      <p class="prose">
+        Cuatro formas de preguntar sobre el tiempo, cada una pareja de una de las construcciones que
+        cubrimos antes. La elección de la pregunta condiciona la forma natural de la respuesta.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">¿Cuánto tiempo</span> dura la película?</div>
+            <div class="example-en">How long is the movie? <em>— La más general; combina con casi cualquier verbo de duración.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">¿Hace cuánto</span> te mudaste?</div>
+            <div class="example-en">How long ago did you move? <em>— Pareja con <em>hace + tiempo</em> (bare): «me mudé hace tres años».</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">¿Desde cuándo</span> estudias español?</div>
+            <div class="example-en">Since when have you been studying Spanish? <em>— Pareja con <em>desde + presente</em>: «desde 2020».</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">¿Desde hace cuánto</span> trabajás en el hospital? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">How long have you been working at the hospital? <em>— Pareja con <em>desde hace + presente</em>; voseo en <code>trabajás</code>.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Each question form points to a different answer construction. <em>¿Cuánto tiempo?</em> is the
+        safest fallback when you're not sure which one fits — it works with most verbs of duration.
+        <em>¿Hace cuánto que…?</em> (with <em>que</em> + present) asks about ongoing duration;
+        <em>¿Hace cuánto…?</em> (no <em>que</em>, past verb) asks about a punctual moment in the past.
+        Same split we saw in section 7.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ─── End of Tiempo tab content ─── -->
 
   </section>
 

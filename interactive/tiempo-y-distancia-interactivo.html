@@ -104,7 +104,7 @@ body {
 /* ── Image placeholder / image figure ── */
 .figure {
   margin: 24px auto 8px;
-  max-width: 720px;
+  max-width: 360px;
 }
 .figure img {
   display: block;
@@ -113,6 +113,17 @@ body {
   border-radius: 12px;
   border: 1px solid var(--border);
   cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transform-origin: center center;
+}
+.figure img.magnified {
+  transform: scale(2.0);
+  z-index: 50;
+  cursor: zoom-out;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  border-color: var(--accent);
 }
 .figure-placeholder {
   display: flex;
@@ -433,6 +444,7 @@ body {
 .reg-spain { color: var(--reg-spain); border-color: rgba(148, 163, 184, 0.35); background: rgba(148, 163, 184, 0.08); }
 .reg-latam { color: var(--reg-latam); border-color: rgba(74, 144, 217, 0.35); background: rgba(74, 144, 217, 0.08); }
 .reg-rio   { color: var(--reg-rio);   border-color: rgba(20, 184, 166, 0.4);  background: rgba(20, 184, 166, 0.08); }
+.reg-esp   { color: #d97757;          border-color: rgba(217, 119, 87, 0.4);   background: rgba(217, 119, 87, 0.08); }
 
 /* ── "Más ejemplos" inert button (Phase 1 placeholder) ── */
 .btn-mas {
@@ -481,26 +493,6 @@ body {
   opacity: 0.5;
 }
 
-/* ── Image lightbox modal ── */
-.lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(5, 10, 20, 0.92);
-  z-index: 200;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 30px;
-  cursor: zoom-out;
-}
-.lightbox.open { display: flex; }
-.lightbox img {
-  max-width: 100%;
-  max-height: 100%;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
 /* ── Responsive ── */
 @media (max-width: 640px) {
   .page-header h1 { font-size: 1.7rem; }
@@ -535,7 +527,7 @@ body {
 
   <!-- Image 1 — unifying diagram placeholder -->
   <figure class="figure" id="figIntro">
-    <img src="/assets/tiempo-distancia-medicion.webp" alt="Diagrama: la misma estructura gramatical (estar a + X) acepta unidades de distancia, de tiempo y formas híbridas — cuadras, minutos, kilómetros, una hora en auto." />
+    <img src="../assets/tiempo-distancia-medicion.webp" alt="Diagrama: la misma estructura gramatical (estar a + X) acepta unidades de distancia, de tiempo y formas híbridas — cuadras, minutos, kilómetros, una hora en auto." />
   </figure>
 
   <!-- Opening NOTA* -->
@@ -578,6 +570,8 @@ body {
   <nav class="tab-bar" role="tablist">
     <button class="tab-btn active" data-tab="tiempo" onclick="switchTab('tiempo')" role="tab">Tiempo</button>
     <button class="tab-btn" data-tab="distancia" onclick="switchTab('distancia')" role="tab">Distancia</button>
+    <button class="tab-btn" data-tab="cuestionarios" onclick="switchTab('cuestionarios')" role="tab">Cuestionarios</button>
+    <button class="tab-btn" data-tab="guia" onclick="switchTab('guia')" role="tab">Guía Rápida</button>
   </nav>
 
   <!-- ═════════════════════════════════════
@@ -670,7 +664,7 @@ body {
 
     <!-- Image 2 — desde / desde hace / hace que timeline placeholder -->
     <figure class="figure" id="figDesde">
-      <img src="/assets/tiempo-distancia-desde.webp" alt="Línea de tiempo con tres formas de expresar la misma duración: «desde 2018» ancla en una fecha; «desde hace seis años» marca la cantidad transcurrida; «hace seis años que» pone la duración al principio." loading="lazy" />
+      <img src="../assets/tiempo-distancia-desde.webp" alt="Línea de tiempo con tres formas de expresar la misma duración: «desde 2018» ancla en una fecha; «desde hace seis años» marca la cantidad transcurrida; «hace seis años que» pone la duración al principio." loading="lazy" />
     </figure>
 
     <!-- ═════════════════════════════════════
@@ -873,9 +867,7 @@ body {
 
       <!-- Image 3 placeholder — hace vs hacía split-panel timeline -->
       <figure class="figure" id="figHaceHacia">
-        <div class="figure-placeholder">
-          Imagen no disponible — aparecerá cuando se agregue <code>tiempo-distancia-hace-hacia.webp</code> a <code>/assets/</code>
-        </div>
+        <img src="../assets/tiempo-distancia-hace-hacia.webp" alt="Comparación entre presente narrativo (hace que + presente: la duración se extiende hasta el «ahora») y pasado narrativo (hacía que + imperfecto: la duración se extiende hasta un punto del pasado, no hasta el ahora)." loading="lazy" />
       </figure>
 
       <!-- Expanded NOTA — the page's central teaching moment -->
@@ -1508,21 +1500,712 @@ body {
        TAB 2 — DISTANCIA (placeholder)
   ═════════════════════════════════════ -->
   <section class="tab-content" id="tab-distancia" role="tabpanel">
+
+    <!-- ── Intro narrative for Distancia ── -->
+    <div class="construction" data-register="both">
+      <h3>La distancia funciona igual que el tiempo</h3>
+      <p class="prose">
+        La distancia en español comparte la misma maquinaria que el tiempo: la construcción central
+        <em>estar a + medida</em> acepta unidades físicas (cuadras, kilómetros), de tiempo (minutos),
+        e incluso híbridas (una hora en auto). En esta pestaña aparecen las construcciones específicas
+        de distancia, pero la mayoría son simplemente las que ya vimos en Tiempo aplicadas a otro
+        tipo de medida.
+      </p>
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        If you've worked through the Tiempo tab, you've already met most of the apparatus on this side.
+        <em>Estar a + X</em> covers physical distance, time-as-distance, and hybrid units without changing
+        shape. <em>Faltar</em> reappears with identical mechanics. The hedge vocabulary (<em>como, más o
+        menos, aproximadamente</em>) is verbatim shared. What's genuinely new is a small set of
+        distance-specific verbs (<em>quedar, acercarse, alejarse</em>) and a few question forms that
+        have no clean time equivalent (<em>¿Qué tan lejos?, ¿Cómo de lejos?</em>).
+      </div>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 1 — Estar a + medida
+         (Central unifying construction — callout block
+          with three flavors as h4 sub-sections.)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Estar a + medida — la construcción central</h3>
+      <p class="prose">
+        Esta es la pieza que une las dos pestañas. <em>Estar a + medida</em> acepta cualquier tipo de
+        unidad — física, temporal o híbrida — sin cambiar de forma. La preposición <em>a</em> es fija
+        y no varía según el tipo de medida que la siga.
+      </p>
+
+      <!-- ── Subsection: Distancia física ── -->
+      <h4>Distancia física</h4>
+      <p class="prose">
+        Unidades de espacio: cuadras, metros, kilómetros, millas.
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El supermercado <span class="hl">está a tres cuadras</span>.</div>
+            <div class="example-en">The supermarket is three blocks away. <em>— Cuadras: unidad urbana en gran parte de Lat-Am.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">La playa <span class="hl">está a diez kilómetros</span>.</div>
+            <div class="example-en">The beach is ten kilometers away. <em>— Cantidad mayor; misma estructura.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Subsection: Tiempo como distancia ── -->
+      <h4>Tiempo como distancia</h4>
+      <p class="prose">
+        Cuando lo que importa es <strong>cuánto se tarda en llegar</strong>, el español usa unidades
+        de tiempo en el mismo molde. La construcción no cambia.
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El restaurante <span class="hl">está a cinco minutos</span>.</div>
+            <div class="example-en">The restaurant is five minutes away. <em>— Sin medio de transporte explícito; se asume caminando o el contexto lo aclara.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">La estación <span class="hl">está a quince minutos caminando</span>.</div>
+            <div class="example-en">The station is fifteen minutes on foot. <em>— Medio de transporte agregado con gerundio.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── Subsection: Híbrida ── -->
+      <h4>Híbrida — tiempo + medio de transporte</h4>
+      <p class="prose">
+        Combinación de unidad temporal con medio de transporte explícito. La construcción sigue siendo
+        <em>estar a + tiempo</em>; lo que cambia es la cola que indica cómo se mide ese tiempo.
+      </p>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El aeropuerto <span class="hl">está a una hora en auto</span>.</div>
+            <div class="example-en">The airport is an hour by car. <em>— «En auto» especifica el medio.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">La cabaña <span class="hl">está a media hora en colectivo</span>. <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">The cabin is half an hour by bus. <em>— «Colectivo» = bus, rioplatense; mismo molde.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        The <em>a</em> in this construction is fixed; it doesn't shift with the unit. Spanish treats
+        space and time as fundamentally the same kind of measurement here — the slot after <em>estar
+        a</em> can take any unit. This is the structural heart of why this page exists. English needs
+        three different constructions (<em>three blocks away · five minutes away · an hour by car</em>);
+        Spanish uses one.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 2 — Quedar a + medida
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Quedar a + medida</h3>
+      <p class="prose">
+        <em>Quedar</em> reemplaza a <em>estar</em> cuando hablamos de la <strong>ubicación establecida</strong>
+        de algo — un edificio, un comercio, un punto fijo en el mapa. La construcción es idéntica;
+        solo cambia el verbo.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">La farmacia <span class="hl">queda a dos cuadras</span>.</div>
+            <div class="example-en">The pharmacy is two blocks away. <em>— Mismo significado que «está a dos cuadras» pero con quedar.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El museo <span class="hl">queda a una hora</span> del centro.</div>
+            <div class="example-en">The museum is an hour from downtown. <em>— Quedar a + tiempo: tiempo como distancia.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">Por dónde queda</span> tu casa? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">Whereabouts is your place? <em>— Variante de pregunta muy común en el Río de la Plata.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        <em>Quedar</em> for location is heavily Lat-Am preferred. Spain leans on <em>estar</em> for the
+        same meaning. Within Lat-Am, both verbs are used; <em>quedar</em> tends to feel more natural
+        for established locations (stores, buildings, neighborhoods), and <em>estar</em> for transient
+        or movable subjects (a person, a vehicle). Many speakers use them interchangeably.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 3 — Cerca de / lejos de
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Cerca de / lejos de</h3>
+      <p class="prose">
+        Cuando no importa la medida exacta sino la <strong>relación entre dos puntos</strong>, el
+        español usa <em>cerca de</em> y <em>lejos de</em>. Combinan con <em>estar</em> o <em>quedar</em>
+        indistintamente y aceptan modificadores de intensidad: <em>muy, bastante, no muy</em>.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El parque <span class="hl">está cerca de</span> mi casa.</div>
+            <div class="example-en">The park is close to my house. <em>— Posición relativa, sin cantidad concreta.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Queda lejos del</span> centro.</div>
+            <div class="example-en">It's far from downtown. <em>— Quedar + lejos de + punto de referencia.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">La universidad <span class="hl">no queda muy lejos</span>.</div>
+            <div class="example-en">The university isn't too far. <em>— «No muy» suaviza la distancia percibida.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Different from <em>estar a + medida</em>: these don't specify a distance, they place two points
+        in relative position. They take modifiers freely (<em>bastante cerca, muy lejos, no muy lejos</em>)
+        and chain naturally with <em>de + reference point</em>. When you don't know the distance — or
+        when it doesn't matter — these are what you reach for.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 4 — A + medida + de
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>A + medida + de</h3>
+      <p class="prose">
+        Combina <em>a + medida</em> (la distancia) con <em>de + punto de referencia</em> (el origen).
+        Es la forma productiva para decir «X está a tal distancia <strong>desde</strong> Z». Cualquier
+        unidad funciona, cualquier referencia funciona.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El hotel está <span class="hl">a tres cuadras del centro</span>.</div>
+            <div class="example-en">The hotel is three blocks from downtown. <em>— Medida + de + referencia: la combinación más usada.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Mi oficina queda <span class="hl">a diez minutos de la estación</span>.</div>
+            <div class="example-en">My office is ten minutes from the station. <em>— Unidad temporal en el mismo molde.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Estamos <span class="hl">a 100 metros de la playa</span>.</div>
+            <div class="example-en">We're 100 meters from the beach. <em>— Pronombre sujeto: «nosotros estamos»; misma estructura.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        This is the construction for "X is Y distance/time from Z." Highly productive — any unit, any
+        reference. The same template handles geographical statements (<em>Madrid está a 600 km de
+        Barcelona</em>), commute descriptions (<em>vivo a quince minutos del trabajo</em>), and giving
+        directions (<em>a tres cuadras del semáforo</em>).
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 5 — Faltar (distancia)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Faltar + distancia</h3>
+      <p class="prose">
+        El mismo verbo que vimos en Tiempo, aplicado al espacio. <em>Faltar</em> marca
+        <strong>cuánta distancia queda por recorrer</strong>. Como con el tiempo, se usa impersonalmente
+        o con objeto indirecto, y la respuesta puede venir en unidades físicas, temporales, o ambas.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">Cuánto falta</span> para llegar?</div>
+            <div class="example-en">How much further? <em>— Pregunta clásica del viaje; respuesta abierta.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Faltan dos cuadras</span> y llegamos.</div>
+            <div class="example-en">Two more blocks and we're there. <em>— Respuesta en unidad física.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Me faltan cinco minutos</span> para llegar.</div>
+            <div class="example-en">I have five minutes left to get there. <em>— Respuesta en unidad temporal; con objeto indirecto.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Same verb as in Tiempo section 10. The distance use is typical mid-journey: someone driving,
+        walking, or commuting asks <em>¿cuánto falta?</em> and the answer can come in distance units,
+        time units, or both. This is the cleanest illustration of the page's thesis — one verb, one
+        question, two interchangeable kinds of answer.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 6 — Verbos de aproximación y alejamiento
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Verbos de aproximación y alejamiento</h3>
+      <p class="prose">
+        Los verbos que implican <strong>cambio de distancia</strong>: alguien o algo se mueve hacia un
+        punto (<em>acercarse a, aproximarse a, dirigirse a</em>) o se aleja de uno (<em>alejarse de</em>).
+        Todos son reflexivos en este uso.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Nos estamos <span class="hl">acercando al centro</span>.</div>
+            <div class="example-en">We're approaching downtown. <em>— Forma reflexiva + a + destino; gerundio para acción en curso.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Se <span class="hl">alejaron de la costa</span> durante la tormenta.</div>
+            <div class="example-en">They moved away from the coast during the storm. <em>— Alejarse de + origen; pretérito.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El auto se <span class="hl">aproxima al cruce</span>.</div>
+            <div class="example-en">The car is approaching the intersection. <em>— Aproximarse es más formal que acercarse.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Nos <span class="hl">dirigimos hacia el norte</span>.</div>
+            <div class="example-en">We're heading north. <em>— Dirigirse implica intención; «hacia» en lugar de «a» es muy común con este verbo.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Register notes: <em>acercarse</em> and <em>alejarse</em> are everyday vocabulary;
+        <em>aproximarse</em> is noticeably more formal (typical in news, navigation, and written
+        Spanish); <em>dirigirse</em> implies intent and is used both physically (<em>dirigirse a
+        casa</em>) and figuratively (<em>dirigirse al público, dirigirse a alguien</em>).
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 7 — Por + zona
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Por + zona</h3>
+      <p class="prose">
+        Cuando la ubicación exacta no importa, el español usa <em>por + zona</em> para indicar una
+        <strong>zona general</strong> sin compromiso de precisión. Es heavily cotidiano y muy común en
+        conversación cuando se da una referencia aproximada.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Eso queda <span class="hl">por el centro</span>.</div>
+            <div class="example-en">That's somewhere downtown. <em>— Zona aproximada, no ubicación exacta.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Vive <span class="hl">por San Telmo</span>. <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">He/she lives over in San Telmo. <em>— Barrio porteño; «por» da una localización de barrio sin dirección exacta.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El restaurante está <span class="hl">por allá</span>.</div>
+            <div class="example-en">The restaurant is over that way. <em>— «Por allá» = vaga dirección, no precisión.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Not a precise distance construction — that's the point. <em>Por + zone</em> gives a vague "in
+        the area of" reference, often used when giving casual directions or describing where someone
+        lives. Compare to <em>en + lugar específico</em> (<em>vive en San Telmo</em>) which is exact;
+        <em>por</em> is purposely loose.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 8 — Hasta + punto
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Hasta + punto</h3>
+      <p class="prose">
+        <em>Hasta</em> marca el <strong>punto final</strong> de un trayecto — el sitio donde algo termina.
+        Suele ir con verbos de movimiento (<em>caminar, ir, llegar</em>) y se usa tanto para distancia
+        física como para tiempo (<em>hasta mañana, hasta las cinco</em>).
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Caminamos <span class="hl">hasta la esquina</span>.</div>
+            <div class="example-en">We walked to the corner. <em>— Hasta + sustantivo: punto final del recorrido.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Vamos <span class="hl">hasta el puerto</span> y volvemos.</div>
+            <div class="example-en">We're going to the port and back. <em>— Implica que el puerto es el límite del trayecto.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Hay que ir <span class="hl">hasta el final</span> del corredor.</div>
+            <div class="example-en">You have to go to the end of the hallway. <em>— Hasta + el final + de + lugar: instrucción direccional típica.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        <em>Hasta</em> works for both space and time — another point where the same word handles both
+        kinds of measurement. Spatial: <em>caminar hasta la plaza</em>. Temporal: <em>esperar hasta
+        las seis</em>. The semantic core is "endpoint of something extending toward it."
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 9 — Aproximaciones (distancia)
+         (Register split — cotidiano + formal; formal hides
+          when filter = cotidiano. Same pattern as Tiempo §11.)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Aproximaciones (distancia)</h3>
+      <p class="prose">
+        Los mismos hedges del Tiempo se aplican a la distancia, casi sin cambios. Cuando no importa
+        la cifra exacta, o cuando no se la sabe, el español ofrece formas cotidianas y formales
+        para redondear. Con el switch en <em>Cotidiano</em>, las opciones formales se ocultan.
+      </p>
+
+      <h4>Cotidiano</h4>
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Está <span class="hl">a unas cuadras</span>.</div>
+            <div class="example-en">It's a few blocks away. <em>— «Unas» antepuesto = «approximately a few».</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Queda <span class="hl">como cinco kilómetros</span> al norte.</div>
+            <div class="example-en">It's about five kilometers north. <em>— «Como» + cantidad: aproximación cotidiana.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="hl">Más o menos a diez minutos</span> caminando.</div>
+            <div class="example-en">More or less ten minutes on foot. <em>— Hedge típico hablado.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Formal sub-block — hides when [data-filter="cotidiano"] -->
+      <div data-register="formal">
+        <h4>Formal</h4>
+        <div class="examples-block">
+
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">El destino se encuentra <span class="hl">aproximadamente a quince kilómetros</span>.</div>
+              <div class="example-en">The destination is approximately fifteen kilometers away. <em>— Forma estándar en navegación y comunicados.</em></div>
+            </div>
+          </div>
+
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">La sede queda <span class="hl">alrededor de tres cuadras al norte</span>.</div>
+              <div class="example-en">The office is around three blocks north. <em>— «Alrededor de» en contexto formal.</em></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        Same split as Tiempo section 11 — and largely the same vocabulary. The hedges (<em>como, más
+        o menos, unas/unos · aproximadamente, alrededor de</em>) transfer wholesale from time to
+        distance. This is one of the reasons the two halves of the page reinforce each other so well:
+        learning the hedge vocabulary once covers both kinds of measurement.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CONSTRUCTION 10 — Formas de pregunta (distancia)
+         (Closing section — strongest regional split on the page.)
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Formas de pregunta (distancia)</h3>
+      <p class="prose">
+        Cinco formas de preguntar por distancia, con un reparto regional más marcado que en Tiempo.
+        Algunas son neutras y funcionan en cualquier registro; otras pertenecen claramente a un lado
+        del Atlántico.
+      </p>
+
+      <div class="examples-block">
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">A qué distancia</span> está el aeropuerto?</div>
+            <div class="example-en">How far is the airport? <em>— La forma más neutral; segura en cualquier contexto o región.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">A cuánto está</span> tu casa de acá?</div>
+            <div class="example-en">How far is your place from here? <em>— Coloquial pero estándar; común en toda Lat-Am.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">Qué tan lejos</span> queda? <span class="reg-badge reg-latam">Lat-Am</span></div>
+            <div class="example-en">How far is it? <em>— Marcadamente latinoamericano; muy raro en España.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">Cómo de lejos</span> está? <span class="reg-badge reg-esp">España</span></div>
+            <div class="example-en">How far is it? <em>— Forma típica de España; rara o inexistente en Lat-Am.</em></div>
+          </div>
+        </div>
+
+        <div class="example-row" data-region="rioplatense">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<span class="hl">Por dónde queda</span> el banco? <span class="reg-badge reg-rio">Rioplatense</span></div>
+            <div class="example-en">Whereabouts is the bank? <em>— Pregunta vaga: pide zona, no dirección exacta.</em></div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span>
+        This is the sharpest regional split on the page. <em>Qué tan lejos</em> and <em>cómo de lejos</em>
+        are essentially mutually exclusive — speakers from one side rarely use the other, and using
+        the "wrong" one is the kind of small mismatch that immediately tags a learner. <em>A qué
+        distancia</em> and <em>a cuánto está</em> are safe in any region. When in doubt about audience,
+        these are the moves.
+      </div>
+
+      <button class="btn-mas" disabled title="Disponible en una fase futura">
+        ✦ Más ejemplos
+      </button>
+    </div>
+
+    <!-- ═════════════════════════════════════
+         CROSS-TAB CALLOUT — closing the loop
+    ═════════════════════════════════════ -->
+    <div class="construction" data-register="both">
+      <h3>Cierre — lo que vive en ambas pestañas</h3>
+      <p class="prose">
+        Tres piezas aparecen en las dos pestañas con la misma mecánica: <em>estar a + medida</em>
+        (sección 1 de esta pestaña), <em>faltar</em> (sección 5 acá / sección 10 en Tiempo), y las
+        aproximaciones cotidianas y formales (sección 9 acá / sección 11 en Tiempo). El paralelismo
+        no es coincidencia: el español usa la misma maquinaria para medir el espacio y el tiempo, lo
+        cual significa que aprender una mitad de la página es aprender la otra.
+      </p>
+
+      <div class="nota nota-expanded">
+        <span class="nota-label">NOTA*</span>
+
+        <h4>Shared apparatus across both tabs</h4>
+        Three constructions span both Tiempo and Distancia with identical mechanics. <em>Estar a + X</em>
+        doesn't care whether X is units of space or units of time — the slot accepts both. <em>Faltar</em>
+        asks the same question (<em>how much remains?</em>) about both, and the answer can come in
+        either unit. The hedge vocabulary (<em>como, más o menos, aproximadamente, alrededor de</em>)
+        is verbatim shared.
+
+        <h4>Why this matters for learning</h4>
+        Once a learner internalizes one of the two tabs, roughly half of the other is already done.
+        That's the structural argument for treating time and distance as one topic rather than two —
+        and it's the thesis the page exists to make visible.
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═════════════════════════════════════
+       TAB 3 — CUESTIONARIOS (stub for future build)
+  ═════════════════════════════════════ -->
+  <section class="tab-content" id="tab-cuestionarios" role="tabpanel">
     <div class="construction" data-register="both">
       <div class="distancia-placeholder">
-        <div class="icon">📐</div>
-        <div>La pestaña <strong style="color:var(--text-secondary)">Distancia</strong> se construye en la Fase 2.</div>
-        <div style="margin-top:6px;font-size:0.82rem">Incluirá <em>estar a · quedar a · cerca/lejos de · faltar · acercarse/alejarse · por · hasta</em> y un cierre que conecta las dos pestañas.</div>
+        <div class="icon">📝</div>
+        <div>Los <strong style="color:var(--text-secondary)">tres cuestionarios</strong> se construyen en una fase futura.</div>
+        <div style="margin-top:6px;font-size:0.82rem">Incluirán: <em>Práctica con fichas</em> (banco pre-autorizado, sin API), <em>Completar la oración</em> (generado y corregido por IA), y <em>Traducción</em> (EN→ES corregido por IA con leeway alta). Especificación completa en <code>expresar-tiempo-y-distancia-spec.md</code>.</div>
       </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════
+       TAB 4 — GUÍA RÁPIDA (stub for future build)
+  ═════════════════════════════════════ -->
+  <section class="tab-content" id="tab-guia" role="tabpanel">
+    <div class="construction" data-register="both">
+      <div class="distancia-placeholder">
+        <div class="icon">⚡</div>
+        <div>La <strong style="color:var(--text-secondary)">Guía Rápida</strong> se construye en una fase futura.</div>
+        <div style="margin-top:6px;font-size:0.82rem">Hoja de trucos al estilo del modal Guía Rápida de <code>prestar-pedir.html</code> — una construcción por línea, con su forma, su gloss y la pista de cuándo usarla. Cubrirá todas las construcciones de las pestañas Tiempo y Distancia.</div>
+    </div>
     </div>
   </section>
 
 </div><!-- /page-wrap -->
 
-<!-- Image lightbox modal -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox()">
-  <img id="lightboxImg" alt="">
-</div>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -1700,32 +2383,42 @@ async function speakExample(btn) {
 }
 
 // ═══════════════════════════════════════════════
-//  IMAGE LIGHTBOX
+//  IMAGE MAGNIFY (in-place, no modal)
+//  Click a figure image to scale it 2.0x in place.
+//  Click again, click outside, or scroll to reset.
+//  Only one image magnified at a time.
 // ═══════════════════════════════════════════════
-document.querySelectorAll('.figure img').forEach(img => {
-  img.addEventListener('click', () => {
-    const lb = document.getElementById('lightbox');
-    const lbi = document.getElementById('lightboxImg');
-    lbi.src = img.src;
-    lbi.alt = img.alt || '';
-    lb.classList.add('open');
-  });
-});
-function closeLightbox() {
-  document.getElementById('lightbox').classList.remove('open');
-}
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeLightbox();
-});
+(function () {
+  const images = document.querySelectorAll('.figure img');
+  let activeImage = null;
 
-// ═══════════════════════════════════════════════
-//  IMAGE FALLBACK (when files arrive later)
-//  When Daniel adds the real .webp to /assets/, the page tries to load it
-//  and swaps from placeholder to <img> automatically on next load — but
-//  for now the placeholder is shown directly in the HTML, no probe needed.
-//  When we wire actual <img> tags in later phases, add onerror swap-to-
-//  placeholder logic at that point.
-// ═══════════════════════════════════════════════
+  function resetZoom() {
+    if (activeImage) {
+      activeImage.classList.remove('magnified');
+      activeImage = null;
+    }
+  }
+
+  images.forEach(img => {
+    img.addEventListener('click', e => {
+      e.stopPropagation();
+      if (activeImage === img) {
+        img.classList.remove('magnified');
+        activeImage = null;
+      } else {
+        resetZoom();
+        img.classList.add('magnified');
+        activeImage = img;
+      }
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') resetZoom();
+  });
+})();
 </script>
 </body>
 </html>

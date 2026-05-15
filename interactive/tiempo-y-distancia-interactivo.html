@@ -254,18 +254,22 @@ body {
 .rt-track.on .rt-thumb { left: 22px; }
 .rt-track.on { border-color: var(--accent); }
 
-/* ── Tab bar ── */
+/* ── Tab bar — translucent navy "frosted glass" tabs ── */
 .tab-bar {
   display: flex;
-  gap: 0;
+  gap: 4px;
   border-bottom: 1px solid var(--border);
   margin-bottom: 24px;
+  padding: 0 2px;
 }
 .tab-btn {
   flex: 1;
-  background: none;
-  border: none;
+  background: rgba(20, 35, 60, 0.40);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-bottom: 2px solid transparent;
+  border-radius: 8px 8px 0 0;
   padding: 14px 18px;
   font-family: 'Outfit', sans-serif;
   font-size: 0.95rem;
@@ -276,10 +280,16 @@ body {
   white-space: nowrap;
   letter-spacing: 0.02em;
 }
-.tab-btn:hover { color: var(--text-secondary); }
+.tab-btn:hover {
+  background: rgba(20, 35, 60, 0.55);
+  color: var(--text-secondary);
+  border-color: rgba(255, 255, 255, 0.08);
+}
 .tab-btn.active {
+  background: rgba(20, 35, 60, 0.65);
   color: var(--text-primary);
-  border-bottom-color: var(--accent);
+  border: 1px solid rgba(74, 144, 217, 0.30);
+  border-bottom: 2px solid var(--accent);
 }
 
 .tab-content { display: none; }
@@ -493,6 +503,405 @@ body {
   opacity: 0.5;
 }
 
+/* ── Guía Rápida cheat sheet ── */
+.guia-intro {
+  font-style: italic;
+  color: var(--text-secondary);
+  margin: 4px 0 22px;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 12px 16px;
+  background: rgba(74, 144, 217, 0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+}
+.cheat-section-header {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin: 28px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.01em;
+}
+.cheat-section-header:first-of-type { margin-top: 8px; }
+.cheat-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+  background: rgba(20, 35, 60, 0.35);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.cheat-table thead th {
+  background: rgba(74, 144, 217, 0.10);
+  color: var(--text-secondary);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.cheat-table tbody tr {
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+  transition: background 0.15s;
+}
+.cheat-table tbody tr:last-child { border-bottom: none; }
+.cheat-table tbody tr:hover { background: rgba(74, 144, 217, 0.05); }
+.cheat-table tbody td {
+  padding: 12px 14px;
+  font-size: 0.92rem;
+  vertical-align: top;
+  line-height: 1.55;
+}
+.cheat-table .col-construction {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.84rem;
+  color: var(--accent);
+  width: 30%;
+  font-weight: 500;
+}
+.cheat-table .col-example {
+  color: var(--text-primary);
+  font-style: italic;
+  width: 36%;
+}
+.cheat-table .col-when {
+  color: var(--text-secondary);
+}
+.cheat-table .group-header td {
+  background: rgba(74, 144, 217, 0.08);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  padding: 10px 14px;
+}
+.cheat-table .llevar-row .col-construction {
+  padding-left: 24px;
+  position: relative;
+}
+.cheat-table .llevar-row .col-construction::before {
+  content: '';
+  position: absolute;
+  left: 14px;
+  top: 16px;
+  bottom: 16px;
+  width: 2px;
+  background: rgba(74, 144, 217, 0.4);
+  border-radius: 1px;
+}
+
+/* ─────────────────────────────────────────────
+   CUESTIONARIOS — sub-tab bar + Quiz 1 (fichas)
+───────────────────────────────────────────── */
+
+/* Inner sub-tab bar (smaller, lighter than the page-level tab bar) */
+.subtab-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 22px;
+  padding: 4px;
+  background: rgba(20, 35, 60, 0.30);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.subtab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.subtab-btn:hover { color: var(--text-secondary); background: rgba(74, 144, 217, 0.06); }
+.subtab-btn.active {
+  background: rgba(74, 144, 217, 0.18);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px rgba(74, 144, 217, 0.25);
+}
+.subtab-content { display: none; }
+.subtab-content.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Quiz intro panel above the questions */
+.quiz-intro {
+  background: rgba(74, 144, 217, 0.06);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin-bottom: 22px;
+}
+.quiz-intro p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+/* Each question card */
+.ficha-question {
+  background: rgba(20, 35, 60, 0.45);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.ficha-question:hover { border-color: rgba(74, 144, 217, 0.25); }
+.ficha-q-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  font-family: 'Outfit', sans-serif;
+}
+.ficha-q-num {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.ficha-q-reg {
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(74, 144, 217, 0.10);
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+  border: 1px solid rgba(74, 144, 217, 0.25);
+}
+
+/* Sentence with inline blanks */
+.ficha-sentence {
+  font-size: 1.08rem;
+  line-height: 2.1;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  font-family: 'Outfit', sans-serif;
+}
+.ficha-blank {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 110px;
+  min-height: 36px;
+  padding: 5px 14px;
+  margin: 0 4px;
+  border: 2px dashed rgba(74, 144, 217, 0.35);
+  border-radius: 999px;
+  background: rgba(74, 144, 217, 0.05);
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-style: italic;
+  vertical-align: middle;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+.ficha-blank:hover { background: rgba(74, 144, 217, 0.10); border-color: rgba(74, 144, 217, 0.5); }
+.ficha-blank.filled {
+  border-style: solid;
+  border-color: var(--accent);
+  background: rgba(74, 144, 217, 0.20);
+  color: var(--text-primary);
+  font-style: normal;
+  font-weight: 500;
+}
+.ficha-blank.drop-target {
+  background: rgba(74, 144, 217, 0.25);
+  border-color: var(--accent);
+  transform: scale(1.04);
+}
+.ficha-blank.correct {
+  border-color: var(--green, #34d399);
+  background: rgba(52, 211, 153, 0.18);
+  color: var(--text-primary);
+}
+.ficha-blank.incorrect {
+  border-color: var(--red, #f87171);
+  background: rgba(248, 113, 113, 0.18);
+  color: var(--text-primary);
+  text-decoration: line-through;
+  text-decoration-color: rgba(248, 113, 113, 0.6);
+}
+
+/* Badge pool */
+.ficha-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(10, 22, 40, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-height: 60px;
+}
+.ficha-badge {
+  background: rgba(74, 144, 217, 0.12);
+  color: var(--text-primary);
+  border: 1px solid rgba(74, 144, 217, 0.30);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.16s;
+}
+.ficha-badge:hover {
+  background: rgba(74, 144, 217, 0.22);
+  border-color: rgba(74, 144, 217, 0.55);
+  transform: translateY(-1px);
+}
+.ficha-badge.selected {
+  background: rgba(74, 144, 217, 0.45);
+  border-color: var(--accent);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(74, 144, 217, 0.25);
+  transform: translateY(-1px);
+}
+.ficha-badge.used {
+  opacity: 0.25;
+  pointer-events: none;
+  filter: grayscale(0.5);
+}
+
+/* Post-grading "correct answer" inline display under wrong blanks */
+.ficha-correction {
+  display: block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  background: rgba(52, 211, 153, 0.08);
+  border-left: 3px solid var(--green, #34d399);
+  border-radius: 0 6px 6px 0;
+}
+.ficha-correction strong { color: var(--green, #34d399); font-family: 'Outfit', sans-serif; }
+
+/* Feedback panel (NOTA-style) shown after grading */
+.ficha-feedback {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+.ficha-feedback .nota-label {
+  display: inline;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.04em;
+  margin-right: 6px;
+}
+.ficha-feedback em { color: var(--accent); font-style: italic; }
+.ficha-feedback code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85em;
+  color: var(--text-primary);
+  background: rgba(10, 22, 40, 0.5);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.ficha-feedback .ficha-gloss {
+  display: block;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(74, 144, 217, 0.15);
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.85rem;
+}
+
+/* Action bar */
+.quiz-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 28px 0 8px;
+  flex-wrap: wrap;
+}
+.btn-quiz {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s;
+  letter-spacing: 0.02em;
+  border: 1px solid transparent;
+}
+.btn-quiz-primary {
+  background: var(--accent);
+  color: #0a1628;
+  border-color: var(--accent);
+}
+.btn-quiz-primary:hover:not(:disabled) {
+  background: #5fa3e5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(74, 144, 217, 0.30);
+}
+.btn-quiz-primary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: rgba(74, 144, 217, 0.3);
+  border-color: transparent;
+}
+.btn-quiz-secondary {
+  background: transparent;
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.45);
+}
+.btn-quiz-secondary:hover {
+  background: rgba(74, 144, 217, 0.10);
+  border-color: var(--accent);
+}
+
+/* Results summary */
+.quiz-results {
+  margin: 22px 0 12px;
+  padding: 22px 24px;
+  background: rgba(74, 144, 217, 0.10);
+  border: 1px solid rgba(74, 144, 217, 0.30);
+  border-radius: 12px;
+  text-align: center;
+}
+.quiz-results .results-score {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  color: var(--text-primary);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.quiz-results .results-score .results-accent { color: var(--accent); }
+.quiz-results .results-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
 /* ── Responsive ── */
 @media (max-width: 640px) {
   .page-header h1 { font-size: 1.7rem; }
@@ -501,6 +910,63 @@ body {
   .tab-btn { padding: 12px 12px; font-size: 0.88rem; }
   .rate-bar { padding: 8px 10px; }
   .example-es { font-size: 1rem; }
+
+  /* Cheat sheet: collapse rows into stacked cards on narrow screens */
+  .cheat-table,
+  .cheat-table thead,
+  .cheat-table tbody,
+  .cheat-table tr,
+  .cheat-table td {
+    display: block;
+    width: 100%;
+  }
+  .cheat-table thead { display: none; }
+  .cheat-table { background: transparent; border: none; }
+  .cheat-table tbody tr {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(20, 35, 60, 0.35);
+  }
+  .cheat-table tbody td {
+    padding: 4px 0;
+    width: auto !important;
+  }
+  .cheat-table .col-construction {
+    font-size: 0.92rem;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+  }
+  .cheat-table .col-example::before {
+    content: 'Ej. ';
+    color: var(--text-muted);
+    font-style: normal;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cheat-table .col-when::before {
+    content: '→ ';
+    color: var(--text-muted);
+  }
+  .cheat-table .group-header { display: none; }
+  .cheat-table .llevar-row .col-construction {
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+  }
+  .cheat-table .llevar-row .col-construction::before { display: none; }
+
+  /* Quiz: tighter padding, smaller subtab labels */
+  .subtab-btn { padding: 9px 8px; font-size: 0.80rem; }
+  .ficha-question { padding: 16px 16px; }
+  .ficha-sentence { font-size: 1rem; line-height: 2; }
+  .ficha-blank { min-width: 90px; padding: 4px 11px; font-size: 0.88rem; }
+  .ficha-badge { padding: 6px 13px; font-size: 0.88rem; }
+  .btn-quiz { padding: 11px 22px; font-size: 0.9rem; }
+  .quiz-results .results-score { font-size: 1.8rem; }
 }
 </style>
 </head>
@@ -1522,6 +1988,11 @@ body {
       </div>
     </div>
 
+    <!-- Image 4 — estar a + medida (central unifying construction for Distancia) -->
+    <figure class="figure" id="figEstarA">
+      <img src="../assets/tiempo-distancia-estar-a.webp" alt="Mapa-diagrama: desde un mismo punto de partida, la misma estructura «está a + medida» expresa distancia física (a tres cuadras), distancia en tiempo (a cinco minutos a pie) y forma híbrida (a una hora en auto)." loading="lazy" />
+    </figure>
+
     <!-- ═════════════════════════════════════
          CONSTRUCTION 1 — Estar a + medida
          (Central unifying construction — callout block
@@ -2179,29 +2650,230 @@ body {
   </section>
 
   <!-- ═════════════════════════════════════
-       TAB 3 — CUESTIONARIOS (stub for future build)
+       TAB 3 — CUESTIONARIOS — sub-tab chassis + Quiz 1
   ═════════════════════════════════════ -->
   <section class="tab-content" id="tab-cuestionarios" role="tabpanel">
-    <div class="construction" data-register="both">
-      <div class="distancia-placeholder">
-        <div class="icon">📝</div>
-        <div>Los <strong style="color:var(--text-secondary)">tres cuestionarios</strong> se construyen en una fase futura.</div>
-        <div style="margin-top:6px;font-size:0.82rem">Incluirán: <em>Práctica con fichas</em> (banco pre-autorizado, sin API), <em>Completar la oración</em> (generado y corregido por IA), y <em>Traducción</em> (EN→ES corregido por IA con leeway alta). Especificación completa en <code>expresar-tiempo-y-distancia-spec.md</code>.</div>
+
+    <!-- Inner sub-tab nav: Práctica con fichas · Completar la oración · Traducción -->
+    <nav class="subtab-bar" role="tablist" aria-label="Tipos de cuestionario">
+      <button class="subtab-btn active" data-subtab="fichas"      onclick="switchSubtab('fichas')"     role="tab">Práctica con fichas</button>
+      <button class="subtab-btn"        data-subtab="fillin"      onclick="switchSubtab('fillin')"     role="tab">Completar la oración</button>
+      <button class="subtab-btn"        data-subtab="translation" onclick="switchSubtab('translation')" role="tab">Traducción</button>
+    </nav>
+
+    <!-- ─── Sub-panel: Práctica con fichas (Quiz 1) ─── -->
+    <div class="subtab-content active" id="subtab-fichas" role="tabpanel">
+      <div class="quiz-intro">
+        <p>Tocá una ficha para seleccionarla; tocá un hueco para colocarla. Tocá un hueco lleno para devolver la ficha al banco. Cuando completés los diez ítems, presioná <strong>Comprobar</strong>. El registro de las preguntas sigue el interruptor de arriba (Cotidiano / Mostrar todo).</p>
+      </div>
+
+      <div id="fichas-container">
+        <!-- Questions injected by JS on init -->
+      </div>
+
+      <div class="quiz-actions">
+        <button class="btn-quiz btn-quiz-primary" id="ficha-comprobar" onclick="comprobarFichas()" disabled>Comprobar</button>
+        <button class="btn-quiz btn-quiz-secondary" id="ficha-otra-ronda" onclick="otraRondaFichas()" style="display:none">Otra ronda</button>
+      </div>
+
+      <div id="ficha-results" class="quiz-results" style="display:none"></div>
+    </div>
+
+    <!-- ─── Sub-panel: Completar la oración (Quiz 2 — to be built) ─── -->
+    <div class="subtab-content" id="subtab-fillin" role="tabpanel">
+      <div class="construction" data-register="both">
+        <div class="distancia-placeholder">
+          <div class="icon">✦</div>
+          <div><strong style="color:var(--text-secondary)">Completar la oración</strong> se construye en una fase futura.</div>
+          <div style="margin-top:6px;font-size:0.82rem">Cuestionario tipo «llená el hueco» generado y corregido por IA. Usará el mismo backend que la Comprensión Lectora. Lenient en acentos y mayúsculas; acepta variantes válidas.</div>
+        </div>
       </div>
     </div>
+
+    <!-- ─── Sub-panel: Traducción (Quiz 3 — to be built) ─── -->
+    <div class="subtab-content" id="subtab-translation" role="tabpanel">
+      <div class="construction" data-register="both">
+        <div class="distancia-placeholder">
+          <div class="icon">⇄</div>
+          <div><strong style="color:var(--text-secondary)">Traducción EN → ES</strong> se construye en una fase futura.</div>
+          <div style="margin-top:6px;font-size:0.82rem">Cuestionario de traducción con leeway alta: una sola frase en inglés puede tener múltiples respuestas correctas en español. La IA reconoce los moldes equivalentes (<em>hace X que · desde hace X · llevo X</em>).</div>
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <!-- ═════════════════════════════════════
-       TAB 4 — GUÍA RÁPIDA (stub for future build)
+       TAB 4 — GUÍA RÁPIDA — cheat sheet for both tabs
   ═════════════════════════════════════ -->
   <section class="tab-content" id="tab-guia" role="tabpanel">
-    <div class="construction" data-register="both">
-      <div class="distancia-placeholder">
-        <div class="icon">⚡</div>
-        <div>La <strong style="color:var(--text-secondary)">Guía Rápida</strong> se construye en una fase futura.</div>
-        <div style="margin-top:6px;font-size:0.82rem">Hoja de trucos al estilo del modal Guía Rápida de <code>prestar-pedir.html</code> — una construcción por línea, con su forma, su gloss y la pista de cuándo usarla. Cubrirá todas las construcciones de las pestañas Tiempo y Distancia.</div>
-    </div>
-    </div>
+
+    <p class="guia-intro">
+      Toda la información detallada está en las pestañas <strong>Tiempo</strong> y <strong>Distancia</strong>.
+      Esta es la versión condensada — una construcción por línea, con su ejemplo y la pista de cuándo usarla.
+    </p>
+
+    <!-- ─── Cheat table: Tiempo ─── -->
+    <h3 class="cheat-section-header">Tiempo</h3>
+    <table class="cheat-table">
+      <thead>
+        <tr>
+          <th>Construcción</th>
+          <th>Ejemplo</th>
+          <th>Cuándo usarla</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-construction">desde + presente</td>
+          <td class="col-example">Vivo acá desde 2018.</td>
+          <td class="col-when">Punto fijo de inicio; acción todavía en curso.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">desde hace + presente</td>
+          <td class="col-example">Vivo acá desde hace seis años.</td>
+          <td class="col-when">Cantidad transcurrida en lugar de fecha; acción en curso. La más usada en habla.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">hace + tiempo + que + presente</td>
+          <td class="col-example">Hace seis años que vivo acá.</td>
+          <td class="col-when">Misma duración, pero la cantidad va delante: énfasis en cuánto tiempo lleva pasando.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">hace + tiempo + que no + presente</td>
+          <td class="col-example">Hace dos años que no lo veo.</td>
+          <td class="col-when">Cuánto tiempo lleva sin ocurrir algo. Versión negativa del molde anterior.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">hacía + tiempo + que + imperfecto</td>
+          <td class="col-example">Hacía dos años que vivía allí cuando lo conocí.</td>
+          <td class="col-when">Duración anclada a un punto del pasado, no al ahora. El molde <em>hace que</em> trasladado al pasado.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">desde + imperfecto</td>
+          <td class="col-example">Vivía allí desde 2010.</td>
+          <td class="col-when">Punto fijo de inicio en una narración pasada. Versión narrativa de <em>desde + presente</em>.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">hace + tiempo (sin <em>que</em>)</td>
+          <td class="col-example">Llegué hace dos horas.</td>
+          <td class="col-when">Marca un punto en el pasado, no una duración. Equivale al inglés <em>"X ago"</em>.</td>
+        </tr>
+
+        <tr class="group-header"><td colspan="3">Llevar + tiempo — 4 variantes</td></tr>
+        <tr class="llevar-row">
+          <td class="col-construction">llevar + tiempo + gerundio</td>
+          <td class="col-example">Llevo dos horas estudiando.</td>
+          <td class="col-when">Cuánto tiempo lleva alguien haciendo algo. Equivalente conversacional a <em>hace X que estudio</em>.</td>
+        </tr>
+        <tr class="llevar-row">
+          <td class="col-construction">llevar + tiempo + infinitivo</td>
+          <td class="col-example">Lleva diez minutos rellenar el formulario.</td>
+          <td class="col-when">Impersonal: cuánto tiempo toma una tarea. El sujeto pasa a ser la tarea, no la persona.</td>
+        </tr>
+        <tr class="llevar-row">
+          <td class="col-construction">me/te/le llevó + tiempo + infinitivo</td>
+          <td class="col-example">Me llevó una hora terminar el informe.</td>
+          <td class="col-when">Pasado completado: cuánto le tomó a alguien hacer algo. Marca al experiencer con OI.</td>
+        </tr>
+        <tr class="llevar-row">
+          <td class="col-construction">llevar + tiempo + sin + infinitivo</td>
+          <td class="col-example">Llevo dos años sin verlo.</td>
+          <td class="col-when">Negativa: cuánto tiempo lleva sin hacer algo. Equivalente a <em>hace X que no lo veo</em>.</td>
+        </tr>
+
+        <tr>
+          <td class="col-construction">tardar / demorar (en) + infinitivo</td>
+          <td class="col-example">El tren tarda veinte minutos en llegar.</td>
+          <td class="col-when">Tiempo que toma una acción en completarse. <em>Demorar</em> es más común en Rioplatense.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">faltar + tiempo (para)</td>
+          <td class="col-example">Faltan cinco minutos para el partido.</td>
+          <td class="col-when">Tiempo que queda hasta un evento futuro. Verbo concuerda con la cantidad.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">aproximaciones (cotidiano)</td>
+          <td class="col-example">Hace como dos horas. / Más o menos cinco minutos.</td>
+          <td class="col-when">Hedges informales para no comprometerse con una cifra exacta.</td>
+        </tr>
+        <tr data-register="formal">
+          <td class="col-construction">aproximaciones (formal)</td>
+          <td class="col-example">Hace aproximadamente dos horas. / Cerca de cinco minutos.</td>
+          <td class="col-when">Hedges de registro escrito o periodístico.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">formas de pregunta</td>
+          <td class="col-example">¿Cuánto hace que vivís acá? / ¿Desde cuándo? / ¿Hace cuánto?</td>
+          <td class="col-when">Preguntar por duración. <em>Hace cuánto</em> y <em>desde cuándo</em> dominan en Rioplatense.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ─── Cheat table: Distancia ─── -->
+    <h3 class="cheat-section-header">Distancia</h3>
+    <table class="cheat-table">
+      <thead>
+        <tr>
+          <th>Construcción</th>
+          <th>Ejemplo</th>
+          <th>Cuándo usarla</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-construction">estar a + medida</td>
+          <td class="col-example">Está a tres cuadras. / Está a cinco minutos. / Está a una hora en auto.</td>
+          <td class="col-when">La construcción central. Une las dos pestañas: acepta unidad física, de tiempo o híbrida sin cambiar de forma.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">quedar a + medida</td>
+          <td class="col-example">El hotel queda a dos cuadras.</td>
+          <td class="col-when">Casi sinónimo de <em>estar a</em>, pero con matiz de ubicación fija. Muy común en habla cotidiana.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">cerca de / lejos de</td>
+          <td class="col-example">Vive cerca de la plaza. / Está lejos del centro.</td>
+          <td class="col-when">Distancia relativa sin medida concreta. Coloca dos puntos en relación, no cuantifica.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">a + medida + de</td>
+          <td class="col-example">A tres cuadras de mi casa hay una farmacia.</td>
+          <td class="col-when">Especifica el punto de referencia. La medida se ubica respecto a un lugar nombrado.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">faltar + distancia (para)</td>
+          <td class="col-example">Faltan dos kilómetros para llegar.</td>
+          <td class="col-when">Distancia que queda por recorrer hasta un punto. Misma mecánica que <em>faltar + tiempo</em>.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">acercarse / alejarse / aproximarse a</td>
+          <td class="col-example">Nos acercamos al pueblo. / El barco se aleja de la costa.</td>
+          <td class="col-when">Verbos de movimiento direccional. <em>Acercarse</em> y <em>alejarse</em> son cotidianos; <em>aproximarse</em> es más formal.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">por + zona</td>
+          <td class="col-example">Vive por el centro. / Hay un buen café por acá.</td>
+          <td class="col-when">Ubicación vaga dentro de un área. <em>Por</em> = "en algún lugar de la zona X", sin precisar.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">hasta + punto</td>
+          <td class="col-example">Caminé hasta la plaza. / Tomá esta calle hasta la esquina.</td>
+          <td class="col-when">Marca el límite o destino del movimiento. Opuesto a <em>por</em>: <em>hasta</em> = punto preciso.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">aproximaciones (cotidiano)</td>
+          <td class="col-example">Como unas tres cuadras. / Más o menos cinco minutos a pie.</td>
+          <td class="col-when">Mismas piezas que en Tiempo (<em>como, más o menos</em>) aplicadas a medidas de distancia.</td>
+        </tr>
+        <tr>
+          <td class="col-construction">formas de pregunta</td>
+          <td class="col-example">¿A qué distancia queda? / ¿Qué tan lejos está? / ¿Cómo de lejos? <span class="reg-badge reg-esp">España</span></td>
+          <td class="col-when">El reparto regional más marcado de la página: <em>qué tan lejos</em> domina Lat-Am, <em>cómo de lejos</em> domina España.</td>
+        </tr>
+      </tbody>
+    </table>
+
   </section>
 
 </div><!-- /page-wrap -->
@@ -2243,6 +2915,7 @@ function setRegister(value) {
   if (value !== 'cotidiano' && value !== 'todo') return;
   localStorage.setItem(REGISTER_KEY, value);
   applyRegister(value);
+  document.dispatchEvent(new CustomEvent('registerChanged', { detail: { value } }));
 }
 function toggleRegister() {
   setRegister(readRegister() === 'cotidiano' ? 'todo' : 'cotidiano');
@@ -2419,6 +3092,394 @@ async function speakExample(btn) {
     if (e.key === 'Escape') resetZoom();
   });
 })();
+
+
+// ═══════════════════════════════════════════════
+//  CUESTIONARIOS — sub-tab switcher
+// ═══════════════════════════════════════════════
+function switchSubtab(name) {
+  document.querySelectorAll('.subtab-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.subtab === name);
+  });
+  document.querySelectorAll('.subtab-content').forEach(p => {
+    p.classList.toggle('active', p.id === 'subtab-' + name);
+  });
+}
+
+
+// ═══════════════════════════════════════════════
+//  QUIZ 1 — PRÁCTICA CON FICHAS
+//
+//  Click-to-place UX: tap a badge to select it, tap a
+//  blank to place. Tap a filled blank to release.
+//  Pure CSS/DOM — no API call.
+//
+//  Question schema:
+//    {
+//      id, register: "cotidiano"|"formal"|"both",
+//      tokens: [ {type:"text", text:"..."} | {type:"blank", id:"b1", answer:"..."} ],
+//      pool: ["badge1", "badge2", ...],   // shuffled at render
+//      explanation: "English NOTA-style mechanic explanation",
+//      gloss: "English meaning of the completed sentence"
+//    }
+//
+//  Phase 1 seed bank: 10 questions. Sonnet will author
+//  the full 30-question bank in a later batch.
+// ═══════════════════════════════════════════════
+
+const FICHA_BANK = [
+  {
+    id: 'q01', register: 'cotidiano',
+    tokens: [
+      {type:'blank', id:'b1', answer:'Hace'},
+      {type:'text', text:' dos horas que estudio.'}
+    ],
+    pool: ['Hace', 'Desde hace', 'Llevo', 'Hacía'],
+    explanation: '<em>Hace + tiempo + que + presente</em> fronts the duration. The verb stays in the present even though English uses the perfect ("it\'s been"). <em>Desde hace</em> would need the verb first; <em>llevo</em> needs a gerund; <em>hacía</em> would force the verb into the imperfect.',
+    gloss: "It's been two hours since I started studying."
+  },
+  {
+    id: 'q02', register: 'cotidiano',
+    tokens: [
+      {type:'text', text:'Vivo acá '},
+      {type:'blank', id:'b1', answer:'desde hace'},
+      {type:'text', text:' seis años.'}
+    ],
+    pool: ['desde hace', 'hace', 'desde', 'hacía'],
+    explanation: '<em>Desde hace + presente</em> introduces a <strong>quantified</strong> duration of an action still in progress. <em>Desde</em> alone would need a fixed point (<em>desde 2018</em>); <em>hace</em> by itself reads as "X ago".',
+    gloss: "I've been living here for six years."
+  },
+  {
+    id: 'q03', register: 'cotidiano',
+    tokens: [
+      {type:'text', text:'Trabajo en este hospital '},
+      {type:'blank', id:'b1', answer:'desde'},
+      {type:'text', text:' 2018.'}
+    ],
+    pool: ['desde', 'desde hace', 'hace', 'hacía'],
+    explanation: '<em>Desde + presente</em> anchors the action to a <strong>fixed starting point</strong> — a date, a year, an event. When the second slot is a quantity (six years), you switch to <em>desde hace</em>.',
+    gloss: "I have been working at this hospital since 2018."
+  },
+  {
+    id: 'q04', register: 'both',
+    tokens: [
+      {type:'blank', id:'b1', answer:'Hacía'},
+      {type:'text', text:' dos años que vivía allí cuando lo conocí.'}
+    ],
+    pool: ['Hacía', 'Hace', 'Desde hacía', 'Llevo'],
+    explanation: 'The whole <em>hace que</em> apparatus shifts back one tense when the temporal anchor moves into the past. <em>Hacía + imperfecto</em> describes a duration that was true at some past moment — not how long it has been until now.',
+    gloss: "I had been living there for two years when I met him."
+  },
+  {
+    id: 'q05', register: 'cotidiano',
+    tokens: [
+      {type:'text', text:'Llegué '},
+      {type:'blank', id:'b1', answer:'hace'},
+      {type:'text', text:' dos horas.'}
+    ],
+    pool: ['hace', 'desde hace', 'desde', 'hacía'],
+    explanation: '<em>Hace + tiempo</em> without <em>que</em> marks a completed point in the past — the English "two hours ago". It does <strong>not</strong> describe an ongoing duration; the action (<em>llegué</em>) finished and the duration measures backward from now.',
+    gloss: "I arrived two hours ago."
+  },
+  {
+    id: 'q06', register: 'cotidiano',
+    tokens: [
+      {type:'text', text:'Hace dos años '},
+      {type:'blank', id:'b1', answer:'que'},
+      {type:'text', text:' '},
+      {type:'blank', id:'b2', answer:'no'},
+      {type:'text', text:' lo veo.'}
+    ],
+    pool: ['que', 'no', 'sin', 'cuando', 'desde'],
+    explanation: 'For "I haven\'t seen him in two years", Spanish requires both pieces: <em>que</em> bridges the duration to the verb clause, and <em>no</em> negates the verb. Drop either and the construction breaks. The mechanically equivalent alternative is <em>llevo dos años sin verlo</em>.',
+    gloss: "I haven't seen him in two years."
+  },
+  {
+    id: 'q07', register: 'cotidiano',
+    tokens: [
+      {type:'text', text:'Llevo dos horas '},
+      {type:'blank', id:'b1', answer:'estudiando'},
+      {type:'text', text:'.'}
+    ],
+    pool: ['estudiando', 'estudiar', 'estudiado', 'sin estudiar'],
+    explanation: '<em>Llevar + tiempo + gerundio</em> requires the gerund (-ndo form). The subject of <em>llevar</em> is the person doing the action; the gerund tells you what they\'re doing. The infinitive (<em>estudiar</em>) would flip the construction into its impersonal flavor — "it takes two hours to study".',
+    gloss: "I've been studying for two hours."
+  },
+  {
+    id: 'q08', register: 'cotidiano',
+    tokens: [
+      {type:'text', text:'Llevo dos años '},
+      {type:'blank', id:'b1', answer:'sin'},
+      {type:'text', text:' verlo.'}
+    ],
+    pool: ['sin', 'que no', 'no', 'que', 'de'],
+    explanation: 'The negative flavor of <em>llevar + tiempo</em> uses <em>sin + infinitivo</em>, not <em>no + verb</em>. This is the mechanical equivalent of <em>hace dos años que no lo veo</em> — same meaning, different structural choice.',
+    gloss: "I haven't seen him in two years."
+  },
+  {
+    id: 'q09', register: 'both',
+    tokens: [
+      {type:'blank', id:'b1', answer:'Faltan'},
+      {type:'text', text:' cinco minutos para el partido.'}
+    ],
+    pool: ['Faltan', 'Falta', 'Llevan', 'Hace'],
+    explanation: '<em>Faltar</em> agrees with its <strong>quantity subject</strong> — here, <em>cinco minutos</em> is plural, so <em>faltan</em>. With a singular subject you\'d say <em>falta una hora</em>. <em>Para</em> introduces the endpoint event (the match).',
+    gloss: "Five minutes left until the match."
+  },
+  {
+    id: 'q10', register: 'cotidiano',
+    tokens: [
+      {type:'text', text:'La playa '},
+      {type:'blank', id:'b1', answer:'está a'},
+      {type:'text', text:' diez kilómetros.'}
+    ],
+    pool: ['está a', 'queda en', 'falta de', 'está en'],
+    explanation: '<em>Estar a + medida</em> is the central distance construction — it accepts physical distance (kilómetros), time-as-distance (cinco minutos), or hybrid (una hora en auto) without changing form. <em>Quedar a</em> would also work; <em>queda en</em> and <em>está en</em> mean "is located in", not "is X away".',
+    gloss: "The beach is ten kilometers away."
+  }
+];
+
+
+// ── Quiz state ──
+let fichaState = {
+  questions: [],       // 10 chosen questions for this round
+  answers: {},         // { 'q01_b1': 'Hace', 'q06_b1': 'que', ... }
+  selectedBadge: null, // {qid, badge} currently selected
+  graded: false
+};
+
+
+// ── Init / re-init ──
+function initFichas() {
+  const filter = document.body.dataset.filter || 'todo';
+  const pool = FICHA_BANK.filter(q => {
+    if (filter === 'todo') return true;
+    return q.register === 'cotidiano' || q.register === 'both';
+  });
+
+  // For the chassis, the bank is only 10 — once it grows to 30, this picks 10.
+  fichaState.questions = shuffle(pool).slice(0, Math.min(10, pool.length));
+  fichaState.answers = {};
+  fichaState.selectedBadge = null;
+  fichaState.graded = false;
+
+  renderFichas();
+  updateComprobarState();
+  document.getElementById('ficha-otra-ronda').style.display = 'none';
+  document.getElementById('ficha-results').style.display = 'none';
+  document.getElementById('ficha-comprobar').textContent = 'Comprobar';
+  document.getElementById('ficha-comprobar').style.display = '';
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+
+// ── Render the question set ──
+function renderFichas() {
+  const container = document.getElementById('fichas-container');
+  if (!container) return;
+
+  container.innerHTML = fichaState.questions.map((q, idx) => {
+    const sentenceHtml = q.tokens.map(t => {
+      if (t.type === 'text') return escapeHtml(t.text);
+      return `<span class="ficha-blank" data-qid="${q.id}" data-blank-id="${t.id}" onclick="onBlankClick(this)"></span>`;
+    }).join('');
+
+    const shuffledPool = shuffle(q.pool);
+    const poolHtml = shuffledPool.map(b =>
+      `<button class="ficha-badge" data-qid="${q.id}" data-badge="${escapeAttr(b)}" onclick="onBadgeClick(this)">${escapeHtml(b)}</button>`
+    ).join('');
+
+    return `
+      <div class="ficha-question" data-qid="${q.id}">
+        <div class="ficha-q-header">
+          <span class="ficha-q-num">Pregunta ${idx + 1}</span>
+          <span class="ficha-q-reg">${q.register === 'both' ? 'ambos registros' : q.register}</span>
+        </div>
+        <div class="ficha-sentence">${sentenceHtml}</div>
+        <div class="ficha-pool">${poolHtml}</div>
+        <div class="ficha-feedback" style="display:none"></div>
+      </div>
+    `;
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
+
+
+// ── Badge / blank click handlers ──
+function onBadgeClick(badgeEl) {
+  if (fichaState.graded) return;
+  const qid = badgeEl.dataset.qid;
+  const badge = badgeEl.dataset.badge;
+
+  // Tapping the already-selected badge deselects.
+  if (fichaState.selectedBadge && fichaState.selectedBadge.qid === qid && fichaState.selectedBadge.badge === badge) {
+    fichaState.selectedBadge = null;
+    badgeEl.classList.remove('selected');
+    return;
+  }
+
+  // Clear any other selection in this question.
+  document.querySelectorAll(`.ficha-badge[data-qid="${qid}"].selected`).forEach(b => b.classList.remove('selected'));
+  fichaState.selectedBadge = { qid, badge };
+  badgeEl.classList.add('selected');
+}
+
+function onBlankClick(blankEl) {
+  if (fichaState.graded) return;
+  const qid = blankEl.dataset.qid;
+  const blankId = blankEl.dataset.blankId;
+  const answerKey = `${qid}_${blankId}`;
+
+  // If blank is filled, tapping it releases the badge back to the pool.
+  if (blankEl.classList.contains('filled')) {
+    const released = fichaState.answers[answerKey];
+    delete fichaState.answers[answerKey];
+    blankEl.classList.remove('filled');
+    blankEl.textContent = '';
+    // Find first .used badge in this question with matching text and un-use it.
+    const badgeEls = document.querySelectorAll(`.ficha-badge[data-qid="${qid}"].used`);
+    for (const b of badgeEls) {
+      if (b.dataset.badge === released) { b.classList.remove('used'); break; }
+    }
+    updateComprobarState();
+    return;
+  }
+
+  // Place currently selected badge into this blank.
+  if (!fichaState.selectedBadge || fichaState.selectedBadge.qid !== qid) return;
+
+  const badge = fichaState.selectedBadge.badge;
+  fichaState.answers[answerKey] = badge;
+  blankEl.classList.add('filled');
+  blankEl.textContent = badge;
+
+  // Mark the badge as used (visually disabled) — pick the first matching unused.
+  const badgeEls = document.querySelectorAll(`.ficha-badge[data-qid="${qid}"]:not(.used)`);
+  for (const b of badgeEls) {
+    if (b.dataset.badge === badge) {
+      b.classList.add('used');
+      b.classList.remove('selected');
+      break;
+    }
+  }
+  fichaState.selectedBadge = null;
+  updateComprobarState();
+}
+
+
+// ── Enable Comprobar only when every blank in every question is filled ──
+function updateComprobarState() {
+  const btn = document.getElementById('ficha-comprobar');
+  const totalBlanks = fichaState.questions.reduce((sum, q) =>
+    sum + q.tokens.filter(t => t.type === 'blank').length, 0);
+  const filled = Object.keys(fichaState.answers).length;
+  btn.disabled = filled !== totalBlanks;
+}
+
+
+// ── Grade and show feedback ──
+function comprobarFichas() {
+  fichaState.graded = true;
+  let correctCount = 0;
+  let totalBlanks = 0;
+
+  fichaState.questions.forEach(q => {
+    const qEl = document.querySelector(`.ficha-question[data-qid="${q.id}"]`);
+    if (!qEl) return;
+
+    let qAllCorrect = true;
+    const wrongAnswers = []; // collected for the per-question feedback footer
+
+    q.tokens.filter(t => t.type === 'blank').forEach(blank => {
+      totalBlanks++;
+      const key = `${q.id}_${blank.id}`;
+      const user = (fichaState.answers[key] || '').trim();
+      const correct = blank.answer.trim();
+      const matches = user.toLowerCase() === correct.toLowerCase();
+
+      const blankEl = qEl.querySelector(`.ficha-blank[data-blank-id="${blank.id}"]`);
+      if (blankEl) {
+        blankEl.classList.add(matches ? 'correct' : 'incorrect');
+      }
+      if (matches) { correctCount++; }
+      else { qAllCorrect = false; wrongAnswers.push(correct); }
+    });
+
+    // Render the NOTA-style feedback panel for this question.
+    const fb = qEl.querySelector('.ficha-feedback');
+    if (fb) {
+      let html = `<span class="nota-label">NOTA*</span>${q.explanation}`;
+      if (!qAllCorrect && wrongAnswers.length) {
+        html += `<div class="ficha-correction">Respuesta correcta: <strong>${escapeHtml(wrongAnswers.join(' · '))}</strong></div>`;
+      }
+      if (q.gloss) {
+        html += `<span class="ficha-gloss">${escapeHtml(q.gloss)}</span>`;
+      }
+      fb.innerHTML = html;
+      fb.style.display = 'block';
+    }
+  });
+
+  // Lock interaction — disable all unfilled badges and blanks visually
+  document.querySelectorAll('.ficha-badge').forEach(b => b.style.pointerEvents = 'none');
+  document.querySelectorAll('.ficha-blank').forEach(b => b.style.cursor = 'default');
+
+  // Score summary
+  showFichaResults(correctCount, totalBlanks);
+
+  // Swap action buttons
+  document.getElementById('ficha-comprobar').style.display = 'none';
+  document.getElementById('ficha-otra-ronda').style.display = '';
+
+  // Scroll to top of cuestionarios tab so the summary is visible.
+  document.getElementById('tab-cuestionarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function showFichaResults(correct, total) {
+  const pct = total ? Math.round((correct / total) * 100) : 0;
+  let label;
+  if (pct === 100) label = '¡Perfecto!';
+  else if (pct >= 80) label = 'Muy bien';
+  else if (pct >= 60) label = 'Bien — repasá lo que fallaste';
+  else if (pct >= 40) label = 'Hay material para repasar';
+  else label = 'Es momento de revisar las pestañas Tiempo y Distancia';
+
+  const el = document.getElementById('ficha-results');
+  el.innerHTML = `
+    <div class="results-score"><span class="results-accent">${correct}</span> <span style="color:var(--text-muted);font-size:1.4rem">/</span> ${total}</div>
+    <div class="results-label">${label}</div>
+  `;
+  el.style.display = 'block';
+}
+
+function otraRondaFichas() {
+  initFichas();
+  document.getElementById('tab-cuestionarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+
+// ── Init on page load ──
+document.addEventListener('DOMContentLoaded', () => {
+  initFichas();
+});
+
+// Re-init when the register switch flips (so question pool refilters).
+document.addEventListener('registerChanged', () => {
+  // Only re-init if user is on the fichas sub-tab and hasn't started grading.
+  if (!fichaState.graded) initFichas();
+});
 </script>
 </body>
 </html>

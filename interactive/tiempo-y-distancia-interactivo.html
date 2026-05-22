@@ -742,17 +742,93 @@ body {
   text-decoration-color: rgba(248, 113, 113, 0.6);
 }
 
-/* Badge pool */
-.ficha-pool {
+/* Two-column quiz layout: questions on the left, sticky badge pool on the right */
+.fichas-layout {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+.fichas-questions-col {
+  flex: 1;
+  min-width: 0;
+}
+.fichas-pool-sticky {
+  flex: 0 0 280px;
+  align-self: flex-start;
+  position: sticky;
+  top: 16px;
+  background: rgba(10, 22, 40, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 16px 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+.fichas-pool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(74, 144, 217, 0.18);
+  font-family: 'Outfit', sans-serif;
+}
+.fichas-pool-title {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+.fichas-pool-count {
+  background: rgba(74, 144, 217, 0.18);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid rgba(74, 144, 217, 0.30);
+}
+.fichas-pool-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 12px 14px;
-  background: rgba(10, 22, 40, 0.5);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  min-height: 60px;
+  min-height: 80px;
+  padding: 4px;
+  border-radius: 8px;
+  transition: all 0.18s;
 }
+.fichas-pool-badges.drag-over {
+  background: rgba(74, 144, 217, 0.10);
+  outline: 1px dashed rgba(74, 144, 217, 0.35);
+  outline-offset: -2px;
+}
+.fichas-pool-empty {
+  width: 100%;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+  padding: 24px 0;
+  letter-spacing: 0.02em;
+}
+
+/* Drag state for badges and blanks */
+.ficha-badge.dragging,
+.ficha-blank.dragging {
+  opacity: 0.40;
+  cursor: grabbing;
+}
+.ficha-blank.drag-over {
+  background: rgba(74, 144, 217, 0.30);
+  border-color: var(--accent);
+  border-style: solid;
+  transform: scale(1.06);
+}
+.ficha-badge { cursor: grab; }
+.ficha-blank.filled { cursor: grab; }
 .ficha-badge {
   background: rgba(74, 144, 217, 0.12);
   color: var(--text-primary);
@@ -967,6 +1043,22 @@ body {
   .ficha-badge { padding: 6px 13px; font-size: 0.88rem; }
   .btn-quiz { padding: 11px 22px; font-size: 0.9rem; }
   .quiz-results .results-score { font-size: 1.8rem; }
+
+  /* Two-column quiz collapses: pool moves above questions and sticks to top */
+  .fichas-layout { flex-direction: column; gap: 12px; }
+  .fichas-pool-sticky {
+    flex: 0 0 auto;
+    width: 100%;
+    order: -1;
+    top: 8px;
+    padding: 12px 14px 10px;
+    z-index: 50;
+  }
+  .fichas-pool-badges {
+    min-height: 56px;
+    max-height: 130px;
+    overflow-y: auto;
+  }
 }
 </style>
 </head>
@@ -2664,11 +2756,24 @@ body {
     <!-- ─── Sub-panel: Práctica con fichas (Quiz 1) ─── -->
     <div class="subtab-content active" id="subtab-fichas" role="tabpanel">
       <div class="quiz-intro">
-        <p>Tocá una ficha para seleccionarla; tocá un hueco para colocarla. Tocá un hueco lleno para devolver la ficha al banco. Cuando completés los diez ítems, presioná <strong>Comprobar</strong>. El registro de las preguntas sigue el interruptor de arriba (Cotidiano / Mostrar todo).</p>
+        <p>Arrastrá las fichas del banco hacia los huecos — o tocá una ficha y luego el hueco si estás en móvil. Tocá un hueco lleno (o arrastrala de vuelta) para devolver la ficha al banco. Cuando completés los diez ítems, presioná <strong>Comprobar</strong>. <em>Este cuestionario es solo de registro cotidiano; el interruptor del frente de la página no le afecta.</em></p>
       </div>
 
-      <div id="fichas-container">
-        <!-- Questions injected by JS on init -->
+      <div class="fichas-layout">
+        <div class="fichas-questions-col">
+          <div id="fichas-container">
+            <!-- Question cards injected by JS on init -->
+          </div>
+        </div>
+        <aside class="fichas-pool-sticky">
+          <div class="fichas-pool-header">
+            <span class="fichas-pool-title">Banco de fichas</span>
+            <span class="fichas-pool-count" id="fichas-pool-count">10</span>
+          </div>
+          <div class="fichas-pool-badges" id="fichas-pool-badges">
+            <!-- Pool badges injected by JS -->
+          </div>
+        </aside>
       </div>
 
       <div class="quiz-actions">
@@ -2878,6 +2983,11 @@ body {
 
 </div><!-- /page-wrap -->
 
+
+<!-- Quiz 1 (Práctica con fichas) — question bank(s). Each bank file
+     self-registers onto window.FICHAS_BANKS. Add more <script src> tags
+     here to load additional banks (bank-2, bank-3, …); the page merges them. -->
+<script src="subpages/tiempo-distancia-fichas-bank-1.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════
@@ -3110,165 +3220,38 @@ function switchSubtab(name) {
 // ═══════════════════════════════════════════════
 //  QUIZ 1 — PRÁCTICA CON FICHAS
 //
-//  Click-to-place UX: tap a badge to select it, tap a
-//  blank to place. Tap a filled blank to release.
-//  Pure CSS/DOM — no API call.
+//  Layered UX: native HTML5 drag-and-drop for mouse,
+//  tap-to-select / tap-to-place for touch. Both code
+//  paths active simultaneously — no separate UI.
 //
-//  Question schema:
-//    {
-//      id, register: "cotidiano"|"formal"|"both",
-//      tokens: [ {type:"text", text:"..."} | {type:"blank", id:"b1", answer:"..."} ],
-//      pool: ["badge1", "badge2", ...],   // shuffled at render
-//      explanation: "English NOTA-style mechanic explanation",
-//      gloss: "English meaning of the completed sentence"
-//    }
+//  Question bank lives in:
+//    interactive/subpages/tiempo-distancia-fichas-bank-1.js
+//  Banks self-register onto window.FICHAS_BANKS.
 //
-//  Phase 1 seed bank: 10 questions. Sonnet will author
-//  the full 30-question bank in a later batch.
+//  Question schema (per the schema doc):
+//    { id, sentence (with '___' blank), answer,
+//      explanation (English NOTA-style), gloss }
+//
+//  Layout: questions render in the left column, the
+//  10 answer badges live in a shared sticky pool on
+//  the right. Jumbled. The register switch at the
+//  top of the page is intentionally ignored — this
+//  quiz is cotidiano-only by design.
 // ═══════════════════════════════════════════════
 
-const FICHA_BANK = [
-  {
-    id: 'q01', register: 'cotidiano',
-    tokens: [
-      {type:'blank', id:'b1', answer:'Hace'},
-      {type:'text', text:' dos horas que estudio.'}
-    ],
-    pool: ['Hace', 'Desde hace', 'Llevo', 'Hacía'],
-    explanation: '<em>Hace + tiempo + que + presente</em> fronts the duration. The verb stays in the present even though English uses the perfect ("it\'s been"). <em>Desde hace</em> would need the verb first; <em>llevo</em> needs a gerund; <em>hacía</em> would force the verb into the imperfect.',
-    gloss: "It's been two hours since I started studying."
-  },
-  {
-    id: 'q02', register: 'cotidiano',
-    tokens: [
-      {type:'text', text:'Vivo acá '},
-      {type:'blank', id:'b1', answer:'desde hace'},
-      {type:'text', text:' seis años.'}
-    ],
-    pool: ['desde hace', 'hace', 'desde', 'hacía'],
-    explanation: '<em>Desde hace + presente</em> introduces a <strong>quantified</strong> duration of an action still in progress. <em>Desde</em> alone would need a fixed point (<em>desde 2018</em>); <em>hace</em> by itself reads as "X ago".',
-    gloss: "I've been living here for six years."
-  },
-  {
-    id: 'q03', register: 'cotidiano',
-    tokens: [
-      {type:'text', text:'Trabajo en este hospital '},
-      {type:'blank', id:'b1', answer:'desde'},
-      {type:'text', text:' 2018.'}
-    ],
-    pool: ['desde', 'desde hace', 'hace', 'hacía'],
-    explanation: '<em>Desde + presente</em> anchors the action to a <strong>fixed starting point</strong> — a date, a year, an event. When the second slot is a quantity (six years), you switch to <em>desde hace</em>.',
-    gloss: "I have been working at this hospital since 2018."
-  },
-  {
-    id: 'q04', register: 'both',
-    tokens: [
-      {type:'blank', id:'b1', answer:'Hacía'},
-      {type:'text', text:' dos años que vivía allí cuando lo conocí.'}
-    ],
-    pool: ['Hacía', 'Hace', 'Desde hacía', 'Llevo'],
-    explanation: 'The whole <em>hace que</em> apparatus shifts back one tense when the temporal anchor moves into the past. <em>Hacía + imperfecto</em> describes a duration that was true at some past moment — not how long it has been until now.',
-    gloss: "I had been living there for two years when I met him."
-  },
-  {
-    id: 'q05', register: 'cotidiano',
-    tokens: [
-      {type:'text', text:'Llegué '},
-      {type:'blank', id:'b1', answer:'hace'},
-      {type:'text', text:' dos horas.'}
-    ],
-    pool: ['hace', 'desde hace', 'desde', 'hacía'],
-    explanation: '<em>Hace + tiempo</em> without <em>que</em> marks a completed point in the past — the English "two hours ago". It does <strong>not</strong> describe an ongoing duration; the action (<em>llegué</em>) finished and the duration measures backward from now.',
-    gloss: "I arrived two hours ago."
-  },
-  {
-    id: 'q06', register: 'cotidiano',
-    tokens: [
-      {type:'text', text:'Hace dos años '},
-      {type:'blank', id:'b1', answer:'que'},
-      {type:'text', text:' '},
-      {type:'blank', id:'b2', answer:'no'},
-      {type:'text', text:' lo veo.'}
-    ],
-    pool: ['que', 'no', 'sin', 'cuando', 'desde'],
-    explanation: 'For "I haven\'t seen him in two years", Spanish requires both pieces: <em>que</em> bridges the duration to the verb clause, and <em>no</em> negates the verb. Drop either and the construction breaks. The mechanically equivalent alternative is <em>llevo dos años sin verlo</em>.',
-    gloss: "I haven't seen him in two years."
-  },
-  {
-    id: 'q07', register: 'cotidiano',
-    tokens: [
-      {type:'text', text:'Llevo dos horas '},
-      {type:'blank', id:'b1', answer:'estudiando'},
-      {type:'text', text:'.'}
-    ],
-    pool: ['estudiando', 'estudiar', 'estudiado', 'sin estudiar'],
-    explanation: '<em>Llevar + tiempo + gerundio</em> requires the gerund (-ndo form). The subject of <em>llevar</em> is the person doing the action; the gerund tells you what they\'re doing. The infinitive (<em>estudiar</em>) would flip the construction into its impersonal flavor — "it takes two hours to study".',
-    gloss: "I've been studying for two hours."
-  },
-  {
-    id: 'q08', register: 'cotidiano',
-    tokens: [
-      {type:'text', text:'Llevo dos años '},
-      {type:'blank', id:'b1', answer:'sin'},
-      {type:'text', text:' verlo.'}
-    ],
-    pool: ['sin', 'que no', 'no', 'que', 'de'],
-    explanation: 'The negative flavor of <em>llevar + tiempo</em> uses <em>sin + infinitivo</em>, not <em>no + verb</em>. This is the mechanical equivalent of <em>hace dos años que no lo veo</em> — same meaning, different structural choice.',
-    gloss: "I haven't seen him in two years."
-  },
-  {
-    id: 'q09', register: 'both',
-    tokens: [
-      {type:'blank', id:'b1', answer:'Faltan'},
-      {type:'text', text:' cinco minutos para el partido.'}
-    ],
-    pool: ['Faltan', 'Falta', 'Llevan', 'Hace'],
-    explanation: '<em>Faltar</em> agrees with its <strong>quantity subject</strong> — here, <em>cinco minutos</em> is plural, so <em>faltan</em>. With a singular subject you\'d say <em>falta una hora</em>. <em>Para</em> introduces the endpoint event (the match).',
-    gloss: "Five minutes left until the match."
-  },
-  {
-    id: 'q10', register: 'cotidiano',
-    tokens: [
-      {type:'text', text:'La playa '},
-      {type:'blank', id:'b1', answer:'está a'},
-      {type:'text', text:' diez kilómetros.'}
-    ],
-    pool: ['está a', 'queda en', 'falta de', 'está en'],
-    explanation: '<em>Estar a + medida</em> is the central distance construction — it accepts physical distance (kilómetros), time-as-distance (cinco minutos), or hybrid (una hora en auto) without changing form. <em>Quedar a</em> would also work; <em>queda en</em> and <em>está en</em> mean "is located in", not "is X away".',
-    gloss: "The beach is ten kilometers away."
-  }
-];
-
-
-// ── Quiz state ──
 let fichaState = {
   questions: [],       // 10 chosen questions for this round
-  answers: {},         // { 'q01_b1': 'Hace', 'q06_b1': 'que', ... }
-  selectedBadge: null, // {qid, badge} currently selected
+  pool: [],            // badge values currently available in the pool
+  answers: {},         // { qid: badge_value } for filled blanks
+  selectedBadge: null, // { value, idx } for tap UX selection
   graded: false
 };
 
 
-// ── Init / re-init ──
-function initFichas() {
-  const filter = document.body.dataset.filter || 'todo';
-  const pool = FICHA_BANK.filter(q => {
-    if (filter === 'todo') return true;
-    return q.register === 'cotidiano' || q.register === 'both';
-  });
-
-  // For the chassis, the bank is only 10 — once it grows to 30, this picks 10.
-  fichaState.questions = shuffle(pool).slice(0, Math.min(10, pool.length));
-  fichaState.answers = {};
-  fichaState.selectedBadge = null;
-  fichaState.graded = false;
-
-  renderFichas();
-  updateComprobarState();
-  document.getElementById('ficha-otra-ronda').style.display = 'none';
-  document.getElementById('ficha-results').style.display = 'none';
-  document.getElementById('ficha-comprobar').textContent = 'Comprobar';
-  document.getElementById('ficha-comprobar').style.display = '';
+// ── Pull questions from all registered banks ──
+function flattenBanks() {
+  const banks = window.FICHAS_BANKS || [];
+  return banks.flatMap(b => Array.isArray(b && b.questions) ? b.questions : []);
 }
 
 function shuffle(arr) {
@@ -3280,183 +3263,344 @@ function shuffle(arr) {
   return a;
 }
 
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeAttr(s) { return escapeHtml(s); }
 
-// ── Render the question set ──
-function renderFichas() {
-  const container = document.getElementById('fichas-container');
-  if (!container) return;
 
-  container.innerHTML = fichaState.questions.map((q, idx) => {
-    const sentenceHtml = q.tokens.map(t => {
-      if (t.type === 'text') return escapeHtml(t.text);
-      return `<span class="ficha-blank" data-qid="${q.id}" data-blank-id="${t.id}" onclick="onBlankClick(this)"></span>`;
-    }).join('');
+// ── Init / re-init ──
+function initFichas() {
+  const all = flattenBanks();
 
-    const shuffledPool = shuffle(q.pool);
-    const poolHtml = shuffledPool.map(b =>
-      `<button class="ficha-badge" data-qid="${q.id}" data-badge="${escapeAttr(b)}" onclick="onBadgeClick(this)">${escapeHtml(b)}</button>`
-    ).join('');
+  if (all.length === 0) {
+    // Bank file missing or failed to load — show a friendly error.
+    const c = document.getElementById('fichas-container');
+    if (c) {
+      c.innerHTML = '<div class="distancia-placeholder">'
+        + '<div class="icon">⚠</div>'
+        + '<div><strong style="color:var(--text-secondary)">El banco de preguntas no se cargó.</strong></div>'
+        + '<div style="margin-top:6px;font-size:0.82rem">Verificá que el archivo <code>subpages/tiempo-distancia-fichas-bank-1.js</code> exista y esté bien formado.</div>'
+        + '</div>';
+    }
+    const poolEl = document.getElementById('fichas-pool-badges');
+    const countEl = document.getElementById('fichas-pool-count');
+    if (poolEl) poolEl.innerHTML = '';
+    if (countEl) countEl.textContent = '0';
+    const cBtn = document.getElementById('ficha-comprobar');
+    if (cBtn) cBtn.disabled = true;
+    return;
+  }
 
+  fichaState.questions = shuffle(all).slice(0, Math.min(10, all.length));
+  fichaState.pool = shuffle(fichaState.questions.map(q => q.answer));
+  fichaState.answers = {};
+  fichaState.selectedBadge = null;
+  fichaState.graded = false;
+
+  renderQuestions();
+  renderPool();
+  updateComprobarState();
+
+  document.getElementById('ficha-otra-ronda').style.display = 'none';
+  document.getElementById('ficha-results').style.display = 'none';
+  document.getElementById('ficha-comprobar').style.display = '';
+}
+
+
+// ── Render question cards in the left column ──
+function renderQuestions() {
+  const c = document.getElementById('fichas-container');
+  if (!c) return;
+  c.innerHTML = fichaState.questions.map((q, idx) => {
+    const sentenceHtml = renderSentence(q);
+    let feedbackHtml = '';
+    if (fichaState.graded) {
+      const user = (fichaState.answers[q.id] || '').trim();
+      const correct = q.answer.trim();
+      const matches = user.toLowerCase() === correct.toLowerCase();
+      let html = `<span class="nota-label">NOTA*</span>${q.explanation || ''}`;
+      if (!matches) {
+        html += `<div class="ficha-correction">Respuesta correcta: <strong>${escapeHtml(correct)}</strong></div>`;
+      }
+      if (q.gloss) {
+        html += `<span class="ficha-gloss">${escapeHtml(q.gloss)}</span>`;
+      }
+      feedbackHtml = `<div class="ficha-feedback" style="display:block">${html}</div>`;
+    }
     return `
-      <div class="ficha-question" data-qid="${q.id}">
+      <div class="ficha-question" data-qid="${escapeAttr(q.id)}">
         <div class="ficha-q-header">
           <span class="ficha-q-num">Pregunta ${idx + 1}</span>
-          <span class="ficha-q-reg">${q.register === 'both' ? 'ambos registros' : q.register}</span>
         </div>
         <div class="ficha-sentence">${sentenceHtml}</div>
-        <div class="ficha-pool">${poolHtml}</div>
-        <div class="ficha-feedback" style="display:none"></div>
+        ${feedbackHtml}
       </div>
     `;
   }).join('');
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function renderSentence(q) {
+  // Split on first '___' (one blank per question per the schema).
+  const splitIdx = q.sentence.indexOf('___');
+  if (splitIdx === -1) {
+    // Fallback: no blank found, show as-is with a trailing blank.
+    return escapeHtml(q.sentence) + buildBlankSpan(q);
+  }
+  const before = q.sentence.slice(0, splitIdx);
+  const after  = q.sentence.slice(splitIdx + 3);
+  return escapeHtml(before) + buildBlankSpan(q) + escapeHtml(after);
 }
-function escapeAttr(s) { return escapeHtml(s); }
+
+function buildBlankSpan(q) {
+  const filled = fichaState.answers[q.id];
+  const isGraded = fichaState.graded;
+  let cls = 'ficha-blank';
+  let content = '';
+  let attrs = '';
+
+  if (filled !== undefined) {
+    cls += ' filled';
+    content = escapeHtml(filled);
+    attrs += ` data-value="${escapeAttr(filled)}"`;
+    if (!isGraded) attrs += ' draggable="true"';
+    if (isGraded) {
+      const correct = q.answer.trim().toLowerCase() === filled.trim().toLowerCase();
+      cls += correct ? ' correct' : ' incorrect';
+    }
+  }
+  return `<span class="${cls}" data-qid="${escapeAttr(q.id)}"${attrs}>${content}</span>`;
+}
 
 
-// ── Badge / blank click handlers ──
-function onBadgeClick(badgeEl) {
-  if (fichaState.graded) return;
-  const qid = badgeEl.dataset.qid;
-  const badge = badgeEl.dataset.badge;
+// ── Render the shared badge pool on the right ──
+function renderPool() {
+  const el = document.getElementById('fichas-pool-badges');
+  const countEl = document.getElementById('fichas-pool-count');
+  if (!el) return;
+
+  if (fichaState.graded) {
+    el.innerHTML = '<div class="fichas-pool-empty">Cuestionario corregido</div>';
+  } else if (fichaState.pool.length === 0) {
+    el.innerHTML = '<div class="fichas-pool-empty">Todas las fichas están colocadas</div>';
+  } else {
+    el.innerHTML = fichaState.pool.map((v, i) =>
+      `<button class="ficha-badge" data-value="${escapeAttr(v)}" data-pool-idx="${i}" draggable="true">${escapeHtml(v)}</button>`
+    ).join('');
+  }
+
+  if (countEl) countEl.textContent = String(fichaState.pool.length);
+}
+
+
+// ── Tap-to-place handlers (called via delegation) ──
+function onPoolBadgeClick(badgeEl) {
+  const value = badgeEl.dataset.value;
+  const idx = parseInt(badgeEl.dataset.poolIdx, 10);
 
   // Tapping the already-selected badge deselects.
-  if (fichaState.selectedBadge && fichaState.selectedBadge.qid === qid && fichaState.selectedBadge.badge === badge) {
+  if (fichaState.selectedBadge && fichaState.selectedBadge.idx === idx) {
     fichaState.selectedBadge = null;
     badgeEl.classList.remove('selected');
     return;
   }
 
-  // Clear any other selection in this question.
-  document.querySelectorAll(`.ficha-badge[data-qid="${qid}"].selected`).forEach(b => b.classList.remove('selected'));
-  fichaState.selectedBadge = { qid, badge };
+  // Clear other selections in the pool.
+  document.querySelectorAll('.fichas-pool-badges .ficha-badge.selected').forEach(b => b.classList.remove('selected'));
+  fichaState.selectedBadge = { value, idx };
   badgeEl.classList.add('selected');
 }
 
 function onBlankClick(blankEl) {
-  if (fichaState.graded) return;
   const qid = blankEl.dataset.qid;
-  const blankId = blankEl.dataset.blankId;
-  const answerKey = `${qid}_${blankId}`;
 
-  // If blank is filled, tapping it releases the badge back to the pool.
+  // Filled? Return its value to the pool.
   if (blankEl.classList.contains('filled')) {
-    const released = fichaState.answers[answerKey];
-    delete fichaState.answers[answerKey];
-    blankEl.classList.remove('filled');
-    blankEl.textContent = '';
-    // Find first .used badge in this question with matching text and un-use it.
-    const badgeEls = document.querySelectorAll(`.ficha-badge[data-qid="${qid}"].used`);
-    for (const b of badgeEls) {
-      if (b.dataset.badge === released) { b.classList.remove('used'); break; }
-    }
+    const v = blankEl.dataset.value;
+    delete fichaState.answers[qid];
+    fichaState.pool.push(v);
+    fichaState.selectedBadge = null;
+    renderQuestions();
+    renderPool();
     updateComprobarState();
     return;
   }
 
-  // Place currently selected badge into this blank.
-  if (!fichaState.selectedBadge || fichaState.selectedBadge.qid !== qid) return;
-
-  const badge = fichaState.selectedBadge.badge;
-  fichaState.answers[answerKey] = badge;
-  blankEl.classList.add('filled');
-  blankEl.textContent = badge;
-
-  // Mark the badge as used (visually disabled) — pick the first matching unused.
-  const badgeEls = document.querySelectorAll(`.ficha-badge[data-qid="${qid}"]:not(.used)`);
-  for (const b of badgeEls) {
-    if (b.dataset.badge === badge) {
-      b.classList.add('used');
-      b.classList.remove('selected');
-      break;
-    }
-  }
+  // Empty and a badge is selected: place it.
+  if (!fichaState.selectedBadge) return;
+  const v = fichaState.selectedBadge.value;
+  const poolIdx = fichaState.pool.indexOf(v);
+  if (poolIdx === -1) return;
+  fichaState.pool.splice(poolIdx, 1);
+  fichaState.answers[qid] = v;
   fichaState.selectedBadge = null;
+  renderQuestions();
+  renderPool();
   updateComprobarState();
 }
 
 
-// ── Enable Comprobar only when every blank in every question is filled ──
+// ── Drag-and-drop handlers (used by mouse). Delegation pattern so
+//    they survive re-renders. Both blank↔pool and blank↔blank moves
+//    are supported; same-target drops are no-ops.
+function handleDropOnBlank(payload, toQid) {
+  if (payload.source === 'pool') {
+    // Target already filled → push its current value back to pool first.
+    if (fichaState.answers[toQid] !== undefined) {
+      fichaState.pool.push(fichaState.answers[toQid]);
+    }
+    const idx = fichaState.pool.indexOf(payload.value);
+    if (idx === -1) return;
+    fichaState.pool.splice(idx, 1);
+    fichaState.answers[toQid] = payload.value;
+  } else if (payload.source === 'blank') {
+    if (payload.qid === toQid) return;
+    // Swap if target filled; otherwise empty the source slot.
+    if (fichaState.answers[toQid] !== undefined) {
+      fichaState.answers[payload.qid] = fichaState.answers[toQid];
+    } else {
+      delete fichaState.answers[payload.qid];
+    }
+    fichaState.answers[toQid] = payload.value;
+  }
+  renderQuestions();
+  renderPool();
+  updateComprobarState();
+}
+
+function handleDropOnPool(payload) {
+  if (payload.source !== 'blank') return;
+  delete fichaState.answers[payload.qid];
+  fichaState.pool.push(payload.value);
+  renderQuestions();
+  renderPool();
+  updateComprobarState();
+}
+
+function attachQuizDelegation() {
+  const root = document.getElementById('subtab-fichas');
+  if (!root || root._delegated) return;
+  root._delegated = true;
+
+  // Clicks (tap UX)
+  root.addEventListener('click', e => {
+    if (fichaState.graded) return;
+    const badge = e.target.closest('.ficha-badge');
+    if (badge && badge.closest('.fichas-pool-badges')) {
+      onPoolBadgeClick(badge);
+      return;
+    }
+    const blank = e.target.closest('.ficha-blank');
+    if (blank) onBlankClick(blank);
+  });
+
+  // Drag start — set payload, mark dragging
+  root.addEventListener('dragstart', e => {
+    if (fichaState.graded) { e.preventDefault(); return; }
+    const badge = e.target.closest('.ficha-badge');
+    if (badge && badge.closest('.fichas-pool-badges')) {
+      e.dataTransfer.setData('text/plain', JSON.stringify({
+        source: 'pool',
+        value: badge.dataset.value
+      }));
+      e.dataTransfer.effectAllowed = 'move';
+      badge.classList.add('dragging');
+      return;
+    }
+    const blank = e.target.closest('.ficha-blank.filled');
+    if (blank) {
+      e.dataTransfer.setData('text/plain', JSON.stringify({
+        source: 'blank',
+        value: blank.dataset.value,
+        qid: blank.dataset.qid
+      }));
+      e.dataTransfer.effectAllowed = 'move';
+      blank.classList.add('dragging');
+    }
+  });
+
+  root.addEventListener('dragend', () => {
+    root.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+    root.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+  });
+
+  root.addEventListener('dragover', e => {
+    if (fichaState.graded) return;
+    const target = e.target.closest('.ficha-blank, .fichas-pool-badges');
+    if (!target) return;
+    e.preventDefault();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+    target.classList.add('drag-over');
+  });
+
+  root.addEventListener('dragleave', e => {
+    const target = e.target.closest('.ficha-blank, .fichas-pool-badges');
+    if (target && (!e.relatedTarget || !target.contains(e.relatedTarget))) {
+      target.classList.remove('drag-over');
+    }
+  });
+
+  root.addEventListener('drop', e => {
+    if (fichaState.graded) return;
+    e.preventDefault();
+    root.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+
+    let payload;
+    try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); }
+    catch { return; }
+    if (!payload || !payload.source) return;
+
+    const blank = e.target.closest('.ficha-blank');
+    if (blank) { handleDropOnBlank(payload, blank.dataset.qid); return; }
+    const pool = e.target.closest('.fichas-pool-badges');
+    if (pool) handleDropOnPool(payload);
+  });
+}
+
+
+// ── Comprobar button enables only when every blank is filled ──
 function updateComprobarState() {
   const btn = document.getElementById('ficha-comprobar');
-  const totalBlanks = fichaState.questions.reduce((sum, q) =>
-    sum + q.tokens.filter(t => t.type === 'blank').length, 0);
+  if (!btn) return;
+  const total = fichaState.questions.length;
   const filled = Object.keys(fichaState.answers).length;
-  btn.disabled = filled !== totalBlanks;
+  btn.disabled = (filled !== total) || total === 0;
 }
 
 
 // ── Grade and show feedback ──
 function comprobarFichas() {
   fichaState.graded = true;
+
   let correctCount = 0;
-  let totalBlanks = 0;
-
+  const total = fichaState.questions.length;
   fichaState.questions.forEach(q => {
-    const qEl = document.querySelector(`.ficha-question[data-qid="${q.id}"]`);
-    if (!qEl) return;
-
-    let qAllCorrect = true;
-    const wrongAnswers = []; // collected for the per-question feedback footer
-
-    q.tokens.filter(t => t.type === 'blank').forEach(blank => {
-      totalBlanks++;
-      const key = `${q.id}_${blank.id}`;
-      const user = (fichaState.answers[key] || '').trim();
-      const correct = blank.answer.trim();
-      const matches = user.toLowerCase() === correct.toLowerCase();
-
-      const blankEl = qEl.querySelector(`.ficha-blank[data-blank-id="${blank.id}"]`);
-      if (blankEl) {
-        blankEl.classList.add(matches ? 'correct' : 'incorrect');
-      }
-      if (matches) { correctCount++; }
-      else { qAllCorrect = false; wrongAnswers.push(correct); }
-    });
-
-    // Render the NOTA-style feedback panel for this question.
-    const fb = qEl.querySelector('.ficha-feedback');
-    if (fb) {
-      let html = `<span class="nota-label">NOTA*</span>${q.explanation}`;
-      if (!qAllCorrect && wrongAnswers.length) {
-        html += `<div class="ficha-correction">Respuesta correcta: <strong>${escapeHtml(wrongAnswers.join(' · '))}</strong></div>`;
-      }
-      if (q.gloss) {
-        html += `<span class="ficha-gloss">${escapeHtml(q.gloss)}</span>`;
-      }
-      fb.innerHTML = html;
-      fb.style.display = 'block';
-    }
+    const user = (fichaState.answers[q.id] || '').trim();
+    const correct = q.answer.trim();
+    if (user.toLowerCase() === correct.toLowerCase()) correctCount++;
   });
 
-  // Lock interaction — disable all unfilled badges and blanks visually
-  document.querySelectorAll('.ficha-badge').forEach(b => b.style.pointerEvents = 'none');
-  document.querySelectorAll('.ficha-blank').forEach(b => b.style.cursor = 'default');
+  renderQuestions();   // re-render with correct/incorrect blanks + feedback panels
+  renderPool();        // clears pool to "Cuestionario corregido"
+  showFichaResults(correctCount, total);
 
-  // Score summary
-  showFichaResults(correctCount, totalBlanks);
-
-  // Swap action buttons
   document.getElementById('ficha-comprobar').style.display = 'none';
   document.getElementById('ficha-otra-ronda').style.display = '';
-
-  // Scroll to top of cuestionarios tab so the summary is visible.
   document.getElementById('tab-cuestionarios').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function showFichaResults(correct, total) {
   const pct = total ? Math.round((correct / total) * 100) : 0;
   let label;
-  if (pct === 100) label = '¡Perfecto!';
-  else if (pct >= 80) label = 'Muy bien';
-  else if (pct >= 60) label = 'Bien — repasá lo que fallaste';
-  else if (pct >= 40) label = 'Hay material para repasar';
-  else label = 'Es momento de revisar las pestañas Tiempo y Distancia';
+  if (pct === 100)      label = '¡Perfecto!';
+  else if (pct >= 80)   label = 'Muy bien';
+  else if (pct >= 60)   label = 'Bien — repasá lo que fallaste';
+  else if (pct >= 40)   label = 'Hay material para repasar';
+  else                  label = 'Es momento de revisar las pestañas Tiempo y Distancia';
 
   const el = document.getElementById('ficha-results');
+  if (!el) return;
   el.innerHTML = `
     <div class="results-score"><span class="results-accent">${correct}</span> <span style="color:var(--text-muted);font-size:1.4rem">/</span> ${total}</div>
     <div class="results-label">${label}</div>
@@ -3472,13 +3616,8 @@ function otraRondaFichas() {
 
 // ── Init on page load ──
 document.addEventListener('DOMContentLoaded', () => {
+  attachQuizDelegation();
   initFichas();
-});
-
-// Re-init when the register switch flips (so question pool refilters).
-document.addEventListener('registerChanged', () => {
-  // Only re-init if user is on the fichas sub-tab and hasn't started grading.
-  if (!fichaState.graded) initFichas();
 });
 </script>
 </body>

@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ya, Todavía y Aún — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accent palette (8 cards) */
+  --accent-alpha:   #4a90d9;  /* card 1 — blue        */
+  --accent-beta:    #c084fc;  /* card 2 — violet      */
+  --accent-gamma:   #fbbf24;  /* card 3 — gold        */
+  --accent-delta:   #4ecdc4;  /* card 4 — teal        */
+  --accent-epsilon: #f472b6;  /* card 5 — rose        */
+  --accent-zeta:    #34d399;  /* card 6 — green       */
+  --accent-eta:     #fb923c;  /* card 7 — orange      */
+  --accent-theta:   #fb7185;  /* card 8 — rose-coral  */
+
+  /* Rioplatense card accent */
+  --accent-rio:     #5eead4;  /* teal, mirrors rio-section */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (alhambra) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.55);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 22px;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks (mental hooks) ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Grammar card ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha    { border-left-color: var(--accent-alpha); }
+.card-beta     { border-left-color: var(--accent-beta); }
+.card-gamma    { border-left-color: var(--accent-gamma); }
+.card-delta    { border-left-color: var(--accent-delta); }
+.card-epsilon  { border-left-color: var(--accent-epsilon); }
+.card-zeta     { border-left-color: var(--accent-zeta); }
+.card-eta      { border-left-color: var(--accent-eta); }
+.card-theta    { border-left-color: var(--accent-theta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+.card-theta   .card-number { color: var(--accent-theta);   opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.92em;
+  font-weight: 500;
+}
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+.gloss {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  font-style: italic;
+  margin: 10px 0 16px;
+  line-height: 1.5;
+}
+.gloss em { color: var(--accent); font-style: italic; }
+.gloss strong { color: var(--text-primary); font-weight: 600; font-style: normal; }
+
+/* ── Card image (one per variant) ── */
+.variant-figure {
+  margin: 0 0 8px;
+  max-width: 280px;
+}
+.variant-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transform-origin: left center;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.variant-figure img.magnified {
+  transform: scale(2.0);
+  z-index: 50;
+  cursor: zoom-out;
+  box-shadow: 8px 8px 28px rgba(0, 0, 0, 0.55);
+  border-color: var(--accent);
+}
+@media (max-width: 640px) {
+  .variant-figure img { transform-origin: center center; }
+  .variant-figure img.magnified { transform: scale(1.8); }
+}
+
+/* ── Summary figure (Card 7 large image) ── */
+.summary-figure {
+  margin: 18px auto 14px;
+  max-width: 560px;
+}
+.summary-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transform-origin: center center;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.summary-figure img.magnified {
+  transform: scale(1.5);
+  z-index: 50;
+  cursor: zoom-out;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+  border-color: var(--accent);
+}
+.summary-figure .summary-caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ── Symmetry table (Card 7) ── */
+.symmetry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 6px;
+  font-size: 0.88rem;
+}
+.symmetry-table th,
+.symmetry-table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid rgba(74, 144, 217, 0.18);
+}
+.symmetry-table thead th {
+  background: rgba(74, 144, 217, 0.12);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.symmetry-table tbody th {
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.82rem;
+  width: 130px;
+}
+.symmetry-table td {
+  background: transparent;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.symmetry-table td code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--accent);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.86em;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+.symmetry-table td .es {
+  color: var(--text-primary);
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  display: block;
+  margin: 4px 0 2px;
+  font-size: 0.98em;
+}
+.symmetry-table td .en {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.86em;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .symmetry-table { font-size: 0.78rem; }
+  .symmetry-table th,
+  .symmetry-table td { padding: 8px 8px; }
+  .symmetry-table tbody th { width: auto; }
+}
+
+/* ── Tense badge ── */
+.tense {
+  display: inline-block;
+  background: rgba(74, 144, 217, 0.12);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tense.rare {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--red);
+}
+
+/* ── Variant block ── */
+.variant {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+}
+.variant:last-child { border-bottom: none; }
+.variant-image-col { flex: 0 0 200px; }
+.variant-content-col { flex: 1; min-width: 0; }
+
+@media (max-width: 640px) {
+  .variant { flex-direction: column; gap: 10px; }
+  .variant-image-col { flex: 0 0 auto; max-width: 220px; }
+  .variant-figure { max-width: 220px; }
+}
+
+/* ── Example row (speak button + body) ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.speak-btn.playing {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+/* ── Rioplatense sub-section inside card 3 ── */
+.rio-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(20, 184, 166, 0.35);
+}
+.rio-section .rio-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #5eead4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.rio-section .rio-heading em { color: #99f6e4; font-style: italic; }
+.rio-section .rio-blurb {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.rio-tag {
+  display: inline-block;
+  background: rgba(20, 184, 166, 0.12);
+  color: #5eead4;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rio-section .example-es strong { color: #5eead4; }
+
+/* ── Quick map reference card ── */
+.reference {
+  background: rgba(74, 144, 217, 0.04);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 22px 26px 20px;
+  margin-top: 22px;
+}
+.reference h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.ref-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+  font-size: 0.9rem;
+  align-items: center;
+}
+.ref-row:last-child { border-bottom: none; }
+.ref-row .what { color: var(--text-primary); }
+.ref-row .what em { color: var(--accent); font-style: italic; }
+.ref-row .tense-label {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  text-align: right;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 640px) {
+  .ref-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .ref-row .tense-label { text-align: left; }
+}
+/* ── Rio-card (standalone Rioplatense block at page bottom) ── */
+.rio-card {
+  border-left-color: var(--accent-rio);
+  background: linear-gradient(180deg, rgba(20, 184, 166, 0.06), var(--bg-card) 220px);
+}
+.rio-card .card-number { color: var(--accent-rio); opacity: 0.85; }
+.rio-card .card-title { color: #99f6e4; }
+.rio-card .card-title code {
+  background: var(--bg-input);
+  color: #99f6e4;
+}
+.rio-card .card-title-en { color: var(--accent-rio); }
+.rio-card .gloss em { color: var(--accent-rio); }
+.rio-card .gloss strong { color: #d8f5ee; }
+.rio-card .example-es strong { color: var(--accent-rio); }
+.rio-card .rio-section { border-top-color: rgba(20, 184, 166, 0.35); }
+
+/* ── Inline small "vs." sentence comparison ── */
+.compact-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+.compact-pair .col {
+  background: rgba(74, 144, 217, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.compact-pair .col-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.compact-pair .col-es {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+.compact-pair .col-en {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+@media (max-width: 640px) {
+  .compact-pair { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <a href="../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Adverbios de Tiempo · Continuidad y Cambio</div>
+    <h1><em>Ya</em>, <em>todavía</em> y <em>aún</em></h1>
+    <p class="subtitle">Tres adverbios que comparten traducciones en inglés pero hacen trabajos distintos en español: lo que sigue igual, lo que acaba de cambiar — y una pequeña trampa ortográfica al final.</p>
+  </header>
+
+  <!-- Rate bar -->
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- Mental hook NOTA #1 -->
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong>Mental hook · status quo vs. change.</strong> <em>Todavía</em> and <em>aún</em> describe what <strong>stays the same</strong> across the present moment. <em>Ya</em> describes what <strong>changes</strong>. Nearly everything else on this page is elaboration of that single contrast.
+  </div>
+
+  <!-- Mental hook NOTA #2 -->
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong>Mental hook · "yet" is not one structure.</strong> English "yet" maps to <em>two different Spanish structures</em> depending on sentence type: <em>¿ya...?</em> in questions, <em>todavía no</em> in negatives. Same word in English, opposite shape in Spanish.
+  </div>
+
+  <!-- ═════════════════════════════════════
+       CARD 1 — El principio central
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">El principio central</div>
+        <div class="card-title-en">CONTINUITY VS. CHANGE OF STATE</div>
+      </div>
+    </div>
+    <p class="gloss">Todos los usos de <em>ya</em>, <em>todavía</em> y <em>aún</em> caen sobre un mismo eje. <strong>Todavía</strong> y <strong>aún</strong> hablan de lo que <strong>persiste</strong> a través de AHORA. <strong>Ya</strong> habla de lo que <strong>cambió</strong> — antes de AHORA, en AHORA mismo, o que está dejando de ser.</p>
+
+    <figure class="summary-figure">
+      <img src="../assets/ya-todavia-aun/principio-central.webp" alt="Diagrama maestro con dos líneas de tiempo apiladas que comparten el mismo marcador AHORA. Arriba, etiquetada TODAVÍA / AÚN — continuidad, una barra verde atraviesa AHORA sin interrupción. Abajo, etiquetada YA — cambio de estado, una barra gris a la izquierda de AHORA pasa a una barra verde brillante a la derecha, con un estallido amarillo en el punto de transición.">
+      <div class="summary-caption">Las dos lógicas en una sola imagen — arriba, lo que persiste; abajo, lo que cambia. Clic para ampliar.</div>
+    </figure>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 2 — Todavía y aún: continuidad
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>todavía</code> · <code>aún</code></div>
+        <div class="card-title-en">CONTINUITY — "STILL" / "NOT YET"</div>
+      </div>
+    </div>
+    <p class="gloss">Sinónimos exactos para describir un estado o una acción que <strong>continúa</strong> (afirmativo) o que <strong>todavía no ha empezado</strong>, pero se espera que ocurra (negativo). En conversación cotidiana <em>todavía</em> domina sin competencia; <em>aún</em> se usa más en registros literarios o formales — son intercambiables, no son sinónimos perfectos de uso.</p>
+
+    <!-- Variant 1: afirmativo -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/todavia-afirmativo.webp" alt="Línea de tiempo con una barra verde continua que comienza en el pasado, atraviesa AHORA sin interrupción, y continúa hacia el futuro — un estado que sigue igual.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Afirmativo · "still"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Todavía</strong> estoy estudiando para el viaje.</div>
+            <div class="example-en">I am still studying for the trip.</div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral" style="margin-top: 12px;">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Aún</strong> tengo la intención de ir.</div>
+            <div class="example-en">I still intend to go. <em>(Same meaning, more formal register.)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant 2: negativo -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/todavia-no.webp" alt="Línea de tiempo con el pasado y AHORA completamente vacíos; en el futuro, una forma punteada con un signo de pregunta dentro, conectada a AHORA por una flecha — una acción esperada que todavía no ha ocurrido.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Negativo · "not yet"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Todavía no</strong> probé el mate.</div>
+            <div class="example-en">I haven't tried mate yet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota" style="margin-top: 14px;">
+      <span class="nota-label">NOTA*</span>
+      <strong>The hidden component of "not yet".</strong> <em>Todavía no</em> implies <strong>expectation</strong>: the action hasn't happened, but is assumed to happen. That's why it sounds strange in contexts with no real expectation — <em>«todavía no soy astronauta»</em> only works if the speaker genuinely plans to become one someday.
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 3 — Ya: cuatro rostros del cambio
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>ya</code> — los cuatro rostros del cambio</div>
+        <div class="card-title-en">FOUR FACES OF "ALREADY / NOW / NO LONGER"</div>
+      </div>
+    </div>
+    <p class="gloss"><em>Ya</em> es polifacético, pero todos sus usos comparten una misma lógica: <strong>algo ya no es como era antes</strong>. La pregunta para identificar cuál de los cuatro usos aplica: <em>¿qué cambió, y cuándo cambió?</em></p>
+
+    <!-- Variant 1: ya completado -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/ya-completado.webp" alt="Línea de tiempo con un círculo verde lleno y un checkmark en el pasado, claramente a la izquierda de AHORA, etiquetado YA — una acción completada antes del momento presente.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">"Already" · acción completada en el pasado</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya</strong> leí ese libro.</div>
+            <div class="example-en">I already read that book.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant 2: ya inmediato -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/ya-inmediato.webp" alt="Línea de tiempo con un estallido amarillo radiante sobre la línea AHORA, y una barra verde que arranca exactamente en ese punto — acción que comienza en este mismo instante.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">"Right now" · acción inmediata</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¡Voy <strong>ya</strong>!</div>
+            <div class="example-en">I'm going right now!</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant 3: ya cognitivo (signature) -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/ya-cognitivo.webp" alt="Línea de tiempo dividida en dos zonas por AHORA: a la izquierda una barra gris apagada etiquetada 'no entendía', un foco amarillo en AHORA, y a la derecha una barra verde brillante etiquetada 'entiendo' — la transición de un estado cognitivo al otro.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Cambio cognitivo · "now I get it"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya</strong> entiendo.</div>
+            <div class="example-en">Now I understand. <em>(Implies: I didn't a moment ago — the lightbulb just turned on.)</em></div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral" style="margin-top: 12px;">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya</strong> sé qué hacer.</div>
+            <div class="example-en">Now I know what to do.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant 4: ya no -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/ya-no.webp" alt="Línea de tiempo con una barra verde que existe en el pasado y termina abruptamente con un marcador coral antes de AHORA; el espacio desde ese punto hasta el futuro está vacío — un estado que cesó.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense"><em>ya no</em> · "anymore / no longer"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya no</strong> vivo ahí.</div>
+            <div class="example-en">I don't live there anymore.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota" style="margin-top: 14px;">
+      <span class="nota-label">NOTA*</span>
+      <strong>The common thread.</strong> Look at the four timelines above — they all share one feature: there is a <em>before</em> and an <em>after</em>, and they differ. That's the signature of <em>ya</em>. When you hear it, ask <em>«what changed?»</em> — the answer is always there.
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 4 — Traducir "yet"
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Traducir <code>yet</code></div>
+        <div class="card-title-en">QUESTION VS. NEGATION — TWO STRUCTURES</div>
+      </div>
+    </div>
+    <p class="gloss">La misma palabra inglesa, dos estructuras españolas. En <strong>preguntas</strong>, "yet" se traduce con <em>ya</em>. En <strong>negaciones</strong>, se traduce con <em>todavía no</em>. Mismo "yet", caminos opuestos.</p>
+
+    <figure class="summary-figure">
+      <img src="../assets/ya-todavia-aun/yet-matrix.webp" alt="Dos líneas de tiempo apiladas. La de arriba, etiquetada PREGUNTA → YA, muestra un signo de pregunta sobre AHORA con una flecha curva que apunta hacia una forma punteada en el pasado. La de abajo, etiquetada NEGACIÓN → TODAVÍA NO, muestra pasado y AHORA vacíos con una forma esperada en el futuro.">
+      <div class="summary-caption">Una sola palabra inglesa, dos estructuras españolas distintas según el tipo de oración. Clic para ampliar.</div>
+    </figure>
+
+    <div class="variant">
+      <div class="variant-content-col">
+        <span class="tense">Pregunta · "yet" → <em>ya</em></span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<strong>Ya</strong> almorzaste?</div>
+            <div class="example-en">Have you had lunch yet?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-content-col">
+        <span class="tense">Negación · "yet" → <em>todavía no</em></span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">No, <strong>todavía no</strong> almorcé.</div>
+            <div class="example-en">No, I haven't had lunch yet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="compact-pair">
+      <div class="col">
+        <div class="col-label">Pregunta</div>
+        <div class="col-es">¿<strong style="color: var(--accent);">Ya</strong> llegó tu hermana?</div>
+        <div class="col-en">Has your sister arrived yet?</div>
+      </div>
+      <div class="col">
+        <div class="col-label">Negación</div>
+        <div class="col-es"><strong style="color: var(--accent);">Todavía no</strong> llegó.</div>
+        <div class="col-en">She hasn't arrived yet.</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 5 — Los dos negativos
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-epsilon">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Los dos negativos: <code>todavía no</code> vs. <code>ya no</code></div>
+        <div class="card-title-en">OPPOSITE TEMPORAL LOGICS</div>
+      </div>
+    </div>
+    <p class="gloss">Ambas formas son negativas, pero apuntan en <strong>direcciones opuestas en el tiempo</strong>. <em>Todavía no</em>: la acción <strong>aún no ocurrió</strong> — pero se espera que ocurra. <em>Ya no</em>: la acción <strong>ya no ocurre</strong> — pero ocurría antes. Es el contraste más subestimado de este tema.</p>
+
+    <figure class="summary-figure">
+      <img src="../assets/ya-todavia-aun/negativos-contraste.webp" alt="Dos líneas de tiempo apiladas. La de arriba, TODAVÍA NO — aún no ocurrió pero se espera, muestra pasado y AHORA vacíos con una forma punteada esperada en el futuro. La de abajo, YA NO — ocurría antes ahora cesó, muestra una barra verde en el pasado que termina con un marcador coral antes de AHORA, dejando el futuro vacío.">
+      <div class="summary-caption">La misma negación, dos tiempos opuestos: lo que aún no llegó arriba, lo que ya se fue abajo. Clic para ampliar.</div>
+    </figure>
+
+    <div class="variant">
+      <div class="variant-content-col">
+        <span class="tense"><em>todavía no</em> · aún no ocurrió, pero se espera</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Todavía no</strong> llegó mi pedido.</div>
+            <div class="example-en">My order hasn't arrived yet. <em>(But I expect it to.)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-content-col">
+        <span class="tense"><em>ya no</em> · ocurría antes, ahora cesó</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya no</strong> me llegan paquetes.</div>
+            <div class="example-en">Packages don't arrive for me anymore. <em>(They used to.)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota" style="margin-top: 14px;">
+      <span class="nota-label">NOTA*</span>
+      <strong>Mental trick.</strong> <em>Todavía no</em> looks <strong>forward</strong>: an unfulfilled expectation. <em>Ya no</em> looks <strong>backward</strong>: a habit or state that ended. The negation is the same word; the adverb it pairs with sets the direction in time.
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 6 — Usos extendidos de ya
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-zeta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Usos extendidos de <code>ya</code></div>
+        <div class="card-title-en">REASSURANCE · INTENSIFIED IMMEDIACY</div>
+      </div>
+    </div>
+    <p class="gloss">Dos giros idiomáticos que extienden el sentido temporal básico de <em>ya</em>. El primero suaviza el futuro hacia algo tranquilizador («en su momento»); el segundo intensifica el ahora hasta volverlo casi exclamativo.</p>
+
+    <!-- Variant 1: ya + futuro -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/ya-futuro.webp" alt="Línea de tiempo con una forma suave y redondeada en color teal apagado situada en la parte futura, conectada a AHORA por una flecha confiada, con un reloj de arena pequeño cerca — algo que llegará a su debido tiempo.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense"><em>ya</em> + futuro · tranquilización</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya</strong> veremos.</div>
+            <div class="example-en">We'll see. <em>(In due time — no rush, no commitment.)</em></div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral" style="margin-top: 12px;">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya</strong> te vas a acostumbrar.</div>
+            <div class="example-en">You'll get used to it. <em>(Reassurance — give it time.)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Variant 2: ya mismo -->
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/ya-mismo.webp" alt="Línea de tiempo con la marca AHORA mucho más gruesa y prominente de lo habitual, un estallido amarillo intenso sobre ella, y múltiples líneas de movimiento convergiendo desde todos los lados — la inmediatez del momento intensificada.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense"><em>ya mismo</em> · inmediatez intensificada</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya mismo</strong> voy.</div>
+            <div class="example-en">I'm going right this second.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 7 — Ya que: cuando ya no es temporal
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-eta">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>ya que</code> — cuando <em>ya</em> no es temporal</div>
+        <div class="card-title-en">CAUSAL CONJUNCTION — "SINCE" / "GIVEN THAT"</div>
+      </div>
+    </div>
+    <p class="gloss">Mismas letras, función totalmente distinta. Aquí <em>ya que</em> es una <strong>conjunción causal</strong> equivalente a <em>puesto que / dado que</em>. No hay nada temporal en juego — por eso la imagen abandona la línea de tiempo: el concepto no la necesita.</p>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/ya-que.webp" alt="Diagrama de flujo horizontal en lugar de línea de tiempo: dos cajas rectangulares conectadas por una flecha con la etiqueta YA QUE destacada en amarillo, indicando que se trata de un uso causal, no temporal.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Causal · "since" / "given that"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya que</strong> estamos acá, vayamos al café.</div>
+            <div class="example-en">Since we're here, let's go to the café.</div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral" style="margin-top: 12px;">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Ya que</strong> insistes, te acompaño.</div>
+            <div class="example-en">Since you insist, I'll come with you.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota" style="margin-top: 14px;">
+      <span class="nota-label">NOTA*</span>
+      <strong>Surface trap.</strong> Same letters, completely different job. The clue: <em>ya que</em> introduces a reason <strong>both speakers already accept</strong> — not «because I just discovered this», but «given that we already know this, let's move on». The temporal sense of <em>ya</em> does peek through underneath: what is taken for granted is <em>already</em> known.
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 8 — Aún vs. aun (la trampa ortográfica)
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-theta">
+    <div class="card-header">
+      <div class="card-number">⑧</div>
+      <div class="card-title-group">
+        <div class="card-title">Una tilde, dos palabras: <code>aún</code> vs. <code>aun</code></div>
+        <div class="card-title-en">THE ACCENT IS NOT OPTIONAL</div>
+      </div>
+    </div>
+    <p class="gloss">La <strong>presencia o ausencia</strong> de la tilde cambia totalmente la palabra. <em>Aún</em> (con tilde) es sinónimo de <em>todavía</em>: temporal. <em>Aun</em> (sin tilde) significa <em>incluso</em>: aditivo o concesivo. No es una variante ortográfica — son dos palabras diferentes que comparten letras.</p>
+
+    <figure class="summary-figure">
+      <img src="../assets/ya-todavia-aun/tilde-trampa.webp" alt="Dos paneles lado a lado divididos por una línea vertical. Panel izquierdo: una mini línea de tiempo con un reloj pequeño y el encabezado AÚN = TODAVÍA (temporal), con la tilde sobre la U destacada en amarillo. Panel derecho: un mini diagrama de conjuntos y el encabezado AUN = INCLUSO (aditivo), con la ausencia de tilde marcada por un símbolo de tilde tachada. En el divisor central, una tilde aislada a la izquierda y una tilde tachada a la derecha.">
+      <div class="summary-caption">Una sola tilde es la única diferencia visible entre dos palabras distintas. Clic para ampliar.</div>
+    </figure>
+
+    <div class="variant">
+      <div class="variant-content-col">
+        <span class="tense"><em>aún</em> (con tilde) · temporal = <em>todavía</em></span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Aún</strong> tengo la intención de ir.</div>
+            <div class="example-en">I still intend to go.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/ya-todavia-aun/aun-incluso.webp" alt="Diagrama de conjuntos en lugar de línea de tiempo. Un círculo grande etiquetado 'personas que se equivocan' contiene varios puntos pequeños etiquetados 'novatos', 'estudiantes', 'profesionales'. Un punto destacado en amarillo etiquetado 'expertos' tiene una flecha que apunta hacia él desde fuera del círculo, con una burbuja de diálogo que dice '¡incluso!'.">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense"><em>aun</em> (sin tilde) · aditivo = <em>incluso</em></span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Aun</strong> los expertos se equivocan.</div>
+            <div class="example-en">Even experts make mistakes.</div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral" style="margin-top: 12px;">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Aun</strong> así, no me convence.</div>
+            <div class="example-en">Even so, I'm not convinced. <em>(Concessive — fixed expression "aun así".)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota" style="margin-top: 14px;">
+      <span class="nota-label">NOTA*</span>
+      <strong>Quick test.</strong> If you can replace the word with <em>todavía</em> without changing the meaning, it takes the accent (<em>aún</em>). If you can replace it with <em>incluso</em>, no accent (<em>aun</em>). Pronunciation gives no clue — the distinction is <strong>only on paper</strong>.
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       RIOPLATENSE CARD — standalone callout
+  ═════════════════════════════════════ -->
+  <article class="grammar-card rio-card">
+    <div class="card-header">
+      <div class="card-number">⚐</div>
+      <div class="card-title-group">
+        <div class="card-title">Nota rioplatense</div>
+        <div class="card-title-en">REGIONAL VARIANTS — RÍO DE LA PLATA</div>
+      </div>
+    </div>
+    <p class="gloss">Dos puntos donde el español del Río de la Plata se distingue del neutro latinoamericano en este tema: una preferencia de tiempo verbal en construcciones con <em>todavía no</em>, y un puñado de expresiones fijas con <em>ya</em> que conviene reconocer al oído.</p>
+
+    <!-- Tense preference -->
+    <div class="rio-section">
+      <div class="rio-heading">Preferencia de tiempo · <em>pretérito</em> en lugar del compuesto</div>
+      <div class="rio-blurb">
+        En construcciones negativas con <em>todavía no</em>, el rioplatense prefiere el <strong>pretérito simple</strong> donde el español peninsular usaría el <strong>pretérito perfecto compuesto</strong>. En el español neutro latinoamericano las dos formas coexisten; en el rioplatense el simple domina sin competencia.
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">Rioplatense · pretérito simple</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><strong>Todavía no comí.</strong></div>
+              <div class="example-en">I haven't eaten yet.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">Peninsular · perfecto compuesto</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><strong>Todavía no he comido.</strong></div>
+              <div class="example-en">I haven't eaten yet. <em>(Same meaning, different tense.)</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixed expressions -->
+    <div class="rio-section">
+      <div class="rio-heading">Expresiones fijas con <em>ya</em></div>
+      <div class="rio-blurb">
+        Cinco fórmulas conversacionales que el oído entrenado registra como rioplatenses casi al instante. Todas son neutrales en el habla del Río de la Plata; algunas se cruzan con otras regiones, pero el conjunto suena distintivo.
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">«ya está»</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><strong>Ya está</strong>, no te preocupes.</div>
+              <div class="example-en">It's done / It's fine — don't worry. <em>(Closes a topic.)</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">«ya fue»</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><strong>Ya fue</strong>, no vale la pena.</div>
+              <div class="example-en">Forget it / let it go — it's not worth it. <em>(Resigned dismissal.)</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">«desde ya»</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><strong>Desde ya</strong> te agradezco.</div>
+              <div class="example-en">I thank you in advance. <em>(Formal courtesy formula.)</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">«dale ya»</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><strong>Dale ya</strong>, que se hace tarde.</div>
+              <div class="example-en">Come on, hurry — it's getting late.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">«¡ya!»</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">— ¿Listo? — <strong>¡Ya!</strong></div>
+              <div class="example-en">— Ready? — Done! / Right now! <em>(One-word confirmation.)</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only
+//  Per project memory (2026-05-22): default to
+//  neutral LatAm voice; do not use es-AR even when
+//  rioplatense text appears on the page, since
+//  those sentences are grammatical in neutral too.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Image magnification (click to zoom)
+//  Mirrors the pattern from Geometria_vueltas.html.
+//  One image magnified at a time; scrolling or
+//  clicking elsewhere resets zoom.
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.variant-figure img, .summary-figure img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (activeImage) {
+      activeImage.classList.remove('magnified');
+      activeImage = null;
+    }
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) {
+        img.classList.remove('magnified');
+        activeImage = null;
+      } else {
+        resetZoom();
+        img.classList.add('magnified');
+        activeImage = img;
+      }
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+});
+</script>
+
+</body>
+</html>

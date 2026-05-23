@@ -24,13 +24,14 @@
   --yellow:         #fbbf24;
   --red:            #f87171;
 
-  /* Per-card accent palette (6 cards) */
+  /* Per-card accent palette (7 cards) */
   --accent-alpha:   #4a90d9;  /* card 1 — blue       */
   --accent-beta:    #c084fc;  /* card 2 — violet     */
   --accent-gamma:   #fbbf24;  /* card 3 — gold       */
   --accent-delta:   #4ecdc4;  /* card 4 — teal       */
   --accent-epsilon: #f472b6;  /* card 5 — rose       */
   --accent-zeta:    #34d399;  /* card 6 — green      */
+  --accent-eta:     #fb923c;  /* card 7 — orange     */
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -194,12 +195,14 @@ body {
 .card-delta    { border-left-color: var(--accent-delta); }
 .card-epsilon  { border-left-color: var(--accent-epsilon); }
 .card-zeta     { border-left-color: var(--accent-zeta); }
+.card-eta      { border-left-color: var(--accent-eta); }
 .card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
 .card-beta    .card-number { color: var(--accent-beta);    opacity: 0.75; }
 .card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
 .card-delta   .card-number { color: var(--accent-delta);   opacity: 0.75; }
 .card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
 .card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
 
 .card-header {
   display: flex;
@@ -278,6 +281,105 @@ body {
 @media (max-width: 640px) {
   .variant-figure img { transform-origin: center center; }
   .variant-figure img.magnified { transform: scale(1.8); }
+}
+
+/* ── Summary figure (Card 7 large image) ── */
+.summary-figure {
+  margin: 18px auto 14px;
+  max-width: 560px;
+}
+.summary-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transform-origin: center center;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.summary-figure img.magnified {
+  transform: scale(1.5);
+  z-index: 50;
+  cursor: zoom-out;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.55);
+  border-color: var(--accent);
+}
+.summary-figure .summary-caption {
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ── Symmetry table (Card 7) ── */
+.symmetry-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0 6px;
+  font-size: 0.88rem;
+}
+.symmetry-table th,
+.symmetry-table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border: 1px solid rgba(74, 144, 217, 0.18);
+}
+.symmetry-table thead th {
+  background: rgba(74, 144, 217, 0.12);
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.symmetry-table tbody th {
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.82rem;
+  width: 130px;
+}
+.symmetry-table td {
+  background: transparent;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.symmetry-table td code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--accent);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.86em;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+.symmetry-table td .es {
+  color: var(--text-primary);
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  display: block;
+  margin: 4px 0 2px;
+  font-size: 0.98em;
+}
+.symmetry-table td .en {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.86em;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .symmetry-table { font-size: 0.78rem; }
+  .symmetry-table th,
+  .symmetry-table td { padding: 8px 8px; }
+  .symmetry-table tbody th { width: auto; }
 }
 
 /* ── Tense badge ── */
@@ -919,47 +1021,108 @@ body {
   </article>
 
   <!-- ═════════════════════════════════════
-       QUICK MAP
+       CARD 7 — hacía + pluscuamperfecto
+       (Completes the symmetry — past-anchor parallel of Card 2)
   ═════════════════════════════════════ -->
-  <section class="reference">
-    <h3>Quick map</h3>
-    <div class="ref-row">
-      <span class="what">"For" (ongoing) — verb before time</span>
-      <span class="tense-label">desde hace + presente</span>
+  <article class="grammar-card card-eta">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>hacía + pluscuamperfecto</code></div>
+        <div class="card-title-en">"AGO" FROM A PAST ANCHOR — COMPLETING THE SYMMETRY</div>
+      </div>
     </div>
-    <div class="ref-row">
-      <span class="what">"For" (ongoing) — time before verb</span>
-      <span class="tense-label">hace … que + presente</span>
+
+    <p class="gloss">
+      The past-anchored mirror of Card 2. Just as <code>hace + pretérito</code> points to a moment behind <em>now</em>, <code>hacía + pluscuamperfecto</code> points to a moment behind a <em>past anchor</em>. This card completes the full system — every other construction on this page is one of its four quadrants.
+    </p>
+
+    <!-- Symmetry NOTA with table -->
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Watch the symmetry now click into place.</strong> The <em>tense of</em> <code>hacer</code> sets the anchor (now vs past moment). The <em>tense of the main verb</em> sets the meaning (punctual = "ago", ongoing = "for"). Two axes, four quadrants — every <em>hace/hacía</em> construction on this page lives in one of these cells.
+
+      <table class="symmetry-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Anchor = now</th>
+            <th>Anchor = past moment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Point in past<br>("ago")</th>
+            <td>
+              <code>hace + pretérito</code>
+              <span class="es">Murió hace un año.</span>
+              <span class="en">"She died one year ago."</span>
+            </td>
+            <td>
+              <code>hacía + pluscuamperfecto</code>
+              <span class="es">Había muerto hacía un año.</span>
+              <span class="en">"She had died one year earlier."</span>
+            </td>
+          </tr>
+          <tr>
+            <th>Duration<br>("for")</th>
+            <td>
+              <code>(desde) hace + presente</code>
+              <span class="es">Vivo aquí (desde) hace dos años.</span>
+              <span class="en">"I've lived here for 2 years."</span>
+            </td>
+            <td>
+              <code>(desde) hacía + imperfecto</code>
+              <span class="es">Vivía allí (desde) hacía dos años.</span>
+              <span class="en">"I had been living there for 2 years."</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+<p style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(74, 144, 217, 0.18); font-size: 0.9em;">
+        <strong>Footnote — Spain.</strong> In peninsular Spanish, <code>hace + pretérito perfecto compuesto</code> often replaces <code>hace + pretérito</code> for recent past events: <em>He llegado hace cinco minutos</em> ("I arrived five minutes ago"). It functions identically to the pretérito version — completion of the event is what triggers the "ago" reading, and the present perfect is just another way Spanish flags completion. In neutral Latin American Spanish, the pretérito form (<em>Llegué hace cinco minutos</em>) is overwhelmingly preferred.
+      </p>
     </div>
-    <div class="ref-row">
-      <span class="what">"For" (ongoing) — spoken / colloquial</span>
-      <span class="tense-label">llevar + tiempo + gerundio</span>
+
+    <!-- Big summary image — visualizes all four quadrants -->
+    <figure class="summary-figure">
+      <img src="../assets/desde-c7-symmetry.webp" alt="Diagrama resumen de las cuatro construcciones — arriba la fila puntual (murió hace un año / había muerto hacía un año) con motivo de figura humana y ataúd pequeño; abajo la fila durativa (vivo aquí desde hace dos años / vivía allí desde hacía dos años) con motivo de figura y casita. Cada cuadrante muestra una línea de tiempo con su ancla correspondiente.">
+      <div class="summary-caption">Las cuatro construcciones lado a lado — arriba, el evento puntual («ago» / «X earlier»); abajo, la duración («for» / «had been for»). Clic para ampliar.</div>
+    </figure>
+
+    <!-- Example variants -->
+    <div class="variant">
+      <div class="variant-content-col">
+        <span class="tense">Pluscuamperfecto · "X earlier" from a past anchor</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Cuando llegué a su casa, su esposa <strong>había muerto hacía un año</strong>.</div>
+            <div class="example-en">When I arrived at his house, his wife had died one year earlier.</div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="ref-row">
-      <span class="what">"Had been ___ for" (past ongoing)</span>
-      <span class="tense-label">desde hacía / hacía … que + imperfecto</span>
+
+    <div class="variant">
+      <div class="variant-content-col">
+        <span class="tense">Pluscuamperfecto · otro ejemplo</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">En 2020, me <strong>había comido una manzana hacía dos años</strong>.</div>
+            <div class="example-en">In 2020, I had eaten an apple two years earlier. <em>(The eating sits in 2018, two years before the 2020 anchor.)</em></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="ref-row">
-      <span class="what">"Ago" (completed past)</span>
-      <span class="tense-label">hace + tiempo + pretérito</span>
+
+    <!-- Closing register note -->
+    <div class="nota" style="margin-top: 14px;">
+      <span class="nota-label">NOTA*</span>
+      <strong>Register.</strong> <code>pluscuamperfecto + hacía</code> is most common in narrative prose and formal speech. In everyday conversation, speakers often restructure with <em>dos años antes</em> instead: <em>se había mudado dos años antes</em>. Both are correct — Spanish gives you the choice, the way English offers "two years earlier" or "before that".
     </div>
-    <div class="ref-row">
-      <span class="what">"Haven't ___ for" (negative ongoing)</span>
-      <span class="tense-label">no + presente + desde hace</span>
-    </div>
-    <div class="ref-row">
-      <span class="what">"Haven't ___ for" (spoken)</span>
-      <span class="tense-label">llevar + tiempo + sin + infinitivo</span>
-    </div>
-    <div class="ref-row">
-      <span class="what">Since [event] — linking clause</span>
-      <span class="tense-label">desde que + pretérito / imperfecto</span>
-    </div>
-    <div class="ref-row">
-      <span class="what">Bounded past period — <em>not</em> desde</span>
-      <span class="tense-label">durante / por / Ø + pretérito</span>
-    </div>
-  </section>
+  </article>
 
 </div>
 
@@ -1064,7 +1227,7 @@ async function speakExample(btn) {
 //  clicking elsewhere resets zoom.
 // ═══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
-  const images = document.querySelectorAll('.variant-figure img');
+  const images = document.querySelectorAll('.variant-figure img, .summary-figure img');
   let activeImage = null;
 
   const resetZoom = () => {

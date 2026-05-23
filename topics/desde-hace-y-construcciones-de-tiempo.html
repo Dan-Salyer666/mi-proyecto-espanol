@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desde, Hace y Construcciones de Tiempo — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accent palette (6 cards) */
+  --accent-alpha:   #4a90d9;  /* card 1 — blue       */
+  --accent-beta:    #c084fc;  /* card 2 — violet     */
+  --accent-gamma:   #fbbf24;  /* card 3 — gold       */
+  --accent-delta:   #4ecdc4;  /* card 4 — teal       */
+  --accent-epsilon: #f472b6;  /* card 5 — rose       */
+  --accent-zeta:    #34d399;  /* card 6 — green      */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (alhambra) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.55);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 22px;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em {
+  font-style: italic;
+  color: var(--accent);
+}
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks (mental hooks) ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Grammar card ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha    { border-left-color: var(--accent-alpha); }
+.card-beta     { border-left-color: var(--accent-beta); }
+.card-gamma    { border-left-color: var(--accent-gamma); }
+.card-delta    { border-left-color: var(--accent-delta); }
+.card-epsilon  { border-left-color: var(--accent-epsilon); }
+.card-zeta     { border-left-color: var(--accent-zeta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--accent);
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.92em;
+  font-weight: 500;
+}
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+.gloss {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  font-style: italic;
+  margin: 10px 0 16px;
+  line-height: 1.5;
+}
+.gloss em { color: var(--accent); font-style: italic; }
+.gloss strong { color: var(--text-primary); font-weight: 600; font-style: normal; }
+
+/* ── Card image (one per variant) ── */
+.variant-figure {
+  margin: 0 0 8px;
+  max-width: 280px;
+}
+.variant-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transform-origin: left center;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.variant-figure img.magnified {
+  transform: scale(2.0);
+  z-index: 50;
+  cursor: zoom-out;
+  box-shadow: 8px 8px 28px rgba(0, 0, 0, 0.55);
+  border-color: var(--accent);
+}
+@media (max-width: 640px) {
+  .variant-figure img { transform-origin: center center; }
+  .variant-figure img.magnified { transform: scale(1.8); }
+}
+
+/* ── Tense badge ── */
+.tense {
+  display: inline-block;
+  background: rgba(74, 144, 217, 0.12);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.tense.rare {
+  background: rgba(248, 113, 113, 0.12);
+  color: var(--red);
+}
+
+/* ── Variant block ── */
+.variant {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+}
+.variant:last-child { border-bottom: none; }
+.variant-image-col { flex: 0 0 200px; }
+.variant-content-col { flex: 1; min-width: 0; }
+
+@media (max-width: 640px) {
+  .variant { flex-direction: column; gap: 10px; }
+  .variant-image-col { flex: 0 0 auto; max-width: 220px; }
+  .variant-figure { max-width: 220px; }
+}
+
+/* ── Example row (speak button + body) ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 4px;
+}
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.speak-btn.playing {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+/* ── Rioplatense sub-section inside card 3 ── */
+.rio-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(20, 184, 166, 0.35);
+}
+.rio-section .rio-heading {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #5eead4;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 6px;
+}
+.rio-section .rio-heading em { color: #99f6e4; font-style: italic; }
+.rio-section .rio-blurb {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.rio-tag {
+  display: inline-block;
+  background: rgba(20, 184, 166, 0.12);
+  color: #5eead4;
+  font-size: 0.7rem;
+  font-weight: 500;
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.rio-section .example-es strong { color: #5eead4; }
+
+/* ── Quick map reference card ── */
+.reference {
+  background: rgba(74, 144, 217, 0.04);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  padding: 22px 26px 20px;
+  margin-top: 22px;
+}
+.reference h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.ref-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+  font-size: 0.9rem;
+  align-items: center;
+}
+.ref-row:last-child { border-bottom: none; }
+.ref-row .what { color: var(--text-primary); }
+.ref-row .what em { color: var(--accent); font-style: italic; }
+.ref-row .tense-label {
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  text-align: right;
+  letter-spacing: 0.01em;
+}
+
+@media (max-width: 640px) {
+  .ref-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+  .ref-row .tense-label { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <a href="../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Construcciones de Tiempo</div>
+    <h1><em>Desde</em>, <em>hace</em> y construcciones de tiempo</h1>
+    <p class="subtitle">Las seis formas principales de expresar duración, inicio y "hace tanto" en español neutral latinoamericano.</p>
+  </header>
+
+  <!-- Rate bar -->
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- Mental hook NOTA #1 -->
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong>Mental hook · tense.</strong> For ongoing duration, Spanish uses the <em>presente</em> where English uses the present perfect. Shift to the <em>imperfecto</em> (and <code>hace → hacía</code>) for the past parallel — "had been ___ for".
+  </div>
+
+  <!-- Mental hook NOTA #2 -->
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong>Mental hook · structure.</strong> <em>desde</em> marks where something <em>begins</em>; the main clause extends to the reference moment — usually now, sometimes a past anchor. For closed, bounded periods, use <code>durante / por / Ø</code> instead.
+  </div>
+
+  <!-- ═════════════════════════════════════
+       CARD 1 — desde
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>desde</code></div>
+        <div class="card-title-en">"SINCE" — A STARTING POINT</div>
+      </div>
+    </div>
+    <p class="gloss">Marks a <strong>specific starting point</strong> in time. The main clause extends from that point to now (or to a past anchor).</p>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c1-presente.webp" alt="Desde + presente: starting point continuing to now">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Presente</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Vivo aquí <strong>desde 2020</strong>.</div>
+            <div class="example-en">I have lived here since 2020.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c1-imperfecto.webp" alt="Desde + imperfecto: starting point continuing to a past anchor">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Imperfecto · past ongoing</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Vivía allí <strong>desde 2010</strong> cuando lo conocí.</div>
+            <div class="example-en">I had been living there since 2010 when I met him.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 2 — hace + tiempo + pretérito
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>hace + tiempo + pretérito</code></div>
+        <div class="card-title-en">"AGO" — COMPLETED PAST EVENT</div>
+      </div>
+    </div>
+    <p class="gloss">"<em>ago</em>" — a single, completed past event. For closed, bounded periods of past activity, use <code>durante / por / Ø</code> instead.</p>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c2-ago.webp" alt="Hace + tiempo + pretérito: a completed past event at a fixed distance in the past">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Pretérito · tiempo primero</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Hace dos años</strong> viajé a España.</div>
+            <div class="example-en">Two years ago I traveled to Spain.</div>
+          </div>
+        </div>
+
+        <span class="tense" style="margin-top:10px;">Pretérito · tiempo al final</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Viajé a España <strong>hace dos años</strong>.</div>
+            <div class="example-en">I traveled to Spain two years ago.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 3 — desde hace
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>desde hace</code></div>
+        <div class="card-title-en">"FOR" — ONGOING DURATION</div>
+      </div>
+    </div>
+    <p class="gloss">"<em>for</em>" with ongoing duration. The verb comes <strong>before</strong> the time phrase.</p>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c3-presente.webp" alt="Desde hace + presente: ongoing duration extending into the present">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Presente</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Vivo aquí <strong>desde hace dos años</strong>.</div>
+            <div class="example-en">I have lived here for two years.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c3-imperfecto.webp" alt="Desde hacía + imperfecto: had been doing something for a duration in the past">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Imperfecto · "had been ___ for"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Vivía allí <strong>desde hacía dos años</strong>.</div>
+            <div class="example-en">I had been living there for two years.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c3-negativo.webp" alt="No + presente + desde hace: haven't done something for a duration">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Negativo · "haven't ___ for"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">No la veo <strong>desde hace tres meses</strong>.</div>
+            <div class="example-en">I haven't seen her in three months.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rioplatense informal variant (no separate audio — neutral voice) -->
+    <div class="rio-section">
+      <div class="rio-heading">Variante rioplatense · drop <em>desde</em> (informal)</div>
+      <div class="rio-blurb">
+        En el español del Río de la Plata, es muy común eliminar <em>desde</em> y dejar solo <em>hace</em> + tiempo en estas mismas estructuras. Es informal pero está totalmente aceptado en el habla cotidiana.
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">Negativo · más común</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">No la veo <strong>hace tres meses</strong>.</div>
+              <div class="example-en">I haven't seen her in three months.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">Presente</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">Vivo aquí <strong>hace dos años</strong>.</div>
+              <div class="example-en">I have lived here for two years.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="variant">
+        <div class="variant-content-col">
+          <span class="rio-tag">Imperfecto · menos común</span>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">Vivía allí <strong>hacía dos años</strong>.</div>
+              <div class="example-en">I had been living there for two years.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 4 — hace … que
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>hace … que</code></div>
+        <div class="card-title-en">TIME FIRST, THEN VERB</div>
+      </div>
+    </div>
+    <p class="gloss">El tiempo viene <strong>antes</strong> del verbo. The meaning depends on the tense after <em>que</em>: presente = "for", imperfecto = "had been ___ for", pretérito = "ago".</p>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c4-presente.webp" alt="Hace + tiempo + que + presente: ongoing duration extending to now">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Presente · "for" (ongoing)</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Hace dos años que</strong> vivo aquí.</div>
+            <div class="example-en">I have lived here for two years.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c4-imperfecto.webp" alt="Hacía + tiempo + que + imperfecto: had been doing something for a duration at a past anchor">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Imperfecto · "had been ___ for"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Hacía dos años que</strong> vivía allí.</div>
+            <div class="example-en">I had been living there for two years.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c4-preterito.webp" alt="Hace + tiempo + que + pretérito: a completed past event at a fixed distance">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Pretérito · "ago"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Hace dos años que</strong> viajé a España.</div>
+            <div class="example-en">Two years ago I traveled to Spain.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c4-negativo.webp" alt="Hace + tiempo + que + no + presente: haven't done something for a duration">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Negativo · "haven't ___ for"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Hace tres meses que</strong> no la veo.</div>
+            <div class="example-en">I haven't seen her in three months.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 5 — desde que
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-epsilon">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>desde que</code></div>
+        <div class="card-title-en">"SINCE [EVENT]" — LINKING CLAUSE</div>
+      </div>
+    </div>
+    <p class="gloss"><em>desde que + cláusula</em> = <strong>starting point</strong>. The main clause extends from that event to the reference moment. The tense <em>after</em> desde que depends on the kind of event.</p>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c5-preterito.webp" alt="Desde que + pretérito: a specific past event marking the starting point of a continuing state">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Pretérito · specific past event</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Desde que llegué</strong>, no he dormido bien.</div>
+            <div class="example-en">Since I arrived, I haven't slept well.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c5-imperfecto.webp" alt="Desde que + imperfecto: a habitual or ongoing past state as the starting point">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Imperfecto · habitual / ongoing past state</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Desde que era niño</strong>, me gusta el chocolate.</div>
+            <div class="example-en">Ever since I was a child, I've liked chocolate.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c5-subjuntivo.webp" alt="Desde que + subjuntivo: a future-trigger construction that is rare in modern usage">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense rare">Subjuntivo · raro</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Desde que llegue</strong>, te aviso.</div>
+            <div class="example-en">The moment he arrives, I'll let you know.</div>
+          </div>
+        </div>
+
+        <div class="nota" style="margin: 10px 0 0;">
+          <span class="nota-label">NOTA*</span>
+          <strong>Use sparingly.</strong> <em>desde que + subjuntivo</em> for future triggers is grammatically valid but uncommon. Native speakers almost always prefer <code>en cuanto</code> or <code>tan pronto como</code> + subjuntivo for this meaning:
+          <br><br>
+          <em>En cuanto llegue, te aviso.</em> &nbsp;·&nbsp; <em>Tan pronto como llegue, te aviso.</em>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       CARD 6 — llevar + gerundio
+  ═════════════════════════════════════ -->
+  <article class="grammar-card card-zeta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>llevar + tiempo + gerundio</code></div>
+        <div class="card-title-en">SPOKEN EQUIVALENT OF <em>DESDE HACE</em></div>
+      </div>
+    </div>
+    <p class="gloss">In everyday speech, <em>llevar + tiempo + gerundio</em> often replaces <em>desde hace</em>. The subject of <em>llevar</em> is the person, and the time amount sits between <em>llevar</em> and the gerund. For the negative, use <em>llevar + tiempo + sin + infinitivo</em>.</p>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c6-presente.webp" alt="Llevar + tiempo + gerundio: an action ongoing for a duration up to now">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Presente · "have been ___ for"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Llevo dos años</strong> viviendo aquí.</div>
+            <div class="example-en">I have been living here for two years. <em>(= Vivo aquí desde hace dos años.)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c6-imperfecto.webp" alt="Llevaba + tiempo + gerundio: had been doing something for a duration at a past anchor">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Imperfecto · "had been ___ for"</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Llevaba dos años</strong> viviendo allí.</div>
+            <div class="example-en">I had been living there for two years. <em>(= Vivía allí desde hacía dos años.)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="variant">
+      <div class="variant-image-col">
+        <figure class="variant-figure">
+          <img src="../assets/desde-c6-sin.webp" alt="Llevar + tiempo + sin + infinitivo: haven't done something for a duration">
+        </figure>
+      </div>
+      <div class="variant-content-col">
+        <span class="tense">Negativo · <em>sin</em> + infinitivo</span>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><strong>Llevo tres meses</strong> sin verla.</div>
+            <div class="example-en">I haven't seen her for three months. <em>(= No la veo desde hace tres meses.)</em></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ═════════════════════════════════════
+       QUICK MAP
+  ═════════════════════════════════════ -->
+  <section class="reference">
+    <h3>Quick map</h3>
+    <div class="ref-row">
+      <span class="what">"For" (ongoing) — verb before time</span>
+      <span class="tense-label">desde hace + presente</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">"For" (ongoing) — time before verb</span>
+      <span class="tense-label">hace … que + presente</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">"For" (ongoing) — spoken / colloquial</span>
+      <span class="tense-label">llevar + tiempo + gerundio</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">"Had been ___ for" (past ongoing)</span>
+      <span class="tense-label">desde hacía / hacía … que + imperfecto</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">"Ago" (completed past)</span>
+      <span class="tense-label">hace + tiempo + pretérito</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">"Haven't ___ for" (negative ongoing)</span>
+      <span class="tense-label">no + presente + desde hace</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">"Haven't ___ for" (spoken)</span>
+      <span class="tense-label">llevar + tiempo + sin + infinitivo</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">Since [event] — linking clause</span>
+      <span class="tense-label">desde que + pretérito / imperfecto</span>
+    </div>
+    <div class="ref-row">
+      <span class="what">Bounded past period — <em>not</em> desde</span>
+      <span class="tense-label">durante / por / Ø + pretérito</span>
+    </div>
+  </section>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only
+//  Per project memory (2026-05-22): default to
+//  neutral LatAm voice; do not use es-AR even when
+//  rioplatense text appears on the page, since
+//  those sentences are grammatical in neutral too.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Image magnification (click to zoom)
+//  Mirrors the pattern from Geometria_vueltas.html.
+//  One image magnified at a time; scrolling or
+//  clicking elsewhere resets zoom.
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.variant-figure img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (activeImage) {
+      activeImage.classList.remove('magnified');
+      activeImage = null;
+    }
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) {
+        img.classList.remove('magnified');
+        activeImage = null;
+      } else {
+        resetZoom();
+        img.classList.add('magnified');
+        activeImage = img;
+      }
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+});
+</script>
+
+</body>
+</html>

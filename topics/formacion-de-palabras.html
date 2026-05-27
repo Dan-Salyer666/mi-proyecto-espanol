@@ -1,0 +1,2322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formación de Palabras — Prefijos y Sufijos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  /* Trio 4 + delta — Blue / Violet / Gold / Teal */
+  --accent-alpha:   #4a90d9;  /* cards 1, 5, 9   — blue   */
+  --accent-beta:    #c084fc;  /* cards 2, 6, 10  — violet */
+  --accent-gamma:   #fbbf24;  /* cards 3, 7, 11  — gold   */
+  --accent-delta:   #4ecdc4;  /* cards 4, 8, 12  — teal   */
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  padding: 32px 16px 80px;
+  position: relative;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+/* Background pattern — Option C, eight-point stars */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M30,5 L35,25 L55,30 L35,35 L30,55 L25,35 L5,30 L25,25 Z'/><circle cx='30' cy='30' r='3'/></svg>");
+  background-size: 60px 60px;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.back-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back-nav:hover { color: var(--accent); }
+
+/* Title card */
+.title-card {
+  text-align: center;
+  padding: 44px 24px 48px;
+  margin-bottom: 28px;
+  background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5.5vw, 3.2rem);
+  font-weight: normal;
+  line-height: 1.05;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 20px auto 10px;
+  color: var(--accent);
+  opacity: 0.65;
+  max-width: 280px;
+}
+.ornament::before, .ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.ornament-symbol { font-size: 1.1rem; }
+.title-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  font-style: italic;
+}
+
+/* Cheat-sheet badge */
+.cheat-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 14px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  color: #fcd34d;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cheat-badge:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+/* Intro prose */
+.intro-prose {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: -8px 4px 22px;
+  padding: 0 6px;
+}
+.intro-prose strong { color: var(--text-primary); font-weight: 600; }
+.intro-prose em     { color: var(--accent); font-style: italic; }
+
+/* Rate bar */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* NOTA boxes */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota.nota-expanded { padding: 18px 22px; }
+.nota.nota-expanded p { margin: 8px 0; }
+.nota.nota-expanded p:first-of-type { margin-top: 4px; }
+.nota.nota-expanded h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 14px 0 6px;
+}
+.nota.nota-expanded h4:first-of-type { margin-top: 8px; }
+.nota.nota-expanded ul {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 8px;
+}
+.nota.nota-expanded ul li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+}
+.nota.nota-expanded ul li::before {
+  content: '›';
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em     { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Goals callout — variant NOTA */
+.nota.nota-goals {
+  background: rgba(78, 205, 196, 0.07);
+  border-left-color: var(--accent-delta);
+}
+.nota.nota-goals .nota-label { color: var(--accent-delta); }
+.nota.nota-goals ul li::before { color: var(--accent-delta); }
+
+/* Grammar cards */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 28px 28px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+
+.card-alpha    { border-left-color: var(--accent-alpha); }
+.card-beta     { border-left-color: var(--accent-beta); }
+.card-gamma    { border-left-color: var(--accent-gamma); }
+.card-delta    { border-left-color: var(--accent-delta); }
+
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+.formula {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 14px 0 16px;
+}
+
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+.explanation em     { color: var(--text-primary); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+/* Subsection heading within a card */
+.card-subsection {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--text-muted);
+  margin: 18px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Example row + speaker */
+.examples-block { margin: 14px 0 8px; }
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:last-child { border-bottom: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es .hl { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+.example-en em { color: var(--text-secondary); font-style: normal; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.speak-btn.playing {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+/* Regional badges */
+.reg-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+.reg-badge.reg-rio  { background: rgba(255, 159, 28, 0.15); color: #ffb066; border: 1px solid rgba(255, 159, 28, 0.3); }
+.reg-badge.reg-esp  { background: rgba(192, 132, 252, 0.15); color: #d0a8ff; border: 1px solid rgba(192, 132, 252, 0.3); }
+.reg-badge.reg-mx   { background: rgba(78, 205, 196, 0.15); color: #7be3db; border: 1px solid rgba(78, 205, 196, 0.3); }
+.reg-badge.reg-car  { background: rgba(251, 191, 36, 0.15); color: #fcd34d; border: 1px solid rgba(251, 191, 36, 0.3); }
+
+/* Inline reference tables inside NOTAs */
+.nota .ref-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 4px;
+  font-size: 0.9rem;
+}
+.nota .ref-table th {
+  text-align: left;
+  background: rgba(0,0,0,0.25);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+}
+.nota .ref-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+  color: var(--text-secondary);
+}
+.nota .ref-table tr:last-child td { border-bottom: none; }
+.nota .ref-table em {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+  color: var(--text-primary);
+  font-style: italic;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active {
+  display: flex;
+  opacity: 1;
+  animation: cheatFadeIn 0.3s forwards;
+}
+@keyframes cheatFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 820px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+
+.modal-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: var(--accent); }
+
+.modal-body {
+  padding: 26px 28px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.modal-body > p {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.modal-body h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin: 22px 0 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-body h3:first-of-type { margin-top: 6px; }
+
+.table-wrapper {
+  overflow-x: auto;
+  margin: 6px 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  text-align: left;
+}
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  font-weight: 600;
+}
+.table-wrapper td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td:first-child {
+  font-family: 'DM Serif Display', serif;
+  color: var(--accent);
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .title-card        { padding: 32px 18px 36px; }
+  .grammar-card      { padding: 22px 20px 18px; }
+  .nota              { padding: 14px 16px; }
+  .nota.nota-expanded{ padding: 16px 18px; }
+  .rate-bar          { padding: 8px 10px; }
+  .cheat-badge       { position: static; display: inline-block; margin-top: 16px; }
+  .card-title        { font-size: 1.35rem; }
+  .modal-body        { padding: 20px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <div class="overline">Referencia Gramatical</div>
+    <h1>Formación de Palabras</h1>
+    <div class="ornament"><span class="ornament-symbol">✦</span></div>
+    <div class="title-subtitle">Prefijos y sufijos: cómo se construye el vocabulario en español</div>
+    <button class="cheat-badge" onclick="openCheat()">⚡ Guía Rápida</button>
+  </header>
+
+  <p class="intro-prose">
+    Hace poco escuché <em>Amiguito</em> como nombre del gato de un amigo y no entendí de inmediato lo que la persona decía. Es exactamente el caso que esta página existe para resolver: <strong>amigo</strong> + el sufijo diminutivo <strong>-ito</strong> = <em>amiguito</em>. El significado literal es «amigo pequeño», pero el sentido real está más cerca de «compañerito», «buddy», «pal». El sufijo no solo encoge — abraza. Esta página recoge, en un solo lugar, los prefijos y sufijos más productivos del español y lo que significan cuando se enganchan a una raíz.
+  </p>
+
+  <div class="nota nota-goals nota-expanded">
+    <span class="nota-label">GOALS*</span>
+    <p>After reading this page, you should be able to:</p>
+    <ul>
+      <li><strong>Decode</strong> — hear or read a word containing an affix, scan to the right card, and pin down both its meaning and its likely base word.</li>
+      <li><strong>Form</strong> — take a base word and confidently build the diminutive, superlative, adverb, opposite, agent noun, or whatever you need — including the orthographic adjustments that come along.</li>
+    </ul>
+    <p>And, as a third soft goal: <strong>the <em>Amiguito</em> moment doesn't happen again.</strong> Use the ⚡ Guía Rápida button up top for fast lookups when you don't need the full explanation.</p>
+  </div>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       SUFIJOS — Cards 1 through 7
+       ═══════════════════════════════════════════════ -->
+
+  <!-- ① DIMINUTIVOS -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Diminutivos</div>
+        <div class="card-title-en">Diminutives — size, affection, nuance</div>
+      </div>
+    </div>
+
+    <code class="formula">raíz + -ito · -cito · -ecito · -illo · -ico · -ín</code>
+
+    <p class="explanation">
+      El sufijo diminutivo es el más productivo del español y también el más cariñoso. Su trabajo principal no siempre es <em>encoger</em> la cosa: un <em>cafecito</em> no necesariamente es un café pequeño, puede ser una invitación, una pausa, un gesto. <em>Amiguito</em> aplicado a un gato no significa «amigo en miniatura» — es una forma de cariño. El sentido literal (tamaño) y el connotativo (afecto, suavización, ironía) conviven en cada uso, y casi siempre el contexto inclina la balanza.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ese gato se llama <span class="hl">Amiguito</span>.</div>
+          <div class="example-en">That cat is named <em>Amiguito</em> ('little buddy'). <em>— amigo + -ito, the ancestor example of this page.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Quieres un <span class="hl">cafecito</span>?</div>
+          <div class="example-en">Want a (little) coffee? <em>— invitation, not literally smaller.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Espera <span class="hl">un momentito</span>.</div>
+          <div class="example-en">Wait just a moment. <em>— softening the request.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Voy a llamar a mi <span class="hl">abuelita</span>.</div>
+          <div class="example-en">I'm going to call my grandma. <em>— affection, not size.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¡Qué <span class="hl">perrito</span> tan lindo!</div>
+          <div class="example-en">What a cute (little) doggy!</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo una <span class="hl">casita</span> en la playa.</div>
+          <div class="example-en">I have a little house at the beach. <em>— modest size + affection together.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ven <span class="hl">despacito</span>, hijita.</div>
+          <div class="example-en">Come slowly, sweetheart. <em>— adverbial diminutive: despacio → despacito, even gentler.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Un <span class="hl">poquito</span> de sal, por favor.</div>
+          <div class="example-en">A little bit of salt, please. <em>— adverbial / quantifier diminutive.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Carlitos</span>, vení a cenar. <span class="reg-badge reg-rio">Rioplatense</span></div>
+          <div class="example-en">Carlitos, come to dinner. <em>— Rioplatense diminutive on a proper name; voseo verb. Carlos → Carlitos.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Esperá un <span class="hl">ratico</span>, ya voy. <span class="reg-badge reg-car">Caribe/Colombia</span></div>
+          <div class="example-en">Wait a little while, I'm coming. <em>— Caribbean/Colombian -ico variant of -ito (ratito).</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Choosing the right diminutive ending.</strong> Spanish picks between three variants based on the shape of the base word — there's a system, even if it feels arbitrary at first.</p>
+      <h4>Selection rule</h4>
+      <ul>
+        <li><strong>-ito / -ita</strong> is the default. Use it for words ending in unstressed <em>-o</em> or <em>-a</em>: <em>casa → casita</em>, <em>perro → perrito</em>, <em>libro → librito</em>, <em>amiga → amiguita</em>.</li>
+        <li><strong>-cito / -cita</strong> attaches when the base ends in <em>-e</em>, <em>-n</em>, or <em>-r</em>, and on multi-syllable words ending in a stressed vowel: <em>hombre → hombrecito</em>, <em>joven → jovencito</em>, <em>mujer → mujercita</em>, <em>café → cafecito</em>.</li>
+        <li><strong>-ecito / -ecita</strong> attaches to one-syllable words and to words containing the diphthongs <em>ie</em> or <em>ue</em>: <em>pan → panecito</em>, <em>flor → florecita</em>, <em>viejo → viejecito</em>, <em>nuevo → nuevecito</em>.</li>
+      </ul>
+      <h4>Spelling adjustments that come along</h4>
+      <p>Three consonant changes show up to preserve the original pronunciation when the diminutive vowel <em>i</em> arrives:</p>
+      <ul>
+        <li><code>c → qu</code> before <em>i</em>: <em>chico → chiquito</em>, <em>poco → poquito</em>, <em>rico → riquísimo</em>. Without the <em>qu</em>, the /k/ would soften to /s/.</li>
+        <li><code>g → gu</code> before <em>i</em>: <em>amigo → amiguito</em>, <em>lago → laguito</em>, <em>fuego → fueguito</em>. The <em>u</em> keeps the /g/ hard.</li>
+        <li><code>z → c</code> before <em>i</em>: <em>luz → lucecita</em>, <em>voz → vocecita</em>, <em>pez → pececito</em>. Spanish never writes <em>zi</em> at the start of a syllable.</li>
+      </ul>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Diminutives aren't just about size.</strong> The size meaning is the literal anchor, but most everyday uses lean on the affective layer.</p>
+      <ul>
+        <li><strong>Affection</strong> — <em>mi amorcito</em>, <em>abuelita</em>, <em>hijita</em>. The ending warms up the noun the way English does with "dear-" or "little-".</li>
+        <li><strong>Politeness / softening</strong> — <em>un momentito</em>, <em>una preguntita</em>, <em>un favorcito</em>. Asking for a "small" version of a thing feels less demanding than asking for the full thing, even when the request is identical.</li>
+        <li><strong>Endearing the inanimate</strong> — <em>un cafecito</em>, <em>un vinito</em>, <em>mi cochecito</em>. The diminutive signals familiarity and warmth with the object itself.</li>
+        <li><strong>Irony or condescension</strong> — <em>qué listillo</em> ('what a smart-ass'), <em>bonito problema</em> said sarcastically. The diminutive carries the edge.</li>
+      </ul>
+      <p>When you hear <em>Amiguito</em> as a cat's name, it's the second and third category running together: affection plus familiarity. Most cats are already small; the suffix isn't reporting that fact, it's expressing the relationship.</p>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Regional diminutive variants.</strong> <em>-ito</em> is the pan-Spanish default and works everywhere, but several regions favor their own characteristic suffix:</p>
+      <ul>
+        <li><strong>-ico / -ica</strong> — Caribbean (Cuba, Venezuela, Dominican Republic), Costa Rica, parts of Colombia, and traditionally Aragón in Spain. <em>Un momentico</em>, <em>ahorica</em>, <em>ratico</em>. In Caribbean Spanish, <em>-ico</em> often alternates with <em>-ito</em> by phonetic context, frequently winning after a <em>t</em>: <em>ratito → ratico</em>, <em>gatito → gatico</em>.</li>
+        <li><strong>-illo / -illa</strong> — strongly associated with Andalusia and parts of Latin America. Less affectionate than <em>-ito</em>; sometimes carries a faintly pejorative tone (<em>un hombrecillo</em> = "a little man" in a slightly dismissive sense). Compare <em>casilla</em> ('small slot, box') with <em>casita</em> ('cute little house').</li>
+        <li><strong>-ín / -ina</strong> — Asturias and León in northern Spain, influenced by the Asturian language. <em>Pequeñín</em>, <em>guapín</em>.</li>
+        <li><strong>-uco / -uca</strong> — Cantabria, also northern Spain.</li>
+      </ul>
+      <p>Rioplatense Spanish uses <em>-ito</em> as its default and applies it heavily to names (<em>Carlitos</em>, <em>Juancito</em>, <em>Pablito</em>, <em>Susanita</em>). Voseo doesn't change the diminutive pattern.</p>
+    </div>
+  </article>
+
+  <!-- ② AUMENTATIVOS Y PEYORATIVOS -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Aumentativos y Peyorativos</div>
+        <div class="card-title-en">Augmentatives — size, impact, edge</div>
+      </div>
+    </div>
+
+    <code class="formula">raíz + -ón · -azo · -ote · -ucho · -aco</code>
+
+    <p class="explanation">
+      Los aumentativos hacen lo opuesto al diminutivo, al menos en la superficie: agrandan. Pero en español el aumentativo casi siempre arrastra una <em>actitud</em> — admiración, sorpresa, burla, desprecio. Y el sufijo <em>-azo</em>, además de tamaño, tiene una segunda vida útil: significa también «golpe con X» (<em>codazo</em>, <em>balazo</em>) y, en registro más coloquial, «gran logro» (<em>golazo</em>, <em>exitazo</em>). Los sufijos peyorativos puros (<em>-ucho</em>, <em>-aco</em>) son más directos: hacen las cosas feas.
+    </p>
+
+    <div class="card-subsection">Aumentativos clásicos</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un <span class="hl">hombrón</span> de dos metros.</div>
+          <div class="example-en">He's a huge man, two meters tall. <em>— hombre + -ón.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tiene un <span class="hl">librote</span> en la mesa.</div>
+          <div class="example-en">He's got a big (chunky) book on the table. <em>— libro + -ote, often slightly negative.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un <span class="hl">llorón</span>, llora por todo.</div>
+          <div class="example-en">He's a crybaby, he cries about everything. <em>— -ón as "person prone to X".</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Mi tío es muy <span class="hl">comilón</span>.</div>
+          <div class="example-en">My uncle is a big eater. <em>— comer + -ón.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¡Qué <span class="hl">bocaza</span>! Cuenta todo.</div>
+          <div class="example-en">What a big mouth! He tells everything. <em>— boca + -aza, pejorative.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-subsection">El sufijo -azo en sus tres vidas</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me dio un <span class="hl">codazo</span> en las costillas.</div>
+          <div class="example-en">He gave me an elbow (a jab with the elbow) in the ribs. <em>— "blow with X" sense.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Se escuchó un <span class="hl">balazo</span> a lo lejos.</div>
+          <div class="example-en">A gunshot was heard in the distance. <em>— bala + -azo.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Salió y cerró con un <span class="hl">portazo</span>.</div>
+          <div class="example-en">He left and slammed the door. <em>— puerta + -azo.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¡Metió un <span class="hl">golazo</span> en el último minuto!</div>
+          <div class="example-en">He scored a brilliant goal in the last minute! <em>— gol + -azo, "great X" sense.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La película fue un <span class="hl">exitazo</span>.</div>
+          <div class="example-en">The movie was a huge hit. <em>— éxito + -azo, "great X" sense.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-subsection">Peyorativos puros</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vivían en una <span class="hl">casucha</span> al borde del camino.</div>
+          <div class="example-en">They lived in a shabby shack at the edge of the road. <em>— casa + -ucha.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Cargaba un <span class="hl">libraco</span> enorme y feo.</div>
+          <div class="example-en">He was lugging around a big ugly tome. <em>— libro + -aco, pejorative.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Un <span class="hl">pajarraco</span> negro nos miraba desde el árbol.</div>
+          <div class="example-en">An ugly black bird was watching us from the tree. <em>— pájaro + -aco.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>The three lives of <em>-azo</em>.</strong> No other suffix carries three meanings this cleanly — it's worth knowing all of them because context usually picks effortlessly between the three.</p>
+      <table class="ref-table">
+        <thead><tr><th>Sense</th><th>Pattern</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td>Augmentative (size)</td><td>thing + <em>-azo</em> = big version</td><td><em>perrazo</em>, <em>manaza</em>, <em>cochazo</em></td></tr>
+          <tr><td>Blow / strike with X</td><td>weapon-or-body-part + <em>-azo</em></td><td><em>codazo</em>, <em>puñetazo</em>, <em>balazo</em>, <em>portazo</em>, <em>cabezazo</em>, <em>rodillazo</em>, <em>manotazo</em></td></tr>
+          <tr><td>Great achievement / event</td><td>noun + <em>-azo</em> = "a great X"</td><td><em>golazo</em>, <em>exitazo</em>, <em>bombazo</em>, <em>pelotazo</em>, <em>discurso → discursazo</em></td></tr>
+        </tbody>
+      </table>
+      <p>The "great achievement" sense is especially productive in Latin American sports and news commentary — almost any noun can take it for emphasis.</p>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Augmentatives carry pejorative weight by default.</strong> Where English "big-" or "huge-" is neutral, Spanish augmentatives almost always editorialize. <em>Una mujerona</em> is not just "a big woman" — it implies imposing, intimidating, or unfeminine. <em>Un hombrón</em> can be admiring (huge guy) or threatening (oversized brute), and context picks. The exception is the achievement sense of <em>-azo</em>, which leans positive (<em>golazo</em>, <em>exitazo</em>). When in doubt, augmentatives are <em>marked</em> — they tell you something beyond the size.
+    </div>
+  </article>
+
+  <!-- ③ SUPERLATIVO ABSOLUTO -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">El Superlativo Absoluto</div>
+        <div class="card-title-en">-ísimo — very, extremely</div>
+      </div>
+    </div>
+
+    <code class="formula">raíz del adjetivo + -ísimo / -ísima</code>
+
+    <p class="explanation">
+      El sufijo <em>-ísimo</em> es la manera más natural de decir «muy X» o «extremadamente X» en español. Se forma quitando la vocal final del adjetivo y añadiendo <em>-ísimo</em> (o <em>-ísima</em> en femenino). Lleva tilde obligatoria sobre la <em>í</em>. Es muy productivo: prácticamente cualquier adjetivo lo admite, y también algunos cuantificadores (<em>muchísimo</em>, <em>poquísimo</em>) y, en uso coloquial, hasta sustantivos (<em>amigísimo</em>).
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El examen fue <span class="hl">dificilísimo</span>.</div>
+          <div class="example-en">The exam was extremely hard. <em>— difícil → dificilísimo (the tilde of difícil drops since the new accent is on í).</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La comida estaba <span class="hl">riquísima</span>.</div>
+          <div class="example-en">The food was incredibly delicious. <em>— rico → riquísima (c → qu).</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un viaje <span class="hl">larguísimo</span>.</div>
+          <div class="example-en">It's an extremely long trip. <em>— largo → larguísimo (g → gu).</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Estoy <span class="hl">felicísimo</span> con la noticia.</div>
+          <div class="example-en">I'm extremely happy with the news. <em>— feliz → felicísimo (z → c).</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es una catedral <span class="hl">antiquísima</span>.</div>
+          <div class="example-en">It's an extremely old cathedral. <em>— antiguo → antiquísimo (irregular).</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">muchísima</span> hambre.</div>
+          <div class="example-en">I'm extremely hungry. <em>— mucho → muchísimo, cuantificador.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La película fue <span class="hl">malísima</span>.</div>
+          <div class="example-en">The movie was awful. <em>— malo → malísimo, the colloquial irregular.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Orthographic changes when forming <em>-ísimo</em>.</strong> The three sound-preserving spelling rules from the diminutive section come back — same logic, same letters.</p>
+      <table class="ref-table">
+        <thead><tr><th>Change</th><th>Base → Superlative</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td><code>c → qu</code></td><td><em>rico → riquísimo</em>, <em>blanco → blanquísimo</em>, <em>fresco → fresquísimo</em></td><td>Keeps the /k/ sound</td></tr>
+          <tr><td><code>g → gu</code></td><td><em>largo → larguísimo</em>, <em>vago → vaguísimo</em>, <em>amargo → amarguísimo</em></td><td>Keeps the hard /g/</td></tr>
+          <tr><td><code>z → c</code></td><td><em>feliz → felicísimo</em>, <em>audaz → audacísimo</em>, <em>voraz → voracísimo</em></td><td>Spanish doesn't spell <em>zi</em></td></tr>
+          <tr><td>drop existing tilde</td><td><em>difícil → dificilísimo</em>, <em>rápido → rapidísimo</em>, <em>fácil → facilísimo</em></td><td>The new tilde on <em>í</em> takes over</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Absolute vs relative superlative.</strong> <em>-ísimo</em> is the <em>absolute</em> superlative — "very/extremely X" with no point of comparison. It's not the same as the <em>relative</em> superlative <em>el/la más X</em>, which does compare. <em>Esta casa es grandísima</em> = "this house is very big". <em>Esta casa es la más grande</em> = "this house is the biggest". Two different operations, and English collapses them both into "-est" sometimes, which is what trips learners up.
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Cultos vs. colloquial irregulars.</strong> A handful of adjectives have two superlatives — a Latin-derived formal form, and the regular <em>-ísimo</em> formation that's far more common in speech. Both are correct; the choice is one of register.</p>
+      <table class="ref-table">
+        <thead><tr><th>Base</th><th>Culto (formal)</th><th>Colloquial</th></tr></thead>
+        <tbody>
+          <tr><td><em>bueno</em></td><td><em>óptimo</em></td><td><em>buenísimo</em></td></tr>
+          <tr><td><em>malo</em></td><td><em>pésimo</em></td><td><em>malísimo</em></td></tr>
+          <tr><td><em>grande</em></td><td><em>máximo</em></td><td><em>grandísimo</em></td></tr>
+          <tr><td><em>pequeño</em></td><td><em>mínimo</em></td><td><em>pequeñísimo</em> / <em>chiquitísimo</em></td></tr>
+          <tr><td><em>alto</em></td><td><em>supremo</em></td><td><em>altísimo</em></td></tr>
+          <tr><td><em>bajo</em></td><td><em>ínfimo</em></td><td><em>bajísimo</em></td></tr>
+          <tr><td><em>fuerte</em></td><td>—</td><td><em>fortísimo</em> (note <em>o → ue</em> reversion)</td></tr>
+          <tr><td><em>antiguo</em></td><td>—</td><td><em>antiquísimo</em> (Latinizing form)</td></tr>
+          <tr><td><em>amable</em></td><td>—</td><td><em>amabilísimo</em> (Latin stem comes back)</td></tr>
+          <tr><td><em>noble</em></td><td>—</td><td><em>nobilísimo</em></td></tr>
+        </tbody>
+      </table>
+      <p>In speech, the colloquial column wins almost everywhere. The cultos forms (<em>óptimo</em>, <em>pésimo</em>, <em>mínimo</em>, <em>máximo</em>) survive in formal writing, journalism, and idiomatic phrases ("en óptimas condiciones", "lo mínimo indispensable") and aren't just dressy synonyms — they often imply a fixed best/worst rather than a graded "very good/bad".</p>
+    </div>
+  </article>
+
+  <!-- ④ ADVERBIOS EN -MENTE -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Adverbios en -mente</div>
+        <div class="card-title-en">Adverbs from adjectives</div>
+      </div>
+    </div>
+
+    <code class="formula">adjetivo (femenino singular) + -mente</code>
+
+    <p class="explanation">
+      Casi cualquier adjetivo puede convertirse en adverbio agregando <em>-mente</em> a su forma femenina singular: <em>rápida → rápidamente</em>, <em>clara → claramente</em>. Si el adjetivo no tiene variación de género (<em>fácil</em>, <em>feliz</em>, <em>amable</em>), simplemente se agrega <em>-mente</em>. Es la forma más productiva de crear adverbios en español, y los adverbios resultantes funcionan exactamente como sus equivalentes ingleses en <em>-ly</em>.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El cirujano operó <span class="hl">rápidamente</span>.</div>
+          <div class="example-en">The surgeon operated quickly. <em>— rápida + mente; tilde survives.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Habla <span class="hl">claramente</span>, por favor.</div>
+          <div class="example-en">Speak clearly, please.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo resolvieron <span class="hl">fácilmente</span>.</div>
+          <div class="example-en">They solved it easily. <em>— fácil + mente; the original tilde stays.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Caminó <span class="hl">lenta y silenciosamente</span>.</div>
+          <div class="example-en">She walked slowly and silently. <em>— two adverbs, only the last takes -mente.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Trabajó <span class="hl">rapidísimamente</span> esa noche.</div>
+          <div class="example-en">She worked extremely quickly that night. <em>— -ísimo + -mente stacked; valid Spanish.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vivimos <span class="hl">felizmente</span> en este pueblo.</div>
+          <div class="example-en">We live happily in this village. <em>— feliz has no gender; just add -mente.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Reaccionó <span class="hl">honesta, abierta y serenamente</span>.</div>
+          <div class="example-en">She reacted honestly, openly, and serenely. <em>— three coordinated adverbs, only the last carries -mente.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Formation and the surviving tilde.</strong> The mechanics in three points:</p>
+      <ul>
+        <li><strong>Use the feminine singular form</strong> of the adjective if it has one: <em>rápida + mente</em>, not <em>rápido + mente</em>. <em>Bueno → buenamente</em>, not <em>buenomente</em>.</li>
+        <li><strong>Add -mente directly</strong> to adjectives with no gender variation (those ending in <em>-e</em>, <em>-l</em>, <em>-z</em>, <em>-n</em>, etc.): <em>fácil → fácilmente</em>, <em>feliz → felizmente</em>, <em>amable → amablemente</em>.</li>
+        <li><strong>The original tilde is preserved</strong> on the adjective stem, even though the new word has two stressed syllables (one on the original vowel, one on <em>men</em>): <em>rápidamente</em>, <em>fácilmente</em>, <em>cómicamente</em>, <em>cortésmente</em>. This is unusual — Spanish normally has one stressed syllable per word — and is the one quirky rule about <em>-mente</em> adverbs to remember.</li>
+      </ul>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>The two-adverbs (or more) rule.</strong> When two or more <em>-mente</em> adverbs appear in a coordinated list with <em>y</em> / <em>e</em> / <em>o</em> / a comma, only the last one carries the <em>-mente</em> suffix. The previous adverbs keep their feminine adjective form. So: <em>clara y rápidamente</em>, never <em>claramente y rápidamente</em>. And with three: <em>lenta, profunda y silenciosamente</em>. The first adverbs look like adjectives but function as adverbs by virtue of the trailing <em>-mente</em> on the last one.
+    </div>
+  </article>
+
+  <!-- ⑤ SUFIJOS QUE FORMAN SUSTANTIVOS -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Sufijos que Forman Sustantivos</div>
+        <div class="card-title-en">Noun-forming suffixes</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Buena parte del vocabulario español se construye agregando un sufijo nominalizador a un verbo o a un adjetivo. <em>Construir</em> + <em>-ción</em> = <em>construcción</em>; <em>amargo</em> + <em>-ura</em> = <em>amargura</em>; <em>pan</em> + <em>-adero</em> = <em>panadero</em>. Saber qué hace cada terminación te permite intuir el significado de palabras nuevas: cuando ves un sufijo <em>-ería</em> al final, casi siempre se trata de un local o tienda; <em>-dor</em> casi siempre marca quien hace algo; <em>-ción</em> casi siempre nombra una acción o su resultado.
+    </p>
+
+    <div class="card-subsection">A partir de verbos — acción o resultado</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <span class="hl">construcción</span> empezó en marzo.</div>
+          <div class="example-en">Construction began in March. <em>— construir + -ción.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">movimiento</span> fue brusco.</div>
+          <div class="example-en">The movement was abrupt. <em>— mover + -miento.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">aprendizaje</span> requiere paciencia.</div>
+          <div class="example-en">Learning requires patience. <em>— aprender + -izaje.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Después del <span class="hl">lavado</span>, dejé la ropa al sol.</div>
+          <div class="example-en">After the wash, I left the clothes in the sun. <em>— lavar + -do.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">confianza</span> en él.</div>
+          <div class="example-en">I trust him. <em>— confiar + -nza.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-subsection">A partir de adjetivos — cualidad abstracta</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lucharon por su <span class="hl">libertad</span>.</div>
+          <div class="example-en">They fought for their freedom. <em>— libre + -tad.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <span class="hl">belleza</span> del paisaje me impresionó.</div>
+          <div class="example-en">The beauty of the landscape impressed me. <em>— bello + -eza.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <span class="hl">amargura</span> del café no me molesta.</div>
+          <div class="example-en">The bitterness of the coffee doesn't bother me. <em>— amargo + -ura.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Su <span class="hl">alegría</span> contagió a todos.</div>
+          <div class="example-en">Her joy was contagious. <em>— alegre + -ía.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Defiende el <span class="hl">realismo</span> en el arte.</div>
+          <div class="example-en">He defends realism in art. <em>— real + -ismo.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-subsection">Agentes y oficios</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">trabajador</span> llegó a las siete.</div>
+          <div class="example-en">The worker arrived at seven. <em>— trabajar + -dor.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">panadero</span> abre a las cinco.</div>
+          <div class="example-en">The baker opens at five. <em>— pan + -adero.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">taxista</span> conocía la ciudad perfectamente.</div>
+          <div class="example-en">The taxi driver knew the city perfectly. <em>— taxi + -ista.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">cantante</span> salió al escenario.</div>
+          <div class="example-en">The singer came out on stage. <em>— cantar + -ante.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-subsection">Lugar y contenedor</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Compré pan en la <span class="hl">panadería</span>.</div>
+          <div class="example-en">I bought bread at the bakery. <em>— pan + -adería; -ería marks a shop or location.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">basurero</span> está lleno.</div>
+          <div class="example-en">The trash can is full. <em>— basura + -ero; -ero/-era often marks containers and contained-spaces.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Necesito una <span class="hl">azucarera</span>.</div>
+          <div class="example-en">I need a sugar bowl. <em>— azúcar + -era; the -era variant for many containers.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Compraron un <span class="hl">acuario</span> nuevo.</div>
+          <div class="example-en">They bought a new aquarium. <em>— agua + -ario; -ario marks a place or collection (acuario, herbolario, herbario, planetario).</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Suffix-to-category quick map.</strong> If you can match a noun's tail to one of these buckets, you can usually intuit what kind of thing it names without ever looking it up. (See the Guía Rápida for a longer list.)</p>
+      <table class="ref-table">
+        <thead><tr><th>Suffix</th><th>What it names</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><em>-ción / -sión</em></td><td>action or its result (from verbs)</td><td><em>decisión</em>, <em>acción</em></td></tr>
+          <tr><td><em>-miento</em></td><td>action or process (from verbs)</td><td><em>movimiento</em>, <em>conocimiento</em></td></tr>
+          <tr><td><em>-aje</em></td><td>action, set, or fee (from verbs)</td><td><em>aprendizaje</em>, <em>viaje</em>, <em>kilometraje</em></td></tr>
+          <tr><td><em>-dad / -tad / -idad</em></td><td>abstract quality (from adjectives)</td><td><em>libertad</em>, <em>bondad</em>, <em>realidad</em></td></tr>
+          <tr><td><em>-ez / -eza</em></td><td>abstract quality (from adjectives)</td><td><em>vejez</em>, <em>belleza</em></td></tr>
+          <tr><td><em>-ura</em></td><td>quality or its result</td><td><em>amargura</em>, <em>escritura</em>, <em>dulzura</em></td></tr>
+          <tr><td><em>-ismo</em></td><td>doctrine, system, behavior</td><td><em>realismo</em>, <em>egoísmo</em>, <em>turismo</em></td></tr>
+          <tr><td><em>-ía</em></td><td>quality, state, or office</td><td><em>alegría</em>, <em>monarquía</em>, <em>tiranía</em></td></tr>
+          <tr><td><em>-dor / -dora</em></td><td>agent — person or device that does X</td><td><em>trabajador</em>, <em>computador</em>, <em>secador</em></td></tr>
+          <tr><td><em>-ero / -era</em></td><td>profession or container</td><td><em>panadero</em>, <em>azucarera</em>, <em>basurero</em></td></tr>
+          <tr><td><em>-ista</em></td><td>practitioner, often of an -ismo</td><td><em>taxista</em>, <em>dentista</em>, <em>realista</em></td></tr>
+          <tr><td><em>-ante / -iente</em></td><td>agent (from verb participles)</td><td><em>cantante</em>, <em>estudiante</em>, <em>viviente</em></td></tr>
+          <tr><td><em>-ería</em></td><td>shop, set of things, or activity</td><td><em>panadería</em>, <em>librería</em>, <em>tontería</em></td></tr>
+          <tr><td><em>-ario</em></td><td>place or collection</td><td><em>acuario</em>, <em>herbario</em>, <em>diccionario</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+  <!-- ⑥ SUFIJOS QUE FORMAN ADJETIVOS -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Sufijos que Forman Adjetivos</div>
+        <div class="card-title-en">Adjective-forming suffixes</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Estos sufijos toman un sustantivo (o, a veces, un verbo) y producen un adjetivo. Cada terminación tiene una pista de significado: <em>-oso</em> sugiere abundancia («lleno de X»); <em>-al</em> indica pertenencia o relación; <em>-ble</em> indica capacidad o potencial; <em>-ivo</em> indica tendencia. Conocer estos patrones convierte la lectura en algo más activo — uno puede deducir el significado aproximado de un adjetivo nuevo desde su tail.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es una comida <span class="hl">sabrosa</span>.</div>
+          <div class="example-en">It's a tasty dish. <em>— sabor + -osa; -oso/-osa = full of X.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Trabaja en una empresa <span class="hl">nacional</span>.</div>
+          <div class="example-en">He works at a national company. <em>— nación + -al = pertaining to.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hicieron un análisis <span class="hl">histórico</span> de los datos.</div>
+          <div class="example-en">They did a historical analysis of the data. <em>— historia + -ico.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un libro <span class="hl">inolvidable</span>.</div>
+          <div class="example-en">It's an unforgettable book. <em>— in- + olvidar + -able; "able to be X-ed" with negation.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es una persona muy <span class="hl">creativa</span>.</div>
+          <div class="example-en">She's a very creative person. <em>— crear + -tiva; -ivo/-iva = tendency or capacity.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Está <span class="hl">hambriento</span> después del partido.</div>
+          <div class="example-en">He's ravenous after the match. <em>— hambre + -iento; -ento/-iento = strongly characterized by.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El gato está <span class="hl">dormido</span> en el sofá.</div>
+          <div class="example-en">The cat is asleep on the couch. <em>— dormir + -ido; participio adjetival.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Conocí a una pareja <span class="hl">costarricense</span>.</div>
+          <div class="example-en">I met a Costa Rican couple. <em>— Costa Rica + -ense; gentilicio invariable in gender.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Two important quirks: <em>-ble</em> and <em>-ico</em>.</strong></p>
+      <h4>The capacity sense of <em>-ble</em></h4>
+      <p>The suffix <em>-ble</em> is the Spanish equivalent of English "-able / -ible". It carries a <strong>capacity</strong> or <strong>passive</strong> meaning: <em>comestible</em> = "that <em>can be eaten</em>", not just "edible food". <em>Inolvidable</em> = "that <em>cannot be forgotten</em>". <em>Amable</em> originally meant "lovable" but has drifted to mean "kind" (i.e. "easy to love"). Reading a <em>-ble</em> word as "able to be X-ed by someone" usually gets you to the right meaning faster than treating it as a fixed adjective.</p>
+      <h4>The ambiguity of <em>-ico</em></h4>
+      <p>Watch out: <em>-ico</em> wears two hats. As an <strong>adjective-forming suffix</strong> on a Latin/Greek noun, it makes adjectives meaning "pertaining to X" (<em>lógico</em>, <em>geográfico</em>, <em>científico</em>, <em>histórico</em>). As a <strong>regional diminutive</strong> in the Caribbean, Colombia, and Costa Rica, it shrinks/endears nouns (<em>momentico</em>, <em>ahorica</em>, <em>ratico</em>). Context picks effortlessly between them — one is rooted in scholarly nouns, the other in everyday speech. They rarely collide.</p>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Gentilicios — the place-of-origin adjective family.</strong> Spanish has roughly five productive suffixes for "person from X", and which one wins is largely conventional (and sometimes contested):</p>
+      <ul>
+        <li><em>-ano / -ana</em> — <em>mexicano</em>, <em>peruano</em>, <em>colombiano</em>, <em>italiano</em></li>
+        <li><em>-eño / -eña</em> — <em>salvadoreño</em>, <em>brasileño</em>, <em>limeño</em>, <em>madrileño</em></li>
+        <li><em>-ense</em> (invariable in gender) — <em>estadounidense</em>, <em>costarricense</em>, <em>bonaerense</em>, <em>canadiense</em></li>
+        <li><em>-í</em> (invariable, always with tilde) — <em>marroquí</em>, <em>iraní</em>, <em>israelí</em>, <em>iraquí</em>; plural usually <em>-íes</em></li>
+        <li><em>-ino / -ina</em> — <em>granadino</em>, <em>argentino</em>, <em>florentino</em>, <em>bilbaíno</em></li>
+      </ul>
+      <p>There's no rule for predicting which suffix attaches to which place — it's lexical. But the existence of the pattern means a new gentilicio you've never seen is still parseable.</p>
+    </div>
+  </article>
+
+  <!-- ⑦ SUFIJOS QUE FORMAN VERBOS -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title">Sufijos que Forman Verbos</div>
+        <div class="card-title-en">Verb-forming suffixes</div>
+      </div>
+    </div>
+
+    <code class="formula">raíz + -ear · -izar · -ificar · -ecer</code>
+
+    <p class="explanation">
+      Estos cuatro sufijos toman un sustantivo o un adjetivo y producen un verbo. Cada uno conserva un matiz: <em>-ear</em> es el más coloquial y el más productivo (es el responsable de la mayoría de los verbos nuevos que entran al español); <em>-izar</em> tiene aire técnico o formal («hacer que algo sea X»); <em>-ificar</em> sugiere causar o producir; <em>-ecer</em> describe un cambio gradual de estado.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me <span class="hl">golpeé</span> la rodilla contra la mesa.</div>
+          <div class="example-en">I banged my knee on the table. <em>— golpe + -ear.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vamos a <span class="hl">googlear</span> esa palabra.</div>
+          <div class="example-en">Let's google that word. <em>— Google + -ear; modern loanword via -ear.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Pasamos la noche <span class="hl">chateando</span>.</div>
+          <div class="example-en">We spent the night chatting (online). <em>— chat + -ear.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Logró <span class="hl">realizar</span> su sueño.</div>
+          <div class="example-en">She managed to fulfill her dream. <em>— real + -izar; "make it real".</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El gobierno decidió <span class="hl">privatizar</span> la empresa.</div>
+          <div class="example-en">The government decided to privatize the company. <em>— privado + -izar.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hay que <span class="hl">clasificar</span> los documentos.</div>
+          <div class="example-en">We have to classify the documents. <em>— clase + -ificar.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El cielo empezó a <span class="hl">oscurecer</span>.</div>
+          <div class="example-en">The sky started to darken. <em>— oscuro + -ecer; gradual change of state.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le voy a <span class="hl">agradecer</span> el favor.</div>
+          <div class="example-en">I'm going to thank him for the favor. <em>— gracia (a-) + -decer.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>-ear is the productive one — and the gateway for new verbs.</strong> Almost every verb that has entered Spanish in the last few decades has done so via <em>-ear</em>. The suffix attaches easily to nouns (often loanwords) and forms a regular <em>-ar</em> verb that conjugates without surprises:</p>
+      <ul>
+        <li><em>googlear</em>, <em>chatear</em>, <em>tuitear</em> (from Twitter), <em>postear</em> (post online), <em>likear</em> (Facebook "like"), <em>guglear</em> (alternative spelling)</li>
+        <li><em>formatear</em> a hard drive, <em>resetear</em> a router, <em>parsear</em> a string, <em>linkear</em> a page</li>
+        <li><em>faxear</em>, <em>escanear</em>, <em>cliquear</em> — older borrowings, same pattern</li>
+      </ul>
+      <p>If you encounter an unfamiliar verb ending in <em>-ear</em>, it's almost certainly built from a noun (probably modern) by this rule. Some <em>-ear</em> verbs go further back and behave the same way: <em>voz → vocear</em>, <em>color → colorear</em>, <em>parpadeo → parpadear</em>.</p>
+    </div>
+  </article>
+
+  <!-- ═══════════════════════════════════════════════
+       PREFIJOS — Cards 8 through 12
+       ═══════════════════════════════════════════════ -->
+
+  <!-- ⑧ PREFIJOS DE NEGACIÓN Y OPOSICIÓN -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">⑧</div>
+      <div class="card-title-group">
+        <div class="card-title">Prefijos de Negación y Oposición</div>
+        <div class="card-title-en">Negation & opposition</div>
+      </div>
+    </div>
+
+    <code class="formula">des- · in- (im-, ir-, i-) · a- · anti- · contra- + base</code>
+
+    <p class="explanation">
+      Los prefijos de negación niegan o invierten el significado de la base a la que se enganchan. <em>Des-</em> es el caballo de batalla del español: deshace verbos casi sin restricción (<em>hacer → deshacer</em>, <em>ordenar → desordenar</em>). <em>In-</em> niega adjetivos y muta su forma según la letra que sigue (<em>im-</em>, <em>ir-</em>, <em>il-</em>, <em>i-</em>). <em>A-</em> niega de manera más culta o técnica (<em>amoral</em>, <em>asocial</em>). <em>Anti-</em> y <em>contra-</em> expresan oposición activa, no solo ausencia.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tienes que <span class="hl">deshacer</span> el nudo.</div>
+          <div class="example-en">You have to undo the knot. <em>— des- + hacer.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un autor <span class="hl">desconocido</span> fuera de su país.</div>
+          <div class="example-en">He's an unknown author outside his country. <em>— des- + conocido.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es <span class="hl">imposible</span> entrar sin llave.</div>
+          <div class="example-en">It's impossible to get in without a key. <em>— in- → im- before p.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El verbo es <span class="hl">irregular</span>.</div>
+          <div class="example-en">The verb is irregular. <em>— in- → ir- before r.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Esa práctica es <span class="hl">ilegal</span>.</div>
+          <div class="example-en">That practice is illegal. <em>— in- → il- before l.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un caso <span class="hl">atípico</span>.</div>
+          <div class="example-en">It's an atypical case. <em>— a- before típico; privative.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es el típico <span class="hl">antihéroe</span> de la novela.</div>
+          <div class="example-en">He's the classic antihero of the novel. <em>— anti- + héroe.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No me gusta <span class="hl">contradecir</span> a mi madre.</div>
+          <div class="example-en">I don't like to contradict my mother. <em>— contra- + decir.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El equipo lanzó un <span class="hl">contraataque</span> fulminante.</div>
+          <div class="example-en">The team launched a devastating counterattack. <em>— contra- + ataque.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>The <em>in-</em> allomorphy rule and the <em>des-</em> super-power.</strong></p>
+      <h4>How <em>in-</em> changes shape</h4>
+      <p>The negation prefix <em>in-</em> assimilates to the first letter of the word it attaches to. Same prefix, different surface forms — a phenomenon called <em>allomorphy</em>.</p>
+      <table class="ref-table">
+        <thead><tr><th>Form</th><th>Before</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><em>im-</em></td><td>p, b, m</td><td><em>imposible</em>, <em>imborrable</em>, <em>improbable</em></td></tr>
+          <tr><td><em>ir-</em></td><td>r</td><td><em>irregular</em>, <em>irreal</em>, <em>irresponsable</em></td></tr>
+          <tr><td><em>il-</em></td><td>l</td><td><em>ilegal</em>, <em>ilógico</em>, <em>ilegible</em></td></tr>
+          <tr><td><em>in-</em></td><td>everywhere else</td><td><em>incapaz</em>, <em>incorrecto</em>, <em>infeliz</em></td></tr>
+        </tbody>
+      </table>
+      <h4>Why <em>des-</em> is the workhorse</h4>
+      <p>Where English needs to choose between "un-", "dis-", "de-", and "non-", Spanish has <em>des-</em> doing nearly all of it for verbs. <em>Des-</em> attaches to almost any action verb to express undoing, reversal, or removal: <em>hacer → deshacer</em>, <em>ordenar → desordenar</em>, <em>aparecer → desaparecer</em>, <em>cubrir → descubrir</em>, <em>cargar → descargar</em>, <em>conectar → desconectar</em>, <em>congelar → descongelar</em>, <em>vestir → desvestir</em>, <em>armar → desarmar</em>. If you can think of a Spanish verb and the action could plausibly be undone, the <em>des-</em> form usually exists.</p>
+    </div>
+  </article>
+
+  <!-- ⑨ PREFIJOS DE REPETICIÓN E INTENSIFICACIÓN -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">⑨</div>
+      <div class="card-title-group">
+        <div class="card-title">Prefijos de Repetición e Intensificación</div>
+        <div class="card-title-en">Repetition & intensifiers</div>
+      </div>
+    </div>
+
+    <code class="formula">re- · requete- · archi- · super- · hiper- · mega- + base</code>
+
+    <p class="explanation">
+      Un grupo de prefijos hace dos cosas conectadas: indica que la acción se repite (<em>rehacer</em> = «hacer otra vez»), o subraya que algo es extremo en su categoría (<em>rebueno</em> = «buenísimo, muy bueno»). El prefijo <em>re-</em> hace ambos trabajos según el contexto. Los demás (<em>requete-</em>, <em>archi-</em>, <em>super-</em>, <em>hiper-</em>, <em>mega-</em>) son intensificadores puros, en registros que van del coloquial al periodístico.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo que <span class="hl">rehacer</span> el informe.</div>
+          <div class="example-en">I have to redo the report. <em>— re- + hacer; repetition sense.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Voy a <span class="hl">releer</span> ese capítulo.</div>
+          <div class="example-en">I'm going to re-read that chapter. <em>— re- + leer.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El café está <span class="hl">rebueno</span>.</div>
+          <div class="example-en">The coffee is really good. <em>— re- as intensifier; very LatAm colloquial.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¡Está <span class="hl">requeteguapa</span> hoy!</div>
+          <div class="example-en">She looks ridiculously gorgeous today! <em>— requete- = strong colloquial intensifier.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un actor <span class="hl">archifamoso</span>.</div>
+          <div class="example-en">He's an extremely famous actor. <em>— archi- as intensifier, more bookish than super-.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es su <span class="hl">archienemigo</span> de siempre.</div>
+          <div class="example-en">He's his archenemy from way back. <em>— archi- + enemigo.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es <span class="hl">superinteligente</span>.</div>
+          <div class="example-en">He's super smart. <em>— super- as everyday intensifier, especially in Spain.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Anunciaron un <span class="hl">megaproyecto</span> de infraestructura.</div>
+          <div class="example-en">They announced a massive infrastructure project. <em>— mega- in journalistic register.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>The two jobs of <em>re-</em>, and the regional register of intensifiers.</strong></p>
+      <h4>Repetition vs intensification</h4>
+      <p>The same prefix <em>re-</em> does two jobs, and the listener picks based on what part of speech it's attaching to:</p>
+      <ul>
+        <li><strong>On a verb</strong> → repetition: <em>rehacer</em> (redo), <em>releer</em> (re-read), <em>reorganizar</em> (reorganize), <em>reabrir</em> (reopen). This is the same <em>re-</em> as in English "re-".</li>
+        <li><strong>On an adjective</strong> → intensification: <em>rebueno</em> (really good), <em>regrande</em> (really big), <em>recontento</em> (really happy). Colloquial, Latin American.</li>
+      </ul>
+      <h4>Register of the intensifier prefixes</h4>
+      <p>The "very-X" prefix family stratifies by register and region:</p>
+      <ul>
+        <li><em>re-</em> on adjectives — <strong>colloquial, very LatAm</strong>. <em>Rebueno</em>, <em>relinda</em>.</li>
+        <li><em>requete-</em> — <strong>even more colloquial, often playful or emphatic</strong>. Pan-Spanish but heard often in Mexico and Spain.</li>
+        <li><em>archi-</em> — <strong>formal or written register</strong>. <em>Archifamoso</em>, <em>archisabido</em>, <em>archienemigo</em>.</li>
+        <li><em>super-</em> — <strong>everyday in Spain</strong>, also used in Latin America but less universally.</li>
+        <li><em>hiper-</em> — <strong>often technical or journalistic</strong>. <em>Hipersensible</em>, <em>hipermercado</em>.</li>
+        <li><em>mega-</em> — <strong>media/marketing register</strong>. <em>Megaproyecto</em>, <em>megaventa</em>.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ⑩ PREFIJOS DE TIEMPO Y LUGAR -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">⑩</div>
+      <div class="card-title-group">
+        <div class="card-title">Prefijos de Tiempo y Lugar</div>
+        <div class="card-title-en">Time & position</div>
+      </div>
+    </div>
+
+    <code class="formula">pre · ante · pos(t) · sub · super · entre · inter · intra · extra · ultra · trans · retro + base</code>
+
+    <p class="explanation">
+      Este grupo numeroso de prefijos posiciona la base en el tiempo o en el espacio: <em>antes</em> de algo (<em>pre-</em>, <em>ante-</em>), <em>después</em> de algo (<em>pos-</em>, <em>post-</em>), <em>debajo</em> o <em>encima</em> (<em>sub-</em>, <em>super-</em>, <em>supra-</em>), <em>entre</em> dos cosas (<em>entre-</em>, <em>inter-</em>), <em>dentro</em> o <em>fuera</em> (<em>intra-</em>, <em>extra-</em>), <em>más allá</em> (<em>ultra-</em>, <em>trans-</em>) o <em>hacia atrás</em> (<em>retro-</em>). Casi todos son productivos en español moderno.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es una pintura <span class="hl">prehistórica</span>.</div>
+          <div class="example-en">It's a prehistoric painting. <em>— pre- + histórica.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vivieron la <span class="hl">posguerra</span> con dificultad.</div>
+          <div class="example-en">They lived through the postwar period with difficulty. <em>— pos- + guerra.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llegamos <span class="hl">anteayer</span>.</div>
+          <div class="example-en">We arrived the day before yesterday. <em>— ante- + ayer.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">submarino</span> bajó a quinientos metros.</div>
+          <div class="example-en">The submarine descended to five hundred meters. <em>— sub- + marino.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vamos al <span class="hl">supermercado</span> de la esquina.</div>
+          <div class="example-en">Let's go to the supermarket on the corner. <em>— super- + mercado.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Sufre de <span class="hl">hipertensión</span> desde hace años.</div>
+          <div class="example-en">He's had high blood pressure for years. <em>— hiper- + tensión, technical/medical.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Durante el <span class="hl">entreacto</span> bajamos al café.</div>
+          <div class="example-en">During the intermission we went down to the café. <em>— entre- + acto.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Trabaja en una empresa <span class="hl">internacional</span>.</div>
+          <div class="example-en">She works at an international company. <em>— inter- + nacional.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le administraron suero <span class="hl">intravenoso</span>.</div>
+          <div class="example-en">They gave him intravenous saline. <em>— intra- + venoso; medical register.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La reunión fue <span class="hl">extraoficial</span>.</div>
+          <div class="example-en">The meeting was unofficial. <em>— extra- + oficial; "outside the official".</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Los rayos <span class="hl">ultravioleta</span> dañan la piel.</div>
+          <div class="example-en">Ultraviolet rays damage the skin. <em>— ultra- + violeta; "beyond violet".</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vamos a <span class="hl">transportar</span> el equipo en camión.</div>
+          <div class="example-en">We're going to transport the equipment by truck. <em>— trans- + portar.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tuvo que <span class="hl">retroceder</span> unos pasos.</div>
+          <div class="example-en">He had to step back a few paces. <em>— retro- + ceder.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Orientational quick map and two spelling variants.</strong></p>
+      <table class="ref-table">
+        <thead><tr><th>Prefix</th><th>Direction</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><em>pre-</em>, <em>ante-</em></td><td>before</td><td><em>prehistórico</em>, <em>antesala</em>, <em>antebrazo</em></td></tr>
+          <tr><td><em>pos-</em>, <em>post-</em></td><td>after</td><td><em>posguerra</em>, <em>posmoderno</em>, <em>postdata</em></td></tr>
+          <tr><td><em>sub-</em></td><td>under, below</td><td><em>submarino</em>, <em>subterráneo</em>, <em>subrayar</em></td></tr>
+          <tr><td><em>super-</em>, <em>supra-</em></td><td>over, above</td><td><em>supermercado</em>, <em>supranacional</em>, <em>supervisar</em></td></tr>
+          <tr><td><em>hiper-</em></td><td>excessive, very high</td><td><em>hipermercado</em>, <em>hipertensión</em></td></tr>
+          <tr><td><em>entre-</em></td><td>between (everyday)</td><td><em>entreacto</em>, <em>entremés</em>, <em>entretiempo</em></td></tr>
+          <tr><td><em>inter-</em></td><td>between, among (formal)</td><td><em>internacional</em>, <em>intercambiar</em>, <em>interceder</em></td></tr>
+          <tr><td><em>intra-</em></td><td>within, inside</td><td><em>intramuros</em>, <em>intravenoso</em>, <em>intramuscular</em></td></tr>
+          <tr><td><em>extra-</em></td><td>outside, beyond</td><td><em>extraoficial</em>, <em>extraescolar</em>, <em>extraordinario</em></td></tr>
+          <tr><td><em>ultra-</em></td><td>beyond, extreme</td><td><em>ultravioleta</em>, <em>ultraderecha</em>, <em>ultramoderno</em></td></tr>
+          <tr><td><em>trans-</em>, <em>tras-</em></td><td>across, through</td><td><em>transportar</em>, <em>transatlántico</em>, <em>traspasar</em>, <em>trasnochar</em></td></tr>
+          <tr><td><em>retro-</em></td><td>backward, behind</td><td><em>retroceder</em>, <em>retrovisor</em>, <em>retroactivo</em></td></tr>
+        </tbody>
+      </table>
+      <h4>Two spelling pairs worth knowing</h4>
+      <ul>
+        <li><strong><em>pos-</em> vs <em>post-</em></strong> — both forms are accepted by the RAE. <em>Pos-</em> is now the preferred form when followed by a consonant (<em>posguerra</em>, <em>posmoderno</em>, <em>posparto</em>); <em>post-</em> stays before a vowel or in older fixed forms (<em>postoperatorio</em>, <em>postular</em>, <em>postdata</em>). You'll see both in the wild.</li>
+        <li><strong><em>trans-</em> vs <em>tras-</em></strong> — also both accepted. <em>Trans-</em> is the original Latin form; <em>tras-</em> is the Spanish-evolved form and tends to be more colloquial (<em>trasnochar</em> 'stay up all night', <em>traspasar</em> 'transfer/pass through'). Many words exist in both spellings (<em>transmitir / trasmitir</em>) — pick one and stay consistent in a document.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ⑪ OTROS PREFIJOS ÚTILES -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">⑪</div>
+      <div class="card-title-group">
+        <div class="card-title">Otros Prefijos Útiles</div>
+        <div class="card-title-en">Other useful prefixes</div>
+      </div>
+    </div>
+
+    <code class="formula">auto- · mal- · bien- · semi- · co- · mono-/bi-/multi- · ex- · vice- · neo- + base</code>
+
+    <p class="explanation">
+      Un grupo misceláneo de prefijos cubre nociones que no encajan en las categorías anteriores: reflexividad (<em>auto-</em>: «sí mismo»), juicio de valor (<em>mal-</em>, <em>bien-</em>), parcialidad (<em>semi-</em>), acompañamiento (<em>co-</em>), cantidad (<em>mono-</em>, <em>bi-</em>, <em>tri-</em>, <em>multi-</em>, <em>poli-</em>), una relación anterior (<em>ex-</em>) o una subordinada (<em>vice-</em>), y la idea de «nuevo» (<em>neo-</em>). Casi todos son inmediatamente productivos.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Pintó un <span class="hl">autorretrato</span> a los veinte años.</div>
+          <div class="example-en">He painted a self-portrait at twenty. <em>— auto- + retrato.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un <span class="hl">autoservicio</span> de gasolina.</div>
+          <div class="example-en">It's a self-service gas station. <em>— auto- + servicio.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo acusan de <span class="hl">maltratar</span> a los animales.</div>
+          <div class="example-en">They accuse him of mistreating animals. <em>— mal- + tratar.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El niño está <span class="hl">maleducado</span>.</div>
+          <div class="example-en">The child is badly behaved. <em>— mal- + educado; "ill-mannered", not "uneducated".</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Bienvenidos</span> a la fiesta.</div>
+          <div class="example-en">Welcome to the party. <em>— bien- + venido(s).</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo eliminaron en la <span class="hl">semifinal</span>.</div>
+          <div class="example-en">He was eliminated in the semifinal. <em>— semi- + final.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Soy <span class="hl">coautor</span> del libro.</div>
+          <div class="example-en">I'm a coauthor of the book. <em>— co- + autor.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es <span class="hl">monolingüe</span>, solo habla inglés.</div>
+          <div class="example-en">He's monolingual, only speaks English. <em>— mono- + lingüe.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Trabajan en proyectos <span class="hl">multinacionales</span>.</div>
+          <div class="example-en">They work on multinational projects. <em>— multi- + nacionales.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hablé con su <span class="hl">ex marido</span>.</div>
+          <div class="example-en">I spoke with her ex-husband. <em>— ex written separated, current RAE convention.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo nombraron <span class="hl">vicepresidente</span> de la junta.</div>
+          <div class="example-en">They named him vice president of the board. <em>— vice- joined to the noun.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Critica el discurso <span class="hl">neoliberal</span>.</div>
+          <div class="example-en">He criticizes the neoliberal discourse. <em>— neo- + liberal.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>The shifting convention around <em>ex-</em>.</strong> The prefix <em>ex-</em> ("former") used to attach directly to its noun: <em>exmarido</em>, <em>expresidente</em>, <em>exjefe</em>. The current RAE recommendation (since the 2010 spelling reform) is to write it <strong>separated</strong> when it precedes a one-word noun: <em>ex marido</em>, <em>ex presidente</em>, <em>ex jefe</em>. The joined spelling is still common in older texts and not considered wrong, so you'll see both. When <em>ex-</em> precedes a multi-word phrase, the hyphen comes back: <em>ex primer ministro</em>, <em>ex secretaria general</em>. The other prefix family with a similar history is <em>vice-</em>: it stays joined to its base (<em>vicepresidente</em>, <em>vicerrector</em>) unless the base is multi-word.</p>
+    </div>
+  </article>
+
+  <!-- ⑫ PREFIJOS CULTOS — bio-, eco-, tele-, foto-... -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">⑫</div>
+      <div class="card-title-group">
+        <div class="card-title">Prefijos Cultos: bio-, eco-, tele-, foto-…</div>
+        <div class="card-title-en">Greek & Latin productive prefixes</div>
+      </div>
+    </div>
+
+    <code class="formula">bio · eco · foto · tele · micro · macro · geo · hidro · termo · audio · video + base</code>
+
+    <p class="explanation">
+      Las raíces grecolatinas funcionan, en la práctica, como prefijos productivos en el español moderno. Aunque técnicamente son elementos compositivos (porque vienen de palabras griegas o latinas), se enganchan a sustantivos castellanos con la misma libertad que los prefijos «de verdad». Saber qué significan los más comunes te da acceso a buena parte del léxico científico, técnico y mediático sin necesidad de buscar palabra por palabra.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Estudia <span class="hl">biología</span> marina.</div>
+          <div class="example-en">She studies marine biology. <em>— bio- (vida) + -logía.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Promueven la <span class="hl">ecología</span> en el barrio.</div>
+          <div class="example-en">They promote ecology in the neighborhood. <em>— eco- (casa, entorno) + -logía.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tomó una <span class="hl">fotografía</span> al amanecer.</div>
+          <div class="example-en">She took a photograph at dawn. <em>— foto- (luz) + -grafía.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hablamos por <span class="hl">teléfono</span> ayer.</div>
+          <div class="example-en">We talked on the phone yesterday. <em>— tele- (lejos) + -fono.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Necesito un <span class="hl">micrófono</span> mejor.</div>
+          <div class="example-en">I need a better microphone. <em>— micro- (pequeño) + -fono.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Analizó la <span class="hl">macroeconomía</span> regional.</div>
+          <div class="example-en">She analyzed the regional macroeconomics. <em>— macro- (grande).</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es profesora de <span class="hl">geografía</span>.</div>
+          <div class="example-en">She's a geography teacher. <em>— geo- (tierra) + -grafía.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <span class="hl">termómetro</span> marca treinta grados.</div>
+          <div class="example-en">The thermometer reads thirty degrees. <em>— termo- (calor) + -metro.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Pasamos la tarde jugando <span class="hl">videojuegos</span>.</div>
+          <div class="example-en">We spent the afternoon playing video games. <em>— video- + juegos.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Compré una <span class="hl">audioguía</span> para el museo.</div>
+          <div class="example-en">I bought an audio guide for the museum. <em>— audio- + guía.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Why these "elements" behave like everyday prefixes.</strong> Strictly speaking, <em>bio-</em>, <em>eco-</em>, <em>foto-</em>, <em>tele-</em>, <em>micro-</em>, <em>macro-</em>, <em>geo-</em>, <em>hidro-</em>, <em>termo-</em>, <em>audio-</em>, <em>video-</em> are <em>elementos compositivos cultos</em> — root morphemes borrowed from Greek and Latin. Linguists distinguish them from "true" prefixes because they originate as roots of standalone words in their source languages. In modern Spanish that distinction has dissolved: they attach productively to all sorts of bases (including loanwords), they're written joined as one word, and they take stress on the second element. The practical effect is that they function exactly like prefixes, and treating them that way is fine for reading and word-building.</p>
+      <table class="ref-table">
+        <thead><tr><th>Element</th><th>Meaning</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr><td><em>bio-</em></td><td>life</td><td><em>biología</em>, <em>biodiversidad</em>, <em>biografía</em></td></tr>
+          <tr><td><em>eco-</em></td><td>habitat, environment</td><td><em>ecología</em>, <em>ecosistema</em>, <em>ecoturismo</em></td></tr>
+          <tr><td><em>foto-</em></td><td>light</td><td><em>fotografía</em>, <em>fotosíntesis</em>, <em>fotocopia</em></td></tr>
+          <tr><td><em>tele-</em></td><td>at a distance</td><td><em>teléfono</em>, <em>televisión</em>, <em>telescopio</em>, <em>teletrabajo</em></td></tr>
+          <tr><td><em>micro-</em></td><td>very small</td><td><em>micrófono</em>, <em>microscopio</em>, <em>microondas</em></td></tr>
+          <tr><td><em>macro-</em></td><td>large-scale</td><td><em>macroeconomía</em>, <em>macroestructura</em></td></tr>
+          <tr><td><em>geo-</em></td><td>earth</td><td><em>geografía</em>, <em>geología</em>, <em>geopolítica</em></td></tr>
+          <tr><td><em>hidro-</em></td><td>water</td><td><em>hidroavión</em>, <em>hidroeléctrica</em>, <em>hidratación</em></td></tr>
+          <tr><td><em>termo-</em></td><td>heat</td><td><em>termómetro</em>, <em>termodinámica</em>, <em>termoaislante</em></td></tr>
+          <tr><td><em>audio-</em></td><td>hearing, sound</td><td><em>audioguía</em>, <em>audífono</em>, <em>audiovisual</em></td></tr>
+          <tr><td><em>video-</em></td><td>sight, visual recording</td><td><em>videojuego</em>, <em>videollamada</em>, <em>videoconferencia</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </article>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     GUÍA RÁPIDA MODAL — affix master lookup
+     ═══════════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-cheat" onclick="handleCheatOverlayClick(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Guía Rápida — Affix Lookup</div>
+      <button class="close-btn" onclick="closeCheat()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>One-page reference: every affix on this page, what it does, and one example. When you hear an unfamiliar affix in the wild, scan this table first.</p>
+
+      <h3>Diminutives &amp; Augmentatives</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>-ito / -ita</td><td>diminutive, default</td><td><em>perro → perrito</em></td></tr>
+            <tr><td>-cito / -cita</td><td>diminutive after -e, -n, -r</td><td><em>hombre → hombrecito</em></td></tr>
+            <tr><td>-ecito / -ecita</td><td>diminutive for 1-syllable / diphthong bases</td><td><em>pan → panecito</em></td></tr>
+            <tr><td>-illo / -illa</td><td>diminutive (Andalusian, sometimes pejorative)</td><td><em>hombre → hombrecillo</em></td></tr>
+            <tr><td>-ico / -ica</td><td>diminutive (Caribbean / Colombia / Costa Rica)</td><td><em>rato → ratico</em></td></tr>
+            <tr><td>-ín / -ina</td><td>diminutive (Asturias)</td><td><em>pequeño → pequeñín</em></td></tr>
+            <tr><td>-ón / -ona</td><td>augmentative; or "prone to X"</td><td><em>hombrón</em>; <em>llorón</em></td></tr>
+            <tr><td>-azo / -aza</td><td>augmentative; blow with X; great X</td><td><em>perrazo</em>; <em>codazo</em>; <em>golazo</em></td></tr>
+            <tr><td>-ote / -ota</td><td>augmentative, often pejorative</td><td><em>libro → librote</em></td></tr>
+            <tr><td>-ucho / -ucha</td><td>pejorative</td><td><em>casa → casucha</em></td></tr>
+            <tr><td>-aco / -aca</td><td>pejorative</td><td><em>pájaro → pajarraco</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Grammatical suffixes</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>-ísimo / -ísima</td><td>absolute superlative — "very/extremely"</td><td><em>rápido → rapidísimo</em></td></tr>
+            <tr><td>-mente</td><td>forms an adverb from an adjective</td><td><em>rápida + mente → rápidamente</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Suffixes that form nouns</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>-ción / -sión</td><td>action or result (from verbs)</td><td><em>construir → construcción</em></td></tr>
+            <tr><td>-miento</td><td>action or process</td><td><em>mover → movimiento</em></td></tr>
+            <tr><td>-aje</td><td>action, set, or fee</td><td><em>aprender → aprendizaje</em></td></tr>
+            <tr><td>-do / -da</td><td>action or its result</td><td><em>lavar → lavado</em></td></tr>
+            <tr><td>-nza</td><td>action or quality</td><td><em>confiar → confianza</em></td></tr>
+            <tr><td>-ura</td><td>quality or result</td><td><em>amargo → amargura</em></td></tr>
+            <tr><td>-dad / -tad / -idad</td><td>abstract quality</td><td><em>libre → libertad</em></td></tr>
+            <tr><td>-ez / -eza</td><td>abstract quality</td><td><em>bello → belleza</em></td></tr>
+            <tr><td>-ía</td><td>quality, state, office</td><td><em>alegre → alegría</em></td></tr>
+            <tr><td>-ismo</td><td>doctrine, system, behavior</td><td><em>real → realismo</em></td></tr>
+            <tr><td>-dor / -dora</td><td>agent (person or device)</td><td><em>trabajar → trabajador</em></td></tr>
+            <tr><td>-ero / -era</td><td>profession or container</td><td><em>pan → panadero</em>; <em>azucarera</em></td></tr>
+            <tr><td>-ista</td><td>practitioner</td><td><em>taxi → taxista</em></td></tr>
+            <tr><td>-ante / -iente</td><td>agent (from verb participles)</td><td><em>cantar → cantante</em></td></tr>
+            <tr><td>-ería</td><td>shop, set of things, or activity</td><td><em>pan → panadería</em></td></tr>
+            <tr><td>-ario</td><td>place or collection</td><td><em>agua → acuario</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Suffixes that form adjectives</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>-oso / -osa</td><td>full of X</td><td><em>sabor → sabroso</em></td></tr>
+            <tr><td>-al</td><td>pertaining to X</td><td><em>nación → nacional</em></td></tr>
+            <tr><td>-ico / -ica</td><td>pertaining to X (adjectival)</td><td><em>historia → histórico</em></td></tr>
+            <tr><td>-ble</td><td>able to be X-ed</td><td><em>comer → comestible</em></td></tr>
+            <tr><td>-ivo / -iva</td><td>tendency or capacity</td><td><em>crear → creativo</em></td></tr>
+            <tr><td>-ento / -iento</td><td>characterized by</td><td><em>hambre → hambriento</em></td></tr>
+            <tr><td>-ado / -ido</td><td>participial adjective</td><td><em>dormir → dormido</em></td></tr>
+            <tr><td>-ano / -ana</td><td>gentilicio / pertaining</td><td><em>mexicano</em>, <em>cristiano</em></td></tr>
+            <tr><td>-eño / -eña</td><td>gentilicio</td><td><em>salvadoreño</em></td></tr>
+            <tr><td>-ense</td><td>gentilicio (invariable)</td><td><em>costarricense</em></td></tr>
+            <tr><td>-í</td><td>gentilicio (invariable)</td><td><em>marroquí</em></td></tr>
+            <tr><td>-ino / -ina</td><td>gentilicio</td><td><em>granadino</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Suffixes that form verbs</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>-ear</td><td>most productive; absorbs loanwords</td><td><em>google → googlear</em></td></tr>
+            <tr><td>-izar</td><td>make / cause to be X</td><td><em>real → realizar</em></td></tr>
+            <tr><td>-ificar</td><td>cause, produce</td><td><em>clase → clasificar</em></td></tr>
+            <tr><td>-ecer</td><td>gradual change of state</td><td><em>oscuro → oscurecer</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Prefixes — negation &amp; opposition</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>des-</td><td>undoing, reversal, removal</td><td><em>hacer → deshacer</em></td></tr>
+            <tr><td>in- / im- / ir- / il-</td><td>negation (allomorphic)</td><td><em>imposible</em>, <em>irreal</em>, <em>ilegal</em></td></tr>
+            <tr><td>a-</td><td>privative (cultos)</td><td><em>atípico</em>, <em>amoral</em></td></tr>
+            <tr><td>anti-</td><td>against, opposite</td><td><em>antihéroe</em>, <em>antisocial</em></td></tr>
+            <tr><td>contra-</td><td>against, counter</td><td><em>contradecir</em>, <em>contraataque</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Prefixes — repetition &amp; intensification</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>re- (on verbs)</td><td>repetition: "do again"</td><td><em>hacer → rehacer</em></td></tr>
+            <tr><td>re- (on adjectives)</td><td>intensifier: "really X"</td><td><em>rebueno</em>, <em>relinda</em></td></tr>
+            <tr><td>requete-</td><td>strong colloquial intensifier</td><td><em>requeteguapo</em></td></tr>
+            <tr><td>archi-</td><td>formal intensifier; "chief"</td><td><em>archifamoso</em>, <em>archienemigo</em></td></tr>
+            <tr><td>super-</td><td>everyday intensifier</td><td><em>superinteligente</em></td></tr>
+            <tr><td>hiper-</td><td>technical "excessive / very high"</td><td><em>hipertensión</em></td></tr>
+            <tr><td>mega-</td><td>media intensifier</td><td><em>megaproyecto</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Prefixes — time &amp; position</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>pre-</td><td>before</td><td><em>prehistórico</em></td></tr>
+            <tr><td>ante-</td><td>before, in front</td><td><em>anteayer</em>, <em>antesala</em></td></tr>
+            <tr><td>pos- / post-</td><td>after</td><td><em>posguerra</em>, <em>postdata</em></td></tr>
+            <tr><td>sub-</td><td>under, below</td><td><em>submarino</em></td></tr>
+            <tr><td>super- / supra-</td><td>over, above</td><td><em>supermercado</em>, <em>supranacional</em></td></tr>
+            <tr><td>entre-</td><td>between (everyday)</td><td><em>entreacto</em></td></tr>
+            <tr><td>inter-</td><td>between, among (formal)</td><td><em>internacional</em></td></tr>
+            <tr><td>intra-</td><td>within, inside</td><td><em>intravenoso</em></td></tr>
+            <tr><td>extra-</td><td>outside, beyond</td><td><em>extraoficial</em></td></tr>
+            <tr><td>ultra-</td><td>beyond, extreme</td><td><em>ultravioleta</em></td></tr>
+            <tr><td>trans- / tras-</td><td>across, through</td><td><em>transportar</em>, <em>traspasar</em></td></tr>
+            <tr><td>retro-</td><td>backward, behind</td><td><em>retroceder</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Prefixes — other useful</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>auto-</td><td>self</td><td><em>autorretrato</em>, <em>autoservicio</em></td></tr>
+            <tr><td>mal-</td><td>bad, ill</td><td><em>maltratar</em>, <em>maleducado</em></td></tr>
+            <tr><td>bien-</td><td>good, well</td><td><em>bienvenido</em>, <em>bienestar</em></td></tr>
+            <tr><td>semi-</td><td>half, partial</td><td><em>semifinal</em>, <em>semicírculo</em></td></tr>
+            <tr><td>co-</td><td>together, joint</td><td><em>coautor</em>, <em>copiloto</em></td></tr>
+            <tr><td>mono- / bi- / tri-</td><td>one / two / three</td><td><em>monolingüe</em>, <em>bicicleta</em>, <em>trípode</em></td></tr>
+            <tr><td>multi- / poli-</td><td>many</td><td><em>multinacional</em>, <em>polifacético</em></td></tr>
+            <tr><td>ex-</td><td>former (written separated)</td><td><em>ex marido</em></td></tr>
+            <tr><td>vice-</td><td>deputy, subordinate</td><td><em>vicepresidente</em></td></tr>
+            <tr><td>neo-</td><td>new (recent variant)</td><td><em>neoliberal</em>, <em>neoclásico</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Greek &amp; Latin productive elements</h3>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Affix</th><th>Sense</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>bio-</td><td>life</td><td><em>biología</em></td></tr>
+            <tr><td>eco-</td><td>environment, habitat</td><td><em>ecología</em>, <em>ecosistema</em></td></tr>
+            <tr><td>foto-</td><td>light</td><td><em>fotografía</em>, <em>fotosíntesis</em></td></tr>
+            <tr><td>tele-</td><td>at a distance</td><td><em>teléfono</em>, <em>teletrabajo</em></td></tr>
+            <tr><td>micro- / macro-</td><td>small / large-scale</td><td><em>micrófono</em>, <em>macroeconomía</em></td></tr>
+            <tr><td>geo-</td><td>earth</td><td><em>geografía</em>, <em>geopolítica</em></td></tr>
+            <tr><td>hidro-</td><td>water</td><td><em>hidroavión</em></td></tr>
+            <tr><td>termo-</td><td>heat</td><td><em>termómetro</em></td></tr>
+            <tr><td>audio- / video-</td><td>sound / sight</td><td><em>audioguía</em>, <em>videojuego</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS — TTS (neutral voice only) + modal
+     ═══════════════════════════════════════════════ -->
+<script>
+// ───────── TTS — neutral Latin American Spanish only ─────────
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row') || btn.closest('.vocab-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es') || row.querySelector('.vocab-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  clone.querySelectorAll('.reg-badge').forEach(el => el.remove());
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ───────── Modal ─────────
+function openCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.remove('active');
+  document.body.style.overflow = '';
+}
+function handleCheatOverlayClick(e) {
+  if (e.target.id === 'modal-cheat') closeCheat();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCheat();
+});
+</script>
+
+</body>
+</html>

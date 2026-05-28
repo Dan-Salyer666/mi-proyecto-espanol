@@ -989,7 +989,7 @@ let lastScore        = null;
 let currentStarRating= null;
 let isProcessing     = false;
 
-const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false, module:'sorprendeme' };
+const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false, module:'sorprendeme', generator:'claude' };
 
 // ═══════════════════════════════════════════════
 //  TTS
@@ -1781,7 +1781,7 @@ function startGenerate() {
 //  treats it as a non-fatal miss and proceeds via the legacy inline
 //  planning path. The legacy plannedEnding mechanism is the safety net.
 // ═══════════════════════════════════════════════
-async function generateStoryPlan({ moduleKey, mode, level, register, region, theme, episodeCount }) {
+async function generateStoryPlan({ moduleKey, mode, level, register, region, theme, episodeCount, generator }) {
   const spec = MODULE_SPECS[moduleKey];
   if (!spec) return null;  // No spec text → no prep call → legacy path runs.
 
@@ -1802,11 +1802,12 @@ async function generateStoryPlan({ moduleKey, mode, level, register, region, the
   };
 
   try {
-    const res = await fetch('/api/claude', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         password:   sessionPw,
+        provider:   generator || 'claude',
         model:      'claude-sonnet-4-6',
         max_tokens: 1500,
         stream:     false,
@@ -1905,7 +1906,8 @@ async function doGenerate() {
       register:     cfg.register,
       region:       cfg.region,
       theme,
-      episodeCount: epCountForPlan
+      episodeCount: epCountForPlan,
+      generator:    cfg.generator
     });
   }
 
@@ -1935,11 +1937,12 @@ async function doGenerate() {
   setProgress(0, epMsg, '');
 
   try {
-    const res = await fetch('/api/claude', {
+    const res = await fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         password:   sessionPw,
+        provider:   currentCfg.generator || 'claude',
         model:      'claude-opus-4-7',
         max_tokens: 8000,
         stream:     true,

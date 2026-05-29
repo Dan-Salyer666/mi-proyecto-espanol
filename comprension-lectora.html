@@ -1967,6 +1967,9 @@ CRITICAL JSON RULES:
 - For dialogue in passages, use Spanish guillemets «» or em-dashes (—), NEVER use double quotes inside strings.
 - Escape any special characters in string values: use \\n for newlines, \\" if a double quote is absolutely necessary.
 - All JSON must be on a single logical structure with properly escaped strings.
+CRITICAL QUESTION RULES:
+- Each question must be answerable from the current episode's prose alone. Do not write questions whose correct answer depends on events from future episodes in the plan; the plan guides narrative structure, not the reader's knowledge state at this moment.
+- After writing each question, verify that "correct" is the 0-based index of the option that "explanation" actually describes (A=0, B=1, C=2, D=3). A mismatched index silently breaks the grader, which compares the reader's choice against "correct" without consulting "explanation".
 Spanish must be natural and authentic. Never include medical, clinical, or doctor-patient content.`,
         messages: [{ role: 'user', content: buildPrompt(currentCfg) }]
       })

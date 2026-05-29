@@ -38,6 +38,29 @@ const GEMINI_THINKING_DEFAULT = 512;
 // so a thinking overflow can never silently truncate the story JSON.
 const GEMINI_OUTPUT_PAD = 4096;
 
+// Transient-error retry policy for Gemini calls. The 2.5 Pro endpoint can
+// return 503 "service unavailable" under load even when the user did nothing
+// wrong; without this, every flake bubbles straight to the page. Exponential
+// backoff (~0.8s, 1.6s, 3.2s + jitter) gives a worst case ~6s of added wait
+// — comfortably inside the 30s function budget even when the real generation
+// also runs. Only the listed statuses retry; 400/401/403 etc. fail fast.
+const GEMINI_RETRY_STATUSES = new Set([429, 500, 502, 503, 504]);
+const GEMINI_RETRY_MAX_ATTEMPTS = 3;
+const GEMINI_RETRY_BASE_MS = 800;
+
+async function fetchGeminiWithRetry(url: string, init: RequestInit): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(url, init);
+    if (res.ok || !GEMINI_RETRY_STATUSES.has(res.status) || attempt >= GEMINI_RETRY_MAX_ATTEMPTS) {
+      return res;
+    }
+    // Drain the failed response so the underlying connection can be reused.
+    try { await res.text(); } catch { /* ignore */ }
+    const delay = GEMINI_RETRY_BASE_MS * (1 << attempt) + Math.floor(Math.random() * 500);
+    await new Promise(r => setTimeout(r, delay));
+  }
+}
+
 export default async (req: Request, context: Context) => {
   if (req.method !== "POST") {
     return json({ error: "Method not allowed" }, 405);
@@ -143,6 +166,11 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
       maxOutputTokens,
       temperature: typeof body.temperature === "number" ? body.temperature : 1.0,
       thinkingConfig: { thinkingBudget },
+      // Force structured JSON output. With this on, Gemini guarantees the
+      // emitted text concatenates to valid JSON — kills the "unterminated
+      // string" class of errors the front-end repair pipeline can't always
+      // recover from when a quotation mark slips through unescaped.
+      responseMimeType: "application/json",
     },
   };
   // Anthropic's top-level `system` maps to Gemini's systemInstruction.
@@ -154,7 +182,7 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
     ? `${GEMINI_BASE}/${GEMINI_MODEL}:streamGenerateContent?alt=sse`
     : `${GEMINI_BASE}/${GEMINI_MODEL}:generateContent`;
 
-  const upstream = await fetch(endpoint, {
+  const upstream = await fetchGeminiWithRetry(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

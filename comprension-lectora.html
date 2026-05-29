@@ -807,6 +807,14 @@
         <button class="btn-module selected" data-module="sorprendeme" onclick="pickModule(this)">Sorpréndeme</button>
         <button class="btn-module" data-module="misterio" onclick="pickModule(this)">Misterio</button>
       </div>
+
+      <div class="divider"></div>
+
+      <div class="card-label">Generador</div>
+      <div class="btn-group">
+        <button class="btn-module selected" data-generator="claude" onclick="pickGenerator(this)">Claude</button>
+        <button class="btn-module" data-generator="gemini" onclick="pickGenerator(this)">Gemini</button>
+      </div>
     </div>
 
     <!-- SE Highlight — DISABLED 2026-04-18 per Daniel's request.
@@ -1274,6 +1282,13 @@ function pickModule(btn) {
   document.querySelectorAll('[data-module]').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   cfg.module = newModule;
+}
+
+function pickGenerator(btn) {
+  const newGenerator = btn.dataset.generator;
+  document.querySelectorAll('[data-generator]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  cfg.generator = newGenerator;
 }
 
 function pickRegion(btn) {

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palabras Tramposas — Mi Proyecto Español</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --bg-deep:       #0a1628;
+      --bg-card:       #111d35;
+      --bg-card-hover: #162544;
+      --bg-input:      #0d1a2f;
+      --border:        #1e3355;
+      --border-focus:  #3b6cb5;
+      --text-primary:  #e2e8f0;
+      --text-secondary:#8a9bb8;
+      --text-muted:    #5a6f8e;
+      --accent:        #4a90d9;
+      --accent-glow:   rgba(74,144,217,0.15);
+      --correct:       #34d399;
+      --warning:       #fbbf24;
+      --incorrect:     #f87171;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(74,144,217,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(99,102,241,0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url('../assets/azulejos.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 32px 20px 120px;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+    .back-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      padding-top: 8px;
+      white-space: nowrap;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+    .back-link:hover { color: var(--accent); }
+    .header-text { flex: 1; }
+    .header-text h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.9rem, 4vw, 2.7rem);
+      font-style: italic;
+      line-height: 1.1;
+    }
+    .header-text p {
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 300;
+      margin-top: 5px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Header Drive pill ── */
+    #headerDriveStatus { display: flex; align-items: center; flex-shrink: 0; padding-top: 6px; }
+    #headerDriveLabel {
+      font-family: 'Outfit', sans-serif; font-size: 0.72rem; font-weight: 500;
+      color: var(--text-muted); background: transparent;
+      border: 1px solid var(--border); border-radius: 20px;
+      cursor: pointer; white-space: nowrap; padding: 5px 12px;
+      transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ── Drive status bar (the bubble) ── */
+    .drive-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 22px;
+      font-size: 0.82rem;
+      gap: 10px; flex-wrap: wrap;
+    }
+    .drive-status { display: flex; align-items: center; gap: 8px; color: var(--text-muted); }
+    .drive-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .drive-dot.connected    { background: #34d399; }
+    .drive-dot.disconnected { background: var(--text-muted); }
+    .drive-dot.busy         { background: #fbbf24; animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 1rem;
+      padding: 14px 28px; border-radius: 10px; border: none;
+      background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+      color: #fff; cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s; width: 100%;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-secondary {
+      font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 0.9rem;
+      padding: 11px 22px; border-radius: 10px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-secondary); cursor: pointer; transition: all 0.18s;
+    }
+    .btn-secondary:hover { border-color: #2a4a75; color: var(--text-primary); }
+    .btn-danger {
+      font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.95rem;
+      padding: 14px 28px; border-radius: 10px;
+      border: 1px solid rgba(248,113,113,0.35); background: rgba(248,113,113,0.10);
+      color: #f87171; cursor: pointer; transition: all 0.18s; width: 100%;
+    }
+    .btn-danger:hover { background: rgba(248,113,113,0.18); border-color: rgba(248,113,113,0.55); }
+    #driveBtn { font-size: 0.8rem; padding: 6px 14px; }
+
+    /* ── Connect prompt (shown before Drive is connected) ── */
+    .connect-prompt {
+      text-align: center; padding: 52px 28px; color: var(--text-secondary);
+      background: var(--bg-card); border: 1px dashed var(--border); border-radius: 14px;
+    }
+    .connect-prompt p { font-size: 0.98rem; margin-bottom: 8px; }
+    .connect-prompt small { color: var(--text-muted); font-size: 0.82rem; }
+
+    /* ── Workspace ── */
+    .count-line { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 14px; letter-spacing: 0.03em; }
+    .table-scroll { overflow-x: auto; }
+    .table-inner { min-width: 620px; }
+
+    .col-head {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 36px;
+      gap: 8px; padding: 0 10px 10px; align-items: end;
+    }
+    .col-head span {
+      font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.09em;
+      color: var(--text-muted); font-weight: 600; padding-left: 4px;
+    }
+    .col-head .ch-word { color: var(--accent); }
+
+    .entries { display: flex; flex-direction: column; gap: 10px; }
+
+    .entry {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr 36px;
+      gap: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 26px 10px 12px;   /* top band reserves the edit-box corner */
+      align-items: stretch;
+      transition: border-color 0.18s;
+    }
+    .entry:hover { border-color: #294a78; }
+
+    .cell {
+      border-radius: 8px; padding: 9px 12px;
+      font-size: 0.9rem; line-height: 1.35; min-height: 40px;
+      word-break: break-word; display: flex; align-items: center;
+    }
+    .cell-word {
+      font-family: 'DM Serif Display', serif; font-style: italic; font-size: 1.04rem;
+      background: rgba(74,144,217,0.10);
+      border: 1px solid rgba(74,144,217,0.18);
+      color: var(--text-primary);
+    }
+    .cell-def {
+      background: rgba(90,111,142,0.10);
+      border: 1px solid rgba(90,111,142,0.16);
+      color: var(--text-secondary);
+    }
+    .cell-empty { opacity: 0.32; }
+
+    .entry-edit {
+      position: absolute; top: 6px; right: 8px;
+      width: 24px; height: 24px; border-radius: 6px;
+      border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-muted); cursor: pointer; font-size: 0.78rem;
+      display: flex; align-items: center; justify-content: center; transition: all 0.18s;
+    }
+    .entry-edit:hover { color: var(--accent); border-color: rgba(74,144,217,0.4); }
+
+    .entry-del {
+      align-self: center; justify-self: center;
+      width: 27px; height: 27px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); cursor: pointer; font-size: 0.95rem;
+      display: flex; align-items: center; justify-content: center; transition: all 0.18s;
+    }
+    .entry-del:hover { color: #f87171; border-color: rgba(248,113,113,0.5); background: rgba(248,113,113,0.08); }
+
+    .empty-state { text-align: center; padding: 44px 20px; color: var(--text-muted); font-size: 0.9rem; }
+
+    /* ── Floating add button ── */
+    .fab {
+      position: fixed; right: 28px; bottom: 34px; z-index: 90;
+      width: 56px; height: 56px; border-radius: 50%; border: none;
+      background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+      color: #fff; font-size: 1.8rem; line-height: 1; cursor: pointer;
+      box-shadow: 0 6px 22px rgba(5,12,26,0.55);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.15s, opacity 0.2s;
+    }
+    .fab:hover { transform: translateY(-2px); opacity: 0.94; }
+
+    /* ── Modals ── */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(5,15,30,0.82);
+      backdrop-filter: blur(5px); z-index: 200;
+      display: flex; align-items: center; justify-content: center; padding: 20px;
+    }
+    .modal-box {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 32px; max-width: 420px; width: 100%;
+    }
+    .modal-box h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; margin-bottom: 6px; }
+    .modal-box > p { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 20px; }
+    .modal-err { color: var(--incorrect); font-size: 0.82rem; margin-top: 4px; min-height: 18px; }
+    .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
+
+    .field-group { margin-bottom: 12px; }
+    .field-group label {
+      display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em;
+      color: var(--text-muted); margin-bottom: 5px;
+    }
+    .field-group label .ch { color: var(--accent); }
+    .param-input {
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 10px; padding: 11px 16px; font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem; color: var(--text-primary); outline: none;
+      transition: border-color 0.2s;
+    }
+    .param-input:focus { border-color: var(--border-focus); }
+    .param-input::placeholder { color: var(--text-muted); }
+
+    .delete-preview {
+      background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px;
+      padding: 12px 14px; margin-bottom: 18px; font-size: 0.88rem; color: var(--text-secondary);
+    }
+    .delete-preview .dp-word { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--text-primary); }
+
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeUp 0.3s ease both; }
+    @keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+    @media (max-width: 560px) {
+      .modal-box { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ── Header ── -->
+  <header>
+    <a href="../index.html" class="back-link">← Volver al menú</a>
+    <div class="header-text">
+      <h1>Palabras Tramposas</h1>
+      <p>Pares que suenan o se parecen</p>
+    </div>
+    <div id="headerDriveStatus">
+      <button id="headerDriveLabel" onclick="connectDriveInline()">
+        <span class="drive-dot disconnected" id="headerDriveDot" style="width:7px;height:7px"></span>
+        Drive ✗
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Drive status bubble ── -->
+  <div class="drive-bar">
+    <div class="drive-status">
+      <div class="drive-dot disconnected" id="driveDot"></div>
+      <span id="driveLabel">Google Drive: no conectado</span>
+    </div>
+    <button class="btn-secondary" id="driveBtn" onclick="connectDrive()">Conectar Drive</button>
+  </div>
+
+  <!-- ── Connect prompt (before connection) ── -->
+  <div id="connectPrompt" class="connect-prompt">
+    <p>Conecta Google Drive para ver y editar tus palabras.</p>
+    <small>Tus entradas se guardan en un único archivo (<em>palabras-confusas.json</em>) dentro de la carpeta «Spanish Learning» de tu Drive.</small>
+  </div>
+
+  <!-- ── Workspace (after connection) ── -->
+  <div id="workspace" class="hidden">
+    <div class="count-line" id="count">0 pares</div>
+    <div class="table-scroll">
+      <div class="table-inner">
+        <div class="col-head">
+          <span class="ch-word">Palabra</span>
+          <span>Definición</span>
+          <span class="ch-word">Palabra</span>
+          <span>Definición</span>
+          <span></span>
+        </div>
+        <div class="entries" id="entries"></div>
+        <div class="empty-state hidden" id="emptyState">No hay entradas todavía. Pulsa el botón + para añadir una.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Floating add button ── -->
+<button class="fab hidden" id="fab" onclick="openModal(null)" title="Añadir entrada">+</button>
+
+<!-- ── Add / Edit modal ── -->
+<div id="entryModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h3 id="entryModalTitle">Nueva entrada</h3>
+    <p>Máximo 50 caracteres por campo. Solo «Palabra 1» es obligatoria.</p>
+    <div class="field-group">
+      <label><span class="ch">●</span> Palabra 1</label>
+      <input type="text" id="inW1" class="param-input" maxlength="50" placeholder="p. ej. Saltar">
+    </div>
+    <div class="field-group">
+      <label>Definición 1</label>
+      <input type="text" id="inD1" class="param-input" maxlength="50" placeholder="p. ej. to jump">
+    </div>
+    <div class="field-group">
+      <label><span class="ch">●</span> Palabra 2</label>
+      <input type="text" id="inW2" class="param-input" maxlength="50" placeholder="p. ej. Soltar">
+    </div>
+    <div class="field-group">
+      <label>Definición 2</label>
+      <input type="text" id="inD2" class="param-input" maxlength="50" placeholder="p. ej. to let go of">
+    </div>
+    <div class="modal-err" id="entryErr"></div>
+    <div class="modal-btns">
+      <button class="btn-primary" onclick="saveModal()">Guardar</button>
+      <button class="btn-secondary" style="flex:1" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Delete confirmation modal ── -->
+<div id="deleteModal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h3>¿Eliminar esta entrada?</h3>
+    <p>Esta acción no se puede deshacer.</p>
+    <div class="delete-preview" id="deletePreview"></div>
+    <div class="modal-btns">
+      <button class="btn-danger" onclick="confirmDelete()">Eliminar</button>
+      <button class="btn-secondary" style="flex:1" onclick="closeDelete()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════════════
+const CLIENT_ID     = '10393001786-l8rfutuihm2301jf6a5rkmqumtfla8t5.apps.googleusercontent.com';
+const DRIVE_SCOPE   = 'https://www.googleapis.com/auth/drive.file';
+const PARENT_FOLDER = 'Spanish Learning';
+const DATA_FILENAME = 'palabras-confusas.json';
+
+// Seed entries — only written if no data file exists yet on Drive.
+// Source: sound_alikes.pdf (OCR typos corrected: Follar, loosen, conseguir).
+const SEED = [
+  { w1:'Saltar',  d1:'to jump',            w2:'Soltar', d2:'to let go of, to loosen' },
+  { w1:'Sonar',   d1:'to ring, to sound',  w2:'Soñar',  d2:'to dream' },
+  { w1:'Fallar',  d1:'to fail',            w2:'Follar', d2:'to fuck (vulgar)' },
+  { w1:'Consigo', d1:'1.ª pers. sing. de conseguir', w2:'Consigo', d2:'with him / with her' },
+];
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let driveToken = null, tokenClient = null, driveReady = false;
+let folderId = null, dataFileId = null;
+let entries = [];
+let editingId = null;
+let pendingDeleteId = null;
+let _connectResolve = null;
+
+window.onload = () => initDriveAuth();
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE — AUTH
+// ═══════════════════════════════════════════════
+function setDriveUI(state, label) {
+  const dot = document.getElementById('driveDot'),
+        lbl = document.getElementById('driveLabel'),
+        btn = document.getElementById('driveBtn');
+  if (dot) dot.className   = 'drive-dot ' + state;
+  if (lbl) lbl.textContent = label;
+  if (btn) {
+    btn.textContent = state === 'connected' ? 'Desconectar' : 'Conectar Drive';
+    btn.onclick     = state === 'connected' ? disconnectDrive : connectDrive;
+  }
+  const hdot = document.getElementById('headerDriveDot'),
+        hlbl = document.getElementById('headerDriveLabel');
+  if (hlbl) {
+    const isConn = state === 'connected';
+    const isBusy = state === 'busy';
+    hlbl.innerHTML = `<span class="drive-dot ${state}" id="headerDriveDot" style="width:7px;height:7px"></span>${isConn ? 'Drive ✓' : isBusy ? 'Drive…' : 'Drive ✗'}`;
+    hlbl.style.color       = isConn ? '#34d399' : isBusy ? '#fbbf24' : 'var(--text-muted)';
+    hlbl.style.borderColor = isConn ? 'rgba(52,211,153,0.4)' : isBusy ? 'rgba(251,191,36,0.3)' : 'var(--border)';
+    hlbl.style.cursor      = isConn ? 'default' : 'pointer';
+    hlbl.onclick           = isConn ? () => alert('Google Drive ya está conectado.') : connectDriveInline;
+  }
+}
+
+function initDriveAuth() {
+  if (typeof google === 'undefined' || !google.accounts) { setTimeout(initDriveAuth, 300); return; }
+  driveReady  = true;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: DRIVE_SCOPE, callback: handleTokenResponse,
+  });
+}
+
+function connectDrive() {
+  if (!driveReady) { alert('La biblioteca de Google aún se está cargando. Inténtalo de nuevo.'); return; }
+  setDriveUI('busy', 'Conectando…');
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+
+function connectDriveInline() {
+  if (!driveReady) { alert('La biblioteca de Google aún se está cargando.'); return; }
+  if (driveToken)  { alert('Google Drive ya está conectado.'); return; }
+  connectDrive();
+}
+
+function disconnectDrive() {
+  if (driveToken) google.accounts.oauth2.revoke(driveToken, () => {});
+  driveToken = null; folderId = null; dataFileId = null; entries = [];
+  setDriveUI('disconnected', 'Google Drive: no conectado');
+  showWorkspace(false);
+}
+
+function connectDriveAsync() {
+  return new Promise(resolve => {
+    if (!driveReady) { resolve(false); return; }
+    _connectResolve = resolve;
+    setDriveUI('busy', 'Reconectando Drive…');
+    tokenClient.requestAccessToken({ prompt: '' });
+  });
+}
+
+async function handleTokenResponse(resp) {
+  if (resp.error) {
+    setDriveUI('disconnected', 'Error al conectar Drive');
+    if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(false); }
+    return;
+  }
+  driveToken = resp.access_token;
+  setDriveUI('busy', 'Verificando carpeta…');
+  try {
+    folderId   = await ensureFolder();
+    dataFileId = await findDataFile();
+    if (dataFileId) {
+      await loadData();
+    } else {
+      entries = SEED.map((e, i) => ({ id: 'seed' + i + '_' + Date.now(), ...e }));
+    }
+    setDriveUI('connected', 'Google Drive: conectado ✓');
+    renderEntries();
+    showWorkspace(true);
+    if (!dataFileId) await saveData();   // create the seeded file on first connect
+    if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(true); }
+  } catch (e) {
+    console.error('Drive setup error:', e);
+    setDriveUI('disconnected', 'Error al acceder a Drive');
+    if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(false); }
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE — FOLDER / FILE
+// ═══════════════════════════════════════════════
+async function driveRequest(url, options = {}) {
+  const res = await fetch(url, {
+    ...options,
+    headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json', ...(options.headers||{}) }
+  });
+  if (res.status === 401) { driveToken = null; setDriveUI('disconnected','Sesión Drive expirada — reconecta'); throw new Error('Drive token expired'); }
+  return res;
+}
+
+async function findFolder(name, parentId) {
+  const q = parentId
+    ? `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
+    : `name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)`);
+  const data = await res.json();
+  return data.files?.length ? data.files[0].id : null;
+}
+
+async function createFolder(name, parentId) {
+  const body = { name, mimeType:'application/vnd.google-apps.folder' };
+  if (parentId) body.parents = [parentId];
+  const res = await driveRequest('https://www.googleapis.com/drive/v3/files', { method:'POST', body:JSON.stringify(body) });
+  return (await res.json()).id;
+}
+
+async function ensureFolder() {
+  let p = await findFolder(PARENT_FOLDER, null);
+  if (!p) p = await createFolder(PARENT_FOLDER, null);
+  return p;
+}
+
+async function findDataFile() {
+  const q = `name='${DATA_FILENAME}' and '${folderId}' in parents and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name,modifiedTime)`);
+  const data = await res.json();
+  return data.files?.length ? data.files[0].id : null;
+}
+
+async function loadData() {
+  const res  = await driveRequest(`https://www.googleapis.com/drive/v3/files/${dataFileId}?alt=media`);
+  const data = await res.json();
+  entries = Array.isArray(data) ? data : (data.entries || []);
+  entries.forEach((e, i) => { if (!e.id) e.id = 'e' + i + '_' + Date.now(); });
+}
+
+// ═══════════════════════════════════════════════
+//  GOOGLE DRIVE — SAVE (whole file rewrite)
+// ═══════════════════════════════════════════════
+async function saveData() {
+  if (!driveToken || !folderId) return false;
+  setDriveUI('busy', 'Guardando en Drive…');
+  const json = JSON.stringify({ version: 1, updated: new Date().toISOString(), entries }, null, 2);
+  try {
+    if (dataFileId) {
+      const res = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${dataFileId}?uploadType=media`, {
+        method: 'PATCH',
+        headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json' },
+        body: json
+      });
+      if (res.status === 401) {
+        driveToken = null;
+        const ok = await connectDriveAsync();
+        if (!ok) { setDriveUI('disconnected', 'No se pudo guardar'); return false; }
+        folderId = await ensureFolder();
+        return await saveData();
+      }
+      if (!res.ok) { setDriveUI('connected', 'Error al guardar — reintenta'); return false; }
+    } else {
+      const boundary = '-------314159265358979323846';
+      const meta = JSON.stringify({ name: DATA_FILENAME, parents: [folderId] });
+      const body = [
+        `--${boundary}`, 'Content-Type: application/json; charset=UTF-8', '', meta,
+        `--${boundary}`, 'Content-Type: application/json', '', json,
+        `--${boundary}--`,
+      ].join('\r\n');
+      const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+        method: 'POST',
+        headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':`multipart/related; boundary="${boundary}"` },
+        body
+      });
+      if (!res.ok) { setDriveUI('connected', 'Error al guardar — reintenta'); return false; }
+      dataFileId = (await res.json()).id;
+    }
+    setDriveUI('connected', 'Google Drive: conectado ✓');
+    return true;
+  } catch (e) {
+    console.error('Save error:', e);
+    setDriveUI('connected', 'Error al guardar — reintenta');
+    return false;
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════
+function esc(s) {
+  return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function showWorkspace(connected) {
+  document.getElementById('workspace').classList.toggle('hidden', !connected);
+  document.getElementById('connectPrompt').classList.toggle('hidden', connected);
+  document.getElementById('fab').classList.toggle('hidden', !connected);
+}
+
+function renderEntries() {
+  const wrap  = document.getElementById('entries');
+  const empty = document.getElementById('emptyState');
+  document.getElementById('count').textContent = entries.length + (entries.length === 1 ? ' par' : ' pares');
+  wrap.innerHTML = '';
+  if (!entries.length) { empty.classList.remove('hidden'); return; }
+  empty.classList.add('hidden');
+  entries.forEach(e => {
+    const row = document.createElement('div');
+    row.className = 'entry fade-in';
+    row.innerHTML =
+      `<div class="cell cell-word ${e.w1 ? '' : 'cell-empty'}">${esc(e.w1) || '—'}</div>` +
+      `<div class="cell cell-def ${e.d1 ? '' : 'cell-empty'}">${esc(e.d1) || '—'}</div>` +
+      `<div class="cell cell-word ${e.w2 ? '' : 'cell-empty'}">${esc(e.w2) || '—'}</div>` +
+      `<div class="cell cell-def ${e.d2 ? '' : 'cell-empty'}">${esc(e.d2) || '—'}</div>` +
+      `<button class="entry-del" title="Eliminar entrada">✕</button>` +
+      `<button class="entry-edit" title="Editar entrada">✎</button>`;
+    row.querySelector('.entry-del').onclick  = () => askDelete(e.id);
+    row.querySelector('.entry-edit').onclick = () => openModal(e.id);
+    wrap.appendChild(row);
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  ADD / EDIT
+// ═══════════════════════════════════════════════
+function openModal(id) {
+  editingId = id;
+  const e = id ? entries.find(x => x.id === id) : null;
+  document.getElementById('entryModalTitle').textContent = id ? 'Editar entrada' : 'Nueva entrada';
+  document.getElementById('inW1').value = e ? (e.w1 || '') : '';
+  document.getElementById('inD1').value = e ? (e.d1 || '') : '';
+  document.getElementById('inW2').value = e ? (e.w2 || '') : '';
+  document.getElementById('inD2').value = e ? (e.d2 || '') : '';
+  document.getElementById('entryErr').textContent = '';
+  document.getElementById('entryModal').classList.remove('hidden');
+  document.getElementById('inW1').focus();
+}
+
+function closeModal() {
+  document.getElementById('entryModal').classList.add('hidden');
+  editingId = null;
+}
+
+async function saveModal() {
+  const w1 = document.getElementById('inW1').value.trim();
+  const d1 = document.getElementById('inD1').value.trim();
+  const w2 = document.getElementById('inW2').value.trim();
+  const d2 = document.getElementById('inD2').value.trim();
+  if (!w1) { document.getElementById('entryErr').textContent = '«Palabra 1» es obligatoria.'; return; }
+  if (editingId) {
+    const e = entries.find(x => x.id === editingId);
+    if (e) { e.w1 = w1; e.d1 = d1; e.w2 = w2; e.d2 = d2; }
+  } else {
+    entries.push({ id: 'e_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6), w1, d1, w2, d2 });
+  }
+  closeModal();
+  renderEntries();
+  await saveData();
+}
+
+// ═══════════════════════════════════════════════
+//  DELETE (with confirmation)
+// ═══════════════════════════════════════════════
+function askDelete(id) {
+  pendingDeleteId = id;
+  const e = entries.find(x => x.id === id);
+  const parts = [];
+  if (e.w1) parts.push(`<span class="dp-word">${esc(e.w1)}</span>`);
+  if (e.w2) parts.push(`<span class="dp-word">${esc(e.w2)}</span>`);
+  document.getElementById('deletePreview').innerHTML = parts.join(' &nbsp;·&nbsp; ') || '(entrada vacía)';
+  document.getElementById('deleteModal').classList.remove('hidden');
+}
+
+function closeDelete() {
+  document.getElementById('deleteModal').classList.add('hidden');
+  pendingDeleteId = null;
+}
+
+async function confirmDelete() {
+  entries = entries.filter(x => x.id !== pendingDeleteId);
+  closeDelete();
+  renderEntries();
+  await saveData();
+}
+
+// Close modals on overlay click
+document.getElementById('entryModal').addEventListener('click', e => { if (e.target.id === 'entryModal') closeModal(); });
+document.getElementById('deleteModal').addEventListener('click', e => { if (e.target.id === 'deleteModal') closeDelete(); });
+</script>
+</body>
+</html>

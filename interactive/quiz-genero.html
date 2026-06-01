@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuestionario de Género</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root {
+  --bg-deep:#0a1628; --bg-card:#111d35; --bg-card-hover:#162544; --bg-input:#0d1a2f;
+  --border:#1e3355; --border-focus:#3b6cb5;
+  --text-primary:#e2e8f0; --text-secondary:#8a9bb8; --text-muted:#5a6f8e;
+  --accent:#4a90d9; --accent-glow:rgba(74,144,217,0.15);
+  --ok:#34d399; --warn:#fbbf24;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{min-height:100%;}
+body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-primary);
+  padding:32px 16px 80px;position:relative;overflow-x:hidden;line-height:1.5;}
+body::before{content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M30,5 L35,25 L55,30 L35,35 L30,55 L25,35 L5,30 L25,25 Z'/><circle cx='30' cy='30' r='3'/></svg>");
+  background-size:60px 60px;opacity:0.08;pointer-events:none;z-index:0;}
+.container{max-width:760px;margin:0 auto;position:relative;z-index:1;}
+
+.back-nav{display:inline-flex;align-items:center;gap:8px;color:var(--text-muted);text-decoration:none;
+  font-size:0.9rem;padding:6px 0;margin-bottom:20px;transition:color 0.2s;}
+.back-nav:hover{color:var(--accent);}
+
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
+.header-text h1{font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,4.5vw,2.4rem);font-weight:normal;
+  color:var(--text-primary);line-height:1.1;}
+.header-text p{font-size:0.85rem;color:var(--text-muted);font-style:italic;margin-top:4px;}
+
+/* Drive bar + dot + spinner (reused from Comprensión Lectora) */
+.drive-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  padding:12px 16px;margin-bottom:18px;background:var(--bg-card);border:1px solid var(--border);border-radius:10px;}
+.drive-status{display:flex;align-items:center;gap:10px;font-size:0.9rem;color:var(--text-secondary);}
+.drive-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.drive-dot.connected{background:var(--ok);}
+.drive-dot.disconnected{background:var(--text-muted);}
+.drive-dot.busy{background:var(--warn);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.drive-spinner{width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);
+  border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.btn{font-family:'Outfit',sans-serif;font-weight:500;border-radius:8px;cursor:pointer;transition:all 0.2s;
+  font-size:0.85rem;padding:7px 16px;border:1px solid var(--border);}
+.btn-secondary{background:transparent;color:var(--text-secondary);}
+.btn-secondary:hover{border-color:var(--border-focus);color:var(--text-primary);}
+.btn-primary{background:var(--accent-glow);color:var(--accent);border-color:rgba(74,144,217,0.35);}
+.btn-primary:hover{background:rgba(74,144,217,0.22);}
+.btn:disabled{opacity:0.4;cursor:default;pointer-events:none;}
+
+.panel{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:24px 26px;margin-bottom:18px;}
+.panel.muted{color:var(--text-muted);font-size:0.92rem;text-align:center;font-style:italic;}
+
+.headline{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-bottom:6px;}
+.headline .big{font-family:'DM Serif Display',serif;font-size:2.6rem;line-height:1;color:var(--text-primary);}
+.headline .big small{font-family:'Outfit',sans-serif;font-size:0.9rem;color:var(--text-muted);font-weight:400;margin-left:8px;}
+.headline .hard{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--warn);}
+.headline .hard small{font-family:'Outfit',sans-serif;font-size:0.82rem;color:var(--text-muted);font-weight:400;margin-left:6px;}
+
+.modegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:18px;}
+.modecell{background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
+.modecell .label{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);}
+.modecell .num{font-family:'DM Serif Display',serif;font-size:1.5rem;color:var(--text-primary);margin-top:2px;}
+.modecell .note{font-size:0.72rem;color:var(--text-muted);font-style:italic;margin-top:2px;}
+
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.hidden{display:none!important;}
+@media (max-width:600px){.panel{padding:20px 18px;}}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header>
+    <div class="header-text">
+      <h1>Cuestionario de Género</h1>
+      <p>Práctica de el / la / ambos · datos en Google Drive</p>
+    </div>
+    <div style="flex-shrink:0;padding-top:6px">
+      <button id="headerDriveLabel" onclick="connectDriveInline()" style="font-family:'Outfit',sans-serif;font-size:0.72rem;font-weight:500;color:var(--text-muted);background:transparent;border:1px solid var(--border);border-radius:20px;cursor:pointer;white-space:nowrap;padding:5px 12px;transition:all 0.2s;display:flex;align-items:center;gap:6px">
+        <span class="drive-dot disconnected" id="headerDriveDot" style="width:7px;height:7px"></span>Drive ✗
+      </button>
+    </div>
+  </header>
+
+  <!-- Drive status bar -->
+  <div class="drive-bar">
+    <div class="drive-status">
+      <div class="drive-dot disconnected" id="driveDot"></div>
+      <div class="drive-spinner hidden" id="driveSpinner"></div>
+      <span id="driveLabel">Google Drive: no conectado</span>
+    </div>
+    <button class="btn btn-secondary" id="driveBtn" onclick="connectDrive()">Conectar Drive</button>
+  </div>
+
+  <!-- Pre-connect prompt -->
+  <div class="panel muted" id="prePanel">
+    Conecta Google Drive para cargar el conjunto de palabras.
+  </div>
+
+  <!-- Dataset status (shown once loaded) -->
+  <div class="panel hidden" id="dataPanel">
+    <div class="headline">
+      <div class="big" id="countTotal">0<small>palabras</small></div>
+      <div class="hard" id="countHard">0<small>difíciles</small></div>
+    </div>
+    <div style="font-size:0.85rem;color:var(--text-muted)">Conjunto cargado desde Drive · <span id="datasetVer"></span></div>
+
+    <div class="modegrid" id="modeGrid"></div>
+
+    <div class="controls">
+      <button class="btn btn-secondary" id="reloadBtn" onclick="reloadFromDrive()">Recargar desde Drive</button>
+      <button class="btn btn-secondary" id="disconnectBtn" onclick="disconnectDrive()">Desconectar</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  EMBEDDED SEED — bootstrap only.
+//  Used to create the Drive dataset on first run.
+//  Once Drive holds genero-dataset.json, THAT file is the source of truth.
+// ═══════════════════════════════════════════════
+const SEED_DATA = {"schemaVersion":1,"updated":"2026-06-01","tagVocab":["ma","el-agua","excepcion","regla-ok","epiceno"],"notes":"articulo = graded answer (el/la/ambos); genero = indicator (m/f/ambos). Removable iff articulo in {el,la} AND contexto=='' AND tags==[]. Homograph & bebé pairs intentionally share a normalized palabra. dificultad: curated outliers (tags ma/el-agua/excepcion/epiceno, or any contexto) seeded 'dificil' for testing; rule-following fluff and regla-ok anchors 'facil'.","words":[{"palabra":"dinero","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"zapato","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"sombrero","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"perro","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"gato","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"caballo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"huevo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"queso","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"vino","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"río","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"barco","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"fuego","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"juego","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"suelo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"techo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cielo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"pelo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"beso","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"sueño","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"premio","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"regalo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"vecino","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cuchillo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"bolso","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"dedo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"brazo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"ojo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cuerpo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"pueblo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"campo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"grupo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"modo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"caso","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"paso","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"trabajo","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"año","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"baño","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"aire","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"parque","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"golpe","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"tigre","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"postre","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"paquete","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"billete","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cohete","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"diente","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"puente","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"jefe","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"traje","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"viaje","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"valle","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cofre","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"nivel","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"túnel","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"sol","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"control","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"mantel","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"pastel","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"ángel","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"mármol","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"fútbol","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"huracán","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"volcán","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"guardián","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"andén","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"favor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"temor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"rumor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"licor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"tractor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"ascensor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"comedor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"martes","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"jueves","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"viernes","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"ciprés","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"compás","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"revés","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cocina","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"escuela","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"tienda","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"playa","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"montaña","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"isla","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"planta","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"fruta","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"manzana","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"naranja","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cebolla","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"sopa","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"taza","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cuchara","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"botella","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"camisa","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"falda","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"chaqueta","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"bufanda","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"manta","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"almohada","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"sábana","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cortina","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"alfombra","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"lámpara","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"pintura","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"pregunta","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"respuesta","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"palabra","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"letra","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"página","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"semana","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"hora","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cosa","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"vida","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"bondad","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"edad","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"mitad","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"amistad","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"virtud","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"actitud","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"multitud","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"gratitud","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"costumbre","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"información","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"situación","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"educación","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"relación","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"atención","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"estación","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"lección","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"función","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"dirección","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"población","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"actriz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"raíz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"perdiz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"lombriz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"codorniz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":[]},{"palabra":"papel","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"árbol","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"hotel","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"hospital","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"animal","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"cristal","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"libro","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"plato","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"cuaderno","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"vaso","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"banco","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"coche","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"nombre","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"cine","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"deporte","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"bosque","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"amor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"color","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"sabor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"dolor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"motor","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"pan","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"jardín","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"tren","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"examen","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"origen","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"mes","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"país","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"autobús","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"interés","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"lunes","articulo":"el","genero":"m","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"ciudad","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"verdad","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"pared","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"red","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"salud","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"luz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"paz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"voz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"nariz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"cruz","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"vez","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"canción","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"nación","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"región","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"sesión","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"opinión","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"casa","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"mesa","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"silla","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"puerta","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"ventana","articulo":"la","genero":"f","dificultad":"facil","contexto":"","tags":["regla-ok"]},{"palabra":"problema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"tema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"sistema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"idioma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"clima","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"programa","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"poema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"drama","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"dilema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"síntoma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"esquema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"diploma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"enigma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"fantasma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"carisma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"aroma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"panorama","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"diagrama","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"teorema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"axioma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"lema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"trauma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"dogma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"prisma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"emblema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"cama","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"rama","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"pluma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"forma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"fama","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"lima","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"loma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"llama","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"suma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"goma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"broma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"crema","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"firma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"norma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"palma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"calma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"alarma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["ma"]},{"palabra":"reuma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"aneurisma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"edema","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["ma","excepcion"]},{"palabra":"agua","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"águila","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"alma","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"área","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"arma","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"aula","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"hacha","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"hambre","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"ala","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"ancla","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"asa","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"hada","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"haba","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"habla","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"arpa","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"acta","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"ave","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"asma","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"ascua","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"aria","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"arca","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"hampa","articulo":"el","genero":"f","dificultad":"dificil","contexto":"","tags":["el-agua"]},{"palabra":"mano","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"foto","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"moto","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"libido","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"sal","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"miel","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"piel","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"cárcel","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"señal","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"vocal","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"flor","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"labor","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"mujer","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"coliflor","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"imagen","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"sien","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"crin","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"tos","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"crisis","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"tesis","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"bilis","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"noche","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"tarde","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"calle","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"clase","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"carne","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"madre","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"llave","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"sangre","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"nieve","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"leche","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"suerte","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"muerte","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"mente","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"fuente","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"frase","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"base","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"día","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"sofá","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"mapa","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"planeta","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"tranvía","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"gorila","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"pijama","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"césped","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"ataúd","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"huésped","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"récord","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"alud","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"avión","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"camión","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"corazón","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"buzón","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"sarampión","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"lápiz","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"arroz","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"pez","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"maíz","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"juez","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"ajedrez","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"disfraz","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"avestruz","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["excepcion"]},{"palabra":"estudiante","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"periodista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"artista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"dentista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"turista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"atleta","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"colega","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"guía","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"modelo","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"testigo","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"joven","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cantante","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"representante","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"gerente","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"pianista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"deportista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"especialista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"paciente","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cliente","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"agente","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"taxista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"futbolista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"novelista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"recepcionista","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"profesional","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"rival","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"portavoz","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"líder","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"intérprete","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"oyente","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"amante","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"votante","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"cómplice","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"titular","articulo":"ambos","genero":"ambos","dificultad":"facil","contexto":"","tags":[]},{"palabra":"mar","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"el mar (común); la mar (literario, náutico)","tags":[]},{"palabra":"azúcar","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"el azúcar (estándar); la azúcar (también aceptada)","tags":[]},{"palabra":"arte","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"el arte (singular); las artes (plural)","tags":[]},{"palabra":"internet","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"la internet (la red); el internet (uso común)","tags":[]},{"palabra":"maratón","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"el maratón (tradicional); la maratón (la carrera)","tags":[]},{"palabra":"sartén","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"España: la; Latinoamérica: el","tags":[]},{"palabra":"sauna","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"España: la; América: el","tags":[]},{"palabra":"tilde","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"España: la; Cono Sur: el","tags":[]},{"palabra":"terminal","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"la terminal (estación); el terminal (dispositivo)","tags":[]},{"palabra":"armazón","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"España: el; América: la","tags":[]},{"palabra":"interrogante","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"España: el; Latinoamérica: la","tags":[]},{"palabra":"cura","articulo":"el","genero":"m","dificultad":"dificil","contexto":"el sacerdote","tags":[]},{"palabra":"cura","articulo":"la","genero":"f","dificultad":"dificil","contexto":"el remedio","tags":[]},{"palabra":"capital","articulo":"el","genero":"m","dificultad":"dificil","contexto":"el dinero","tags":[]},{"palabra":"capital","articulo":"la","genero":"f","dificultad":"dificil","contexto":"la ciudad","tags":[]},{"palabra":"orden","articulo":"el","genero":"m","dificultad":"dificil","contexto":"la secuencia","tags":[]},{"palabra":"orden","articulo":"la","genero":"f","dificultad":"dificil","contexto":"el mandato / orden religiosa","tags":[]},{"palabra":"moral","articulo":"el","genero":"m","dificultad":"dificil","contexto":"el árbol (de moras)","tags":[]},{"palabra":"moral","articulo":"la","genero":"f","dificultad":"dificil","contexto":"la ética","tags":[]},{"palabra":"frente","articulo":"el","genero":"m","dificultad":"dificil","contexto":"zona de combate / clima","tags":[]},{"palabra":"frente","articulo":"la","genero":"f","dificultad":"dificil","contexto":"parte de la cara","tags":[]},{"palabra":"corte","articulo":"el","genero":"m","dificultad":"dificil","contexto":"acción de cortar","tags":[]},{"palabra":"corte","articulo":"la","genero":"f","dificultad":"dificil","contexto":"tribunal / corte real","tags":[]},{"palabra":"coma","articulo":"el","genero":"m","dificultad":"dificil","contexto":"estado médico","tags":[]},{"palabra":"coma","articulo":"la","genero":"f","dificultad":"dificil","contexto":"signo de puntuación","tags":[]},{"palabra":"cólera","articulo":"el","genero":"m","dificultad":"dificil","contexto":"la enfermedad","tags":[]},{"palabra":"cólera","articulo":"la","genero":"f","dificultad":"dificil","contexto":"la ira","tags":[]},{"palabra":"pendiente","articulo":"el","genero":"m","dificultad":"dificil","contexto":"el arete","tags":[]},{"palabra":"pendiente","articulo":"la","genero":"f","dificultad":"dificil","contexto":"la cuesta","tags":[]},{"palabra":"radio","articulo":"el","genero":"m","dificultad":"dificil","contexto":"medida / metal / aparato","tags":[]},{"palabra":"radio","articulo":"la","genero":"f","dificultad":"dificil","contexto":"la emisora","tags":[]},{"palabra":"víctima","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["epiceno"]},{"palabra":"persona","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["epiceno"]},{"palabra":"personaje","articulo":"el","genero":"m","dificultad":"dificil","contexto":"","tags":["epiceno"]},{"palabra":"criatura","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["epiceno"]},{"palabra":"celebridad","articulo":"la","genero":"f","dificultad":"dificil","contexto":"","tags":["epiceno"]},{"palabra":"bebé","articulo":"el","genero":"m","dificultad":"dificil","contexto":"España: el bebé (cualquier sexo)","tags":[]},{"palabra":"bebé","articulo":"ambos","genero":"ambos","dificultad":"dificil","contexto":"América: la bebé / el bebé según el sexo","tags":[]}]};
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+const CLIENT_ID     = '10393001786-l8rfutuihm2301jf6a5rkmqumtfla8t5.apps.googleusercontent.com';
+const DRIVE_SCOPE   = 'https://www.googleapis.com/auth/drive.file';
+const PARENT_FOLDER = 'Spanish Learning';   // shared with Comprensión Lectora (same client_id)
+const GENERO_FOLDER = 'Genero';
+const DATASET_NAME  = 'genero-dataset.json';
+
+let driveToken      = null;
+let tokenClient     = null;
+let driveReady      = false;
+let folderId        = null;
+let datasetFileId   = null;
+let dataset         = null;   // the loaded {schemaVersion, words:[...]} object
+let _connectResolve = null;
+
+// ═══════════════════════════════════════════════
+//  DRIVE UI
+// ═══════════════════════════════════════════════
+function setDriveUI(state, label) {
+  const dot=document.getElementById('driveDot'),
+        spn=document.getElementById('driveSpinner'),
+        lbl=document.getElementById('driveLabel'),
+        btn=document.getElementById('driveBtn');
+  const busy = state==='busy';
+  if (dot){ dot.className='drive-dot '+state; dot.classList.toggle('hidden',busy); }
+  if (spn){ spn.classList.toggle('hidden',!busy); }
+  if (lbl) lbl.textContent=label;
+  if (btn){ btn.textContent = state==='connected' ? 'Desconectar' : 'Conectar Drive';
+            btn.onclick = state==='connected' ? disconnectDrive : connectDrive;
+            btn.disabled = busy; }
+  // header pill
+  const hlbl=document.getElementById('headerDriveLabel');
+  if (hlbl){
+    const isConn=state==='connected', isBusy=busy;
+    hlbl.innerHTML = `<span class="drive-dot ${state}" id="headerDriveDot" style="width:7px;height:7px"></span>${isConn?'Drive ✓':isBusy?'Drive…':'Drive ✗'}`;
+    hlbl.style.color       = isConn?'var(--ok)':isBusy?'var(--warn)':'var(--text-muted)';
+    hlbl.style.borderColor = isConn?'rgba(52,211,153,0.4)':isBusy?'rgba(251,191,36,0.3)':'var(--border)';
+    hlbl.style.cursor      = isConn?'default':'pointer';
+    hlbl.onclick           = isConn?()=>alert('Google Drive ya está conectado.'):connectDriveInline;
+  }
+  // lock dataset controls while busy
+  ['reloadBtn','disconnectBtn'].forEach(id=>{const b=document.getElementById(id);if(b)b.disabled=busy;});
+}
+
+function connectDriveInline(){
+  if (!driveReady){ alert('La biblioteca de Google aún se está cargando.'); return; }
+  if (driveToken){ alert('Google Drive ya está conectado.'); return; }
+  connectDrive();
+}
+
+// ═══════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════
+function initDriveAuth(){
+  if (typeof google==='undefined' || !google.accounts){ setTimeout(initDriveAuth,300); return; }
+  driveReady = true;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: DRIVE_SCOPE, callback: handleTokenResponse,
+  });
+}
+function connectDrive(){
+  if (!driveReady){ alert('La biblioteca de Google aún se está cargando. Inténtalo de nuevo.'); return; }
+  setDriveUI('busy','Conectando…');
+  tokenClient.requestAccessToken({ prompt:'' });
+}
+function disconnectDrive(){
+  if (driveToken) google.accounts.oauth2.revoke(driveToken,()=>{});
+  driveToken=null; folderId=null; datasetFileId=null; dataset=null;
+  setDriveUI('disconnected','Google Drive: no conectado');
+  document.getElementById('dataPanel').classList.add('hidden');
+  document.getElementById('prePanel').classList.remove('hidden');
+}
+function connectDriveAsync(){
+  return new Promise(resolve=>{
+    if (!driveReady){ resolve(false); return; }
+    _connectResolve = resolve;
+    setDriveUI('busy','Reconectando Drive…');
+    tokenClient.requestAccessToken({ prompt:'' });
+  });
+}
+// Validate token; silently re-auth if expired (same behavior as the reader app)
+async function ensureDriveConnection(){
+  if (!driveToken) return await connectDriveAsync();
+  try{
+    const res = await fetch('https://www.googleapis.com/drive/v3/about?fields=user',
+      { headers:{ 'Authorization':'Bearer '+driveToken } });
+    if (res.ok) return true;
+    if (res.status===401){ driveToken=null; return await connectDriveAsync(); }
+    return false;
+  }catch(e){ console.error('Drive validation error:',e); return false; }
+}
+async function handleTokenResponse(resp){
+  if (resp.error){
+    setDriveUI('disconnected','Error al conectar Drive');
+    if (_connectResolve){ const r=_connectResolve; _connectResolve=null; r(false); }
+    return;
+  }
+  driveToken = resp.access_token;
+  setDriveUI('busy','Verificando carpeta…');
+  try{
+    folderId = await ensureFolder();
+    setDriveUI('busy','Cargando palabras…');
+    await loadDataset();
+    setDriveUI('connected','Google Drive: conectado ✓');
+    renderStatus();
+    if (_connectResolve){ const r=_connectResolve; _connectResolve=null; r(true); }
+  }catch(e){
+    console.error('Drive setup error:',e);
+    setDriveUI('disconnected','Error al acceder a Drive');
+    if (_connectResolve){ const r=_connectResolve; _connectResolve=null; r(false); }
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  DRIVE REQUEST + FOLDER MANAGEMENT
+// ═══════════════════════════════════════════════
+async function driveRequest(url, options={}){
+  const res = await fetch(url, { ...options,
+    headers:{ 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json', ...(options.headers||{}) } });
+  if (res.status===401){ driveToken=null; setDriveUI('disconnected','Sesión Drive expirada — reconecta'); throw new Error('Drive token expired'); }
+  return res;
+}
+async function findFolder(name, parentId){
+  const q = parentId
+    ? `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
+    : `name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)`);
+  const data = await res.json();
+  return data.files?.length>0 ? data.files[0].id : null;
+}
+async function createFolder(name, parentId){
+  const body={ name, mimeType:'application/vnd.google-apps.folder' };
+  if (parentId) body.parents=[parentId];
+  const res = await driveRequest('https://www.googleapis.com/drive/v3/files',{ method:'POST', body:JSON.stringify(body) });
+  return (await res.json()).id;
+}
+async function ensureFolder(){
+  let p = await findFolder(PARENT_FOLDER,null); if (!p) p = await createFolder(PARENT_FOLDER,null);
+  let g = await findFolder(GENERO_FOLDER,p);   if (!g) g = await createFolder(GENERO_FOLDER,p);
+  return g;
+}
+
+// ═══════════════════════════════════════════════
+//  DATASET — find or create, read, (re)load
+// ═══════════════════════════════════════════════
+async function findDatasetFile(){
+  const q = `name='${DATASET_NAME}' and '${folderId}' in parents and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name,modifiedTime)&orderBy=modifiedTime desc`);
+  const data = await res.json();
+  return data.files?.length>0 ? data.files[0].id : null;
+}
+async function readDatasetFile(id){
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`);
+  return await res.json();
+}
+async function createDatasetFile(obj){
+  const boundary='-------314159265358979323846';
+  const body=[
+    `--${boundary}`,'Content-Type: application/json; charset=UTF-8','',
+    JSON.stringify({ name:DATASET_NAME, parents:[folderId] }),
+    `--${boundary}`,'Content-Type: application/json','',
+    JSON.stringify(obj),`--${boundary}--`,
+  ].join('\r\n');
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{
+    method:'POST',
+    headers:{ 'Authorization':'Bearer '+driveToken, 'Content-Type':`multipart/related; boundary="${boundary}"` },
+    body,
+  });
+  if (!res.ok) throw new Error('No se pudo crear el archivo de datos en Drive');
+  return (await res.json()).id;
+}
+// Find the dataset; if absent, bootstrap it from the embedded seed.
+async function loadDataset(){
+  datasetFileId = await findDatasetFile();
+  if (datasetFileId){
+    dataset = await readDatasetFile(datasetFileId);
+  } else {
+    // First run on this account — create the file from the embedded seed.
+    dataset = JSON.parse(JSON.stringify(SEED_DATA));
+    datasetFileId = await createDatasetFile(dataset);
+  }
+  if (!dataset || !Array.isArray(dataset.words)) throw new Error('Datos de género inválidos');
+}
+async function reloadFromDrive(){
+  const ok = await ensureDriveConnection();
+  if (!ok){ setDriveUI('disconnected','No se pudo reconectar con Drive'); return; }
+  setDriveUI('busy','Recargando…');
+  try{
+    folderId = await ensureFolder();
+    await loadDataset();
+    setDriveUI('connected','Google Drive: conectado ✓');
+    renderStatus();
+  }catch(e){
+    console.error('Reload error:',e);
+    setDriveUI('connected','Google Drive: conectado ✓');
+    alert('No se pudo recargar el conjunto desde Drive.');
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  STATUS READOUT (Phase 3 sanity check — no quiz logic yet)
+// ═══════════════════════════════════════════════
+function renderStatus(){
+  const w = dataset.words;
+  const isAmbos = x => x.articulo==='ambos';
+  const hasTag  = (x,t) => Array.isArray(x.tags) && x.tags.includes(t);
+  const removable = x => (x.articulo==='el'||x.articulo==='la') && !x.contexto && (!x.tags||x.tags.length===0);
+  const follower  = x => (x.articulo==='el'||x.articulo==='la') && !hasTag(x,'excepcion') && !hasTag(x,'el-agua');
+
+  const total   = w.length;
+  const hard    = w.filter(x=>x.dificultad==='dificil').length;
+  document.getElementById('countTotal').innerHTML = total + '<small>palabras</small>';
+  document.getElementById('countHard').innerHTML  = hard  + '<small>difíciles</small>';
+  document.getElementById('datasetVer').textContent =
+    `esquema v${dataset.schemaVersion ?? '?'} · actualizado ${dataset.updated ?? '—'}`;
+
+  const modes = [
+    ['Sin filtro',  total,                                   ''],
+    ['Difíciles',   hard,                                    hard===0?'vacío al inicio':''],
+    ['Ambos',       w.filter(isAmbos).length,                ''],
+    ['-ma',         w.filter(x=>hasTag(x,'ma')).length,      ''],
+    ['Excepciones', w.filter(x=>hasTag(x,'excepcion')).length, 'mezcla 50/50 con reglas'],
+    ['El agua',     w.filter(x=>hasTag(x,'el-agua')).length, 'soporta 10 y 20'],
+    ['Seguidoras',  w.filter(follower).length,               'banco de reglas'],
+    ['Eliminables', w.filter(removable).length,              'fluff + añadidas'],
+  ];
+  const grid = document.getElementById('modeGrid');
+  grid.innerHTML = modes.map(([label,num,note])=>`
+    <div class="modecell">
+      <div class="label">${label}</div>
+      <div class="num">${num}</div>
+      ${note?`<div class="note">${note}</div>`:''}
+    </div>`).join('');
+
+  document.getElementById('prePanel').classList.add('hidden');
+  document.getElementById('dataPanel').classList.remove('hidden');
+}
+
+// boot
+window.addEventListener('load', initDriveAuth);
+</script>
+</body>
+</html>

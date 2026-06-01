@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Género de los Sustantivos</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  /* Trio 4 — Blue / Violet / Gold (formal/scholarly), + teal delta */
+  --accent-alpha: #4a90d9;
+  --accent-beta:  #c084fc;
+  --accent-gamma: #fbbf24;
+  --accent-delta: #4ecdc4;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { min-height: 100%; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  padding: 32px 16px 80px;
+  position: relative;
+  overflow-x: hidden;
+  line-height: 1.5;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none' stroke='%234a90d9' stroke-width='0.8'><path d='M30,5 L35,25 L55,30 L35,35 L30,55 L25,35 L5,30 L25,25 Z'/><circle cx='30' cy='30' r='3'/></svg>");
+  background-size: 60px 60px;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Back nav */
+.back-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back-nav:hover { color: var(--accent); }
+
+/* Title card */
+.title-card {
+  text-align: center;
+  padding: 44px 24px 48px;
+  margin-bottom: 28px;
+  background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5.5vw, 3.2rem);
+  font-weight: normal;
+  line-height: 1.05;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 20px auto 10px;
+  color: var(--accent);
+  opacity: 0.65;
+  max-width: 280px;
+}
+.ornament::before, .ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.ornament-symbol { font-size: 1.1rem; }
+.title-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.06em;
+  font-style: italic;
+}
+
+/* Guía Rápida badge */
+.cheat-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  padding: 6px 14px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  color: #fcd34d;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cheat-badge:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+/* Intro prose */
+.intro-prose {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: -8px 4px 22px;
+  padding: 0 6px;
+}
+.intro-prose strong { color: var(--text-primary); font-weight: 600; }
+.intro-prose em     { color: var(--accent); font-style: italic; }
+
+/* Content cards */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 28px 28px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha { border-left-color: var(--accent-alpha); }
+.card-beta  { border-left-color: var(--accent-beta); }
+.card-gamma { border-left-color: var(--accent-gamma); }
+.card-delta { border-left-color: var(--accent-delta); }
+.card-alpha .card-number { color: var(--accent-alpha); opacity: 0.75; }
+.card-beta  .card-number { color: var(--accent-beta);  opacity: 0.75; }
+.card-gamma .card-number { color: var(--accent-gamma); opacity: 0.75; }
+.card-delta .card-number { color: var(--accent-delta); opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title .qualifier {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.62em;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-left: 6px;
+}
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+.formula {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 14px 0 16px;
+}
+
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+.explanation em     { color: var(--text-primary); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+/* Word / example rows (no speaker layer on this page) */
+.examples-block { margin: 14px 0 8px; }
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:last-child { border-bottom: none; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es .hl { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-es .lead {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-right: 10px;
+  display: inline-block;
+  min-width: 34px;
+}
+.example-en {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.5;
+}
+.example-en em { color: var(--text-secondary); font-style: normal; }
+
+/* Regional badges */
+.reg-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-left: 6px;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+.reg-badge.reg-esp  { background: rgba(192, 132, 252, 0.15); color: #d0a8ff; border: 1px solid rgba(192, 132, 252, 0.3); }
+.reg-badge.reg-lat  { background: rgba(78, 205, 196, 0.15); color: #7be3db; border: 1px solid rgba(78, 205, 196, 0.3); }
+
+/* NOTA */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota.nota-expanded { padding: 18px 22px; }
+.nota.nota-expanded h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 12px 0 6px;
+}
+.nota.nota-expanded h4:first-of-type { margin-top: 8px; }
+.nota.nota-expanded ul {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 8px;
+}
+.nota.nota-expanded ul li {
+  padding: 4px 0 4px 18px;
+  position: relative;
+}
+.nota.nota-expanded ul li::before {
+  content: '\203A';
+  position: absolute;
+  left: 4px;
+  color: var(--accent);
+  font-weight: 700;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em     { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Memorization caution band */
+.caution-band {
+  background: rgba(251, 191, 36, 0.07);
+  border: 1px solid rgba(251, 191, 36, 0.28);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 0 0 26px;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.caution-band .caution-label {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fcd34d;
+  margin-bottom: 8px;
+}
+.caution-band strong { color: var(--text-primary); font-weight: 600; }
+.caution-band em { color: #fcd34d; font-style: italic; }
+
+/* Quiz CTA */
+.quiz-cta {
+  display: block;
+  text-align: center;
+  margin-top: 34px;
+  padding: 22px 24px;
+  background: linear-gradient(180deg, rgba(74,144,217,0.10), rgba(74,144,217,0.03));
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.quiz-cta:hover { border-color: var(--border-focus); background: rgba(74,144,217,0.14); }
+.quiz-cta .quiz-cta-label {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  color: var(--text-primary);
+  display: block;
+}
+.quiz-cta .quiz-cta-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+  display: block;
+}
+.quiz-cta .quiz-cta-arrow { color: var(--accent); }
+
+/* Modal (Guía Rápida) */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 50;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active {
+  display: flex;
+  opacity: 1;
+  animation: cheatFadeIn 0.3s forwards;
+}
+@keyframes cheatFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 760px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: var(--accent); }
+.modal-body {
+  padding: 26px 28px;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+.modal-body > p {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+.table-wrapper {
+  overflow-x: auto;
+  margin: 16px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+  text-align: left;
+}
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 12px 16px;
+  font-weight: 600;
+}
+.table-wrapper td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper .watch { color: var(--text-muted); font-size: 0.84rem; display: block; margin-top: 3px; }
+
+@media (max-width: 600px) {
+  .title-card   { padding: 32px 18px 36px; }
+  .grammar-card { padding: 22px 20px 18px; }
+  .nota         { padding: 14px 16px; }
+  .cheat-badge  { position: static; display: inline-block; margin-top: 16px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <div class="overline">Referencia Gramatical</div>
+    <h1>El Género de los Sustantivos</h1>
+    <div class="ornament"><span class="ornament-symbol">◆</span></div>
+    <div class="title-subtitle">Cómo predecir el género de una palabra — y cuándo el artículo engaña</div>
+    <button class="cheat-badge" onclick="openCheat()">⚡ Guía Rápida</button>
+  </header>
+
+  <p class="intro-prose">
+    En español todo sustantivo es <strong>masculino</strong> o <strong>femenino</strong>, y el género
+    determina el artículo y la concordancia de los adjetivos. La terminación de la palabra ofrece pistas
+    fiables, y dos reglas mnemotécnicas — <em>LONERS</em> y <em>DIÓNZA</em> — resumen las más útiles.
+  </p>
+
+  <div class="caution-band">
+    <span class="caution-label">Antes de empezar</span>
+    Estas reglas son <strong>tendencias, no leyes</strong>. Cada una tiene excepciones, y algunas palabras
+    sencillamente <strong>hay que memorizarlas</strong> junto con su artículo. El objetivo de esta página
+    no es darte una fórmula infalible, sino una red de pistas que reduzca las dudas — y señalar con claridad
+    dónde las pistas <em>fallan</em>.
+  </div>
+
+  <!-- ① LONERS -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">LONERS</div>
+        <div class="card-title-en">Likely masculine endings</div>
+      </div>
+    </div>
+    <code class="formula">-l · -o · -n · -e · -r · -s  →  masculino</code>
+    <p class="explanation">
+      Las palabras terminadas en cualquiera de las letras de <strong>LONERS</strong> tienden a ser
+      masculinas. Es la regla más amplia y la que más excepciones acumula, sobre todo en <em>-e</em>.
+    </p>
+    <div class="examples-block">
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-l</span> el papel, el árbol, el hotel</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-o</span> el libro, el dinero, el cuaderno</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-n</span> el camión, el jardín, el pan</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-e</span> el coche, el cine, el nombre</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-r</span> el amor, el color, el sabor</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-s</span> el mes, el autobús, el país</div></div></div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>Two cautions before you trust LONERS:</p>
+      <ul>
+        <li>The <strong>S applies to singular nouns only</strong> (<em>el mes</em>, <em>el país</em>). Plurals end in -s by definition, so the rule would otherwise mark every plural masculine — ignore it for plurals.</li>
+        <li><strong>-e is the weakest letter</strong> by far. Plenty of everyday feminine nouns end in -e: <em>la noche, la tarde, la calle, la clase, la gente, la sangre, la muerte, la llave</em>. When a word ends in -e, lean on memory, not the rule.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ② DIÓNZA -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">DIÓNZA</div>
+        <div class="card-title-en">Likely feminine endings</div>
+      </div>
+    </div>
+    <code class="formula">-d · -ión · -z · -a  →  femenino</code>
+    <p class="explanation">
+      Las palabras terminadas en <strong>-d, -ión, -z</strong> y <strong>-a</strong> tienden a ser femeninas.
+      Es una regla más estrecha que LONERS y, por tanto, algo más fiable.
+    </p>
+    <div class="examples-block">
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-d</span> la ciudad, la verdad, la pared</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-ión</span> la canción, la nación, la decisión</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-z</span> la luz, la paz, la nariz</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-a</span> la casa, la mesa, la silla</div></div></div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>The big trap and the fine print:</p>
+      <ul>
+        <li><strong>-ión is not the same as -ón.</strong> The feminine rule covers <em>-ción / -sión</em> words (<em>la canción, la decisión</em>). Bare <em>-ón</em> is usually <strong>masculine</strong>: <em>el avión, el camión, el corazón, el buzón</em>.</li>
+        <li>DIÓNZA compresses a longer feminine-ending set worth knowing: <strong>-dad/-tad, -tud, -umbre, -ie, -sis, -itis</strong> — <em>la libertad, la juventud, la costumbre, la serie, la crisis, la bronquitis</em>.</li>
+        <li>But several <strong>-sis</strong> words are masculine exceptions: <em>el análisis, el énfasis, el paréntesis, el oasis</em>.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ③ -ma -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Las terminaciones en <span class="qualifier">-ma</span></div>
+        <div class="card-title-en">The Greek exception to "-a is feminine"</div>
+      </div>
+    </div>
+    <p class="explanation">
+      Por DIÓNZA esperaríamos que toda palabra en <strong>-a</strong> fuera femenina, pero muchas
+      terminadas en <strong>-ma</strong> son masculinas. Conviven dos grupos: las de origen griego,
+      masculinas, y las propiamente españolas, femeninas.
+    </p>
+    <div class="examples-block">
+      <div class="example-row"><div class="example-body"><div class="example-es">el problema, el tema, el sistema, el idioma, el clima</div><div class="example-en">masculinas, de origen griego</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es">el programa, el poema, el drama, el fantasma</div><div class="example-en">masculinas, de origen griego</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es">la cama, la rama, la pluma, la forma</div><div class="example-en">femeninas, de raíz española</div></div></div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>The masculine <em>-ma</em> words came from Greek neuter nouns and kept a masculine gender despite the -a ending. There's no way to <em>derive</em> which is which from the spelling — it's a <strong>learnable list, not a rule</strong>. The good news is the masculine set is finite and high-frequency, so it rewards memorizing.</p>
+      <p>A couple of medical -ma words — <em>reuma</em> and <em>aneurisma</em> — were historically feminine and are now standardly masculine (<em>el reuma, el aneurisma</em>). You may still meet the older feminine form in older or literary texts; use the masculine.</p>
+    </div>
+  </article>
+
+  <!-- ④ El agua -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">El agua <span class="qualifier">la máscara fonética</span></div>
+        <div class="card-title-en">Feminine words that borrow "el"</div>
+      </div>
+    </div>
+    <p class="explanation">
+      Algunos sustantivos femeninos que empiezan por <strong>a-</strong> o <strong>ha-</strong>
+      <em>tónica</em> (acentuada) toman <strong>el</strong> y <strong>un</strong> en singular, solo por
+      eufonía. La palabra <strong>sigue siendo femenina</strong>: lo demuestran el plural y los adjetivos.
+    </p>
+    <div class="examples-block">
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="hl">el</span> agua, <span class="hl">el</span> águila, <span class="hl">el</span> alma, <span class="hl">el</span> hacha</div><div class="example-en">artículo masculino en singular…</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="hl">las</span> aguas, <span class="hl">el</span> agua <span class="hl">fría</span>, un águila <span class="hl">majestuosa</span></div><div class="example-en">…pero el género real es femenino</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es">el área, el aula, el hambre, el arma, el ave</div></div></div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>Scope of the rule, precisely:</p>
+      <ul>
+        <li>Only when the initial <strong>a-/ha- is stressed</strong>. Unstressed initial a- behaves normally: <em>la abeja, la harina, la amapola</em>.</li>
+        <li>Only the <strong>singular</strong> definite/indefinite article switches (<em>el agua, un águila</em>). The plural reverts: <em>las aguas, unas águilas</em>.</li>
+        <li>The noun stays grammatically <strong>feminine</strong> throughout, so adjectives are feminine: <em>el agua negra</em>, <em>el águila herida</em>.</li>
+      </ul>
+      <p>This is the one place where the article and the true gender disagree — exactly the case worth drilling.</p>
+    </div>
+  </article>
+
+  <!-- ⑤ Ambos: común en cuanto al género -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Ambos <span class="qualifier">común en cuanto al género</span></div>
+        <div class="card-title-en">One form, gender follows the person</div>
+      </div>
+    </div>
+    <p class="explanation">
+      Muchos sustantivos que designan <strong>personas</strong> tienen una sola forma; el género lo marca
+      el artículo según quién sea el referente. Suelen agruparse por terminación.
+    </p>
+    <div class="examples-block">
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-ista</span> el/la periodista, el/la artista, el/la dentista</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-nte</span> el/la estudiante, el/la cantante, el/la representante</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">-a</span> el/la atleta, el/la colega, el/la guía</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">otros</span> el/la modelo, el/la testigo, el/la joven</div></div></div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Here the article tracks <strong>the person's gender</strong> — <em>el</em> artista (a man) / <em>la</em> artista (a woman) — but the word itself never changes. This is a different phenomenon from the ambiguous <em>things</em> in the next card, where either article refers to the same object.
+    </div>
+  </article>
+
+  <!-- ⑥ Ambiguos y regionales -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Ambiguos y regionales</div>
+        <div class="card-title-en">Words that accept either article</div>
+      </div>
+    </div>
+    <p class="explanation">
+      Un grupo pequeño de sustantivos admite <strong>los dos artículos</strong> para referirse a lo mismo.
+      Conviene distinguir tres situaciones distintas.
+    </p>
+    <div class="examples-block">
+      <div class="example-row"><div class="example-body"><div class="example-es">el mar / la mar, el azúcar / la azúcar, el arte / las artes</div><div class="example-en">ambiguos verdaderos — mismo significado</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es">la sartén <span class="reg-badge reg-esp">España</span> &nbsp; el sartén <span class="reg-badge reg-lat">LatAm</span></div><div class="example-en">reparto regional limpio</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es">el calor <span class="reg-badge reg-esp">estándar</span> &nbsp; la calor</div><div class="example-en">una forma culta, otra dialectal</div></div></div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>Three different reasons a word ends up with two articles — keep them apart:</p>
+      <ul>
+        <li><strong>Truly ambiguous:</strong> either article, same meaning, both standard. <em>El mar</em> is everyday; <em>la mar</em> is literary or nautical.</li>
+        <li><strong>Regional (Spain vs. Latin America):</strong> a clean geographic split, e.g. <em>la sartén</em> (Spain) / <em>el sartén</em> (much of Latin America). This is the only regional divide worth tracking here.</li>
+        <li><strong>Standard vs. colloquial:</strong> <em>el calor</em> is the educated standard; <em>la calor</em> is dialectal/rural. Recognize it, but don't imitate it.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- ⑦ Epicenos y homógrafos -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title">Epicenos y homógrafos</div>
+        <div class="card-title-en">Two more groups that fool you</div>
+      </div>
+    </div>
+    <p class="explanation">
+      Dos categorías más que rompen la intuición: los <strong>epicenos</strong>, de género fijo aunque
+      cambie el sexo del referente, y los <strong>homógrafos</strong>, donde el género cambia el significado.
+    </p>
+    <div class="examples-block">
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">epiceno</span> la víctima, la persona, el personaje, la criatura</div><div class="example-en">género fijo, sea hombre o mujer</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">homógr.</span> el cura (sacerdote) / la cura (remedio)</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">homógr.</span> el capital (dinero) / la capital (ciudad); el orden (secuencia) / la orden (mandato)</div></div></div>
+      <div class="example-row"><div class="example-body"><div class="example-es"><span class="lead">bebé</span> el bebé <span class="reg-badge reg-esp">España</span> &nbsp; la bebé / el bebé <span class="reg-badge reg-lat">América</span></div></div></div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <ul>
+        <li><strong>Epicene:</strong> one fixed grammatical gender no matter the referent's sex. <em>La víctima</em> stays feminine even for a man; <em>el personaje</em> stays masculine for a woman.</li>
+        <li><strong>Homograph:</strong> same spelling, but the article flips the meaning — <em>el cura</em> (the priest) vs. <em>la cura</em> (the cure). These are really two different words.</li>
+        <li><strong>bebé</strong> sits between the categories: in Spain it's an epicene masculine (<em>el bebé</em> for any baby), while in much of Latin America it's common-gender (<em>la bebé</em> for a girl). A word genuinely in transition.</li>
+      </ul>
+    </div>
+  </article>
+
+  <a href="../interactive/quiz-genero.html" class="quiz-cta">
+    <span class="quiz-cta-label">Empezar quiz <span class="quiz-cta-arrow">→</span></span>
+    <span class="quiz-cta-sub">Pon a prueba el género con un cuestionario interactivo</span>
+  </a>
+
+</div>
+
+<!-- Guía Rápida modal -->
+<div class="modal-overlay" id="modal-cheat" onclick="handleCheatOverlayClick(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Guía Rápida (Cheat Sheet)</div>
+      <button class="close-btn" onclick="closeCheat()" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Fast gender cues by ending. These are <strong>tendencies, not laws</strong> — every line has exceptions, and some words just have to be memorized with their article.</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>If the word…</th><th>Likely gender — and the catch</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>ends in <strong>-o</strong></td><td><em>masculino</em> — el libro<span class="watch">but: la mano, la foto, la moto, la radio</span></td></tr>
+            <tr><td>ends in <strong>-l, -n, -r, -s, -e</strong> (LONERS)</td><td><em>masculino</em> — el papel, el amor<span class="watch">-e is the weakest cue (la noche, la clase); -s only counts in the singular</span></td></tr>
+            <tr><td>ends in <strong>-a</strong></td><td><em>femenino</em> — la casa<span class="watch">but: el día, el mapa, el sofá, and Greek -ma words</span></td></tr>
+            <tr><td>ends in <strong>-ción/-sión, -dad/-tad, -tud, -umbre</strong></td><td><em>femenino</em> — la canción, la libertad<span class="watch">very reliable</span></td></tr>
+            <tr><td>ends in <strong>-ma</strong> (Greek origin)</td><td><em>masculino</em> — el problema, el sistema<span class="watch">but native -ma words stay feminine: la cama, la pluma</span></td></tr>
+            <tr><td>ends in <strong>-ón</strong> (not -ción/-sión)</td><td><em>masculino</em> — el avión, el corazón</td></tr>
+            <tr><td>starts with <strong>stressed a-/ha-</strong></td><td><em>femenino, pero "el" en singular</em> — el agua, el águila<span class="watch">stays feminine: las aguas, el agua fría</span></td></tr>
+            <tr><td>names a <strong>person</strong>, ends in -ista / -nte / -a</td><td><em>ambos</em> — el/la artista, el/la estudiante</td></tr>
+            <tr><td>is a known <strong>homograph</strong></td><td>gender flips the meaning — <em>el cura / la cura</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function openCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.remove('active');
+  document.body.style.overflow = '';
+}
+function handleCheatOverlayClick(e) {
+  if (e.target.id === 'modal-cheat') closeCheat();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCheat();
+});
+</script>
+</body>
+</html>

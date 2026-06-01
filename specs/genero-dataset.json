@@ -1,0 +1,3925 @@
+{
+  "schemaVersion": 2,
+  "updated": "2026-06-01",
+  "tagVocab": [
+    "ma",
+    "el-agua",
+    "excepcion",
+    "regla-ok",
+    "epiceno"
+  ],
+  "notes": "articulo = graded answer (el/la/ambos); genero = indicator (m/f/ambos); definicion = English gloss shown only AFTER answering. Removable iff articulo in {el,la} AND contexto=='' AND tags==[]. Homograph & bebé pairs intentionally share a normalized palabra. dificultad: curated outliers seeded 'dificil'; fluff and regla-ok anchors 'facil'.",
+  "words": [
+    {
+      "palabra": "dinero",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "money"
+    },
+    {
+      "palabra": "zapato",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "shoe"
+    },
+    {
+      "palabra": "sombrero",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "hat"
+    },
+    {
+      "palabra": "perro",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "dog"
+    },
+    {
+      "palabra": "gato",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "cat"
+    },
+    {
+      "palabra": "caballo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "horse"
+    },
+    {
+      "palabra": "huevo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "egg"
+    },
+    {
+      "palabra": "queso",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "cheese"
+    },
+    {
+      "palabra": "vino",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "wine"
+    },
+    {
+      "palabra": "río",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "river"
+    },
+    {
+      "palabra": "barco",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "ship / boat"
+    },
+    {
+      "palabra": "fuego",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "fire"
+    },
+    {
+      "palabra": "juego",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "game"
+    },
+    {
+      "palabra": "suelo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "floor / ground"
+    },
+    {
+      "palabra": "techo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "ceiling / roof"
+    },
+    {
+      "palabra": "cielo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "sky / heaven"
+    },
+    {
+      "palabra": "pelo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "hair"
+    },
+    {
+      "palabra": "beso",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "kiss"
+    },
+    {
+      "palabra": "sueño",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "dream / sleep"
+    },
+    {
+      "palabra": "premio",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "prize / award"
+    },
+    {
+      "palabra": "regalo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "gift"
+    },
+    {
+      "palabra": "vecino",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "neighbor"
+    },
+    {
+      "palabra": "cuchillo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "knife"
+    },
+    {
+      "palabra": "bolso",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "handbag / purse"
+    },
+    {
+      "palabra": "dedo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "finger / toe"
+    },
+    {
+      "palabra": "brazo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "arm"
+    },
+    {
+      "palabra": "ojo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "eye"
+    },
+    {
+      "palabra": "cuerpo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "body"
+    },
+    {
+      "palabra": "pueblo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "town / people"
+    },
+    {
+      "palabra": "campo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "field / countryside"
+    },
+    {
+      "palabra": "grupo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "group"
+    },
+    {
+      "palabra": "modo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "way / manner"
+    },
+    {
+      "palabra": "caso",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "case"
+    },
+    {
+      "palabra": "paso",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "step / pass"
+    },
+    {
+      "palabra": "trabajo",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "work / job"
+    },
+    {
+      "palabra": "año",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "year"
+    },
+    {
+      "palabra": "baño",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "bathroom"
+    },
+    {
+      "palabra": "aire",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "air"
+    },
+    {
+      "palabra": "parque",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "park"
+    },
+    {
+      "palabra": "golpe",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "blow / hit"
+    },
+    {
+      "palabra": "tigre",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "tiger"
+    },
+    {
+      "palabra": "postre",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "dessert"
+    },
+    {
+      "palabra": "paquete",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "package / packet"
+    },
+    {
+      "palabra": "billete",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "ticket / banknote"
+    },
+    {
+      "palabra": "cohete",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "rocket"
+    },
+    {
+      "palabra": "diente",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "tooth"
+    },
+    {
+      "palabra": "puente",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "bridge"
+    },
+    {
+      "palabra": "jefe",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "boss"
+    },
+    {
+      "palabra": "traje",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "suit / outfit"
+    },
+    {
+      "palabra": "viaje",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "trip / journey"
+    },
+    {
+      "palabra": "valle",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "valley"
+    },
+    {
+      "palabra": "cofre",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "chest / coffer"
+    },
+    {
+      "palabra": "nivel",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "level"
+    },
+    {
+      "palabra": "túnel",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "tunnel"
+    },
+    {
+      "palabra": "sol",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "sun"
+    },
+    {
+      "palabra": "control",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "control"
+    },
+    {
+      "palabra": "mantel",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "tablecloth"
+    },
+    {
+      "palabra": "pastel",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "cake / pastry"
+    },
+    {
+      "palabra": "ángel",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "angel"
+    },
+    {
+      "palabra": "mármol",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "marble"
+    },
+    {
+      "palabra": "fútbol",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "soccer / football"
+    },
+    {
+      "palabra": "huracán",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "hurricane"
+    },
+    {
+      "palabra": "volcán",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "volcano"
+    },
+    {
+      "palabra": "guardián",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "guardian"
+    },
+    {
+      "palabra": "andén",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "platform"
+    },
+    {
+      "palabra": "favor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "favor"
+    },
+    {
+      "palabra": "temor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "fear"
+    },
+    {
+      "palabra": "rumor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "rumor"
+    },
+    {
+      "palabra": "licor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "liquor"
+    },
+    {
+      "palabra": "tractor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "tractor"
+    },
+    {
+      "palabra": "ascensor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "elevator / lift"
+    },
+    {
+      "palabra": "comedor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "dining room"
+    },
+    {
+      "palabra": "martes",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "Tuesday"
+    },
+    {
+      "palabra": "jueves",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "Thursday"
+    },
+    {
+      "palabra": "viernes",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "Friday"
+    },
+    {
+      "palabra": "ciprés",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "cypress"
+    },
+    {
+      "palabra": "compás",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "compass / rhythm"
+    },
+    {
+      "palabra": "revés",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "setback / backhand"
+    },
+    {
+      "palabra": "cocina",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "kitchen"
+    },
+    {
+      "palabra": "escuela",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "school"
+    },
+    {
+      "palabra": "tienda",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "store / shop"
+    },
+    {
+      "palabra": "playa",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "beach"
+    },
+    {
+      "palabra": "montaña",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "mountain"
+    },
+    {
+      "palabra": "isla",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "island"
+    },
+    {
+      "palabra": "planta",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "plant / floor"
+    },
+    {
+      "palabra": "fruta",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "fruit"
+    },
+    {
+      "palabra": "manzana",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "apple / city block"
+    },
+    {
+      "palabra": "naranja",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "orange"
+    },
+    {
+      "palabra": "cebolla",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "onion"
+    },
+    {
+      "palabra": "sopa",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "soup"
+    },
+    {
+      "palabra": "taza",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "cup / mug"
+    },
+    {
+      "palabra": "cuchara",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "spoon"
+    },
+    {
+      "palabra": "botella",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "bottle"
+    },
+    {
+      "palabra": "camisa",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "shirt"
+    },
+    {
+      "palabra": "falda",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "skirt"
+    },
+    {
+      "palabra": "chaqueta",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "jacket"
+    },
+    {
+      "palabra": "bufanda",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "scarf"
+    },
+    {
+      "palabra": "manta",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "blanket"
+    },
+    {
+      "palabra": "almohada",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "pillow"
+    },
+    {
+      "palabra": "sábana",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "bed sheet"
+    },
+    {
+      "palabra": "cortina",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "curtain"
+    },
+    {
+      "palabra": "alfombra",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "rug / carpet"
+    },
+    {
+      "palabra": "lámpara",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "lamp"
+    },
+    {
+      "palabra": "pintura",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "painting / paint"
+    },
+    {
+      "palabra": "pregunta",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "question"
+    },
+    {
+      "palabra": "respuesta",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "answer / response"
+    },
+    {
+      "palabra": "palabra",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "word"
+    },
+    {
+      "palabra": "letra",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "letter / lyrics"
+    },
+    {
+      "palabra": "página",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "page"
+    },
+    {
+      "palabra": "semana",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "week"
+    },
+    {
+      "palabra": "hora",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "hour / time"
+    },
+    {
+      "palabra": "cosa",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "thing"
+    },
+    {
+      "palabra": "vida",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "life"
+    },
+    {
+      "palabra": "bondad",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "kindness / goodness"
+    },
+    {
+      "palabra": "edad",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "age"
+    },
+    {
+      "palabra": "mitad",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "half"
+    },
+    {
+      "palabra": "amistad",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "friendship"
+    },
+    {
+      "palabra": "virtud",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "virtue"
+    },
+    {
+      "palabra": "actitud",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "attitude"
+    },
+    {
+      "palabra": "multitud",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "crowd / multitude"
+    },
+    {
+      "palabra": "gratitud",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "gratitude"
+    },
+    {
+      "palabra": "costumbre",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "custom / habit"
+    },
+    {
+      "palabra": "información",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "information"
+    },
+    {
+      "palabra": "situación",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "situation"
+    },
+    {
+      "palabra": "educación",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "education"
+    },
+    {
+      "palabra": "relación",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "relationship / relation"
+    },
+    {
+      "palabra": "atención",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "attention"
+    },
+    {
+      "palabra": "estación",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "station / season"
+    },
+    {
+      "palabra": "lección",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "lesson"
+    },
+    {
+      "palabra": "función",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "function / performance"
+    },
+    {
+      "palabra": "dirección",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "address / direction"
+    },
+    {
+      "palabra": "población",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "population"
+    },
+    {
+      "palabra": "actriz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "actress"
+    },
+    {
+      "palabra": "raíz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "root"
+    },
+    {
+      "palabra": "perdiz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "partridge"
+    },
+    {
+      "palabra": "lombriz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "worm"
+    },
+    {
+      "palabra": "codorniz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "quail"
+    },
+    {
+      "palabra": "papel",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "paper / role"
+    },
+    {
+      "palabra": "árbol",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "tree"
+    },
+    {
+      "palabra": "hotel",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "hotel"
+    },
+    {
+      "palabra": "hospital",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "hospital"
+    },
+    {
+      "palabra": "animal",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "animal"
+    },
+    {
+      "palabra": "cristal",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "glass / crystal"
+    },
+    {
+      "palabra": "libro",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "book"
+    },
+    {
+      "palabra": "plato",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "plate / dish"
+    },
+    {
+      "palabra": "cuaderno",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "notebook"
+    },
+    {
+      "palabra": "vaso",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "glass (drinking)"
+    },
+    {
+      "palabra": "banco",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "bank / bench"
+    },
+    {
+      "palabra": "coche",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "car"
+    },
+    {
+      "palabra": "nombre",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "name"
+    },
+    {
+      "palabra": "cine",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "cinema / movies"
+    },
+    {
+      "palabra": "deporte",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "sport"
+    },
+    {
+      "palabra": "bosque",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "forest / woods"
+    },
+    {
+      "palabra": "amor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "love"
+    },
+    {
+      "palabra": "color",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "color"
+    },
+    {
+      "palabra": "sabor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "flavor / taste"
+    },
+    {
+      "palabra": "dolor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "pain"
+    },
+    {
+      "palabra": "motor",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "motor / engine"
+    },
+    {
+      "palabra": "pan",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "bread"
+    },
+    {
+      "palabra": "jardín",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "garden"
+    },
+    {
+      "palabra": "tren",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "train"
+    },
+    {
+      "palabra": "examen",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "exam / test"
+    },
+    {
+      "palabra": "origen",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "origin"
+    },
+    {
+      "palabra": "mes",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "month"
+    },
+    {
+      "palabra": "país",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "country"
+    },
+    {
+      "palabra": "autobús",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "bus"
+    },
+    {
+      "palabra": "interés",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "interest"
+    },
+    {
+      "palabra": "lunes",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "Monday"
+    },
+    {
+      "palabra": "ciudad",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "city"
+    },
+    {
+      "palabra": "verdad",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "truth"
+    },
+    {
+      "palabra": "pared",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "wall"
+    },
+    {
+      "palabra": "red",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "net / network"
+    },
+    {
+      "palabra": "salud",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "health"
+    },
+    {
+      "palabra": "luz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "light"
+    },
+    {
+      "palabra": "paz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "peace"
+    },
+    {
+      "palabra": "voz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "voice"
+    },
+    {
+      "palabra": "nariz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "nose"
+    },
+    {
+      "palabra": "cruz",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "cross"
+    },
+    {
+      "palabra": "vez",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "time / occasion"
+    },
+    {
+      "palabra": "canción",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "song"
+    },
+    {
+      "palabra": "nación",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "nation"
+    },
+    {
+      "palabra": "región",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "region"
+    },
+    {
+      "palabra": "sesión",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "session"
+    },
+    {
+      "palabra": "opinión",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "opinion"
+    },
+    {
+      "palabra": "casa",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "house"
+    },
+    {
+      "palabra": "mesa",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "table"
+    },
+    {
+      "palabra": "silla",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "chair"
+    },
+    {
+      "palabra": "puerta",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "door"
+    },
+    {
+      "palabra": "ventana",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [
+        "regla-ok"
+      ],
+      "definicion": "window"
+    },
+    {
+      "palabra": "problema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "problem"
+    },
+    {
+      "palabra": "tema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "theme / topic"
+    },
+    {
+      "palabra": "sistema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "system"
+    },
+    {
+      "palabra": "idioma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "language"
+    },
+    {
+      "palabra": "clima",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "climate / weather"
+    },
+    {
+      "palabra": "programa",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "program"
+    },
+    {
+      "palabra": "poema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "poem"
+    },
+    {
+      "palabra": "drama",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "drama"
+    },
+    {
+      "palabra": "dilema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "dilemma"
+    },
+    {
+      "palabra": "síntoma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "symptom"
+    },
+    {
+      "palabra": "esquema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "outline / diagram"
+    },
+    {
+      "palabra": "diploma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "diploma"
+    },
+    {
+      "palabra": "enigma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "enigma / riddle"
+    },
+    {
+      "palabra": "fantasma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "ghost"
+    },
+    {
+      "palabra": "carisma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "charisma"
+    },
+    {
+      "palabra": "aroma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "aroma / scent"
+    },
+    {
+      "palabra": "panorama",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "panorama / overview"
+    },
+    {
+      "palabra": "diagrama",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "diagram"
+    },
+    {
+      "palabra": "teorema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "theorem"
+    },
+    {
+      "palabra": "axioma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "axiom"
+    },
+    {
+      "palabra": "lema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "motto / slogan"
+    },
+    {
+      "palabra": "trauma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "trauma"
+    },
+    {
+      "palabra": "dogma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "dogma"
+    },
+    {
+      "palabra": "prisma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "prism"
+    },
+    {
+      "palabra": "emblema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "emblem"
+    },
+    {
+      "palabra": "cama",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "bed"
+    },
+    {
+      "palabra": "rama",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "branch"
+    },
+    {
+      "palabra": "pluma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "feather / pen"
+    },
+    {
+      "palabra": "forma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "shape / form"
+    },
+    {
+      "palabra": "fama",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "fame"
+    },
+    {
+      "palabra": "lima",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "file / lime"
+    },
+    {
+      "palabra": "loma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "hill / hillock"
+    },
+    {
+      "palabra": "llama",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "flame / llama"
+    },
+    {
+      "palabra": "suma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "sum / addition"
+    },
+    {
+      "palabra": "goma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "rubber / eraser"
+    },
+    {
+      "palabra": "broma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "joke / prank"
+    },
+    {
+      "palabra": "crema",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "cream"
+    },
+    {
+      "palabra": "firma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "signature / firm"
+    },
+    {
+      "palabra": "norma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "rule / norm"
+    },
+    {
+      "palabra": "palma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "palm"
+    },
+    {
+      "palabra": "calma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "calm"
+    },
+    {
+      "palabra": "alarma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma"
+      ],
+      "definicion": "alarm"
+    },
+    {
+      "palabra": "reuma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "rheumatism"
+    },
+    {
+      "palabra": "aneurisma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "aneurysm"
+    },
+    {
+      "palabra": "edema",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "ma",
+        "excepcion"
+      ],
+      "definicion": "edema"
+    },
+    {
+      "palabra": "agua",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "water"
+    },
+    {
+      "palabra": "águila",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "eagle"
+    },
+    {
+      "palabra": "alma",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "soul"
+    },
+    {
+      "palabra": "área",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "area"
+    },
+    {
+      "palabra": "arma",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "weapon"
+    },
+    {
+      "palabra": "aula",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "classroom"
+    },
+    {
+      "palabra": "hacha",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "axe"
+    },
+    {
+      "palabra": "hambre",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "hunger"
+    },
+    {
+      "palabra": "ala",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "wing"
+    },
+    {
+      "palabra": "ancla",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "anchor"
+    },
+    {
+      "palabra": "asa",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "handle"
+    },
+    {
+      "palabra": "hada",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "fairy"
+    },
+    {
+      "palabra": "haba",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "broad bean"
+    },
+    {
+      "palabra": "habla",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "speech"
+    },
+    {
+      "palabra": "arpa",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "harp"
+    },
+    {
+      "palabra": "acta",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "official record / minutes"
+    },
+    {
+      "palabra": "ave",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "bird"
+    },
+    {
+      "palabra": "asma",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "asthma"
+    },
+    {
+      "palabra": "ascua",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "ember"
+    },
+    {
+      "palabra": "aria",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "aria"
+    },
+    {
+      "palabra": "arca",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "ark / chest"
+    },
+    {
+      "palabra": "hampa",
+      "articulo": "el",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "el-agua"
+      ],
+      "definicion": "underworld"
+    },
+    {
+      "palabra": "mano",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "hand"
+    },
+    {
+      "palabra": "foto",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "photo"
+    },
+    {
+      "palabra": "moto",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "motorcycle"
+    },
+    {
+      "palabra": "libido",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "libido"
+    },
+    {
+      "palabra": "sal",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "salt"
+    },
+    {
+      "palabra": "miel",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "honey"
+    },
+    {
+      "palabra": "piel",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "skin"
+    },
+    {
+      "palabra": "cárcel",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "prison / jail"
+    },
+    {
+      "palabra": "señal",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "sign / signal"
+    },
+    {
+      "palabra": "vocal",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "vowel"
+    },
+    {
+      "palabra": "flor",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "flower"
+    },
+    {
+      "palabra": "labor",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "labor / work"
+    },
+    {
+      "palabra": "mujer",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "woman"
+    },
+    {
+      "palabra": "coliflor",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "cauliflower"
+    },
+    {
+      "palabra": "imagen",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "image / picture"
+    },
+    {
+      "palabra": "sien",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "temple (of the head)"
+    },
+    {
+      "palabra": "crin",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "mane / horsehair"
+    },
+    {
+      "palabra": "tos",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "cough"
+    },
+    {
+      "palabra": "crisis",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "crisis"
+    },
+    {
+      "palabra": "tesis",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "thesis"
+    },
+    {
+      "palabra": "bilis",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "bile"
+    },
+    {
+      "palabra": "noche",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "night"
+    },
+    {
+      "palabra": "tarde",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "afternoon"
+    },
+    {
+      "palabra": "calle",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "street"
+    },
+    {
+      "palabra": "clase",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "class"
+    },
+    {
+      "palabra": "carne",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "meat"
+    },
+    {
+      "palabra": "madre",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "mother"
+    },
+    {
+      "palabra": "llave",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "key"
+    },
+    {
+      "palabra": "sangre",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "blood"
+    },
+    {
+      "palabra": "nieve",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "snow"
+    },
+    {
+      "palabra": "leche",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "milk"
+    },
+    {
+      "palabra": "suerte",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "luck"
+    },
+    {
+      "palabra": "muerte",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "death"
+    },
+    {
+      "palabra": "mente",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "mind"
+    },
+    {
+      "palabra": "fuente",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "fountain / source"
+    },
+    {
+      "palabra": "frase",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "phrase / sentence"
+    },
+    {
+      "palabra": "base",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "base"
+    },
+    {
+      "palabra": "día",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "day"
+    },
+    {
+      "palabra": "sofá",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "sofa / couch"
+    },
+    {
+      "palabra": "mapa",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "map"
+    },
+    {
+      "palabra": "planeta",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "planet"
+    },
+    {
+      "palabra": "tranvía",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "tram / streetcar"
+    },
+    {
+      "palabra": "gorila",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "gorilla (animal, el; ambos in other senses)"
+    },
+    {
+      "palabra": "pijama",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "pajamas"
+    },
+    {
+      "palabra": "césped",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "lawn / grass"
+    },
+    {
+      "palabra": "ataúd",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "coffin"
+    },
+    {
+      "palabra": "huésped",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "guest"
+    },
+    {
+      "palabra": "récord",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "record (best mark)"
+    },
+    {
+      "palabra": "alud",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "avalanche"
+    },
+    {
+      "palabra": "avión",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "airplane"
+    },
+    {
+      "palabra": "camión",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "truck"
+    },
+    {
+      "palabra": "corazón",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "heart"
+    },
+    {
+      "palabra": "buzón",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "mailbox"
+    },
+    {
+      "palabra": "sarampión",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "measles"
+    },
+    {
+      "palabra": "lápiz",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "pencil"
+    },
+    {
+      "palabra": "arroz",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "rice"
+    },
+    {
+      "palabra": "pez",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "fish"
+    },
+    {
+      "palabra": "maíz",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "corn / maize"
+    },
+    {
+      "palabra": "juez",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "judge"
+    },
+    {
+      "palabra": "ajedrez",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "chess"
+    },
+    {
+      "palabra": "disfraz",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "costume / disguise"
+    },
+    {
+      "palabra": "avestruz",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "excepcion"
+      ],
+      "definicion": "ostrich"
+    },
+    {
+      "palabra": "estudiante",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "student"
+    },
+    {
+      "palabra": "periodista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "journalist"
+    },
+    {
+      "palabra": "artista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "artist"
+    },
+    {
+      "palabra": "dentista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "dentist"
+    },
+    {
+      "palabra": "turista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "tourist"
+    },
+    {
+      "palabra": "atleta",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "athlete"
+    },
+    {
+      "palabra": "colega",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "colleague"
+    },
+    {
+      "palabra": "guía",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "guide"
+    },
+    {
+      "palabra": "modelo",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "model"
+    },
+    {
+      "palabra": "testigo",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "witness"
+    },
+    {
+      "palabra": "joven",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "young person"
+    },
+    {
+      "palabra": "cantante",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "singer"
+    },
+    {
+      "palabra": "representante",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "representative"
+    },
+    {
+      "palabra": "gerente",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "manager"
+    },
+    {
+      "palabra": "pianista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "pianist"
+    },
+    {
+      "palabra": "deportista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "athlete / sportsperson"
+    },
+    {
+      "palabra": "especialista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "specialist"
+    },
+    {
+      "palabra": "paciente",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "patient"
+    },
+    {
+      "palabra": "cliente",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "client / customer"
+    },
+    {
+      "palabra": "agente",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "agent"
+    },
+    {
+      "palabra": "taxista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "taxi driver"
+    },
+    {
+      "palabra": "futbolista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "soccer player"
+    },
+    {
+      "palabra": "novelista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "novelist"
+    },
+    {
+      "palabra": "recepcionista",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "receptionist"
+    },
+    {
+      "palabra": "profesional",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "professional"
+    },
+    {
+      "palabra": "rival",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "rival"
+    },
+    {
+      "palabra": "portavoz",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "spokesperson"
+    },
+    {
+      "palabra": "líder",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "leader"
+    },
+    {
+      "palabra": "intérprete",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "interpreter / performer"
+    },
+    {
+      "palabra": "oyente",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "listener"
+    },
+    {
+      "palabra": "amante",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "lover"
+    },
+    {
+      "palabra": "votante",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "voter"
+    },
+    {
+      "palabra": "cómplice",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "accomplice"
+    },
+    {
+      "palabra": "titular",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "facil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "headline / holder"
+    },
+    {
+      "palabra": "mar",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "sea (el común; la literario/náutico)"
+    },
+    {
+      "palabra": "azúcar",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "sugar (usually el; la also used)"
+    },
+    {
+      "palabra": "arte",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "(phonetic)",
+      "tags": [],
+      "definicion": "art (el arte sing., las artes pl.)"
+    },
+    {
+      "palabra": "internet",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "internet (el común; la internet = the web)"
+    },
+    {
+      "palabra": "maratón",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "marathon (el tradicional; la = the race)"
+    },
+    {
+      "palabra": "sartén",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "frying pan (Spain: la; Lat. Am.: el)"
+    },
+    {
+      "palabra": "sauna",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "sauna (Spain: la; Americas: el)"
+    },
+    {
+      "palabra": "tilde",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "accent mark (Spain: la; Southern Cone: el)"
+    },
+    {
+      "palabra": "terminal",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "terminal (la = station; el = device)"
+    },
+    {
+      "palabra": "armazón",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "framework (Spain: el; Americas: la)"
+    },
+    {
+      "palabra": "interrogante",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [],
+      "definicion": "question / query (Spain: el; Lat. Am.: la)"
+    },
+    {
+      "palabra": "cura",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "sacerdote",
+      "tags": [],
+      "definicion": "priest"
+    },
+    {
+      "palabra": "cura",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "remedio, curación",
+      "tags": [],
+      "definicion": "cure / remedy"
+    },
+    {
+      "palabra": "capital",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "dinero, fondos",
+      "tags": [],
+      "definicion": "capital (money / funds)"
+    },
+    {
+      "palabra": "capital",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "ciudad principal",
+      "tags": [],
+      "definicion": "capital (city)"
+    },
+    {
+      "palabra": "orden",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "secuencia, organización",
+      "tags": [],
+      "definicion": "order (sequence / tidiness)"
+    },
+    {
+      "palabra": "orden",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "mandato / orden religiosa",
+      "tags": [],
+      "definicion": "order (command) / religious order"
+    },
+    {
+      "palabra": "moral",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "árbol de moras",
+      "tags": [],
+      "definicion": "mulberry tree"
+    },
+    {
+      "palabra": "moral",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "ética, ánimo",
+      "tags": [],
+      "definicion": "morals / morale"
+    },
+    {
+      "palabra": "frente",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "zona de combate / clima",
+      "tags": [],
+      "definicion": "front (battle / weather)"
+    },
+    {
+      "palabra": "frente",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "parte de la cara",
+      "tags": [],
+      "definicion": "forehead"
+    },
+    {
+      "palabra": "corte",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "acción de cortar",
+      "tags": [],
+      "definicion": "cut"
+    },
+    {
+      "palabra": "corte",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "tribunal / corte real",
+      "tags": [],
+      "definicion": "court (royal / legal)"
+    },
+    {
+      "palabra": "coma",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "estado médico",
+      "tags": [],
+      "definicion": "coma"
+    },
+    {
+      "palabra": "coma",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "signo de puntuación",
+      "tags": [],
+      "definicion": "comma"
+    },
+    {
+      "palabra": "cólera",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "enfermedad",
+      "tags": [],
+      "definicion": "cholera"
+    },
+    {
+      "palabra": "cólera",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "ira, enojo",
+      "tags": [],
+      "definicion": "anger / rage"
+    },
+    {
+      "palabra": "pendiente",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "arete, joya",
+      "tags": [],
+      "definicion": "earring"
+    },
+    {
+      "palabra": "pendiente",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "cuesta, inclinación",
+      "tags": [],
+      "definicion": "slope / pending matter"
+    },
+    {
+      "palabra": "radio",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "medida / metal / aparato",
+      "tags": [],
+      "definicion": "radius / radium / radio set"
+    },
+    {
+      "palabra": "radio",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "emisora",
+      "tags": [],
+      "definicion": "radio (broadcast)"
+    },
+    {
+      "palabra": "víctima",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "epiceno"
+      ],
+      "definicion": "victim"
+    },
+    {
+      "palabra": "persona",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "epiceno"
+      ],
+      "definicion": "person"
+    },
+    {
+      "palabra": "personaje",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "epiceno"
+      ],
+      "definicion": "character"
+    },
+    {
+      "palabra": "criatura",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "epiceno"
+      ],
+      "definicion": "creature / small child"
+    },
+    {
+      "palabra": "celebridad",
+      "articulo": "la",
+      "genero": "f",
+      "dificultad": "dificil",
+      "contexto": "",
+      "tags": [
+        "epiceno"
+      ],
+      "definicion": "celebrity"
+    },
+    {
+      "palabra": "bebé",
+      "articulo": "el",
+      "genero": "m",
+      "dificultad": "dificil",
+      "contexto": "España",
+      "tags": [],
+      "definicion": "baby (Spain: el, regardless of sex)"
+    },
+    {
+      "palabra": "bebé",
+      "articulo": "ambos",
+      "genero": "ambos",
+      "dificultad": "dificil",
+      "contexto": "América",
+      "tags": [],
+      "definicion": "baby (Lat. Am.: la/el by the baby's sex)"
+    }
+  ],
+  "contentRev": 3
+}

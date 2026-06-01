@@ -122,6 +122,24 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:16p
 .save-status .ok-text{color:var(--ok);}
 .btn-close{display:block;width:100%;margin-top:18px;font-weight:600;padding:11px;border-radius:10px;border:1px solid var(--border-focus);background:var(--accent-glow);color:var(--accent);cursor:pointer;}
 .btn-close:disabled{opacity:0.4;cursor:default;pointer-events:none;}
+.add-head{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--text-primary);margin-bottom:14px;}
+.add-row{display:flex;gap:10px;flex-wrap:wrap;}
+.add-input{flex:1;min-width:180px;font-family:'Outfit',sans-serif;font-size:0.95rem;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--bg-input);color:var(--text-primary);}
+.add-input:focus{outline:none;border-color:var(--accent);}
+.add-input::placeholder{color:var(--text-muted);}
+.add-input:disabled{opacity:0.5;}
+.btn-add{font-family:'Outfit',sans-serif;font-weight:600;font-size:0.9rem;padding:10px 22px;border-radius:22px;border:1px solid rgba(74,144,217,0.5);background:var(--accent-glow);color:var(--accent);cursor:pointer;transition:all 0.2s;}
+.btn-add:hover{background:rgba(74,144,217,0.24);}
+.add-dup{margin-top:12px;color:var(--warn);font-size:0.88rem;}
+.add-ok{margin-top:12px;color:var(--ok);font-size:0.88rem;}
+.add-field-label{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);margin:16px 0 7px;}
+.toggle-row{display:flex;gap:8px;}
+.toggle-row .flag-btn{flex:1;justify-content:center;text-align:center;}
+.flag-btn.sel{border-color:var(--accent);color:#cfe3fb;background:var(--accent-glow);}
+.add-status{margin-top:16px;display:flex;align-items:center;gap:9px;font-size:0.88rem;color:var(--text-secondary);min-height:1.2em;}
+.btn-go{font-weight:600;padding:9px 20px;border-radius:8px;border:1px solid rgba(74,144,217,0.5);background:var(--accent-glow);color:var(--accent);cursor:pointer;}
+.btn-go:hover{background:rgba(74,144,217,0.24);}
+.btn-go:disabled{opacity:0.4;cursor:default;pointer-events:none;}
 @media(max-width:600px){.panel{padding:20px 18px;}.word-card .word{font-size:2.1rem;}.ans-btn{font-size:1.25rem;}}
 </style>
 </head>
@@ -178,6 +196,15 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:16p
     <div class="guard hidden" id="guard"></div>
   </div>
 
+  <div class="panel hidden" id="addPanel">
+    <div class="add-head">Añadir palabra</div>
+    <div class="add-row">
+      <input type="text" id="addWord" class="add-input" placeholder="Escribe una palabra…" autocomplete="off" onkeydown="if(event.key==='Enter')tryAdd()">
+      <button class="btn-add" onclick="tryAdd()">Añadir</button>
+    </div>
+    <div class="add-dup hidden" id="addMsg"></div>
+  </div>
+
   <div class="panel hidden" id="playPanel">
     <div class="q-top">
       <span class="q-progress" id="qProgress">Pregunta 1 / 10</span>
@@ -225,6 +252,30 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:16p
   </div></div>
 </div>
 
+<div class="overlay" id="addOverlay">
+  <div class="modal"><div class="modal-pad">
+    <h3>Añadir palabra</h3>
+    <p>Vas a añadir <strong id="addWordEcho"></strong>. Las palabras añadidas son de género fijo (el/la) y se pueden eliminar después.</p>
+    <div class="add-field-label">Artículo</div>
+    <div class="toggle-row">
+      <button class="flag-btn" id="addEl" onclick="setAddArt('el')">EL · masculino</button>
+      <button class="flag-btn" id="addLa" onclick="setAddArt('la')">LA · femenino</button>
+    </div>
+    <div class="add-field-label">Definición (inglés)</div>
+    <input type="text" id="addDef" class="add-input" placeholder="p. ej. table, house…" autocomplete="off" style="width:100%">
+    <div class="add-field-label">Dificultad</div>
+    <div class="toggle-row">
+      <button class="flag-btn act-facil" id="addFacil" onclick="setAddDiff('facil')">Fácil</button>
+      <button class="flag-btn" id="addDificil" onclick="setAddDiff('dificil')">Difícil</button>
+    </div>
+    <div class="add-status" id="addStatus"></div>
+    <div class="modal-actions">
+      <button class="btn-no" id="addCancel" onclick="closeAdd()">Cancelar</button>
+      <button class="btn-go" id="addConfirm" onclick="confirmAdd()" disabled>Confirmar</button>
+    </div>
+  </div></div>
+</div>
+
 <div class="overlay" id="resultsOverlay">
   <div class="modal"><div class="modal-pad">
     <div class="res-score" id="resScore">0 / 0<small> correctas</small></div>
@@ -267,7 +318,7 @@ function initDriveAuth(){if(typeof google==='undefined'||!google.accounts){setTi
   driveReady=true;tokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:DRIVE_SCOPE,callback:handleTokenResponse});}
 function connectDrive(){if(!driveReady){alert('La biblioteca de Google aún se está cargando. Inténtalo de nuevo.');return;}setDriveUI('busy','Conectando…');tokenClient.requestAccessToken({prompt:''});}
 function disconnectDrive(){if(driveToken)google.accounts.oauth2.revoke(driveToken,()=>{});driveToken=null;folderId=null;datasetFileId=null;dataset=null;
-  setDriveUI('disconnected','Google Drive: no conectado');document.getElementById('selectPanel').classList.add('hidden');document.getElementById('playPanel').classList.add('hidden');document.getElementById('prePanel').classList.remove('hidden');}
+  setDriveUI('disconnected','Google Drive: no conectado');document.getElementById('selectPanel').classList.add('hidden');document.getElementById('addPanel').classList.add('hidden');document.getElementById('playPanel').classList.add('hidden');document.getElementById('prePanel').classList.remove('hidden');}
 function connectDriveAsync(){return new Promise(res=>{if(!driveReady){res(false);return;}_connectResolve=res;setDriveUI('busy','Reconectando Drive…');tokenClient.requestAccessToken({prompt:''});});}
 async function ensureDriveConnection(){if(!driveToken)return await connectDriveAsync();
   try{const r=await fetch('https://www.googleapis.com/drive/v3/about?fields=user',{headers:{'Authorization':'Bearer '+driveToken}});
@@ -349,7 +400,7 @@ let answered=false,correctNow=null,removeArmed=false,shownDiff=null;
 let staged=new Map(),results=[],stats={correct:0,wrong:0,removed:0};
 
 function showSelect(){document.getElementById('prePanel').classList.add('hidden');document.getElementById('playPanel').classList.add('hidden');
-  document.getElementById('resultsOverlay').classList.remove('active');document.getElementById('selectPanel').classList.remove('hidden');renderModeButtons();renderCounts();}
+  document.getElementById('resultsOverlay').classList.remove('active');document.getElementById('selectPanel').classList.remove('hidden');document.getElementById('addPanel').classList.remove('hidden');renderModeButtons();renderCounts();}
 function renderModeButtons(){document.getElementById('modeGrid').innerHTML=MODES.map(m=>`<button class="opt${selMode===m.key?' active':''}" data-mode="${m.key}" onclick="selectMode('${m.key}')"><span>${m.label}</span><span class="opt-count" data-mc="${m.key}"></span></button>`).join('');}
 function renderCounts(){const w=dataset.words;document.getElementById('countTotal').innerHTML=w.length+'<small>palabras</small>';
   document.getElementById('countHard').innerHTML=w.filter(x=>x.dificultad==='dificil').length+'<small>difíciles</small>';
@@ -373,7 +424,7 @@ function buildQueue(){const w=dataset.words,n=selCount;
   return{queue:shuffle(pool).slice(0,n)};}
 function startQuiz(){if(!(selMode&&selCount))return;initAudio();const r=buildQueue();if(r.err){showGuard(r.err);return;}
   queue=r.queue;qIndex=0;staged=new Map();results=[];stats={correct:0,wrong:0,removed:0};
-  document.getElementById('selectPanel').classList.add('hidden');document.getElementById('playPanel').classList.remove('hidden');renderQuestion();}
+  document.getElementById('selectPanel').classList.add('hidden');document.getElementById('addPanel').classList.add('hidden');document.getElementById('playPanel').classList.remove('hidden');renderQuestion();}
 function curWord(){return queue[qIndex];}
 
 function renderQuestion(){
@@ -448,9 +499,42 @@ async function saveChanges(){
   try{await updateDatasetFile(dataset);staged=new Map();ss.innerHTML='<span class="ok-text">✓ Cambios guardados en Drive</span>';close.disabled=false;}
   catch(e){console.error(e);ss.innerHTML='<span style="color:var(--wrong)">Error al guardar en Drive.</span>';close.disabled=false;}
 }
-function returnToSelect(){document.getElementById('resultsOverlay').classList.remove('active');document.getElementById('playPanel').classList.add('hidden');document.getElementById('selectPanel').classList.remove('hidden');renderCounts();}
+function returnToSelect(){document.getElementById('resultsOverlay').classList.remove('active');document.getElementById('playPanel').classList.add('hidden');document.getElementById('selectPanel').classList.remove('hidden');document.getElementById('addPanel').classList.remove('hidden');renderCounts();}
 function askExit(){openConfirm('Salir del cuestionario','Se perderá el progreso de este cuestionario y no se guardará nada.','Sí, salir',()=>{staged=new Map();results=[];if('speechSynthesis' in window)speechSynthesis.cancel();document.getElementById('playPanel').classList.add('hidden');document.getElementById('selectPanel').classList.remove('hidden');});}
 function replayWord(){if(answered||!answered)speakWord(curWord().palabra);}
+
+/* ---------- add word ---------- */
+let pendingWord=null,addArt=null,addDiff='facil';
+function norm(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();}
+function showAddMsg(text,ok){const m=document.getElementById('addMsg');m.textContent=text;m.className=ok?'add-ok':'add-dup';m.classList.remove('hidden');}
+function setAddControlsEnabled(en){['addEl','addLa','addFacil','addDificil','addCancel','addDef'].forEach(id=>{const e=document.getElementById(id);if(e)e.disabled=!en;});}
+function tryAdd(){
+  const inp=document.getElementById('addWord');const raw=inp.value.trim();
+  document.getElementById('addMsg').classList.add('hidden');
+  if(!raw)return;const n=norm(raw);if(!n)return;
+  if(dataset.words.some(w=>norm(w.palabra)===n)){showAddMsg(`«${raw}» ya está en el conjunto.`,false);return;}
+  pendingWord=raw;addArt=null;addDiff='facil';
+  document.getElementById('addWordEcho').textContent='«'+raw+'»';
+  document.getElementById('addDef').value='';
+  document.getElementById('addEl').classList.remove('sel');document.getElementById('addLa').classList.remove('sel');
+  document.getElementById('addFacil').classList.add('act-facil');document.getElementById('addDificil').classList.remove('act-dificil');
+  document.getElementById('addStatus').textContent='';document.getElementById('addConfirm').disabled=true;
+  setAddControlsEnabled(true);document.getElementById('addOverlay').classList.add('active');document.getElementById('addDef').focus();
+}
+function setAddArt(a){addArt=a;document.getElementById('addEl').classList.toggle('sel',a==='el');document.getElementById('addLa').classList.toggle('sel',a==='la');document.getElementById('addConfirm').disabled=!addArt;}
+function setAddDiff(d){addDiff=d;document.getElementById('addFacil').classList.toggle('act-facil',d==='facil');document.getElementById('addDificil').classList.toggle('act-dificil',d==='dificil');}
+function closeAdd(){document.getElementById('addOverlay').classList.remove('active');}
+async function confirmAdd(){
+  if(!addArt)return;const raw=pendingWord,def=document.getElementById('addDef').value.trim();
+  const st=document.getElementById('addStatus'),cf=document.getElementById('addConfirm');
+  st.innerHTML='<div class="drive-spinner"></div><span>Guardando…</span>';cf.disabled=true;setAddControlsEnabled(false);
+  const ok=await ensureDriveConnection();
+  if(!ok){st.innerHTML='<span style="color:var(--warn)">No se pudo conectar; intenta de nuevo.</span>';cf.disabled=false;setAddControlsEnabled(true);return;}
+  const obj={palabra:raw,articulo:addArt,genero:(addArt==='el'?'m':'f'),dificultad:addDiff,contexto:'',tags:[],definicion:def};
+  const prev=dataset.updated;dataset.words.push(obj);dataset.updated=new Date().toISOString().slice(0,10);
+  try{await updateDatasetFile(dataset);closeAdd();document.getElementById('addWord').value='';renderCounts();showAddMsg(`«${raw}» añadida ✓`,true);}
+  catch(e){console.error(e);dataset.words.pop();dataset.updated=prev;st.innerHTML='<span style="color:var(--wrong)">Error al guardar.</span>';cf.disabled=false;setAddControlsEnabled(true);}
+}
 
 let _cfYes=null;
 function openConfirm(title,body,yesText,onYes){document.getElementById('cfTitle').textContent=title;document.getElementById('cfBody').textContent=body;

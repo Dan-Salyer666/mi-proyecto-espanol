@@ -372,32 +372,22 @@ h1 {
 .caution-band em { color: #fcd34d; font-style: italic; }
 
 /* Quiz CTA */
-.quiz-cta {
-  display: block;
-  text-align: center;
-  margin-top: 8px;
-  padding: 22px 24px;
-  background: linear-gradient(180deg, rgba(74,144,217,0.10), rgba(74,144,217,0.03));
-  border: 1px solid var(--border);
-  border-radius: 14px;
+.quiz-cta-wrap { text-align: center; margin: 4px 0 30px; }
+.quiz-cta-btn {
+  display: inline-block;
+  padding: 9px 24px;
+  background: rgba(78,205,196,0.12);
+  border: 1px solid rgba(78,205,196,0.45);
+  border-radius: 22px;
+  color: #7be3db;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-decoration: none;
-  transition: border-color 0.2s, background 0.2s;
+  transition: all 0.2s;
 }
-.quiz-cta:hover { border-color: var(--border-focus); background: rgba(74,144,217,0.14); }
-.quiz-cta .quiz-cta-label {
-  font-family: 'DM Serif Display', serif;
-  font-size: 1.35rem;
-  color: var(--text-primary);
-  display: block;
-}
-.quiz-cta .quiz-cta-sub {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  font-style: italic;
-  margin-top: 4px;
-  display: block;
-}
-.quiz-cta .quiz-cta-arrow { color: var(--accent); }
+.quiz-cta-btn:hover { background: rgba(78,205,196,0.22); border-color: rgba(78,205,196,0.75); }
 
 /* Modal (Guía Rápida) */
 .modal-overlay {
@@ -528,10 +518,9 @@ h1 {
     fiables, y dos reglas mnemotécnicas — <em>LONERS</em> y <em>DIÓNZA</em> — resumen las más útiles.
   </p>
 
-  <a href="../interactive/quiz-genero.html" class="quiz-cta">
-    <span class="quiz-cta-label">Empezar quiz <span class="quiz-cta-arrow">→</span></span>
-    <span class="quiz-cta-sub">Pon a prueba el género con un cuestionario interactivo</span>
-  </a>
+  <div class="quiz-cta-wrap">
+    <a href="../interactive/quiz-genero.html" class="quiz-cta-btn">Empezar quiz →</a>
+  </div>
 
   <div class="caution-band">
     <span class="caution-label">Antes de empezar</span>

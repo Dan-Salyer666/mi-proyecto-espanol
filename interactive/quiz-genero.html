@@ -26,6 +26,9 @@ body::before{content:'';position:fixed;inset:0;
 .back-nav{display:inline-flex;align-items:center;gap:8px;color:var(--text-muted);text-decoration:none;
   font-size:0.9rem;padding:6px 0;margin-bottom:20px;transition:color 0.2s;}
 .back-nav:hover{color:var(--accent);}
+.back-nav-row{display:flex;gap:8px 18px;flex-wrap:wrap;align-items:center;margin-bottom:20px;}
+.back-nav-row .back-nav{margin-bottom:0;}
+.back-nav-row .sep{color:var(--text-muted);opacity:0.5;font-size:0.85rem;}
 
 header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap;}
 .header-text h1{font-family:'DM Serif Display',serif;font-size:clamp(1.7rem,4.5vw,2.4rem);font-weight:normal;
@@ -76,7 +79,11 @@ header{display:flex;align-items:flex-start;justify-content:space-between;gap:16p
 <body>
 <div class="container">
 
-  <a href="../topics/genero-de-los-sustantivos.html" class="back-nav">← Volver a El género de los sustantivos</a>
+  <div class="back-nav-row">
+    <a href="../index.html" class="back-nav">← Menú principal</a>
+    <span class="sep">·</span>
+    <a href="../topics/genero-de-los-sustantivos.html" class="back-nav">← El género de los sustantivos</a>
+  </div>
 
   <header>
     <div class="header-text">

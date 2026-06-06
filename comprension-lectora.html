@@ -559,6 +559,25 @@
       border: 1px solid var(--border);
       color: var(--text-muted);
     }
+    .gen-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid transparent;
+    }
+    .gen-badge.gen-claude {
+      background: rgba(217, 119, 87, 0.15);
+      border-color: rgba(217, 119, 87, 0.50);
+      color: #e8a589;                /* warm terracotta */
+    }
+    .gen-badge.gen-gemini {
+      background: rgba(124, 132, 255, 0.15);
+      border-color: rgba(124, 132, 255, 0.50);
+      color: #aab2ff;                /* cool indigo/violet */
+    }
 
     /* ── Password modal ── */
     .modal-overlay {
@@ -2147,6 +2166,10 @@ function renderQuiz(quiz, seOn) {
   const tags = [currentCfg.level, currentCfg.register];
   if (currentCfg.region !== 'neutral') tags.push(currentCfg.region.replace('_',' '));
   document.getElementById('qTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
+  // Provider provenance badge — reads currentCfg.generator (correct on fresh gen and resume)
+  const genLabel = currentCfg.generator === 'gemini' ? 'Gemini' : 'Claude';
+  document.getElementById('qTags').insertAdjacentHTML('beforeend',
+    `<span class="gen-badge gen-${currentCfg.generator === 'gemini' ? 'gemini' : 'claude'}">${genLabel}</span>`);
 
   const epEl = document.getElementById('qEpisode');
   if (episodeNum > 0) {
@@ -2783,6 +2806,7 @@ async function saveQuizToDrive(extraFields = {}) {
     level: currentCfg.level, register: currentCfg.register, region: currentCfg.region,
     theme: currentCfg.theme || null,
     module: currentCfg.module || 'sorprendeme',
+    generator: currentCfg.generator || 'claude',
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
     questions: currentQuiz.questions, story_bible: storyBible || null,
     planned_ending: plannedEnding || null,
@@ -2930,6 +2954,8 @@ async function resumeStory(s) {
   cfg.region=s.region||cfg.region; cfg.mode=s.mode||cfg.mode;
   // Restore module selection. Legacy saves don't carry a module — default to sorprendeme.
   cfg.module = s.module || 'sorprendeme';
+  // Restore generator. Legacy saves predate the field — default to claude.
+  cfg.generator = s.generator || 'claude';
   ['level','register','region','mode'].forEach(key =>
     document.querySelectorAll(`[data-key="${key}"]`).forEach(b =>
       b.classList.toggle('selected', b.dataset.val === cfg[key])
@@ -2938,6 +2964,10 @@ async function resumeStory(s) {
   // Sync module button highlight to restored cfg.module
   document.querySelectorAll('[data-module]').forEach(b =>
     b.classList.toggle('selected', b.dataset.module === cfg.module)
+  );
+  // Sync generator button highlight to restored cfg.generator
+  document.querySelectorAll('[data-generator]').forEach(b =>
+    b.classList.toggle('selected', b.dataset.generator === cfg.generator)
   );
   // Populate theme from saved record
   if (s.theme) { document.getElementById('themeInput').value = s.theme; document.getElementById('surpriseMe').checked = false; document.getElementById('themeInput').disabled = false; }

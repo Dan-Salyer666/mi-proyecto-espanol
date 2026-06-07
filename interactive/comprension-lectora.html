@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <!-- Semilla Aleatoria data set — defines global SEMILLAS, loaded before the page script -->
-  <script src="datos/seeds/semillas-data.js"></script>
+  <script src="../datos/seeds/semillas-data.js"></script>
   <style>
     :root {
       --bg-deep:       #0a1628;
@@ -58,7 +58,7 @@
       content: '';
       position: fixed;
       inset: 0;
-      background-image: url('assets/Azulejos.webp');
+      background-image: url('../assets/los fondos/azulejos.webp');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -717,7 +717,7 @@
 
   <!-- ── Header ── -->
   <header>
-    <a href="index.html" class="back-link">← Inicio</a>
+    <a href="../index.html" class="back-link">← Inicio</a>
     <div class="header-text">
       <h1>Comprensión Lectora</h1>
       <p>Generador dinámico · IA</p>
@@ -2042,7 +2042,8 @@ async function doGenerate() {
   ctxParts.push(currentCfg.level);
   ctxParts.push(registerLabels[currentCfg.register] || currentCfg.register);
   ctxParts.push(regionLabels[currentCfg.region] || currentCfg.region);
-  if (theme) ctxParts.push(`Tema: ${theme}`);
+  if (currentCfg.seed) ctxParts.push(`Semilla ${currentCfg.seed}`);
+  else if (theme) ctxParts.push(`Tema: ${theme}`);
   const ctxLabel = document.getElementById('genContextLabel');
   ctxLabel.textContent = ctxParts.join(' · ');
   ctxLabel.style.display = 'block';

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulario: Los Paisajes</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+
+      --accent-alpha:   #4a90d9;
+      --accent-beta:    #c084fc;
+      --accent-gamma:   #fbbf24;
+
+      --color-success:  #4ecdc4;
+      --color-warning:  #fbbf24;
+      --color-danger:   #ff6b6b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 80px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("../assets/los fondos/Spain tile pattern.webp");
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      opacity: 0.10;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 820px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-nav {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 6px 0;
+      margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center;
+      padding: 44px 24px 48px;
+      margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.05), rgba(74,144,217,0));
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .overline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-weight: normal;
+      line-height: 1.05;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 20px auto 10px;
+      color: var(--accent);
+      opacity: 0.65;
+      max-width: 280px;
+    }
+    .ornament::before, .ornament::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    }
+
+    .intro-prose {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin: 0 4px 18px;
+      padding: 0 6px;
+    }
+    .intro-prose strong { color: var(--text-primary); font-weight: 600; }
+
+    .nota {
+      background: rgba(74, 144, 217, 0.08);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 10px 10px 0;
+      padding: 14px 18px;
+      margin: 16px 4px 32px;
+      font-size: 0.93rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+    }
+    .nota .nota-label {
+      display: inline-block;
+      font-weight: 600;
+      color: var(--accent);
+      margin-right: 6px;
+      letter-spacing: 0.02em;
+    }
+    .nota strong { color: var(--text-primary); font-weight: 600; }
+    .nota em     { color: var(--accent); font-style: italic; }
+
+    /* ── Gender & loanwords box ───────────────────── */
+    .gender-box {
+      background: rgba(251, 191, 36, 0.06);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent-gamma);
+      border-radius: 0 12px 12px 0;
+      padding: 18px 22px;
+      margin: 0 4px 32px;
+    }
+    .gender-box-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .gender-box p {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.62;
+      margin-bottom: 11px;
+    }
+    .gender-box p:last-child { margin-bottom: 0; }
+    .gender-box strong { color: var(--text-primary); font-weight: 600; }
+    .gender-box em     { color: var(--accent-gamma); font-style: italic; }
+
+    .image-comparison {
+      display: flex;
+      gap: 16px;
+      margin: 0 0 32px 0;
+    }
+    /* ── Click-to-magnify in place (≈ +30%) ───────── */
+    .image-comparison img {
+      width: calc(50% - 8px);
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      cursor: zoom-in;
+      position: relative;
+      z-index: 1;
+      transform-origin: center center;
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1),
+                  box-shadow 0.25s ease,
+                  border-color 0.25s ease;
+    }
+    .image-comparison img:hover { border-color: var(--accent); }
+    .image-comparison img.magnified {
+      transform: scale(1.5);
+      z-index: 10;
+      cursor: zoom-out;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
+      border-color: var(--accent);
+    }
+
+    .grammar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent-beta);
+      border-radius: 14px;
+      padding: 32px;
+      margin-bottom: 18px;
+    }
+    .card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* ── Quiz start (idle) state ──────────────────── */
+    .quiz-start { text-align: center; padding: 8px 4px 4px; }
+    .quiz-intro {
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+      line-height: 1.65;
+      max-width: 540px;
+      margin: 0 auto 22px;
+    }
+    .quiz-intro strong { color: var(--text-primary); font-weight: 600; }
+    .start-quiz-btn { font-size: 1.05rem; padding: 12px 34px; }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .quiz-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .quiz-row label {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .quiz-input {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      padding: 10px 14px;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .quiz-input:focus {
+      border-color: var(--border-focus);
+    }
+    .quiz-input:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .accent-bar {
+      display: flex;
+      gap: 4px;
+    }
+    .accent-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .accent-btn:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+      border-color: var(--accent);
+    }
+
+    .quiz-result {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.2);
+    }
+    .correct-answer {
+      font-family: 'DM Serif Display', serif;
+      color: var(--accent);
+      font-size: 1.05rem;
+      flex-grow: 1;
+    }
+
+    .speak-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+    .quiz-controls {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+    .action-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      padding: 10px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-weight: 500;
+    }
+    .action-btn.primary {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+    .action-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .action-btn:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--accent); }
+    .action-btn.primary:hover:not(:disabled) { background: #5ba1e5; border-color: #5ba1e5; }
+
+    .score-box {
+      display: none;
+      text-align: center;
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 12px;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+    }
+    .score-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .score-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .score-msg {
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    @media (max-width: 600px) {
+      .image-comparison { flex-direction: column; }
+      .image-comparison img { width: 100%; }
+      .quiz-grid { grid-template-columns: 1fr; }
+      .grammar-card { padding: 24px 18px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <div class="overline">Vocabulario</div>
+    <h1>Los Paisajes</h1>
+    <div class="ornament"><span class="ornament-symbol">✦</span></div>
+  </header>
+
+  <p class="intro-prose">
+    El mundo hispanohablante posee una diversidad geográfica impresionante. Desde la densa selva tropical de la cuenca del Amazonas y el árido desierto de Atacama, hasta los vastos glaciares de la Patagonia y las altas montañas de los Andes, estos paisajes definen la cultura y la vida diaria de millones de personas.
+  </p>
+
+  <p class="intro-prose">
+    Al hablar de la geografía y la naturaleza en español, <strong>casi siempre usamos el artículo definido</strong> (el, la, los, las). A diferencia del inglés, donde conceptos generales a menudo no llevan artículo, el español lo exige rigurosamente para enmarcar la totalidad del concepto ambiental o topográfico.
+  </p>
+
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    In English, we often drop the article when talking about geographical concepts or nature in a general, categorical sense (e.g., "I love <em>nature</em>," "We are studying <em>mountains</em>"). In Spanish, the definite article is grammatically required: <em>Me encanta <strong>la</strong> naturaleza</em>, <em>Estamos estudiando <strong>las</strong> montañas</em>. Always memorize and practice these vocabulary terms with their matching <em>el</em> or <em>la</em>.
+  </div>
+
+  <div class="gender-box">
+    <div class="gender-box-title">El género y los préstamos</div>
+    <p>
+      <strong>An <em>-a</em> ending usually signals feminine</strong> — the everyday pattern: <em>la duna</em>, <em>la montaña</em>, <em>la cueva</em>, <em>la isla</em>. But a group of words borrowed from <strong>Greek</strong> end in <em>-a</em> and are <strong>masculine</strong>. On this map: <em>el delta</em>. Common ones to know: <em>el problema</em>, <em>el clima</em>, <em>el tema</em>, <em>el sistema</em>, <em>el planeta</em>. (A few non-Greek words are masculine too, e.g. <em>el día</em>, <em>el mapa</em>.)
+    </p>
+    <p>
+      <strong>Loanwords (<em>los préstamos</em>) default to masculine</strong> when they don't fit a Spanish pattern: <em>el iceberg</em>, <em>el géiser</em>, <em>el fiordo</em>, <em>el butte</em>, <em>el oasis</em>.
+    </p>
+    <p>
+      <strong>The sea — <em>el mar</em> or <em>la mar</em>:</strong> standard usage is masculine (<em>el mar</em>), but <em>la mar</em> survives in poetry, among sailors and fishers, and in the set phrase <em>la mar de</em> ("loads of," as in <em>la mar de cosas</em>). The quiz accepts both.
+    </p>
+    <p>
+      <strong>"Hill" has three good answers:</strong> <em>la colina</em> (the standard, textbook word), <em>el cerro</em> (very common across Latin America for a hill or small mountain) and <em>la loma</em> (a low, rounded rise). The quiz accepts any of the three.
+    </p>
+  </div>
+
+  <div class="image-comparison">
+    <img src="../assets/vocabulario/landscapes in english.webp" alt="Mapa topográfico en inglés">
+    <img src="../assets/vocabulario/paisajes en espanol.webp" alt="Mapa topográfico en español">
+  </div>
+
+  <article class="grammar-card">
+    <h2 class="card-title">Práctica de Vocabulario</h2>
+
+    <!-- Idle state: just the start button -->
+    <div id="quiz-start" class="quiz-start">
+      <p class="quiz-intro">
+        Pon a prueba tu vocabulario con <strong>10 términos elegidos al azar</strong> de la lista. Escribe cada palabra en español <strong>con su artículo</strong> (<em>el</em> / <em>la</em>).
+      </p>
+      <button class="action-btn primary start-quiz-btn" onclick="startQuiz()">Comenzar quiz</button>
+    </div>
+
+    <!-- Active state: hidden until the quiz starts -->
+    <div id="quiz-active" style="display:none;">
+      <div class="quiz-grid" id="quiz-container"></div>
+
+      <div class="quiz-controls">
+        <button class="action-btn" onclick="closeQuiz()">Cerrar</button>
+        <button class="action-btn" onclick="resetQuiz()">Reiniciar</button>
+        <button class="action-btn primary" onclick="checkAnswers()" id="calificar-btn">Calificar</button>
+      </div>
+
+      <div class="score-box" id="score-box">
+        <div class="score-title">Tu Puntuación</div>
+        <div class="score-value" id="score-value">0/10</div>
+        <div class="score-msg" id="score-msg"></div>
+      </div>
+    </div>
+  </article>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  VOCABULARY POOL  (English prompt → accepted Spanish answers)
+//  "the hill" accepts three answers, "the sea" and "the cove" two; the rest are 1-to-1.
+// ═══════════════════════════════════════════════
+const VOCAB = [
+  { en: "the iceberg",         es: ["el iceberg"] },
+  { en: "the ice floe",        es: ["el témpano de hielo"] },
+  { en: "the glacier",         es: ["el glaciar"] },
+  { en: "the sea",             es: ["el mar", "la mar"] },
+  { en: "the cape",            es: ["el cabo"] },
+  { en: "the bay",             es: ["la bahía"] },
+  { en: "the basin",           es: ["la cuenca"] },
+  { en: "the lake",            es: ["el lago"] },
+  { en: "the forest",          es: ["el bosque"] },
+  { en: "the hill",            es: ["la colina", "el cerro", "la loma"] },
+  { en: "the plain",           es: ["la llanura"] },
+  { en: "the prairie",         es: ["la pradera"] },
+  { en: "the tropical jungle", es: ["la selva tropical"] },
+  { en: "the waterfall",       es: ["la cascada"] },
+  { en: "the strait",          es: ["el estrecho"] },
+  { en: "the channel",         es: ["el canal"] },
+  { en: "the jungle",          es: ["la selva"] },
+  { en: "the beach",           es: ["la playa"] },
+  { en: "the swamp",           es: ["el pantano"] },
+  { en: "the sound",           es: ["un estrecho ancho"] },
+  { en: "the marsh",           es: ["la marisma"] },
+  { en: "the peninsula",       es: ["la península"] },
+  { en: "the isthmus",         es: ["el istmo"] },
+  { en: "the lagoon",          es: ["la laguna"] },
+  { en: "the atoll",           es: ["el atolón"] },
+  { en: "the island",          es: ["la isla"] },
+  { en: "the archipelago",     es: ["el archipiélago"] },
+  { en: "the coast",           es: ["la costa"] },
+  { en: "the dune",            es: ["la duna"] },
+  { en: "the cliff",           es: ["el acantilado"] },
+  { en: "the gulf",            es: ["el golfo"] },
+  { en: "the delta",           es: ["el delta"] },
+  { en: "the river",           es: ["el río"] },
+  { en: "the cave",            es: ["la cueva"] },
+  { en: "the cove",            es: ["la cala", "la ensenada"] },
+  { en: "the canyon",          es: ["el cañón"] },
+  { en: "the plateau",         es: ["la meseta"] },
+  { en: "the butte",           es: ["el butte"] },
+  { en: "the tundra",          es: ["la tundra"] },
+  { en: "the volcano",         es: ["el volcán"] },
+  { en: "the geyser",          es: ["el géiser"] },
+  { en: "the mountain",        es: ["la montaña"] },
+  { en: "the oasis",           es: ["el oasis"] },
+  { en: "the desert",          es: ["el desierto"] },
+  { en: "the mesa",            es: ["la mesa"] },
+  { en: "the fjord",           es: ["el fiordo"] },
+  { en: "the valley",          es: ["el valle"] }
+];
+
+const QUIZ_LEN = 10;
+let current = [];   // the 10 questions in the active quiz
+
+// ── helpers ──────────────────────────────────────
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+function normalizeStr(str) {
+  return str.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+// ── render a fresh random set of rows ────────────
+function renderQuiz() {
+  current = shuffle(VOCAB).slice(0, QUIZ_LEN);
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+
+  current.forEach((item, index) => {
+    const displayAns  = item.es.join(' / ');
+    const firstAnswer = item.es[0];
+    const accentBtns  = ['á','é','í','ó','ú','ñ']
+      .map(c => `<button class="accent-btn" type="button" onclick="insertAccent('q${index}','${c}')">${c}</button>`)
+      .join('');
+
+    const row = document.createElement('div');
+    row.className = 'quiz-row';
+    row.innerHTML = `
+      <label>${index + 1}. ${capitalize(item.en)}</label>
+      <input type="text" class="quiz-input" id="q${index}" placeholder="Ej: la nube"
+             autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <div class="accent-bar">${accentBtns}</div>
+      <div class="quiz-result" id="res${index}">
+        <span class="correct-answer">${displayAns}</span>
+        <button class="speak-btn" data-word="${firstAnswer}" onclick="speakWord(this)" title="Escuchar">🔊</button>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+}
+
+// ── state transitions ────────────────────────────
+function startQuiz() {
+  document.getElementById('quiz-start').style.display = 'none';
+  document.getElementById('quiz-active').style.display = 'block';
+  document.getElementById('score-box').style.display = 'none';
+  document.getElementById('calificar-btn').disabled = false;
+  renderQuiz();
+  const first = document.getElementById('q0');
+  if (first) first.focus();
+}
+
+function resetQuiz() {              // re-roll a brand-new random 10
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  document.getElementById('score-box').style.display = 'none';
+  document.getElementById('calificar-btn').disabled = false;
+  renderQuiz();
+  const first = document.getElementById('q0');
+  if (first) first.focus();
+}
+
+function closeQuiz() {              // back to the lone start button
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  document.getElementById('quiz-active').style.display = 'none';
+  document.getElementById('quiz-start').style.display = 'block';
+  document.getElementById('quiz-container').innerHTML = '';
+  document.getElementById('score-box').style.display = 'none';
+  document.getElementById('calificar-btn').disabled = false;
+}
+
+function insertAccent(inputId, char) {
+  const input = document.getElementById(inputId);
+  if (!input || input.disabled) return;
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const val = input.value;
+  input.value = val.substring(0, start) + char + val.substring(end);
+  input.focus();
+  input.selectionStart = input.selectionEnd = start + 1;
+}
+
+function checkAnswers() {
+  let score = 0;
+
+  current.forEach((item, index) => {
+    const input = document.getElementById('q' + index);
+    const userAnswer = normalizeStr(input.value);
+    const accepted = item.es.map(normalizeStr);
+
+    input.disabled = true;
+    const resultDiv = document.getElementById('res' + index);
+    resultDiv.style.display = 'flex';
+
+    if (accepted.includes(userAnswer)) {
+      input.style.borderColor = 'var(--color-success)';
+      input.style.color = 'var(--color-success)';
+      score++;
+    } else {
+      input.style.borderColor = 'var(--color-danger)';
+      input.style.color = 'var(--color-danger)';
+    }
+  });
+
+  document.getElementById('calificar-btn').disabled = true;
+  showScore(score, current.length);
+}
+
+function showScore(score, total) {
+  const box = document.getElementById('score-box');
+  const valObj = document.getElementById('score-value');
+  const msgObj = document.getElementById('score-msg');
+
+  box.style.display = 'block';
+  valObj.innerText = `${score}/${total}`;
+
+  let color, msg;
+  if (score >= 9) {
+    color = 'var(--color-success)';
+    msg = '¡Excelente trabajo! Tienes un gran dominio del vocabulario.';
+  } else if (score >= 7) {
+    color = 'var(--color-warning)';
+    msg = 'Buen esfuerzo. Repasa un poco más los términos y los artículos.';
+  } else {
+    color = 'var(--color-danger)';
+    msg = 'Necesitas mejorar. Te sugiero revisar el mapa nuevamente.';
+  }
+
+  valObj.style.color = color;
+  msgObj.style.color = color;
+  msgObj.innerText = msg;
+  box.style.borderColor = color;
+}
+
+// ═══════════════════════════════════════════════
+//  TTS — Neutral Latin American Spanish only
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+async function speakWord(btn) {
+  if (!window.speechSynthesis) return;
+  const text = btn.dataset.word;
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = 1.0;
+  u.pitch = 1.0;
+
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Click-to-magnify in place (≈ +30%)
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.image-comparison img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (activeImage) {
+      activeImage.classList.remove('magnified');
+      activeImage = null;
+    }
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) {
+        img.classList.remove('magnified');
+        activeImage = null;
+      } else {
+        resetZoom();
+        img.classList.add('magnified');
+        activeImage = img;
+      }
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+});
+</script>
+
+</body>
+</html>

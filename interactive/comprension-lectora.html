@@ -618,6 +618,8 @@
       padding: 32px;
       max-width: 400px;
       width: 100%;
+      max-height: calc(100vh - 40px);  /* never taller than the viewport (overlay has 20px top+bottom padding) */
+      overflow-y: auto;                /* scroll inside the box so buttons stay reachable on short/wide screens */
     }
     .modal-box h3 {
       font-family: 'DM Serif Display', serif;
@@ -1953,7 +1955,7 @@ function rollSeed(seedNum, data){
     let pool = f.options;
     if (f.gated) pool = pool.filter(o => !o.requires || o.requires.includes(chosen.genero?.id));
     let eff = pool.slice();
-    if (f.optional) eff = [{ id:'_none', label:null }, ...eff];
+    if (f.optional) eff = [{ id:'_none', label:null, weight:(f.noneWeight ?? 1) }, ...eff];
     const total = eff.reduce((s,o)=>s+(o.weight||1),0);
     let r = rng()*total, pick = eff[eff.length-1];
     for (const o of eff){ r -= (o.weight||1); if (r<0){ pick=o; break; } }
@@ -2001,8 +2003,8 @@ function applySeedMode(){
 
 // ── Revisar semilla (review panel) — replays a number against the CURRENT data set.
 // Pure client-side: no generation, no model call, zero tokens.
-const SEED_FIELD_LABELS = { genero:'Género', lugar:'Lugar', final:'Final', pecado:'Énfasis',
-  personaje:'Personaje', situacion:'Situación', tiempo:'Tiempo', tratamiento:'Tratamiento' };
+// Field display labels are read from SEMILLAS.fields[fid].label, so adding or renaming
+// fields in the data set never requires a page edit.
 
 function openSeedReview(){
   document.getElementById('seedReviewErr').textContent = '';
@@ -2029,7 +2031,7 @@ function revealSeed(){
     const opt = chosen[fid];
     const val = opt ? opt.label : '—';
     return `<div style="display:flex;justify-content:space-between;gap:14px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">`
-      + `<span style="color:var(--text-muted);">${SEED_FIELD_LABELS[fid]||fid}</span>`
+      + `<span style="color:var(--text-muted);">${(SEMILLAS.fields[fid] && SEMILLAS.fields[fid].label) || fid}</span>`
       + `<span style="color:var(--text-primary);text-align:right;">${val}</span></div>`;
   }).join('');
   resEl.innerHTML = `<div style="font-weight:600;margin-bottom:6px;">Semilla ${n}</div>`

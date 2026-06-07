@@ -185,6 +185,19 @@
       color: #0a1628;
       font-weight: 600;
     }
+    /* Generar semilla — always lit in the blue 'selected option' style (it's an action,
+       not a toggle). ID specificity beats .btn-module / .btn-module:hover. */
+    #seedRollBtn {
+      background: linear-gradient(135deg, #3b6cb5, #4a90d9);
+      border-color: transparent;
+      color: #fff;
+      font-weight: 600;
+    }
+    #seedRollBtn:hover {
+      background: linear-gradient(135deg, #4076c4, #5a9ee0);
+      border-color: transparent;
+      color: #fff;
+    }
 
     /* ── Text inputs ── */
     .param-input {
@@ -837,6 +850,9 @@
         <button type="button" class="btn-module" id="seedRollBtn" onclick="rollNewSeed()">Generar semilla</button>
         <span id="seedDisplay" style="font-weight:600;color:var(--text-muted);"></span>
       </div>
+      <div style="margin-top:8px;">
+        <span onclick="openSeedReview()" style="font-size:0.8rem;color:#4a90d9;cursor:pointer;">🔍 Revisar una semilla</span>
+      </div>
 
       <div class="divider"></div>
 
@@ -999,6 +1015,21 @@
       <h3 id="conflictModalTitle"></h3>
       <p id="conflictModalBody"></p>
       <div id="conflictModalBtns" class="modal-btns" style="flex-wrap:wrap;gap:10px"></div>
+    </div>
+  </div>
+
+  <!-- ── Revisar semilla modal ── -->
+  <div id="seedReviewModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>Revisar semilla</h3>
+      <p>Escribe un número de semilla para ver el mundo que genera. No se crea ninguna historia ni se usa la IA.</p>
+      <input type="number" id="seedReviewInput" class="param-input" placeholder="Ej: 4471" inputmode="numeric">
+      <div id="seedReviewErr" class="modal-err"></div>
+      <div id="seedReviewResult" class="hidden" style="margin-top:14px;"></div>
+      <div class="modal-btns">
+        <button class="btn-primary" onclick="revealSeed()">Revelar</button>
+        <button class="btn-secondary" onclick="closeSeedReview()">Cerrar</button>
+      </div>
     </div>
   </div>
 
@@ -1959,10 +1990,53 @@ function applySeedMode(){
   const themeEl  = document.getElementById('themeInput');
   const surprise = document.getElementById('surpriseMe');
   if (controls) controls.classList.toggle('hidden', !on);
+  // Mint + show a seed the moment seed mode turns on, so the displayed number
+  // matches the one that will be used (no need to tap "Generar semilla" first).
+  if (on && !cfg.seed) rollNewSeed();
   if (themeEl){ themeEl.disabled = on || (surprise && surprise.checked); themeEl.style.opacity = on ? '0.5' : ''; }
   if (surprise){ surprise.disabled = on; const lbl = surprise.closest('.toggle-label'); if (lbl) lbl.style.opacity = on ? '0.5' : ''; }
   document.querySelectorAll('[data-module]').forEach(b => { b.style.pointerEvents = on ? 'none' : ''; b.style.opacity = on ? '0.5' : ''; });
   if (!on){ cfg.seed = null; cfg.seedTheme = null; cfg.seedVersion = null; const d = document.getElementById('seedDisplay'); if (d) d.textContent = ''; }
+}
+
+// ── Revisar semilla (review panel) — replays a number against the CURRENT data set.
+// Pure client-side: no generation, no model call, zero tokens.
+const SEED_FIELD_LABELS = { genero:'Género', lugar:'Lugar', final:'Final', pecado:'Énfasis',
+  personaje:'Personaje', situacion:'Situación', tiempo:'Tiempo', tratamiento:'Tratamiento' };
+
+function openSeedReview(){
+  document.getElementById('seedReviewErr').textContent = '';
+  const res = document.getElementById('seedReviewResult');
+  res.classList.add('hidden'); res.innerHTML = '';
+  const inp = document.getElementById('seedReviewInput'); inp.value = '';
+  document.getElementById('seedReviewModal').classList.remove('hidden');
+  inp.focus();
+}
+
+function closeSeedReview(){ document.getElementById('seedReviewModal').classList.add('hidden'); }
+
+function revealSeed(){
+  const errEl = document.getElementById('seedReviewErr');
+  const resEl = document.getElementById('seedReviewResult');
+  errEl.textContent = '';
+  if (typeof SEMILLAS === 'undefined'){ errEl.textContent = 'No se pudo cargar el conjunto de semillas.'; return; }
+  const raw = document.getElementById('seedReviewInput').value.trim();
+  const n = parseInt(raw, 10);
+  if (!raw || !Number.isFinite(n) || n < 0){ errEl.textContent = 'Escribe un número entero válido.'; resEl.classList.add('hidden'); return; }
+  const chosen = rollSeed(n, SEMILLAS);
+  const theme  = seedToTheme(chosen);
+  const rows = SEMILLAS.rollOrder.map(fid => {
+    const opt = chosen[fid];
+    const val = opt ? opt.label : '—';
+    return `<div style="display:flex;justify-content:space-between;gap:14px;padding:5px 0;border-bottom:1px solid var(--border);font-size:0.85rem;">`
+      + `<span style="color:var(--text-muted);">${SEED_FIELD_LABELS[fid]||fid}</span>`
+      + `<span style="color:var(--text-primary);text-align:right;">${val}</span></div>`;
+  }).join('');
+  resEl.innerHTML = `<div style="font-weight:600;margin-bottom:6px;">Semilla ${n}</div>`
+    + `<div style="font-size:0.85rem;color:var(--text-secondary);font-style:italic;margin-bottom:12px;">${theme}</div>`
+    + rows
+    + `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:12px;line-height:1.5;">Refleja el conjunto de datos actual (versión ${SEMILLAS.version}). Las historias creadas con una versión anterior pueden diferir.</div>`;
+  resEl.classList.remove('hidden');
 }
 
 async function doGenerate() {

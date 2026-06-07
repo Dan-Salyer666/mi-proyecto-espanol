@@ -1758,8 +1758,8 @@ RECORDATORIO DE REGISTRO: este plan es estructural. Escribe el pasaje en el regi
 
   // JSON schema: conditionally includes planned_ending on episodes that need to commit.
   const jsonSchema = needsEndingPlan
-    ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"thematic_core":"una oración","final_beat":"dos o tres oraciones","thread_resolution":"qué se resuelve, qué queda abierto, qué se recontextualiza"},"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`
-    : `{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"explanation":"por qué"}]}`;
+    ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"thematic_core":"una oración","final_beat":"dos o tres oraciones","thread_resolution":"qué se resuelve, qué queda abierto, qué se recontextualiza"},"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"answer":"copia EXACTA y literal de la opción correcta, idéntica carácter por carácter a su texto en options","explanation":"por qué"}]}`
+    : `{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"answer":"copia EXACTA y literal de la opción correcta, idéntica carácter por carácter a su texto en options","explanation":"por qué"}]}`;
 
   return `Crea un cuestionario de comprensión lectora en español. Responde SOLO con JSON válido, sin texto adicional ni comillas de código.
 
@@ -1780,7 +1780,7 @@ REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas 
 JSON requerido:
 ${jsonSchema}
 
-correct es índice 0-based (0=primera opción, 1=segunda, 2=tercera, 3=cuarta). NO incluyas letras (A/B/C/D) ni números en el texto de opciones ni preguntas — el sistema los agrega automáticamente.`;
+answer DEBE ser una copia exacta y literal de la opción correcta, carácter por carácter, idéntica a su texto en options (el sistema determina la respuesta correcta a partir de answer). correct es el índice 0-based de esa misma opción (0=primera, 1=segunda, 2=tercera, 3=cuarta) y DEBE coincidir con answer. NO incluyas letras (A/B/C/D) ni números en el texto de opciones ni preguntas — el sistema los agrega automáticamente.`;
 }
 
 // ═══════════════════════════════════════════════
@@ -1988,7 +1988,7 @@ CRITICAL JSON RULES:
 - All JSON must be on a single logical structure with properly escaped strings.
 CRITICAL QUESTION RULES:
 - Each question must be answerable from the current episode's prose alone. Do not write questions whose correct answer depends on events from future episodes in the plan; the plan guides narrative structure, not the reader's knowledge state at this moment.
-- After writing each question, verify that "correct" is the 0-based index of the option that "explanation" actually describes (A=0, B=1, C=2, D=3). A mismatched index silently breaks the grader, which compares the reader's choice against "correct" without consulting "explanation".
+- For each question, set "answer" to the verbatim text of the correct option (an exact, character-for-character copy of the matching entry in "options") and set "correct" to that option's 0-based index (A=0, B=1, C=2, D=3). "answer", "correct", and "explanation" must all point to the SAME option. The grader resolves the correct answer from "answer" when present, so an "answer" that does not exactly match one of the options will be rejected.
 Spanish must be natural and authentic. Never include medical, clinical, or doctor-patient content.`,
         messages: [{ role: 'user', content: buildPrompt(currentCfg) }]
       })
@@ -2106,6 +2106,23 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       q.question = stripSE(q.question).replace(/^\s*\d+[\.\)]\s*/, '');
       q.options = q.options.map(opt => stripSE(opt).replace(/^\s*[A-Da-d][\.\)\:]\s*/, ''));
       if (q.explanation) q.explanation = stripSE(q.explanation);
+    });
+
+    // Reconcile the correct index from the verbatim answer text (authoritative).
+    // Some providers (notably Gemini) write a correct explanation/answer but emit a
+    // mismatched `correct` integer that tends to default to 0. The echoed answer text
+    // is trustworthy where the bare index is not. Runs AFTER option cleaning and BEFORE
+    // the shuffle, so the shuffle remaps the corrected index. Falls back silently to the
+    // emitted index when no answer match is found, so providers/saves without an
+    // `answer` field behave exactly as before.
+    quiz.questions.forEach(q => {
+      if (typeof q.answer !== 'string') return;
+      const norm = t => stripSE(String(t)).replace(/^\s*[A-Da-d][\.\)\:]\s*/, '').trim().toLowerCase();
+      const target = norm(q.answer);
+      if (!target) return;
+      let idx = q.options.findIndex(o => norm(o) === target);
+      if (idx === -1) idx = q.options.findIndex(o => { const no = norm(o); return no && (no.includes(target) || target.includes(no)); });
+      if (idx !== -1) q.correct = idx;
     });
 
     // Shuffle options so correct answer isn't always in the same position

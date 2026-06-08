@@ -852,8 +852,9 @@
         <button type="button" class="btn-module" id="seedRollBtn" onclick="rollNewSeed()">Generar semilla</button>
         <span id="seedDisplay" style="font-weight:600;color:var(--text-muted);"></span>
       </div>
-      <div style="margin-top:8px;">
+      <div style="margin-top:8px;display:flex;gap:16px;">
         <span onclick="openSeedReview()" style="font-size:0.8rem;color:#4a90d9;cursor:pointer;">🔍 Revisar una semilla</span>
+        <span onclick="openGenreFilter()" style="font-size:0.8rem;color:#4a90d9;cursor:pointer;">🎛️ Filtrar géneros</span>
       </div>
 
       <div class="divider"></div>
@@ -1031,6 +1032,20 @@
       <div class="modal-btns">
         <button class="btn-primary" onclick="revealSeed()">Revelar</button>
         <button class="btn-secondary" onclick="closeSeedReview()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Filtrar géneros modal ── -->
+  <div id="genreFilterModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>Filtrar géneros</h3>
+      <p>Desmarca los géneros que quieras excluir del azar. Los marcados forman la bolsa de la que sale cada semilla. Tu elección se recuerda entre sesiones.</p>
+      <div id="genreFilterList" style="display:flex;flex-direction:column;gap:8px;margin:14px 0;"></div>
+      <div class="modal-btns">
+        <button class="btn-secondary" onclick="toggleAllGenres(true)">Marcar todos</button>
+        <button class="btn-primary" onclick="applyGenreFilter()">Aplicar</button>
+        <button class="btn-secondary" onclick="closeGenreFilter()">Cerrar</button>
       </div>
     </div>
   </div>
@@ -1969,7 +1984,7 @@ function seedToTheme(chosen){ return Object.values(chosen).filter(Boolean).map(o
 // Mint a fresh number, roll it, show ONLY the number (resolved world stays hidden).
 function rollNewSeed(){
   if (!cfg.seedMode || typeof SEMILLAS === 'undefined') return;
-  cfg.seed        = Math.floor(Math.random()*1e9);
+  cfg.seed        = mintFilteredSeed();
   cfg.seedTheme   = seedToTheme(rollSeed(cfg.seed, SEMILLAS));
   cfg.seedVersion = SEMILLAS.version;
   const d = document.getElementById('seedDisplay');
@@ -2039,6 +2054,55 @@ function revealSeed(){
     + rows
     + `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:12px;line-height:1.5;">Refleja el conjunto de datos actual (versión ${SEMILLAS.version}). Las historias creadas con una versión anterior pueden diferir.</div>`;
   resEl.classList.remove('hidden');
+}
+
+// ── Filtrar géneros — restricts which genres seed-minting can land on. Pure mint-time
+// steering: the roller stays full-pool, so determinism and the review panel are
+// unaffected. The excluded set is remembered in localStorage between sessions.
+function loadExcludedGenres(){
+  if (!cfg.excludedGenres){
+    try { cfg.excludedGenres = JSON.parse(localStorage.getItem('cl_seed_excluded_genres')) || []; }
+    catch(e){ cfg.excludedGenres = []; }
+    if (!Array.isArray(cfg.excludedGenres)) cfg.excludedGenres = [];
+  }
+  return cfg.excludedGenres;
+}
+
+function openGenreFilter(){
+  if (typeof SEMILLAS === 'undefined') return;
+  const excluded = loadExcludedGenres();
+  document.getElementById('genreFilterList').innerHTML = SEMILLAS.fields.genero.options.map(o =>
+    `<label style="display:flex;align-items:center;gap:10px;font-size:0.9rem;cursor:pointer;">`
+    + `<input type="checkbox" class="genre-filter-cb" value="${o.id}" ${excluded.includes(o.id) ? '' : 'checked'}>`
+    + `<span>${o.label}</span></label>`).join('');
+  document.getElementById('genreFilterModal').classList.remove('hidden');
+}
+
+function closeGenreFilter(){ document.getElementById('genreFilterModal').classList.add('hidden'); }
+function toggleAllGenres(on){ document.querySelectorAll('.genre-filter-cb').forEach(cb => cb.checked = on); }
+
+function applyGenreFilter(){
+  const excluded = [];
+  document.querySelectorAll('.genre-filter-cb').forEach(cb => { if (!cb.checked) excluded.push(cb.value); });
+  cfg.excludedGenres = excluded;
+  try { localStorage.setItem('cl_seed_excluded_genres', JSON.stringify(excluded)); } catch(e){}
+  closeGenreFilter();
+}
+
+// Mint a seed whose pure, full-pool genre is allowed by the filter. Chooses among whole
+// valid worlds — never rejects a field mid-roll — so the seed stays deterministic and
+// reviewable. Falls back to a plain mint if the filter is empty/inactive or unsatisfiable.
+function mintFilteredSeed(){
+  if (typeof SEMILLAS === 'undefined') return Math.floor(Math.random()*1e9);
+  const all = SEMILLAS.fields.genero.options.map(o => o.id);
+  const excluded = loadExcludedGenres();
+  const allowed = all.filter(id => !excluded.includes(id));
+  if (allowed.length === 0 || allowed.length === all.length) return Math.floor(Math.random()*1e9);
+  for (let i = 0; i < 500; i++){
+    const n = Math.floor(Math.random()*1e9);
+    if (allowed.includes(rollSeed(n, SEMILLAS).genero.id)) return n;
+  }
+  return Math.floor(Math.random()*1e9);
 }
 
 async function doGenerate() {

@@ -854,7 +854,7 @@
       </div>
       <div style="margin-top:8px;display:flex;gap:16px;">
         <span onclick="openSeedReview()" style="font-size:0.8rem;color:#4a90d9;cursor:pointer;">🔍 Revisar una semilla</span>
-        <span onclick="openGenreFilter()" style="font-size:0.8rem;color:#4a90d9;cursor:pointer;">🎛️ Filtrar géneros</span>
+        <span id="filterLink" onclick="openGenreFilter()" style="font-size:0.8rem;color:#4a90d9;cursor:pointer;">🎛️ Filtrar géneros</span>
       </div>
 
       <div class="divider"></div>
@@ -2086,8 +2086,27 @@ function applyGenreFilter(){
   document.querySelectorAll('.genre-filter-cb').forEach(cb => { if (!cb.checked) excluded.push(cb.value); });
   cfg.excludedGenres = excluded;
   try { localStorage.setItem('cl_seed_excluded_genres', JSON.stringify(excluded)); } catch(e){}
+  updateFilterIndicator();
   closeGenreFilter();
 }
+
+// Front-page feedback that a genre filter is active: the "Filtrar géneros" link turns
+// bright green and shows the pool size when any genre is excluded; default blue = full pool.
+function updateFilterIndicator(){
+  const link = document.getElementById('filterLink');
+  if (!link || typeof SEMILLAS === 'undefined') return;
+  const total = SEMILLAS.fields.genero.options.length;
+  const excluded = loadExcludedGenres().length;
+  if (excluded > 0){
+    link.style.color = '#22c55e';
+    link.textContent = `🎛️ Filtrar géneros (${total - excluded}/${total})`;
+  } else {
+    link.style.color = '#4a90d9';
+    link.textContent = '🎛️ Filtrar géneros';
+  }
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', updateFilterIndicator);
+else updateFilterIndicator();
 
 // Mint a seed whose pure, full-pool genre is allowed by the filter. Chooses among whole
 // valid worlds — never rejects a field mid-roll — so the seed stays deterministic and

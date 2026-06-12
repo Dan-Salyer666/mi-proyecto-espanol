@@ -112,6 +112,14 @@ body {
 .rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
 .rate-btn.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
 
+/* ── Practice CTA (to the quizzes) ── */
+.quiz-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; justify-content: space-between; margin: 0 0 28px; padding: 14px 18px; background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 12px; }
+.quiz-cta .cta-text { font-size: 0.92rem; color: var(--text-secondary); }
+.quiz-cta .cta-text strong { color: var(--text-primary); font-weight: 600; }
+.quiz-cta-links { display: flex; flex-wrap: wrap; gap: 9px; }
+.quiz-cta-btn { font-family: 'Outfit', sans-serif; font-size: 0.88rem; font-weight: 600; padding: 9px 16px; border-radius: 8px; border: 1px solid var(--accent-line); background: var(--accent-soft); color: var(--accent); text-decoration: none; white-space: nowrap; transition: all 0.2s; }
+.quiz-cta-btn:hover { background: var(--accent); color: #0a1628; }
+
 /* ── Accordion topic cards ── */
 .topic {
   border: 1px solid var(--border);
@@ -337,6 +345,13 @@ body {
       <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
       <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
       <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+    </div>
+
+    <div class="quiz-cta">
+      <div class="cta-text"><strong>¿Listo para practicar?</strong> Pon a prueba la teoría con los ejercicios.</div>
+      <div class="quiz-cta-links">
+        <a href="../interactive/preguntas.html" class="quiz-cta-btn">Cloze: arma la pregunta →</a>
+      </div>
     </div>
 
     <!-- ░░ T1 — fully built ░░ -->

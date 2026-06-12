@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloze de Preguntas — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:#0a1628; --bg-card:#111d35; --bg-input:#0d1a2f; --border:#1e3355;
+  --text-primary:#e8edf5; --text-secondary:#9aabc6; --text-muted:#62779a;
+  --accent:#4ecdc4; --accent-soft:rgba(78,205,196,0.10); --accent-line:rgba(78,205,196,0.45);
+  --green:#34d399; --green-soft:rgba(52,211,153,0.12);
+  --yellow:#fbbf24;
+  --red:#f87171; --red-soft:rgba(248,113,113,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+.bg-photo{position:fixed;inset:0;background:url('../assets/los fondos/cordova mezquita.webp') center/cover no-repeat;filter:brightness(0.42);z-index:0;}
+.bg-overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(10,22,40,0.72),rgba(10,22,40,0.82));z-index:0;}
+
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0 6px;}
+.back-link,.review-link{color:var(--text-muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s;}
+.back-link:hover,.review-link:hover{color:var(--accent);}
+.review-link{color:var(--accent);font-weight:500;}
+
+.page-header{text-align:center;padding:14px 0 6px;}
+.page-header .overline{font-size:0.7rem;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.page-header h1{font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(1.9rem,5vw,2.5rem);font-weight:400;line-height:1.14;margin-bottom:10px;}
+.page-header .subtitle{font-size:0.96rem;color:var(--text-secondary);max-width:520px;margin:0 auto;line-height:1.55;}
+
+.hint{text-align:center;font-size:0.84rem;color:var(--text-muted);margin:20px 0 18px;font-style:italic;}
+
+/* progress */
+.progress{margin-bottom:18px;}
+.progress-meta{display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:7px;}
+.progress-meta .sc{color:var(--green);font-weight:600;}
+.progress-track{height:5px;background:var(--bg-input);border:1px solid var(--border);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.35s ease;}
+
+/* quiz card */
+.quiz-card{background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:28px 24px 24px;}
+.cloze{font-family:'DM Serif Display',serif;font-size:1.5rem;line-height:1.5;color:var(--text-primary);text-align:center;margin-bottom:12px;}
+.blank{display:inline-block;min-width:120px;text-align:center;padding:2px 12px;margin:0 2px;border-bottom:2px dashed var(--accent-line);color:var(--text-muted);border-radius:6px 6px 0 0;transition:all 0.2s;cursor:pointer;}
+.blank.empty{color:var(--text-muted);letter-spacing:2px;}
+.blank.filled{background:var(--accent-soft);border-bottom-style:solid;border-bottom-color:var(--accent);color:var(--accent);}
+.blank.over{background:var(--accent-soft);border-bottom-color:var(--accent);}
+.blank.ok{background:var(--green-soft);border-bottom:2px solid var(--green);color:var(--green);cursor:default;}
+.blank.bad{background:var(--red-soft);border-bottom:2px solid var(--red);color:var(--red);cursor:default;}
+
+.gloss{text-align:center;font-size:0.92rem;color:var(--text-secondary);font-style:italic;margin-bottom:22px;}
+
+.bank{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;}
+.badge{font-family:'Outfit',sans-serif;font-size:0.95rem;font-weight:500;color:var(--text-primary);background:var(--bg-input);border:1px solid var(--border);border-radius:9px;padding:9px 15px;cursor:grab;transition:all 0.18s;user-select:none;}
+.badge:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);}
+.badge:active{cursor:grabbing;}
+.badge.used{opacity:0.28;pointer-events:none;border-style:dashed;}
+.badge.locked{pointer-events:none;}
+
+/* feedback */
+.feedback{margin-top:20px;padding:13px 16px;border-radius:10px;font-size:0.92rem;line-height:1.55;}
+.feedback.ok{background:var(--green-soft);border-left:3px solid var(--green);color:var(--text-secondary);}
+.feedback.bad{background:var(--red-soft);border-left:3px solid var(--red);color:var(--text-secondary);}
+.feedback .verdict{font-weight:600;margin-right:6px;}
+.feedback.ok .verdict{color:var(--green);}
+.feedback.bad .verdict{color:var(--red);}
+.feedback .ans{color:var(--text-primary);font-weight:600;}
+.feedback .note{display:block;margin-top:5px;font-size:0.86rem;color:var(--text-muted);font-style:italic;}
+
+/* controls */
+.controls{display:flex;gap:10px;justify-content:center;margin-top:22px;}
+.btn-primary{font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:600;padding:11px 26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);cursor:pointer;transition:all 0.2s;}
+.btn-primary:hover:not(:disabled){background:var(--accent);color:#0a1628;}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-ghost{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:500;padding:11px 22px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* start screen */
+.start-card{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:48px 28px;}
+.start-icon{font-family:'DM Serif Display',serif;font-style:italic;font-size:2.6rem;color:var(--accent);line-height:1;margin-bottom:14px;}
+.start-title{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text-primary);margin-bottom:10px;}
+.start-text{font-size:0.95rem;color:var(--text-secondary);max-width:400px;margin:0 auto 24px;line-height:1.55;}
+.start-card .btn-primary{font-size:1rem;padding:13px 32px;}
+
+/* results */
+.results{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:36px 24px;}
+.results-label{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+.results-score{font-family:'DM Serif Display',serif;font-size:3rem;color:var(--accent);line-height:1;}
+.results-pct{font-size:1rem;color:var(--text-secondary);margin-top:6px;}
+.cat-breakdown{margin:26px auto 8px;max-width:340px;text-align:left;}
+.cat-breakdown .cb-title{font-size:0.66rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;text-align:center;}
+.cat-row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);font-size:0.9rem;color:var(--text-secondary);}
+.cat-row .cnt{font-variant-numeric:tabular-nums;color:var(--text-primary);}
+
+@media (max-width:520px){
+  .cloze{font-size:1.28rem;}
+  .blank{min-width:92px;}
+  .quiz-card{padding:22px 16px 20px;}
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" class="back-link">← Menú</a>
+    <a href="../topics/formacion-de-preguntas.html" class="review-link">Repasar la teoría →</a>
+  </div>
+
+  <header class="page-header">
+    <div class="overline">Práctica · Cloze</div>
+    <h1>Arma la pregunta</h1>
+    <p class="subtitle">Cada frase es una pregunta a la que le falta la palabra interrogativa. Colócala según la pista en inglés.</p>
+  </header>
+
+  <div class="hint">Arrastra o toca la palabra interrogativa correcta para llenar el hueco.</div>
+
+  <div id="quiz"></div>
+</div>
+
+<script>
+// ───────── Seed item bank (10) — Sonnet expands to ~50 via the generation brief ─────────
+// Schema: { id, pre, post, answer, distractors[3], gloss, dimA, dimB|null, note }
+// Hard rule: the gloss + context must force exactly ONE correct interrogative.
+const ITEMS_RAW = [
+  { id:1, pre:"¿", post:" llega el tren?", answer:"A qué hora", distractors:["Cuándo","Cómo","Dónde"],
+    gloss:"What time does the train arrive?", dimA:"tiempo", dimB:"prep_antepuesta",
+    note:"«What time» → a qué hora (preposición antepuesta), no el más vago cuándo." },
+  { id:2, pre:"¿", post:" eres?", answer:"De dónde", distractors:["Dónde","Adónde","Quién"],
+    gloss:"Where are you from?", dimA:"lugar", dimB:"prep_antepuesta",
+    note:"Origen → de dónde; ¿Dónde eres? deja caer la preposición." },
+  { id:3, pre:"¿", post:" es tu cumpleaños?", answer:"Cuándo", distractors:["A qué hora","Cuánto","Cómo"],
+    gloss:"When is your birthday?", dimA:"tiempo", dimB:null,
+    note:"Una fecha → cuándo; a qué hora pediría la hora exacta." },
+  { id:4, pre:"¿", post:" personas vienen?", answer:"Cuántas", distractors:["Cuántos","Cuánto","Cuánta"],
+    gloss:"How many people are coming?", dimA:"cantidad", dimB:"concordancia_cuanto",
+    note:"personas es femenino plural → cuántas." },
+  { id:5, pre:"¿", post:" años tienes?", answer:"Cuántos", distractors:["Cuántas","Cuánto","Qué"],
+    gloss:"How old are you?", dimA:"cantidad", dimB:"concordancia_cuanto",
+    note:"años es masculino plural → cuántos (la edad va con tener)." },
+  { id:6, pre:"¿", post:" sirve esto?", answer:"Para qué", distractors:["Por qué","Qué","Cómo"],
+    gloss:"What is this for?", dimA:"razon", dimB:null,
+    note:"Propósito → para qué; por qué pediría el motivo." },
+  { id:7, pre:"¿", post:" piensas?", answer:"En qué", distractors:["Qué","De qué","Cómo"],
+    gloss:"What are you thinking about?", dimA:"manera", dimB:"colocacion_verbo_prep",
+    note:"pensar en → en qué; el verbo fija la preposición." },
+  { id:8, pre:"¿", post:" hablas?", answer:"Con quién", distractors:["Quién","A quién","De quién"],
+    gloss:"Who are you talking with?", dimA:"identidad", dimB:"prep_antepuesta",
+    note:"hablar con → con quién; el inglés deja «with» colgando." },
+  { id:9, pre:"¿", post:" es la capital de Francia?", answer:"Cuál", distractors:["Qué","Quién","Cómo"],
+    gloss:"What is the capital of France?", dimA:"eleccion", dimB:"que_vs_cual",
+    note:"Identificar dentro de un conjunto, ante ser → cuál; qué pediría una definición." },
+  { id:10, pre:"¿", post:" entrenas?", answer:"Cada cuánto", distractors:["Cuándo","Cuánto","Con qué"],
+    gloss:"How often do you train?", dimA:"frecuencia", dimB:null,
+    note:"Frecuencia → cada cuánto." },
+
+{ id:11, pre:"¿", post:" es tu hermano?", answer:"Quién", distractors:["Cuál","Qué","Cómo"],
+  gloss:"Who is your brother?", dimA:"identidad", dimB:"que_vs_cual",
+  note:"Pregunta por una persona desconocida → quién, no cuál (que presupondría una selección)." },
+
+{ id:12, pre:"¿", post:" es la capital de Chile?", answer:"Cuál", distractors:["Qué","Quién","Dónde"],
+  gloss:"Which is the capital of Chile?", dimA:"eleccion", dimB:"que_vs_cual",
+  note:"Selección entre elementos conocidos ante ser → cuál, no qué (que pediría definición)." },
+
+{ id:13, pre:"¿", post:" vives?", answer:"Dónde", distractors:["Adónde","De dónde","Cuándo"],
+  gloss:"Where do you live?", dimA:"lugar", dimB:null,
+  note:"Lugar de residencia estático → dónde; adónde implica movimiento hacia algún sitio." },
+
+{ id:14, pre:"¿", post:" vas este fin de semana?", answer:"Adónde", distractors:["Dónde","De dónde","Cuándo"],
+  gloss:"Where are you going this weekend?", dimA:"lugar", dimB:"prep_antepuesta",
+  note:"Destino de movimiento → adónde (a + dónde); dónde pregunta por ubicación, no destino." },
+
+{ id:15, pre:"¿", post:" eres?", answer:"De dónde", distractors:["Dónde","Adónde","De quién"],
+  gloss:"Where are you from?", dimA:"lugar", dimB:"prep_antepuesta",
+  note:"Origen → de dónde (preposición antepuesta); dónde y adónde no expresan procedencia." },
+
+{ id:16, pre:"¿", post:" estudiantes hay en la clase?", answer:"Cuántos", distractors:["Cuántas","Cuánto","Cuánta"],
+  gloss:"How many students (masculine/mixed) are in the class?", dimA:"cantidad", dimB:"concordancia_cuanto",
+  note:"Estudiantes es masculino plural → cuántos; cuántas concordaría con un femenino plural." },
+
+{ id:17, pre:"¿", post:" agua queda en la botella?", answer:"Cuánta", distractors:["Cuánto","Cuántos","Cuántas"],
+  gloss:"How much water is left in the bottle?", dimA:"cantidad", dimB:"concordancia_cuanto",
+  note:"Agua es femenino singular → cuánta; cuánto es la forma masculina/neutra." },
+
+{ id:18, pre:"¿", post:" cuesta el boleto?", answer:"Cuánto", distractors:["Cuánta","Cuántos","Qué"],
+  gloss:"How much does the ticket cost?", dimA:"cantidad", dimB:"concordancia_cuanto",
+  note:"Precio incontable, forma neutra → cuánto; cuánta concordaría con un sustantivo femenino." },
+
+{ id:19, pre:"¿", post:" hablas tan rápido?", answer:"Por qué", distractors:["Para qué","Cómo","Cuándo"],
+  gloss:"Why do you speak so fast?", dimA:"razon", dimB:null,
+  note:"Causa del hecho → por qué; para qué preguntaría la finalidad o propósito." },
+
+{ id:20, pre:"¿", post:" aprendes español?", answer:"Para qué", distractors:["Por qué","Cómo","Desde cuándo"],
+  gloss:"What (for what purpose) are you learning Spanish?", dimA:"razon", dimB:null,
+  note:"Finalidad o propósito → para qué; por qué pediría la causa o motivo pasado." },
+
+{ id:21, pre:"¿", post:" se prepara este plato?", answer:"Cómo", distractors:["Por qué","Qué","Cuándo"],
+  gloss:"How is this dish prepared?", dimA:"manera", dimB:null,
+  note:"Modo o procedimiento → cómo; por qué preguntaría la razón, no el método." },
+
+{ id:22, pre:"¿", post:" queda la farmacia más cercana?", answer:"Dónde", distractors:["Adónde","De dónde","Cuándo"],
+  gloss:"Where is the nearest pharmacy?", dimA:"lugar", dimB:null,
+  note:"Ubicación de un lugar estático → dónde; adónde implica movimiento hacia un destino." },
+
+{ id:23, pre:"¿", post:" piensas cuando escuchas esa canción?", answer:"En qué", distractors:["Qué","Con qué","Por qué"],
+  gloss:"What do you think about when you hear that song?", dimA:"manera", dimB:"colocacion_verbo_prep",
+  note:"Pensar rige en → en qué; qué sin preposición sería agramatical con este verbo." },
+
+{ id:24, pre:"¿", post:" sueñas por las noches?", answer:"Con qué", distractors:["Qué","En qué","De qué"],
+  gloss:"What do you dream about at night?", dimA:"manera", dimB:"colocacion_verbo_prep",
+  note:"Soñar rige con → con qué; qué simple no respeta la colocación verbal." },
+
+{ id:25, pre:"¿", post:" depende tu decisión?", answer:"De qué", distractors:["En qué","Con qué","Por qué"],
+  gloss:"What does your decision depend on?", dimA:"manera", dimB:"colocacion_verbo_prep",
+  note:"Depender rige de → de qué (preposición antepuesta); otras preposiciones cambian el verbo." },
+
+{ id:26, pre:"¿", post:" llegaste a México?", answer:"Cuándo", distractors:["A qué hora","Desde cuándo","Cómo"],
+  gloss:"When (on what occasion/day) did you arrive in Mexico?", dimA:"tiempo", dimB:null,
+  note:"Punto temporal indefinido → cuándo; a qué hora exigiría una respuesta de reloj." },
+
+{ id:27, pre:"¿", post:" sale el próximo vuelo?", answer:"A qué hora", distractors:["Cuándo","Desde cuándo","En qué momento"],
+  gloss:"What time does the next flight leave?", dimA:"tiempo", dimB:"prep_antepuesta",
+  note:"Hora exacta del reloj → a qué hora (prep antepuesta); cuándo es demasiado vago para un horario." },
+
+{ id:28, pre:"¿", post:" estudias francés?", answer:"Desde cuándo", distractors:["Cuándo","A qué hora","Hace cuánto"],
+  gloss:"Since when have you been studying French?", dimA:"tiempo", dimB:"prep_antepuesta",
+  note:"Punto de inicio hasta el presente → desde cuándo; cuándo no marca el origen de un estado continuo." },
+
+{ id:29, pre:"¿", post:" te llamas?", answer:"Cómo", distractors:["Quién","Qué","Cuál"],
+  gloss:"What is your name? (What are you called?)", dimA:"formulas", dimB:null,
+  note:"Llamarse pide el modo en que algo se denomina → cómo; quién pediría una persona, no un nombre." },
+
+{ id:30, pre:"¿", post:" termina el contrato?", answer:"Cuándo", distractors:["A qué hora","Desde cuándo","Cómo"],
+  gloss:"When does the contract end?", dimA:"tiempo", dimB:null,
+  note:"Punto temporal no específico en horas → cuándo; a qué hora pediría un horario de reloj." },
+
+{ id:31, pre:"¿", post:" es ese aparato?", answer:"Qué", distractors:["Cuál","Quién","Cómo"],
+  gloss:"What is that device? (asking for its definition/nature)", dimA:"descripcion", dimB:"que_vs_cual",
+  note:"Definición o naturaleza del objeto → qué; cuál ante ser seleccionaría entre opciones, no definiría." },
+
+{ id:32, pre:"¿", post:" color tiene tu coche?", answer:"De qué", distractors:["Qué","Cuál","Cómo"],
+  gloss:"What color is your car?", dimA:"descripcion", dimB:"prep_antepuesta",
+  note:"La preposición de es parte fija de la expresión → de qué color; qué color a secas es un calco del inglés." },
+
+{ id:33, pre:"¿", post:" es la película?", answer:"Cómo", distractors:["Qué","Cuál","Por qué"],
+  gloss:"What is the movie like?", dimA:"descripcion", dimB:null,
+  note:"Descripción cualitativa → cómo; qué es pediría definición, no valoración o descripción." },
+
+{ id:34, pre:"¿", post:" idiomas hablas?", answer:"Cuántos", distractors:["Cuáles","Qué","Cuánto"],
+  gloss:"How many languages do you speak?", dimA:"cantidad", dimB:"concordancia_cuanto",
+  note:"Cantidad de idiomas (masc. pl.) → cuántos; cuáles pediría los nombres, no el número." },
+
+{ id:35, pre:"¿", post:" te puedo ayudar?", answer:"En qué", distractors:["Cómo","Con qué","Qué"],
+  gloss:"How (in what way) can I help you?", dimA:"formulas", dimB:"prep_antepuesta",
+  note:"Fórmula de atención al cliente con ayudar en → en qué; cómo es menos preciso en este registro." },
+
+{ id:36, pre:"¿", post:" te fue en la entrevista?", answer:"Qué tal", distractors:["Cómo","Qué","Cuánto"],
+  gloss:"How did the interview go? (más coloquial)", dimA:"formulas", dimB:null,
+  note:"Fórmula coloquial de valoración → qué tal; cómo es posible pero qué tal es la expresión fija preferida." },
+
+{ id:37, pre:"¿", post:" te parece si salimos a las ocho?", answer:"Qué", distractors:["Cómo","Cuál","Cuánto"],
+  gloss:"What do you think about leaving at eight?", dimA:"formulas", dimB:null,
+  note:"Fórmula qué te parece (si…) pide opinión; cómo te parece es incorrecto en esta construcción." },
+
+{ id:38, pre:"¿", post:" podemos hacer para solucionar esto?", answer:"Qué", distractors:["Cuál","Cómo","Cuánto"],
+  gloss:"What can we do to solve this?", dimA:"eleccion", dimB:"que_vs_cual",
+  note:"Qué + infinitivo como complemento pide una acción o cosa; cuál seleccionaría de opciones dadas." },
+
+{ id:39, pre:"¿", post:" ejercitas?", answer:"Con qué frecuencia", distractors:["Cada cuánto","Cuándo","Cuánto tiempo"],
+  gloss:"How often do you exercise?", dimA:"frecuencia", dimB:"prep_antepuesta",
+  note:"Frecuencia habitual → con qué frecuencia; cada cuánto también vale pero el gloss dice «how often», que es la fórmula fija." },
+
+{ id:40, pre:"¿", post:" tarda el autobús en llegar?", answer:"Cuánto tiempo", distractors:["Cuándo","Cada cuánto","Con qué frecuencia"],
+  gloss:"How long does the bus take to arrive?", dimA:"frecuencia", dimB:null,
+  note:"Duración de un proceso → cuánto tiempo; cuándo preguntaría un punto en el tiempo, no una duración." },
+
+{ id:41, pre:"¿", post:" vas al gimnasio?", answer:"Cada cuánto", distractors:["Con qué frecuencia","Cuándo","Cuánto tiempo"],
+  gloss:"Every how often do you go to the gym?", dimA:"frecuencia", dimB:"prep_antepuesta",
+  note:"Intervalo repetido → cada cuánto; con qué frecuencia también es frecuencia pero el gloss marca el intervalo." },
+
+{ id:42, pre:"¿", post:" son tus padres?", answer:"Cómo", distractors:["Quiénes","Qué","Cuáles"],
+  gloss:"What are your parents like?", dimA:"descripcion", dimB:null,
+  note:"Descripción de características personales → cómo son; quiénes son pediría identidad, no descripción." },
+
+{ id:43, pre:"¿", post:" es tu número de teléfono?", answer:"Cuál", distractors:["Qué","Cómo","Cuánto"],
+  gloss:"What is your phone number? (asking for a specific value)", dimA:"eleccion", dimB:"que_vs_cual",
+  note:"Valor específico seleccionado ante ser → cuál; qué pediría la definición del concepto, no el dato." },
+
+{ id:44, pre:"¿", post:" son tus películas favoritas?", answer:"Cuáles", distractors:["Qué","Cuál","Cómo"],
+  gloss:"Which are your favorite movies? (plural selection)", dimA:"eleccion", dimB:"que_vs_cual",
+  note:"Selección plural ante ser → cuáles; qué pediría definición; cuál (sing.) no concuerda en número." },
+
+{ id:45, pre:"¿", post:" es la diferencia entre los dos modelos?", answer:"Cuál", distractors:["Qué","Cómo","Cuáles"],
+  gloss:"What is the difference between the two models?", dimA:"eleccion", dimB:"que_vs_cual",
+  note:"Identificación de un elemento singular ante ser → cuál; qué es pediría la definición de «diferencia»." },
+
+{ id:46, pre:"¿", post:" vino en la fiesta?", answer:"Quién", distractors:["Cuál","Qué","Cuántos"],
+  gloss:"Who came to the party?", dimA:"identidad", dimB:null,
+  note:"Identidad de persona en evento pasado → quién; cuál implicaría selección de una lista conocida." },
+
+{ id:47, pre:"¿", post:" son los responsables del proyecto?", answer:"Quiénes", distractors:["Cuáles","Qué","Cómo"],
+  gloss:"Who (plural) are the people responsible for the project?", dimA:"identidad", dimB:null,
+  note:"Identidad de personas (plural) → quiénes; cuáles seleccionaría de opciones, no pediría identidades." },
+
+{ id:48, pre:"¿", post:" es ese edificio?", answer:"De quién", distractors:["Para quién","Con quién","A quién"],
+  gloss:"Whose building is that?", dimA:"identidad", dimB:"prep_antepuesta",
+  note:"Posesión → de quién (preposición antepuesta); para quién indicaría destinatario, no dueño." },
+
+{ id:49, pre:"¿", post:" vas al médico?", answer:"Por qué", distractors:["Para qué","Cuándo","Cómo"],
+  gloss:"Why are you going to the doctor?", dimA:"razon", dimB:null,
+  note:"Causa o motivo de la acción → por qué; para qué preguntaría el objetivo o beneficio buscado." },
+
+{ id:50, pre:"¿", post:" estudias tanto?", answer:"Para qué", distractors:["Por qué","Cómo","Cuánto"],
+  gloss:"What for do you study so much? (what is your goal)", dimA:"razon", dimB:null,
+  note:"Finalidad o propósito detrás del esfuerzo → para qué; por qué pediría la causa, no el objetivo." }
+
+];
+
+const DIMA_NAMES = {
+  identidad:"Identidad", lugar:"Lugar", tiempo:"Tiempo", frecuencia:"Frecuencia",
+  cantidad:"Cantidad", manera:"Manera", razon:"Razón", eleccion:"Elección",
+descripcion:"Descripción", si_no:"Sí / No", formulas:"Fórmulas"
+};
+
+const QUESTIONS_PER_RUN = 10;   // each run draws this many at random from ITEMS_RAW
+
+const quiz = document.getElementById('quiz');
+let items=[], idx=0, score=0, catStats={};
+let state={ placed:null, checked:false, correct:false, badges:[] };
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function showStart(){
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">¿?</div>
+      <h2 class="start-title">Listo para practicar</h2>
+      <p class="start-text">Cada ronda son ${QUESTIONS_PER_RUN} preguntas elegidas al azar de un banco de ${ITEMS_RAW.length}.</p>
+      <button class="btn-primary" data-start>Comenzar ronda →</button>
+    </div>`;
+  const b = quiz.querySelector('[data-start]'); if(b) b.addEventListener('click', startQuiz);
+}
+
+function startQuiz(){
+  const pool = shuffle(ITEMS_RAW);
+  items = pool.slice(0, Math.min(QUESTIONS_PER_RUN, pool.length));
+  idx=0; score=0; catStats={};
+  loadItem();
+}
+
+function loadItem(){
+  const it = items[idx];
+  state = { placed:null, checked:false, correct:false, badges: shuffle([it.answer, ...it.distractors]) };
+  paint();
+}
+function placeBadge(i){ if(state.checked) return; state.placed=i; paint(); }
+function clearBlank(){ if(state.checked) return; state.placed=null; paint(); }
+function check(){
+  if(state.placed===null || state.checked) return;
+  const it=items[idx];
+  state.checked=true;
+  state.correct = (state.badges[state.placed]===it.answer);
+  if(state.correct) score++;
+  const c=it.dimA; catStats[c]=catStats[c]||{correct:0,total:0}; catStats[c].total++; if(state.correct) catStats[c].correct++;
+  paint();
+}
+function next(){
+  idx++;
+  if(idx>=items.length) showResults(); else loadItem();
+}
+
+function paint(){
+  const it=items[idx];
+  let blankClass, blankText;
+  if(state.checked){ blankClass=state.correct?'ok':'bad'; blankText=state.placed!==null?state.badges[state.placed]:'_____'; }
+  else if(state.placed!==null){ blankClass='filled'; blankText=state.badges[state.placed]; }
+  else { blankClass='empty'; blankText='_____'; }
+
+  const bankHtml = state.badges.map((b,i)=>{
+    const used = (state.placed===i);
+    const cls = 'badge'+(used?' used':'')+(state.checked?' locked':'');
+    return `<button class="${cls}" data-badge="${i}" draggable="${!state.checked}">${b}</button>`;
+  }).join('');
+
+  let feedbackHtml='';
+  if(state.checked){
+    if(state.correct){
+      feedbackHtml = `<div class="feedback ok"><span class="verdict">¡Correcto!</span><span class="note">${it.note}</span></div>`;
+    } else {
+      feedbackHtml = `<div class="feedback bad"><span class="verdict">No exactamente.</span> La respuesta es <span class="ans">${it.answer}</span>.<span class="note">${it.note}</span></div>`;
+    }
+  }
+
+  const last = (idx+1>=items.length);
+  const controlsHtml = state.checked
+    ? `<button class="btn-primary" data-next>${last?'Ver resultados →':'Siguiente →'}</button>`
+    : `<button class="btn-primary" data-check ${state.placed===null?'disabled':''}>Comprobar</button>`;
+
+  quiz.innerHTML = `
+    <div class="progress">
+      <div class="progress-meta"><span>Pregunta ${idx+1} de ${items.length}</span><span class="sc">${score} ✓</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${(idx/items.length)*100}%"></div></div>
+    </div>
+    <div class="quiz-card">
+      <div class="cloze"><span>${it.pre}</span><span class="blank ${blankClass}" data-blank>${blankText}</span><span>${it.post}</span></div>
+      <div class="gloss">${it.gloss}</div>
+      <div class="bank">${bankHtml}</div>
+      ${feedbackHtml}
+      <div class="controls">${controlsHtml}</div>
+    </div>`;
+
+  attachHandlers();
+}
+
+function attachHandlers(){
+  quiz.querySelectorAll('.badge').forEach(el=>{
+    const i = parseInt(el.dataset.badge,10);
+    el.addEventListener('click', ()=>placeBadge(i));
+    el.addEventListener('dragstart', e=>{ e.dataTransfer.setData('text/plain', String(i)); });
+  });
+  const blank = quiz.querySelector('[data-blank]');
+  if(blank){
+    blank.addEventListener('click', clearBlank);
+    blank.addEventListener('dragover', e=>{ if(!state.checked){ e.preventDefault(); blank.classList.add('over'); } });
+    blank.addEventListener('dragleave', ()=> blank.classList.remove('over'));
+    blank.addEventListener('drop', e=>{
+      e.preventDefault(); blank.classList.remove('over');
+      const i = parseInt(e.dataTransfer.getData('text/plain'),10);
+      if(!isNaN(i)) placeBadge(i);
+    });
+  }
+  const cb = quiz.querySelector('[data-check]'); if(cb) cb.addEventListener('click', check);
+  const nb = quiz.querySelector('[data-next]'); if(nb) nb.addEventListener('click', next);
+}
+
+function showResults(){
+  const pct = Math.round(score/items.length*100);
+  const rows = Object.keys(catStats).sort().map(k=>{
+    const v=catStats[k];
+    return `<div class="cat-row"><span>${DIMA_NAMES[k]||k}</span><span class="cnt">${v.correct}/${v.total}</span></div>`;
+  }).join('');
+  quiz.innerHTML = `
+    <div class="results">
+      <div class="results-label">Resultado</div>
+      <div class="results-score">${score} / ${items.length}</div>
+      <div class="results-pct">${pct}% correctas</div>
+      <div class="cat-breakdown">
+        <div class="cb-title">Por categoría</div>
+        ${rows}
+      </div>
+      <div class="controls">
+        <button class="btn-primary" data-restart>Otra ronda →</button>
+        <a class="btn-ghost" href="../topics/formacion-de-preguntas.html">Repasar la teoría →</a>
+      </div>
+    </div>`;
+  const rb = quiz.querySelector('[data-restart]'); if(rb) rb.addEventListener('click', startQuiz);
+}
+
+showStart();
+</script>
+</body>
+</html>

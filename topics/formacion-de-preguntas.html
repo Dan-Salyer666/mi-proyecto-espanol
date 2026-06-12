@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formación de Preguntas — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --text-primary:   #e8edf5;
+  --text-secondary: #9aabc6;
+  --text-muted:     #62779a;
+  --green:          #4ade80;
+  --red:            #f87171;
+}
+/* ── Single accent (teal) ── */
+:root {
+  --accent:      #4ecdc4;
+  --accent-soft: rgba(78, 205, 196, 0.10);
+  --accent-line: rgba(78, 205, 196, 0.45);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/los fondos/girona.webp') center/cover no-repeat;
+  filter: brightness(0.42);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: linear-gradient(180deg, rgba(10,22,40,0.72), rgba(10,22,40,0.82));
+  z-index: 0;
+}
+
+/* ── Layout: clean floating TOC + reading column ── */
+.layout {
+  position: relative; z-index: 1;
+  display: flex; align-items: flex-start; gap: 40px;
+  max-width: 1100px; margin: 0 auto; padding: 0 24px 90px;
+}
+.content { flex: 1 1 auto; min-width: 0; max-width: 760px; }
+
+.toc {
+  flex: 0 0 180px; position: sticky; top: 30px; margin-top: 132px;
+  padding-left: 2px;
+}
+.toc-title {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px;
+}
+.toc ol { list-style: none; }
+.toc a {
+  display: block; padding: 5px 0 5px 12px; margin-left: -2px;
+  border-left: 2px solid transparent;
+  color: var(--text-muted); text-decoration: none;
+  font-size: 0.82rem; line-height: 1.35; transition: all 0.18s;
+}
+.toc a:hover { color: var(--text-primary); }
+.toc a.active { color: var(--accent); border-left-color: var(--accent); }
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block; color: var(--text-muted); text-decoration: none;
+  font-size: 0.9rem; padding: 22px 0 6px; transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header { padding: 18px 0 10px; }
+.page-header .overline {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif; font-style: italic;
+  font-size: clamp(2.1rem, 5vw, 2.9rem); font-weight: 400;
+  color: var(--text-primary); line-height: 1.12; margin-bottom: 12px;
+}
+.page-header .subtitle {
+  font-size: 1.02rem; color: var(--text-secondary);
+  max-width: 580px; line-height: 1.6;
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 22px 0 30px; padding: 9px 14px;
+  background: rgba(17, 29, 53, 0.55); border: 1px solid var(--border); border-radius: 10px;
+}
+.rate-label { font-size: 0.8rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted);
+  font-family: 'Outfit', sans-serif; font-size: 0.76rem; cursor: pointer; transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); }
+
+/* ── Accordion topic cards ── */
+.topic {
+  border: 1px solid var(--border);
+  background: rgba(17, 29, 53, 0.55);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.topic:hover { border-color: #2a4a75; }
+.topic.open { border-color: var(--accent-line); }
+.topic-head {
+  width: 100%; text-align: left; cursor: pointer;
+  background: none; border: none; color: inherit; font-family: inherit;
+  display: flex; align-items: flex-start; gap: 16px; padding: 18px 20px;
+}
+.topic-num {
+  font-family: 'DM Serif Display', serif; font-size: 1.05rem;
+  color: var(--text-muted); flex-shrink: 0; padding-top: 3px; min-width: 1.4em;
+}
+.topic.open .topic-num { color: var(--accent); }
+.topic-titles { flex: 1; min-width: 0; }
+.topic-title {
+  display: block; font-family: 'DM Serif Display', serif;
+  font-size: 1.24rem; color: var(--text-primary); line-height: 1.25;
+}
+.topic-title .star { font-size: 0.72rem; vertical-align: super; color: var(--accent); }
+.topic-summary {
+  display: block; font-size: 0.9rem; color: var(--text-secondary);
+  margin-top: 4px; line-height: 1.5;
+}
+.topic-chevron {
+  flex-shrink: 0; color: var(--text-muted); font-size: 0.9rem;
+  padding-top: 5px; transition: transform 0.25s ease, color 0.2s;
+}
+.topic.open .topic-chevron { transform: rotate(180deg); color: var(--accent); }
+
+.topic-body { display: none; padding: 4px 22px 22px; }
+.topic.open .topic-body { display: block; }
+.topic-body .divider { height: 1px; background: var(--border); margin: 0 0 18px; }
+.topic-body p.lede {
+  color: var(--text-secondary); font-size: 0.94rem; line-height: 1.6; margin-bottom: 6px;
+}
+
+/* ── Example rows ── */
+.example-row { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif; font-size: 1.05rem;
+  color: var(--text-primary); line-height: 1.5;
+}
+.example-es b { font-weight: 400; color: var(--accent); }
+.example-en {
+  font-size: 0.85rem; color: var(--text-muted); font-style: italic;
+  margin-top: 3px; line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+.mark-ok { color: var(--green); font-weight: 700; }
+.mark-no { color: var(--red);   font-weight: 700; }
+
+.speak-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: none;
+  border: 1px solid var(--border); border-radius: 6px;
+  color: var(--text-muted); cursor: pointer; font-size: 0.85rem;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+
+/* ── NOTA (English explanation layer) ── */
+.nota {
+  background: var(--accent-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 13px 16px; margin: 16px 0 4px;
+  font-size: 0.9rem; color: var(--text-secondary); line-height: 1.65;
+}
+.nota .nota-label {
+  font-weight: 600; color: var(--accent); margin-right: 6px; letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--text-primary); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace; background: var(--bg-input);
+  color: var(--text-primary); padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+}
+.nota-groups { display: flex; flex-direction: column; gap: 11px; margin-top: 6px; }
+.nota-grp { line-height: 1.5; }
+.nota-grp .ng-head { color: var(--accent); font-weight: 600; }
+.nota-grp .ng-rule { color: var(--text-primary); }
+.nota-grp .ng-items {
+  display: block; margin-top: 3px; font-size: 0.86rem; color: var(--text-secondary);
+}
+.nota-grp .ng-items em { color: var(--text-primary); font-style: italic; }
+
+/* ── §1 schematic (single-accent) ── */
+.schematic { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 4px; }
+.sch-col { background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.sch-col.es { border-top: 2px solid var(--accent); }
+.sch-label {
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px;
+}
+.sch-step {
+  font-family: 'DM Serif Display', serif; font-size: 0.96rem; color: var(--text-primary);
+  background: rgba(10,22,40,0.6); border: 1px solid var(--border);
+  border-radius: 7px; padding: 8px 11px; text-align: center;
+}
+.sch-arrow { text-align: center; font-size: 0.74rem; color: var(--text-muted); padding: 6px 0; font-style: italic; }
+.sch-note { font-size: 0.78rem; color: var(--text-secondary); font-style: italic; text-align: center; margin-top: 9px; line-height: 1.45; }
+
+/* ── Regional (Río) note ── */
+.rio { margin-top: 16px; padding-top: 14px; border-top: 1px dashed rgba(78,205,196,0.3); }
+.rio-tag {
+  display: inline-block; background: rgba(255,255,255,0.06); color: var(--text-secondary);
+  font-size: 0.62rem; font-weight: 600; padding: 0.2rem 0.6rem; border-radius: 4px;
+  margin-bottom: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.rio-blurb { font-size: 0.84rem; color: var(--text-muted); font-style: italic; margin-bottom: 2px; line-height: 1.5; }
+
+.stub-hint {
+  font-size: 0.82rem; color: var(--text-muted); font-style: italic;
+  margin-top: 12px; padding: 9px 12px; border: 1px dashed var(--border); border-radius: 8px;
+}
+
+/* ── Interrogative inventory (tabular, breathing) ── */
+.iw-group { margin-top: 22px; }
+.iw-group:first-of-type { margin-top: 12px; }
+.iw-group-title {
+  font-size: 0.66rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 2px;
+}
+.iw-group-sub { font-size: 0.8rem; color: var(--text-muted); font-style: italic; margin-bottom: 4px; }
+.iw-row {
+  display: grid; grid-template-columns: 168px 1fr; gap: 16px;
+  padding: 14px 0; border-top: 1px solid var(--border); align-items: start;
+}
+.iw-word {
+  font-family: 'DM Serif Display', serif; font-size: 1.06rem; color: var(--accent); line-height: 1.25;
+}
+.iw-word .iw-gloss {
+  display: block; font-family: 'Outfit', sans-serif; font-size: 0.72rem;
+  color: var(--text-muted); font-weight: 400; margin-top: 3px;
+}
+.iw-word .iw-tag {
+  display: inline-block; margin-top: 7px; font-family: 'Outfit', sans-serif;
+  font-size: 0.58rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-secondary); background: rgba(255,255,255,0.05);
+  padding: 2px 7px; border-radius: 4px;
+}
+.iw-detail { min-width: 0; }
+.iw-detail .example-row { margin-top: 0; }
+.iw-detail .example-row + .example-row { margin-top: 8px; }
+.iw-uso { font-size: 0.84rem; color: var(--text-secondary); font-style: italic; margin-top: 7px; line-height: 1.5; }
+.iw-uso strong { color: var(--text-primary); font-style: normal; }
+.iw-foot { font-size: 0.76rem; color: var(--text-muted); font-style: italic; margin-top: 5px; }
+.open-link { color: var(--accent); text-decoration: none; font-style: normal; white-space: nowrap; }
+.open-link:hover { text-decoration: underline; }
+.go-subpage {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;
+  padding: 11px 17px; border: 1px solid var(--accent-line); border-radius: 9px;
+  background: var(--accent-soft); color: var(--accent);
+  text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: all 0.2s;
+}
+.go-subpage:hover { background: var(--accent); color: #0a1628; }
+
+@media (max-width: 880px) {
+  .layout { flex-direction: column; gap: 0; padding: 0 18px 70px; }
+  .content { max-width: 100%; }
+  .toc {
+    order: -1; flex: none; width: 100%; margin-top: 12px;
+    position: sticky; top: 0; z-index: 5;
+    background: rgba(10,22,40,0.92); backdrop-filter: blur(6px);
+    padding: 9px 6px; border-bottom: 1px solid var(--border);
+  }
+  .toc-title { display: none; }
+  .toc ol { display: flex; gap: 4px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .toc li { flex: 0 0 auto; }
+  .toc a { border-left: none; border-bottom: 2px solid transparent; padding: 5px 9px; white-space: nowrap; }
+  .toc a.active { border-left: none; border-bottom-color: var(--accent); }
+}
+@media (max-width: 560px) {
+  .schematic { grid-template-columns: 1fr; }
+  .iw-row { grid-template-columns: 1fr; gap: 7px; }
+  .iw-word { font-size: 1.14rem; }
+  .iw-word .iw-tag { margin-top: 4px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="layout">
+
+  <nav class="toc" aria-label="Índice">
+    <div class="toc-title">Secciones</div>
+    <ol>
+      <li><a href="#t1" class="toc-link">La maquinaria</a></li>
+      <li><a href="#t2" class="toc-link">Sí / no</a></li>
+      <li><a href="#t3" class="toc-link">Palabras interrogativas</a></li>
+      <li><a href="#t4" class="toc-link">Reglas inquebrantables</a></li>
+      <li><a href="#t5" class="toc-link">Qué vs. cuál</a></li>
+      <li><a href="#t6" class="toc-link">Por qué / para qué</a></li>
+      <li><a href="#t7" class="toc-link">Las fórmulas</a></li>
+      <li><a href="#t8" class="toc-link">Preguntas indirectas</a></li>
+    </ol>
+  </nav>
+
+  <main class="content">
+    <a href="../index.html" class="back-link">← Volver al menú</a>
+
+    <header class="page-header">
+      <div class="overline">Interacción · Producción</div>
+      <h1>Formación de preguntas</h1>
+      <p class="subtitle">Cómo construye una pregunta el español. Cada tema abre un resumen; toca para expandir.</p>
+    </header>
+
+    <div class="rate-bar">
+      <span class="rate-label">Velocidad del audio</span>
+      <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+      <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+      <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+    </div>
+
+    <!-- ░░ T1 — fully built ░░ -->
+    <article class="topic open" id="t1">
+      <button class="topic-head" aria-expanded="true" onclick="toggleTopic(this)">
+        <span class="topic-num">01</span>
+        <span class="topic-titles">
+          <span class="topic-title">La maquinaria</span>
+          <span class="topic-summary">El inglés monta una máquina (auxiliar + inversión). El español no monta nada: la entonación y el verbo ya conjugado hacen el trabajo.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <div class="schematic">
+          <div class="sch-col en">
+            <div class="sch-label">Inglés · la máquina</div>
+            <div class="sch-step">You like coffee.</div>
+            <div class="sch-arrow">↓ inserta <em>do</em> + invierte</div>
+            <div class="sch-step">Do you like coffee?</div>
+            <div class="sch-note">Hace falta un auxiliar y una reordenación.</div>
+          </div>
+          <div class="sch-col es">
+            <div class="sch-label">Español · sin máquina</div>
+            <div class="sch-step">Te gusta el café.</div>
+            <div class="sch-arrow">↓ solo <em>¿…?</em> + entonación</div>
+            <div class="sch-step">¿Te gusta el café?</div>
+            <div class="sch-note">Mismo orden, mismas palabras.</div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿Dónde vive Juan?</div>
+            <div class="example-en">Where does Juan live? <em>(verb before subject)</em></div>
+          </div>
+        </div>
+        <div class="nota">
+          <span class="nota-label">NOTA*</span>
+          <strong>Four shifts from English.</strong> (1) No <em>do-support</em> — the conjugated verb already carries the <em>do/did</em> and the tense, so <em>¿Comiste?</em> alone means "Did you eat?". (2) The question lives in the punctuation and the voice: an opening <em>¿</em> plus rising pitch turns a statement into a question with no reordering. (3) A preposition never strands at the end — it fronts with its question word (<em>¿De dónde eres?</em>). (4) When an interrogative opens the question, the verb usually comes before the subject (<em>¿Dónde vive Juan?</em>).
+        </div>
+      </div>
+    </article>
+
+    <!-- ░░ T2 — fully built ░░ -->
+    <article class="topic" id="t2">
+      <button class="topic-head" aria-expanded="false" onclick="toggleTopic(this)">
+        <span class="topic-num">02</span>
+        <span class="topic-titles">
+          <span class="topic-title">Preguntas de sí / no</span>
+          <span class="topic-summary">La afirmación se vuelve pregunta sin cambiar nada: solo el marco <em>¿…?</em> y el tono. Aquí está el mayor alivio frente al inglés.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿Tienes hambre?</div>
+            <div class="example-en">Are you hungry? <em>(from</em> Tienes hambre<em>)</em></div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Hace frío hoy, <b>¿no?</b></div>
+            <div class="example-en">It's cold today, isn't it? <em>(tag question)</em></div>
+          </div>
+        </div>
+        <div class="nota">
+          <span class="nota-label">NOTA*</span>
+          <strong>The biggest relief.</strong> To make a yes/no question you change nothing but the frame: add <code>¿…?</code> in writing, raise your pitch in speech. No auxiliary to insert, no inversion to perform — <em>Tienes hambre</em> becomes <em>¿Tienes hambre?</em> with the same words in the same order. The tags <em>¿no?</em>, <em>¿verdad?</em>, <em>¿cierto?</em> just ask for confirmation.
+        </div>
+        <div class="rio">
+          <span class="rio-tag">Nota rioplatense</span>
+          <div class="rio-blurb">En el Río de la Plata se oyen las coletillas <em>¿viste?</em> y <em>¿eh?</em>. El audio se mantiene neutro.</div>
+          <div class="example-row" data-region="rioplatense">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">Está buenísimo, <b>¿viste?</b></div>
+              <div class="example-en">It's really good, you know?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ░░ T3 — built: las palabras interrogativas ░░ -->
+    <article class="topic" id="t3">
+      <button class="topic-head" aria-expanded="false" onclick="toggleTopic(this)">
+        <span class="topic-num">03</span>
+        <span class="topic-titles">
+          <span class="topic-title">Las palabras interrogativas</span>
+          <span class="topic-summary">El inventario completo: las invariables, las que concuerdan (<em>quién, cuál, cuánto</em>) y los compuestos con preposición.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <p class="lede">Todas llevan tilde — en preguntas directas e indirectas (<a href="#t4" class="open-link">→ Reglas inquebrantables</a>).</p>
+
+        <!-- Invariables -->
+        <div class="iw-group">
+          <div class="iw-group-title">Invariables</div>
+          <div class="iw-group-sub">No cambian de forma.</div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Qué?<span class="iw-gloss">what</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Qué es esto?</div>
+                  <div class="example-en">What is this?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Definiciones, explicaciones o ante un sustantivo; también el «qué» abierto general (<em>¿Qué quieres?</em>).</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Cómo?<span class="iw-gloss">how</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Cómo <b>es</b> tu casa?</div>
+                  <div class="example-en">What's your house like? <em>(description →</em> ser<em>)</em></div>
+                </div>
+              </div>
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Cómo <b>está</b> tu madre?</div>
+                  <div class="example-en">How is your mother? <em>(state →</em> estar<em>)</em></div>
+                </div>
+              </div>
+              <div class="iw-uso">Manera, condición o estado. Ojo al contraste <em>es</em> (cómo es algo) vs. <em>está</em> (cómo se encuentra).</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Cuándo?<span class="iw-gloss">when</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Cuándo llegas?</div>
+                  <div class="example-en">When do you arrive?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Momento o tiempo.</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Dónde?<span class="iw-gloss">where</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Dónde vives?</div>
+                  <div class="example-en">Where do you live?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Ubicación estática.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Variables -->
+        <div class="iw-group">
+          <div class="iw-group-title">Variables — concuerdan</div>
+          <div class="iw-group-sub">Cambian para coincidir con el sustantivo.</div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Quién? / ¿Quiénes?<span class="iw-gloss">who</span><span class="iw-tag">número</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Quién es él? · ¿Quiénes son ellos?</div>
+                  <div class="example-en">Who is he? · Who are they?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Personas; singular o plural.</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Cuál? / ¿Cuáles?<span class="iw-gloss">which / what</span><span class="iw-tag">número</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Cuál es tu nombre? · ¿Cuáles prefieres?</div>
+                  <div class="example-en">What's your name? · Which ones do you prefer?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Selección de un conjunto (<a href="#t5" class="open-link">→ Qué vs. cuál</a>).</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Cuánto? -a · -os · -as<span class="iw-gloss">how much / many</span><span class="iw-tag">género + número</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Cuánto tiempo tenemos? · ¿Cuántas personas vienen?</div>
+                  <div class="example-en">How much time do we have? · How many people are coming?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Cantidad. El único que concuerda en género <strong>y</strong> número.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compuestos con preposición -->
+        <div class="iw-group">
+          <div class="iw-group-title">Compuestos con preposición</div>
+          <div class="iw-group-sub">La preposición se antepone; nunca queda al final.</div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Por qué?<span class="iw-gloss">why</span><span class="iw-tag">por + qué</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Por qué estudias español?</div>
+                  <div class="example-en">Why do you study Spanish?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Motivo o causa (<a href="#t6" class="open-link">→ Por qué / para qué</a>).</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Para qué?<span class="iw-gloss">what for</span><span class="iw-tag">para + qué</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Para qué sirve esto?</div>
+                  <div class="example-en">What is this for?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Propósito u objetivo.</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿Adónde?<span class="iw-gloss">to where</span><span class="iw-tag">a + dónde</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿Adónde vas?</div>
+                  <div class="example-en">Where are you going? <em>(to)</em></div>
+                </div>
+              </div>
+              <div class="iw-uso">Destino.</div>
+              <div class="iw-foot">RAE: <em>adónde</em> y <em>a dónde</em> son ambas válidas.</div>
+            </div>
+          </div>
+
+          <div class="iw-row">
+            <div class="iw-word">¿De dónde?<span class="iw-gloss">from where</span><span class="iw-tag">de + dónde</span></div>
+            <div class="iw-detail">
+              <div class="example-row" data-region="neutral">
+                <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+                <div class="example-body">
+                  <div class="example-es">¿De dónde eres?</div>
+                  <div class="example-en">Where are you from?</div>
+                </div>
+              </div>
+              <div class="iw-uso">Origen.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nota">
+          <span class="nota-label">NOTA*</span>
+          <div class="nota-groups">
+            <div class="nota-grp">
+              <span class="ng-head">Invariable</span> — <span class="ng-rule">never change.</span>
+              <span class="ng-items"><em>qué</em> (definitions, + noun, open "what") · <em>cómo</em> (manner, condition, state) · <em>cuándo</em> (time) · <em>dónde</em> (static location)</span>
+            </div>
+            <div class="nota-grp">
+              <span class="ng-head">Variable</span> — <span class="ng-rule">agree with the noun.</span>
+              <span class="ng-items"><em>quién / quiénes</em> (number) · <em>cuál / cuáles</em> (number; selection) · <em>cuánto/-a/-os/-as</em> (gender + number — the only one with both)</span>
+            </div>
+            <div class="nota-grp">
+              <span class="ng-head">Prepositional compounds</span> — <span class="ng-rule">the preposition fronts.</span>
+              <span class="ng-items"><em>por qué</em> (reason) · <em>para qué</em> (purpose) · <em>adónde</em> (destination) · <em>de dónde</em> (origin)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ░░ T4 — stub ░░ -->
+    <article class="topic" id="t4">
+      <button class="topic-head" aria-expanded="false" onclick="toggleTopic(this)">
+        <span class="topic-num">04</span>
+        <span class="topic-titles">
+          <span class="topic-title">Las reglas inquebrantables</span>
+          <span class="topic-summary">Dos reglas universales: la preposición se antepone (nunca queda colgando) y toda interrogativa lleva tilde, siempre.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <p class="lede">Dos reglas que no admiten excepción.</p>
+
+        <div class="iw-group">
+          <div class="iw-group-title">1 · La preposición se antepone</div>
+          <div class="iw-group-sub">Nunca queda colgando al final, como sí pasa en inglés.</div>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><b>¿Con quién</b> hablas?</div>
+              <div class="example-en">Who are you talking with?</div>
+            </div>
+          </div>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><b>¿De qué</b> depende?</div>
+              <div class="example-en">What does it depend on?</div>
+            </div>
+          </div>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es"><b>¿A qué hora</b> llega?</div>
+              <div class="example-en">What time does it arrive?</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="iw-group">
+          <div class="iw-group-title">2 · Toda interrogativa lleva tilde</div>
+          <div class="iw-group-sub">Siempre — en preguntas directas e indirectas.</div>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">¿<b>Qué</b> quieres?</div>
+              <div class="example-en">What do you want? <em>(direct)</em></div>
+            </div>
+          </div>
+          <div class="example-row" data-region="neutral">
+            <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+            <div class="example-body">
+              <div class="example-es">No sé <b>qué</b> quiere.</div>
+              <div class="example-en">I don't know what he wants. <em>(indirect — tilde stays)</em></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="nota">
+          <span class="nota-label">NOTA*</span>
+          <div class="nota-groups">
+            <div class="nota-grp">
+              <span class="ng-head">No stranding</span> — <span class="ng-rule">the preposition fronts.</span>
+              <span class="ng-items">English ends on a dangling preposition ("who are you talking <em>with</em>?"). Spanish never does — it rides to the front with the question word: <em>¿Con quién…? ¿De qué…?</em></span>
+            </div>
+            <div class="nota-grp">
+              <span class="ng-head">The accent is the question</span> — <span class="ng-rule">always.</span>
+              <span class="ng-items">Every interrogative keeps its written tilde, even embedded in a statement with no <em>¿…?</em> around it (<a href="#t8" class="open-link">→ Preguntas indirectas</a>).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ░░ T5 — fully built (the deep one) ░░ -->
+    <article class="topic" id="t5">
+      <button class="topic-head" aria-expanded="false" onclick="toggleTopic(this)">
+        <span class="topic-num">05</span>
+        <span class="topic-titles">
+          <span class="topic-title"><em>Qué</em> vs. <em>cuál</em></span>
+          <span class="topic-summary">La trampa clásica. <em>Qué</em> pide definición o categoría; <em>cuál</em> selecciona de un conjunto — y casi siempre va antes de <em>ser</em>.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="mark-ok">✓</span> ¿<b>Cuál</b> es tu nombre?</div>
+            <div class="example-en">What's your name? <em>(identifying from a set — not defining the word)</em></div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><span class="mark-no">✗</span> ¿<b>Qué</b> es tu nombre?</div>
+            <div class="example-en">(asks for a <em>definition</em> of the word "name")</div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿<b>Qué</b> libro quieres? · ¿<b>Cuál</b> quieres?</div>
+            <div class="example-en">Which book do you want? · Which one do you want?</div>
+          </div>
+        </div>
+        <div class="nota">
+          <span class="nota-label">NOTA*</span>
+          <strong>The decision rule.</strong> Use <em>qué</em> for a definition, a category, or when a noun follows it (<em>¿Qué libro quieres?</em>). Use <em>cuál</em> when you select from an implied set, and almost always before <em>ser</em> when you are <strong>not</strong> defining a word. English "what is your name?" is the trap: Spanish reads it as a selection, so it takes <span class="mark-ok">cuál</span>, not <span class="mark-no">qué</span>.
+        </div>
+      </div>
+    </article>
+
+    <!-- ░░ T6 — stub ░░ -->
+    <article class="topic" id="t6">
+      <button class="topic-head" aria-expanded="false" onclick="toggleTopic(this)">
+        <span class="topic-num">06</span>
+        <span class="topic-titles">
+          <span class="topic-title"><em>Por qué</em> / <em>para qué</em></span>
+          <span class="topic-summary">Motivo vs. propósito — y la familia homófona <em>por qué · porque · porqué · por que</em>, un sonido con cuatro grafías.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <p class="lede">Motivo frente a propósito — más una familia de homófonos que conviene separar.</p>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><b>¿Por qué</b> llegaste tarde?</div>
+            <div class="example-en">Why were you late? <em>(motivo / causa)</em></div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es"><b>¿Para qué</b> sirve esto?</div>
+            <div class="example-en">What is this for? <em>(propósito / objetivo)</em></div>
+          </div>
+        </div>
+        <div class="nota">
+          <span class="nota-label">NOTA*</span>
+          <div class="nota-groups">
+            <div class="nota-grp">
+              <span class="ng-head">¿Por qué?</span> — <span class="ng-rule">two words, accent.</span>
+              <span class="ng-items">The question word "why?".</span>
+            </div>
+            <div class="nota-grp">
+              <span class="ng-head">porque</span> — <span class="ng-rule">one word, no accent.</span>
+              <span class="ng-items">The answer, "because".</span>
+            </div>
+            <div class="nota-grp">
+              <span class="ng-head">el porqué</span> — <span class="ng-rule">one word, accent, + article.</span>
+              <span class="ng-items">The noun, "the reason".</span>
+            </div>
+            <div class="nota-grp">
+              <span class="ng-head">por que</span> — <span class="ng-rule">two words, no accent.</span>
+              <span class="ng-items">The rare relative, "for which". Only the first is a question word.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ░░ T7 — stub (the ⭐ featured) ░░ -->
+    <article class="topic" id="t7">
+      <button class="topic-head" aria-expanded="false" onclick="toggleTopic(this)">
+        <span class="topic-num">07</span>
+        <span class="topic-titles">
+          <span class="topic-title">Las fórmulas, por verbo <span class="star">⭐</span></span>
+          <span class="topic-summary">Bloques que se memorizan enteros, agrupados por el verbo que los gobierna: <em>tener</em> (edad, estados), <em>hacer</em> (clima, tiempo), <em>estar</em> (precio, distancia) y el régimen verbal.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <p class="lede">Los bloques que se memorizan enteros, agrupados por el verbo que gobierna la frase. Es el corazón del tema — y la zona donde más se atasca la producción — así que vive en su propia página, con tratamiento exhaustivo: <em>tener, hacer, estar, ser</em>, los marcos de identidad y el régimen verbal completo.</p>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">¿Cuántos años <b>tienes</b>? · ¿Qué tiempo <b>hace</b>? · ¿<b>En</b> qué piensas?</div>
+            <div class="example-en">How old are you? · What's the weather like? · What are you thinking about?</div>
+          </div>
+        </div>
+        <a href="subpages/formacion-de-preguntas-formulas.html" class="go-subpage">Ver la página completa de fórmulas →</a>
+      </div>
+    </article>
+
+    <!-- ░░ T8 — stub ░░ -->
+    <article class="topic" id="t8">
+      <button class="topic-head" aria-expanded="false" onclick="toggleTopic(this)">
+        <span class="topic-num">08</span>
+        <span class="topic-titles">
+          <span class="topic-title">Preguntas indirectas</span>
+          <span class="topic-summary">La pregunta envuelta dentro de una afirmación: pierde los signos <em>¿?</em> pero conserva la tilde.</span>
+        </span>
+        <span class="topic-chevron">⌄</span>
+      </button>
+      <div class="topic-body">
+        <div class="divider"></div>
+        <p class="lede">La pregunta se envuelve dentro de una afirmación: pierde los signos <em>¿?</em>, pero conserva la tilde.</p>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">No sé <b>qué</b> hacer.</div>
+            <div class="example-en">I don't know what to do.</div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Quiero saber <b>de dónde</b> viene esto.</div>
+            <div class="example-en">I want to know where this comes from.</div>
+          </div>
+        </div>
+        <div class="example-row" data-region="neutral">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Me pregunto <b>cómo</b> lo van a resolver.</div>
+            <div class="example-en">I wonder how they're going to solve it.</div>
+          </div>
+        </div>
+        <div class="nota">
+          <span class="nota-label">NOTA*</span>
+          <strong>No <em>¿…?</em>, but keep the tilde.</strong> Indirect questions sit after verbs of knowing, asking, or saying (<em>saber, preguntar, decir, entender</em>), so they drop the question marks. The interrogative still carries its accent, because the accent — not the punctuation — is what marks it as a question (<a href="#t4" class="open-link">→ Reglas inquebrantables</a>).
+        </div>
+      </div>
+    </article>
+
+  </main>
+</div>
+
+<script>
+// ── Accordion ──
+function toggleTopic(head) {
+  const topic = head.closest('.topic');
+  const open = topic.classList.toggle('open');
+  head.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+// ── TOC: jump to a card and open it ──
+document.querySelectorAll('.toc-link').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const topic = document.getElementById(id);
+    if (!topic) return;
+    if (!topic.classList.contains('open')) toggleTopic(topic.querySelector('.topic-head'));
+    document.querySelectorAll('.toc-link').forEach(l => l.classList.remove('active'));
+    a.classList.add('active');
+    topic.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ── Inline pointers: open + scroll the target card ──
+document.querySelectorAll('a.open-link').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    const id = a.getAttribute('href').slice(1);
+    const t = document.getElementById(id);
+    if (!t) return;
+    if (!t.classList.contains('open')) toggleTopic(t.querySelector('.topic-head'));
+    t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// ── Light scroll-spy ──
+document.addEventListener('DOMContentLoaded', () => {
+  const links = Array.from(document.querySelectorAll('.toc-link'));
+  const map = {};
+  links.forEach(a => { map[a.getAttribute('href').slice(1)] = a; });
+  const sections = links.map(a => document.getElementById(a.getAttribute('href').slice(1))).filter(Boolean);
+  if ('IntersectionObserver' in window) {
+    const obs = new IntersectionObserver((entries) => {
+      const vis = entries.filter(e => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (vis.length) { links.forEach(l => l.classList.remove('active')); if (map[vis[0].target.id]) map[vis[0].target.id].classList.add('active'); }
+    }, { rootMargin: '-15% 0px -75% 0px', threshold: 0 });
+    sections.forEach(s => obs.observe(s));
+  }
+});
+
+// ═══ TTS — neutral Latin American Spanish only ═══
+let neutralVoice = null, voicesReady = false, ttsRate = 1.0;
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+  voicesReady = true;
+}
+if (window.speechSynthesis) { speechSynthesis.addEventListener('voiceschanged', pickVoices); pickVoices(); }
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => { pickVoices(); attempts++; if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); } }, 100);
+  });
+}
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text.replace(/\p{Extended_Pictographic}/gu, '').replace(/[\u{FE00}-\u{FE0F}]/gu, '').replace(/\u200D/g, '').replace(/[✓✗·]/g, '').replace(/\s+/g, ' ').trim();
+}
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row'); if (!row) return;
+  const esEl = row.querySelector('.example-es'); if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent); if (!text) return;
+  if (btn.classList.contains('playing')) { speechSynthesis.cancel(); btn.classList.remove('playing'); return; }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+  if (!voicesReady) await ensureVoices();
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; } else { u.lang = 'es-419'; }
+  u.rate = ttsRate; u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+</script>
+</body>
+</html>

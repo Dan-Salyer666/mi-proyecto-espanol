@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trampas de Preguntas — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:#0a1628; --bg-card:#111d35; --bg-input:#0d1a2f; --border:#1e3355;
+  --text-primary:#e8edf5; --text-secondary:#9aabc6; --text-muted:#62779a;
+  --accent:#4ecdc4; --accent-soft:rgba(78,205,196,0.10); --accent-line:rgba(78,205,196,0.45);
+  --green:#34d399; --green-soft:rgba(52,211,153,0.12);
+  --yellow:#fbbf24;
+  --red:#f87171; --red-soft:rgba(248,113,113,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+.bg-photo{position:fixed;inset:0;background:url('../assets/los fondos/la sagrada familia.webp') center/cover no-repeat;filter:brightness(0.42);z-index:0;}
+.bg-overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(10,22,40,0.72),rgba(10,22,40,0.82));z-index:0;}
+
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0 6px;}
+.back-link,.review-link{color:var(--text-muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s;}
+.back-link:hover,.review-link:hover{color:var(--accent);}
+.review-link{color:var(--accent);font-weight:500;}
+
+.page-header{text-align:center;padding:14px 0 6px;}
+.page-header .overline{font-size:0.7rem;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.page-header h1{font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(1.9rem,5vw,2.5rem);font-weight:400;line-height:1.14;margin-bottom:10px;}
+.page-header .subtitle{font-size:0.96rem;color:var(--text-secondary);max-width:520px;margin:0 auto;line-height:1.55;}
+
+.hint{text-align:center;font-size:0.84rem;color:var(--text-muted);margin:20px 0 18px;font-style:italic;}
+
+/* progress */
+.progress{margin-bottom:18px;}
+.progress-meta{display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:7px;}
+.progress-meta .sc{color:var(--green);font-weight:600;}
+.progress-track{height:5px;background:var(--bg-input);border:1px solid var(--border);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.35s ease;}
+
+/* quiz card */
+.quiz-card{background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:28px 24px 24px;}
+.stem{font-family:'DM Serif Display',serif;font-size:1.5rem;line-height:1.5;color:var(--text-primary);text-align:center;margin-bottom:12px;}
+.blank{display:inline-block;min-width:110px;text-align:center;padding:2px 12px;margin:0 2px;border-bottom:2px dashed var(--accent-line);color:var(--text-muted);border-radius:6px 6px 0 0;transition:all 0.2s;}
+.blank.empty{color:var(--text-muted);letter-spacing:2px;}
+.blank.sel{background:var(--accent-soft);border-bottom-style:solid;border-bottom-color:var(--accent);color:var(--accent);}
+.blank.ok{background:var(--green-soft);border-bottom:2px solid var(--green);color:var(--green);}
+.blank.bad{background:var(--red-soft);border-bottom:2px solid var(--red);color:var(--red);}
+
+.gloss{text-align:center;font-size:0.92rem;color:var(--text-secondary);font-style:italic;margin-bottom:22px;}
+
+/* contaminated-sentence box (error drill) */
+.error-prompt{display:flex;align-items:center;gap:11px;justify-content:center;background:var(--red-soft);border:1px solid rgba(248,113,113,0.3);border-radius:11px;padding:15px 18px;margin-bottom:10px;}
+.error-prompt .mark{font-size:1.1rem;color:var(--red);flex:none;}
+.error-prompt .sent{font-family:'DM Serif Display',serif;font-size:1.32rem;color:var(--text-primary);line-height:1.35;}
+.error-label{text-align:center;font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:14px;}
+
+/* options — short (qc / prep) */
+.opts{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;}
+.opt{font-family:'Outfit',sans-serif;font-size:0.95rem;font-weight:500;color:var(--text-primary);background:var(--bg-input);border:1px solid var(--border);border-radius:9px;padding:9px 16px;cursor:pointer;transition:all 0.18s;user-select:none;text-align:center;}
+.opt:hover:not(.locked){border-color:var(--accent);color:var(--accent);transform:translateY(-1px);}
+.opt.sel{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);}
+.opt.locked{cursor:default;}
+.opt.ok{background:var(--green-soft);border-color:var(--green);color:var(--green);}
+.opt.bad{background:var(--red-soft);border-color:var(--red);color:var(--red);}
+.opt.reveal{border-color:var(--green);color:var(--green);border-style:dashed;}
+
+/* options — sentence stack (error drill) */
+.opts.stack{flex-direction:column;align-items:stretch;}
+.opts.stack .opt{font-family:'DM Serif Display',serif;font-size:1.06rem;padding:12px 16px;line-height:1.35;}
+
+/* feedback */
+.feedback{margin-top:20px;padding:13px 16px;border-radius:10px;font-size:0.92rem;line-height:1.55;}
+.feedback.ok{background:var(--green-soft);border-left:3px solid var(--green);color:var(--text-secondary);}
+.feedback.bad{background:var(--red-soft);border-left:3px solid var(--red);color:var(--text-secondary);}
+.feedback .verdict{font-weight:600;margin-right:6px;}
+.feedback.ok .verdict{color:var(--green);}
+.feedback.bad .verdict{color:var(--red);}
+.feedback .ans{color:var(--text-primary);font-weight:600;}
+.feedback .note{display:block;margin-top:5px;font-size:0.86rem;color:var(--text-muted);font-style:italic;}
+
+/* controls */
+.controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+.btn-primary{font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:600;padding:11px 26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);cursor:pointer;transition:all 0.2s;}
+.btn-primary:hover:not(:disabled){background:var(--accent);color:#0a1628;}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-ghost{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:500;padding:11px 22px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* start / drill picker */
+.start-card{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:40px 26px;}
+.start-icon{font-family:'DM Serif Display',serif;font-style:italic;font-size:2.6rem;color:var(--accent);line-height:1;margin-bottom:14px;}
+.start-title{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text-primary);margin-bottom:10px;}
+.start-text{font-size:0.95rem;color:var(--text-secondary);max-width:420px;margin:0 auto 26px;line-height:1.55;}
+.drill-list{display:flex;flex-direction:column;gap:11px;max-width:440px;margin:0 auto;text-align:left;}
+.drill-btn{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--bg-input);border:1px solid var(--border);border-radius:12px;padding:15px 18px;cursor:pointer;transition:all 0.18s;width:100%;font-family:'Outfit',sans-serif;}
+.drill-btn:hover{border-color:var(--accent);transform:translateY(-1px);}
+.drill-btn .d-title{font-size:1.02rem;font-weight:600;color:var(--text-primary);}
+.drill-btn .d-sub{font-size:0.84rem;color:var(--text-secondary);margin-top:2px;}
+.drill-btn .d-ex{font-family:'DM Serif Display',serif;font-style:italic;font-size:0.9rem;color:var(--text-muted);flex:none;text-align:right;max-width:42%;}
+.drill-btn.mix{border-style:dashed;}
+
+/* results */
+.results{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:36px 24px;}
+.results-label{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+.results-score{font-family:'DM Serif Display',serif;font-size:3rem;color:var(--accent);line-height:1;}
+.results-pct{font-size:1rem;color:var(--text-secondary);margin-top:6px;}
+.cat-breakdown{margin:26px auto 8px;max-width:360px;text-align:left;}
+.cat-breakdown .cb-title{font-size:0.66rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;text-align:center;}
+.cat-row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);font-size:0.9rem;color:var(--text-secondary);}
+.cat-row .cnt{font-variant-numeric:tabular-nums;color:var(--text-primary);}
+
+@media (max-width:520px){
+  .stem{font-size:1.28rem;}
+  .blank{min-width:88px;}
+  .quiz-card{padding:22px 16px 20px;}
+  .error-prompt .sent{font-size:1.16rem;}
+  .opts.stack .opt{font-size:0.98rem;}
+  .drill-btn .d-ex{display:none;}
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" class="back-link">← Menú</a>
+    <a href="../topics/formacion-de-preguntas.html" class="review-link">Repasar la teoría →</a>
+  </div>
+
+  <header class="page-header">
+    <div class="overline">Práctica · Trampas</div>
+    <h1>Caza la trampa</h1>
+    <p class="subtitle">Tres miniretos sobre los puntos donde el inglés y el español chocan: <em>qué</em> contra <em>cuál</em>, la preposición correcta, y los errores que se cuelan.</p>
+  </header>
+
+  <div class="hint">Elige un reto. Cada ronda toma 10 ítems al azar (o todos los que haya).</div>
+
+  <div id="quiz"></div>
+</div>
+
+<script>
+// ───────── Seed item banks — Sonnet expands each drill via the generation brief ─────────
+// Schema: { id, type:"qc"|"prep"|"error", pre, post, prompt, options[], answer, gloss, dimB, note }
+//   qc / prep  → use pre + post (cloze stem); options are short words; answer ∈ options.
+//   error      → use prompt (the contaminated question); options are full corrected sentences; answer ∈ options.
+// Hard rule: gloss + context must force exactly ONE correct option. options INCLUDE the answer.
+const ITEMS_RAW = [
+
+  // ── qué vs cuál (dimB: que_vs_cual) ──
+  { id:1, type:"qc", pre:"¿", post:" es tu apellido?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's your last name?", dimB:"que_vs_cual",
+    note:"Selección de identidad ante ser → cuál; «¿Qué es tu apellido?» pediría una definición." },
+  { id:2, type:"qc", pre:"¿", post:" es la diferencia entre los dos?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's the difference between the two?", dimB:"que_vs_cual",
+    note:"Pide identificar una opción concreta ante ser → cuál, no una definición." },
+  { id:3, type:"qc", pre:"¿", post:" es un sustantivo?",
+    options:["Qué","Cuál"], answer:"Qué",
+    gloss:"What is a noun?", dimB:"que_vs_cual",
+    note:"Pide la definición de un concepto → qué; cuál esperaría elegir de un conjunto." },
+  { id:4, type:"qc", pre:"¿", post:" prefieres, el té o el café?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"Which do you prefer, tea or coffee?", dimB:"que_vs_cual",
+    note:"Elección entre opciones ya dadas → cuál." },
+
+  // ── selección de preposición (dimB: prep_antepuesta / colocacion_verbo_prep) ──
+  { id:5, type:"prep", pre:"¿", post:" quién hablas?",
+    options:["Con","A","De","Para"], answer:"Con",
+    gloss:"Who are you talking with?", dimB:"prep_antepuesta",
+    note:"«with» → hablar con; la preposición va delante de quién, nunca al final." },
+  { id:6, type:"prep", pre:"¿", post:" qué piensas?",
+    options:["En","De","Con","A"], answer:"En",
+    gloss:"What are you thinking about?", dimB:"colocacion_verbo_prep",
+    note:"pensar en algo → en qué; el verbo fija la preposición." },
+  { id:7, type:"prep", pre:"¿", post:" qué color es?",
+    options:["De","En","A","Con"], answer:"De",
+    gloss:"What color is it?", dimB:"prep_antepuesta",
+    note:"de qué color es una fórmula fija con la preposición antepuesta." },
+  { id:8, type:"prep", pre:"¿", post:" quién es este regalo?",
+    options:["Para","De","A","Con"], answer:"Para",
+    gloss:"Who is this gift for?", dimB:"prep_antepuesta",
+    note:"Destinatario → para quién; «for» antepone para, no lo deja al final." },
+
+  // ── corrige el error (dimB: variado) ──
+  { id:9, type:"error", prompt:"¿Dónde eres de?",
+    options:["¿De dónde eres?","¿Dónde de eres?","¿De dónde eres de?","¿Adónde eres?"],
+    answer:"¿De dónde eres?",
+    gloss:"Where are you from?", dimB:"prep_antepuesta",
+    note:"El español no deja la preposición al final: de se antepone a dónde." },
+  { id:10, type:"error", prompt:"¿Qué es tu nombre?",
+    options:["¿Cuál es tu nombre?","¿Cuál tu nombre es?","¿Qué tu nombre?","¿Cuáles es tu nombre?"],
+    answer:"¿Cuál es tu nombre?",
+    gloss:"What's your name?", dimB:"que_vs_cual",
+    note:"Identidad ante ser → cuál; qué pediría una definición de la palabra «nombre»." },
+  { id:11, type:"error", prompt:"¿Cuánto años tienes?",
+    options:["¿Cuántos años tienes?","¿Cuántas años tienes?","¿Cuántos años eres?","¿Qué años tienes?"],
+    answer:"¿Cuántos años tienes?",
+    gloss:"How old are you?", dimB:"concordancia_cuanto",
+    note:"cuánto concuerda; años es masculino plural → cuántos (y la edad va con tener)." },
+  { id:12, type:"error", prompt:"¿En qué piensas en?",
+    options:["¿En qué piensas?","¿Qué piensas en?","¿De qué piensas?","¿En qué te piensas?"],
+    answer:"¿En qué piensas?",
+    gloss:"What are you thinking about?", dimB:"colocacion_verbo_prep",
+    note:"La preposición ya va antepuesta (en qué); repetirla al final sobra." },
+
+  // ── qué vs cuál (cont.) ──
+  { id:13, type:"qc", pre:"¿", post:" es la capital de México?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's the capital of Mexico?", dimB:"que_vs_cual",
+    note:"Identificación de un dato concreto ante ser → cuál; qué pediría una definición." },
+  { id:14, type:"qc", pre:"¿", post:" es tu número de teléfono?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's your phone number?", dimB:"que_vs_cual",
+    note:"Selección de un dato específico ante ser → cuál, no una categoría abstracta." },
+  { id:15, type:"qc", pre:"¿", post:" es la fotosíntesis?",
+    options:["Qué","Cuál"], answer:"Qué",
+    gloss:"What is photosynthesis?", dimB:"que_vs_cual",
+    note:"Pide la definición de un proceso → qué; cuál esperaría elegir de un conjunto." },
+  { id:16, type:"qc", pre:"¿", post:" es un adjetivo?",
+    options:["Qué","Cuál"], answer:"Qué",
+    gloss:"What is an adjective?", dimB:"que_vs_cual",
+    note:"Definición de una categoría gramatical → qué." },
+  { id:17, type:"qc", pre:"¿", post:" es tu película favorita?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's your favorite movie?", dimB:"que_vs_cual",
+    note:"Identifica una preferencia personal ante ser → cuál." },
+  { id:18, type:"qc", pre:"¿", post:" es la democracia?",
+    options:["Qué","Cuál"], answer:"Qué",
+    gloss:"What is democracy?", dimB:"que_vs_cual",
+    note:"Definición de un concepto abstracto → qué." },
+  { id:19, type:"qc", pre:"¿", post:" es tu dirección?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's your address?", dimB:"que_vs_cual",
+    note:"Dato específico identificable ante ser → cuál." },
+  { id:20, type:"qc", pre:"¿", post:" es el problema?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's the problem?", dimB:"que_vs_cual",
+    note:"Identifica el problema concreto de entre posibles → cuál." },
+  { id:21, type:"qc", pre:"¿", post:" es la mejor opción?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"Which is the best option?", dimB:"que_vs_cual",
+    note:"Selección de una opción de un conjunto → cuál." },
+  { id:22, type:"qc", pre:"¿", post:" es un eclipse?",
+    options:["Qué","Cuál"], answer:"Qué",
+    gloss:"What is an eclipse?", dimB:"que_vs_cual",
+    note:"Definición científica → qué; cuál implicaría elegir entre eclipses ya nombrados." },
+  { id:23, type:"qc", pre:"¿", post:" es tu color favorito?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's your favorite color?", dimB:"que_vs_cual",
+    note:"Preferencia personal ante ser → cuál; qué pediría una definición de 'color'." },
+  { id:24, type:"qc", pre:"¿", post:" de los dos prefieres?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"Which of the two do you prefer?", dimB:"que_vs_cual",
+    note:"Elección explícita entre dos opciones → cuál de los dos." },
+  { id:25, type:"qc", pre:"¿", post:" es el subjuntivo?",
+    options:["Qué","Cuál"], answer:"Qué",
+    gloss:"What is the subjunctive?", dimB:"que_vs_cual",
+    note:"Definición de un modo verbal → qué." },
+  { id:26, type:"qc", pre:"¿", post:" es tu canción favorita?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's your favorite song?", dimB:"que_vs_cual",
+    note:"Identificación de una preferencia específica → cuál." },
+  { id:27, type:"qc", pre:"¿", post:" es la solución?",
+    options:["Cuál","Qué"], answer:"Cuál",
+    gloss:"What's the solution?", dimB:"que_vs_cual",
+    note:"Identifica la solución concreta de entre posibles → cuál." },
+  { id:28, type:"qc", pre:"¿", post:" es el internet?",
+    options:["Qué","Cuál"], answer:"Qué",
+    gloss:"What is the internet?", dimB:"que_vs_cual",
+    note:"Definición de un concepto tecnológico → qué." },
+
+  // ── selección de preposición (cont.) ──
+  { id:29, type:"prep", pre:"¿", post:" qué sueñas?",
+    options:["Con","En","De","A"], answer:"Con",
+    gloss:"What do you dream about?", dimB:"colocacion_verbo_prep",
+    note:"soñar con algo → con qué; el verbo fija la preposición." },
+  { id:30, type:"prep", pre:"¿", post:" qué depende?",
+    options:["De","En","Con","A"], answer:"De",
+    gloss:"What does it depend on?", dimB:"colocacion_verbo_prep",
+    note:"depender de algo → de qué; la preposición va antepuesta." },
+  { id:31, type:"prep", pre:"¿", post:" quién es ese correo?",
+    options:["Para","De","A","Con"], answer:"Para",
+    gloss:"Who is that email for?", dimB:"prep_antepuesta",
+    note:"Destinatario → para quién; la preposición se antepone, no se deja al final." },
+  { id:32, type:"prep", pre:"¿", post:" quién trabaja usted?",
+    options:["Para","Con","De","A"], answer:"Para",
+    gloss:"Who do you work for?", dimB:"prep_antepuesta",
+    note:"Empleador → para quién; 'for' en inglés se antepone como para en español." },
+  { id:33, type:"prep", pre:"¿", post:" qué te quejas?",
+    options:["De","Por","En","Con"], answer:"De",
+    gloss:"What are you complaining about?", dimB:"colocacion_verbo_prep",
+    note:"quejarse de algo → de qué; el verbo rige la preposición." },
+  { id:34, type:"prep", pre:"¿", post:" qué hora sale el vuelo?",
+    options:["A","De","En","Para"], answer:"A",
+    gloss:"What time does the flight leave?", dimB:"prep_antepuesta",
+    note:"La hora exacta → a qué hora; preposición antepuesta al interrogativo." },
+  { id:35, type:"prep", pre:"¿", post:" quién confías más?",
+    options:["En","Con","De","A"], answer:"En",
+    gloss:"Who do you trust the most?", dimB:"colocacion_verbo_prep",
+    note:"confiar en alguien → en quién; el verbo fija la preposición." },
+  { id:36, type:"prep", pre:"¿", post:" dónde viene?",
+    options:["De","A","En","Por"], answer:"De",
+    gloss:"Where does it come from?", dimB:"prep_antepuesta",
+    note:"Origen → de dónde; la preposición de va siempre antepuesta." },
+  { id:37, type:"prep", pre:"¿", post:" qué material está hecho?",
+    options:["De","Con","En","Por"], answer:"De",
+    gloss:"What material is it made of?", dimB:"prep_antepuesta",
+    note:"Materia o composición → de qué (está hecho de…); preposición antepuesta." },
+  { id:38, type:"prep", pre:"¿", post:" qué se interesa?",
+    options:["En","Por","De","Con"], answer:"En",
+    gloss:"What is he/she interested in?", dimB:"colocacion_verbo_prep",
+    note:"interesarse en algo → en qué; verbo con preposición fija." },
+  { id:39, type:"prep", pre:"¿", post:" quién saliste anoche?",
+    options:["Con","A","De","Para"], answer:"Con",
+    gloss:"Who did you go out with last night?", dimB:"prep_antepuesta",
+    note:"Compañía → con quién; 'with' nunca va al final en español." },
+  { id:40, type:"prep", pre:"¿", post:" qué sirve este botón?",
+    options:["Para","Por","De","Con"], answer:"Para",
+    gloss:"What is this button for?", dimB:"prep_antepuesta",
+    note:"Propósito → para qué; para se antepone al interrogativo." },
+  { id:41, type:"prep", pre:"¿", post:" qué hablan en esa reunión?",
+    options:["De","Con","En","Por"], answer:"De",
+    gloss:"What do they talk about in that meeting?", dimB:"colocacion_verbo_prep",
+    note:"hablar de algo → de qué; el complemento va con de." },
+  { id:42, type:"prep", pre:"¿", post:" quién está dirigida esta carta?",
+    options:["A","Para","De","Con"], answer:"A",
+    gloss:"Who is this letter addressed to?", dimB:"prep_antepuesta",
+    note:"Destinatario directo de ir/dirigir → a quién; preposición antepuesta." },
+  { id:43, type:"prep", pre:"¿", post:" qué asignatura te especializas?",
+    options:["En","De","Con","Para"], answer:"En",
+    gloss:"What subject do you specialize in?", dimB:"colocacion_verbo_prep",
+    note:"especializarse en algo → en qué; la preposición la fija el verbo." },
+  { id:44, type:"prep", pre:"¿", post:" quién le regalaste el libro?",
+    options:["A","Para","Con","De"], answer:"A",
+    gloss:"Who did you give the book to?", dimB:"prep_antepuesta",
+    note:"Receptor del complemento indirecto → a quién; a se antepone siempre." },
+
+  // ── corrige el error (cont.) ──
+  { id:45, type:"error", prompt:"¿Cuánta años tienes?",
+    options:["¿Cuántos años tienes?","¿Cuántas años tienes?","¿Cuánto años tienes?","¿Qué años tienes?"],
+    answer:"¿Cuántos años tienes?",
+    gloss:"How old are you?", dimB:"concordancia_cuanto",
+    note:"años es masculino plural → cuántos; cuánta sería femenino singular." },
+  { id:46, type:"error", prompt:"¿A quién hablas?",
+    options:["¿Con quién hablas?","¿De quién hablas?","¿A quien hablas?","¿Quién hablas?"],
+    answer:"¿Con quién hablas?",
+    gloss:"Who are you talking with?", dimB:"prep_antepuesta",
+    note:"hablar con alguien → con quién; 'a quién' sería el destinatario de una acción directa." },
+  { id:47, type:"error", prompt:"¿Cuántos horas dura?",
+    options:["¿Cuántas horas dura?","¿Cuántos horas son?","¿Cuánto horas dura?","¿Qué horas dura?"],
+    answer:"¿Cuántas horas dura?",
+    gloss:"How many hours does it last?", dimB:"concordancia_cuanto",
+    note:"horas es femenino plural → cuántas; cuántos sería masculino plural." },
+  { id:48, type:"error", prompt:"¿Qué es tu dirección?",
+    options:["¿Cuál es tu dirección?","¿Cuáles es tu dirección?","¿Qué dirección tienes?","¿Cuál tu dirección?"],
+    answer:"¿Cuál es tu dirección?",
+    gloss:"What's your address?", dimB:"que_vs_cual",
+    note:"Dato específico identificable ante ser → cuál; qué pediría una definición." },
+  { id:49, type:"error", prompt:"¿Cuántos años eres?",
+    options:["¿Cuántos años tienes?","¿Cuántos años tenés?","¿Qué años tienes?","¿Cuántos años tiene?"],
+    answer:"¿Cuántos años tienes?",
+    gloss:"How old are you?", dimB:"tener_edad",
+    note:"La edad se expresa con tener, no con ser; eres es el error de interferencia del inglés." },
+  { id:50, type:"error", prompt:"¿De quién color es?",
+    options:["¿De qué color es?","¿Qué color de es?","¿De qué color es de?","¿Cuál color es?"],
+    answer:"¿De qué color es?",
+    gloss:"What color is it?", dimB:"prep_antepuesta",
+    note:"La fórmula fija es de qué color; quién es pronombre de persona, no sirve aquí." },
+  { id:51, type:"error", prompt:"¿Adónde eres?",
+    options:["¿De dónde eres?","¿Dónde de eres?","¿Adónde eres de?","¿Dónde eres de?"],
+    answer:"¿De dónde eres?",
+    gloss:"Where are you from?", dimB:"prep_antepuesta",
+    note:"Origen → de dónde; adónde pregunta dirección hacia donde se va, no procedencia." },
+  { id:52, type:"error", prompt:"¿Cuánta dinero tienes?",
+    options:["¿Cuánto dinero tienes?","¿Cuántos dinero tienes?","¿Cuántas dinero tienes?","¿Qué dinero tienes?"],
+    answer:"¿Cuánto dinero tienes?",
+    gloss:"How much money do you have?", dimB:"concordancia_cuanto",
+    note:"dinero es masculino singular → cuánto; cuánta sería femenino singular." },
+  { id:53, type:"error", prompt:"¿Para qué razón lo hiciste?",
+    options:["¿Por qué lo hiciste?","¿Para qué razón fue?","¿Qué razón tienes?","¿Para qué lo hiciste?"],
+    answer:"¿Por qué lo hiciste?",
+    gloss:"Why did you do it?", dimB:"que_vs_cual",
+    note:"La causa → por qué; para qué pregunta propósito, y la razón añade un calco del inglés." },
+  { id:54, type:"error", prompt:"¿Qué es tu número favorito?",
+    options:["¿Cuál es tu número favorito?","¿Cuáles son tus números favoritos?","¿Qué número favorito tienes?","¿Cuál tu número favorito?"],
+    answer:"¿Cuál es tu número favorito?",
+    gloss:"What's your favorite number?", dimB:"que_vs_cual",
+    note:"Preferencia personal ante ser → cuál; qué pediría la definición de 'número'." },
+  { id:55, type:"error", prompt:"¿Cuántos leche quieres?",
+    options:["¿Cuánta leche quieres?","¿Cuánto leche quieres?","¿Cuántas leches quieres?","¿Qué leche quieres?"],
+    answer:"¿Cuánta leche quieres?",
+    gloss:"How much milk do you want?", dimB:"concordancia_cuanto",
+    note:"leche es femenino singular → cuánta; cuántos sería masculino plural." },
+  { id:56, type:"error", prompt:"¿En qué ciudad vives en?",
+    options:["¿En qué ciudad vives?","¿Qué ciudad vives en?","¿En qué ciudad en vives?","¿Dónde ciudad vives?"],
+    answer:"¿En qué ciudad vives?",
+    gloss:"What city do you live in?", dimB:"prep_antepuesta",
+    note:"La preposición ya va antepuesta (en qué ciudad); repetirla al final es calco del inglés." },
+  { id:57, type:"error", prompt:"¿Con quién hablas a?",
+    options:["¿Con quién hablas?","¿A quién hablas con?","¿Con quién hablas con?","¿Con quién a hablas?"],
+    answer:"¿Con quién hablas?",
+    gloss:"Who are you talking with?", dimB:"prep_antepuesta",
+    note:"Con ya antepuesta cubre toda la pregunta; añadir a al final es error de calco." },
+  { id:58, type:"error", prompt:"¿Cuántos años ser tienes?",
+    options:["¿Cuántos años tienes?","¿Cuántos años eres?","¿Qué años ser tienes?","¿Cuántos tienes años?"],
+    answer:"¿Cuántos años tienes?",
+    gloss:"How old are you?", dimB:"tener_edad",
+    note:"La edad va con tener únicamente; ser no entra en esta fórmula." },
+  { id:59, type:"error", prompt:"¿De qué país eres de?",
+    options:["¿De qué país eres?","¿Qué país eres de?","¿De qué país de eres?","¿De dónde país eres?"],
+    answer:"¿De qué país eres?",
+    gloss:"What country are you from?", dimB:"prep_antepuesta",
+    note:"De ya antepuesta basta; repetirla al final es el error de preposición varada." },
+  { id:60, type:"error", prompt:"¿Cuánto personas hay?",
+    options:["¿Cuántas personas hay?","¿Cuántos personas hay?","¿Cuánta personas hay?","¿Qué personas hay?"],
+    answer:"¿Cuántas personas hay?",
+    gloss:"How many people are there?", dimB:"concordancia_cuanto",
+    note:"personas es femenino plural → cuántas; cuánto sería masculino singular." }
+
+];
+
+const DIMB_NAMES = {
+  prep_antepuesta:"Preposición antepuesta",
+  que_vs_cual:"Qué vs. cuál",
+  concordancia_cuanto:"Concordancia de cuánto",
+  tener_edad:"La edad con tener",
+  ser_vs_estar:"Ser vs. estar",
+  entonacion_si_no:"Entonación sí/no",
+  tilde_forma:"Tilde interrogativa",
+  colocacion_verbo_prep:"Verbo + preposición"
+};
+
+const DRILLS = [
+  { key:"qc",    title:"Qué vs. cuál",        sub:"Elige el interrogativo correcto.",  ex:"¿___ es tu nombre?" },
+  { key:"prep",  title:"La preposición",      sub:"¿Qué preposición pide la pregunta?", ex:"¿___ quién hablas?" },
+  { key:"error", title:"Corrige el error",    sub:"Una pregunta contaminada por el inglés.", ex:"¿Dónde eres de?" },
+  { key:"mix",   title:"Mezcla",              sub:"Diez al azar de los tres retos.",   ex:"" }
+];
+
+const QUESTIONS_PER_RUN = 10;   // each run draws up to this many at random
+
+const quiz = document.getElementById('quiz');
+let items=[], idx=0, score=0, bStats={}, currentDrill="mix";
+let state={ sel:null, checked:false, correct:false, opts:[] };
+
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+function showStart(){
+  const cards = DRILLS.map(d=>{
+    const ex = d.ex ? `<span class="d-ex">${d.ex}</span>` : '';
+    return `<button class="drill-btn${d.key==='mix'?' mix':''}" data-drill="${d.key}">
+      <span><span class="d-title">${d.title}</span><span class="d-sub">${d.sub}</span></span>${ex}
+    </button>`;
+  }).join('');
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">&ne;</div>
+      <h2 class="start-title">Elige tu reto</h2>
+      <p class="start-text">Cada reto ataca una trampa distinta de la formación de preguntas. Selecciona uno para empezar.</p>
+      <div class="drill-list">${cards}</div>
+    </div>`;
+  quiz.querySelectorAll('[data-drill]').forEach(b=>{
+    b.addEventListener('click', ()=>startDrill(b.dataset.drill));
+  });
+}
+
+function startDrill(key){
+  currentDrill = key;
+  const pool = shuffle(key==="mix" ? ITEMS_RAW : ITEMS_RAW.filter(it=>it.type===key));
+  items = pool.slice(0, Math.min(QUESTIONS_PER_RUN, pool.length));
+  idx=0; score=0; bStats={};
+  loadItem();
+}
+
+function loadItem(){
+  const it = items[idx];
+  state = { sel:null, checked:false, correct:false, opts: shuffle(it.options) };
+  paint();
+}
+function selectOpt(i){ if(state.checked) return; state.sel=i; paint(); }
+function check(){
+  if(state.sel===null || state.checked) return;
+  const it=items[idx];
+  state.checked=true;
+  state.correct = (state.opts[state.sel]===it.answer);
+  if(state.correct) score++;
+  const b=it.dimB; if(b){ bStats[b]=bStats[b]||{correct:0,total:0}; bStats[b].total++; if(state.correct) bStats[b].correct++; }
+  paint();
+}
+function next(){
+  idx++;
+  if(idx>=items.length) showResults(); else loadItem();
+}
+
+function paint(){
+  const it=items[idx];
+
+  // option buttons
+  const optsHtml = state.opts.map((o,i)=>{
+    let cls='opt';
+    if(state.checked){
+      cls+=' locked';
+      if(o===it.answer) cls+= (i===state.sel?' ok':' reveal');
+      else if(i===state.sel) cls+=' bad';
+    } else if(state.sel===i){ cls+=' sel'; }
+    return `<button class="${cls}" data-opt="${i}">${o}</button>`;
+  }).join('');
+  const stack = (it.type==='error') ? ' stack' : '';
+
+  // prompt region (cloze stem for qc/prep, contaminated box for error)
+  let promptHtml;
+  if(it.type==='error'){
+    promptHtml = `
+      <div class="error-prompt"><span class="mark">&#10007;</span><span class="sent">${it.prompt}</span></div>
+      <div class="error-label">Elige la corrección</div>`;
+  } else {
+    let bClass, bText;
+    if(state.checked){ bClass=state.correct?'ok':'bad'; bText=state.sel!==null?state.opts[state.sel]:'_____'; }
+    else if(state.sel!==null){ bClass='sel'; bText=state.opts[state.sel]; }
+    else { bClass='empty'; bText='_____'; }
+    promptHtml = `<div class="stem"><span>${it.pre}</span><span class="blank ${bClass}">${bText}</span><span>${it.post}</span></div>`;
+  }
+
+  // feedback
+  let feedbackHtml='';
+  if(state.checked){
+    if(state.correct){
+      feedbackHtml = `<div class="feedback ok"><span class="verdict">&iexcl;Correcto!</span><span class="note">${it.note}</span></div>`;
+    } else {
+      feedbackHtml = `<div class="feedback bad"><span class="verdict">No exactamente.</span> La respuesta es <span class="ans">${it.answer}</span>.<span class="note">${it.note}</span></div>`;
+    }
+  }
+
+  const last = (idx+1>=items.length);
+  const controlsHtml = state.checked
+    ? `<button class="btn-primary" data-next>${last?'Ver resultados →':'Siguiente →'}</button>`
+    : `<button class="btn-primary" data-check ${state.sel===null?'disabled':''}>Comprobar</button>`;
+
+  quiz.innerHTML = `
+    <div class="progress">
+      <div class="progress-meta"><span>Pregunta ${idx+1} de ${items.length}</span><span class="sc">${score} ✓</span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:${(idx/items.length)*100}%"></div></div>
+    </div>
+    <div class="quiz-card">
+      ${promptHtml}
+      <div class="gloss">${it.gloss}</div>
+      <div class="opts${stack}">${optsHtml}</div>
+      ${feedbackHtml}
+      <div class="controls">${controlsHtml}</div>
+    </div>`;
+
+  attachHandlers();
+}
+
+function attachHandlers(){
+  quiz.querySelectorAll('.opt').forEach(el=>{
+    const i = parseInt(el.dataset.opt,10);
+    el.addEventListener('click', ()=>selectOpt(i));
+  });
+  const cb = quiz.querySelector('[data-check]'); if(cb) cb.addEventListener('click', check);
+  const nb = quiz.querySelector('[data-next]'); if(nb) nb.addEventListener('click', next);
+}
+
+function showResults(){
+  const pct = Math.round(score/items.length*100);
+  const keys = Object.keys(bStats).sort();
+  const rows = keys.length
+    ? keys.map(k=>{
+        const v=bStats[k];
+        return `<div class="cat-row"><span>${DIMB_NAMES[k]||k}</span><span class="cnt">${v.correct}/${v.total}</span></div>`;
+      }).join('')
+    : `<div class="cat-row"><span>Sin clasificar</span><span class="cnt">${score}/${items.length}</span></div>`;
+  quiz.innerHTML = `
+    <div class="results">
+      <div class="results-label">Resultado</div>
+      <div class="results-score">${score} / ${items.length}</div>
+      <div class="results-pct">${pct}% correctas</div>
+      <div class="cat-breakdown">
+        <div class="cb-title">Por trampa</div>
+        ${rows}
+      </div>
+      <div class="controls">
+        <button class="btn-primary" data-restart>Otra ronda →</button>
+        <button class="btn-ghost" data-pick>Cambiar de reto</button>
+        <a class="btn-ghost" href="../topics/formacion-de-preguntas.html">Repasar la teoría →</a>
+      </div>
+    </div>`;
+  const rb = quiz.querySelector('[data-restart]'); if(rb) rb.addEventListener('click', ()=>startDrill(currentDrill));
+  const pb = quiz.querySelector('[data-pick]'); if(pb) pb.addEventListener('click', showStart);
+}
+
+showStart();
+</script>
+</body>
+</html>

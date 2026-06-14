@@ -105,6 +105,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 .dash-stat{color:var(--text-secondary);font-variant-numeric:tabular-nums;white-space:nowrap;}
 .dash-row.low{opacity:0.5;}
 .dash-casi{color:var(--yellow);}
+.dash-reset{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);text-align:right;}
+.dash-reset.confirm{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.dash-reset-q{font-size:0.84rem;color:var(--text-secondary);}
+.dash-reset-btns{display:flex;gap:8px;}
+.btn-mini{font-family:'Outfit',sans-serif;font-size:0.78rem;font-weight:500;padding:6px 14px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.btn-mini:hover{border-color:var(--accent);color:var(--accent);}
+.btn-mini.danger{border-color:var(--red);color:var(--red);}
+.btn-mini.danger:hover{background:var(--red);color:#0a1628;border-color:var(--red);}
+.dash-note{margin-top:10px;font-size:0.8rem;color:var(--red);text-align:right;}
 
 /* controls */
 .controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
@@ -248,6 +257,8 @@ let folderId    = null;     // 'Spanish Learning' project folder
 let store       = null;     // in-memory weakness store; null until connected
 let driveBusy   = false;
 let driveError  = '';
+let resetConfirming = false;   // dashboard reset confirm step
+let dashNote        = '';      // transient dashboard note (e.g. reset write failure)
 
 const quiz = document.getElementById('quiz');
 
@@ -442,6 +453,7 @@ async function loadOrCreateStore(){
 
 // ───────── screens ─────────
 function showStart(){
+  resetConfirming = false; dashNote = '';
   quiz.innerHTML = `
     <div class="start-card">
       <div class="start-icon">¿?</div>
@@ -463,7 +475,8 @@ function renderDriveRow(){
     return;
   }
   if(driveToken && store){
-    row.innerHTML = dashboardHtml();
+    row.innerHTML = dashboardHtml(true);
+    wireDashButtons(row);
     return;
   }
   const err = driveError ? `<div class="drive-err">${esc(driveError)}</div>` : '';
@@ -472,13 +485,14 @@ function renderDriveRow(){
   if(b) b.addEventListener('click', connectDrive);
 }
 
-// 5c: weakness dashboard built from the in-memory store
-function dashboardHtml(){
+// 5c/5d: weakness dashboard built from the in-memory store. withReset adds the reset control (start screen only).
+function dashboardHtml(withReset){
   const cats = (store && store.categories) ? store.categories : {};
   const rows = Object.keys(cats).map(k => ({ k, ...cats[k] })).filter(c => c.seen >= 1);
   const head = `<div class="dash-head">Tu progreso <span class="dash-ok">conectado ✓</span></div>`;
+  const note = dashNote ? `<div class="dash-note">${esc(dashNote)}</div>` : '';
   if(rows.length === 0){
-    return `<div class="dash">${head}<div class="dash-empty">Aún no hay datos. Completa una ronda para empezar.</div></div>`;
+    return `<div class="dash">${head}<div class="dash-empty">Aún no hay datos. Completa una ronda para empezar.</div>${note}</div>`;
   }
   rows.forEach(c => { c.rate = c.missed / c.seen; c.low = c.seen < MIN_SAMPLE; });
   rows.sort((a, b) => (a.low !== b.low) ? (a.low ? 1 : -1) : (b.rate - a.rate));   // weakest first; low-data last
@@ -490,7 +504,39 @@ function dashboardHtml(){
     const casi = c.casi > 0 ? ` <span class="dash-casi">· ${c.casi} casi</span>` : '';
     return `<div class="dash-row"><span class="dash-name">${name}</span><span class="dash-stat">${c.seen} vistas · ${Math.round(c.rate*100)}% errores${casi}</span></div>`;
   }).join('');
-  return `<div class="dash">${head}${rowHtml}</div>`;
+  let footer = '';
+  if(withReset){
+    footer = resetConfirming
+      ? `<div class="dash-reset confirm"><span class="dash-reset-q">¿Seguro? Esto borra todas tus estadísticas.</span><div class="dash-reset-btns"><button type="button" class="btn-mini danger" data-reset-yes>Confirmar</button><button type="button" class="btn-mini" data-reset-no>Cancelar</button></div></div>`
+      : `<div class="dash-reset"><button type="button" class="btn-mini" data-reset>Reiniciar progreso</button></div>`;
+  }
+  return `<div class="dash">${head}${rowHtml}${footer}${note}</div>`;
+}
+
+// 5d: reset control wiring + confirm
+function wireDashButtons(container){
+  const r   = container.querySelector('[data-reset]');
+  const yes = container.querySelector('[data-reset-yes]');
+  const no  = container.querySelector('[data-reset-no]');
+  if(r)   r.addEventListener('click',   () => { resetConfirming = true;  dashNote = ''; renderDriveRow(); });
+  if(no)  no.addEventListener('click',  () => { resetConfirming = false; renderDriveRow(); });
+  if(yes) yes.addEventListener('click', confirmReset);
+}
+async function confirmReset(){
+  resetConfirming = false;
+  dashNote = '';
+  ALL_CATS.forEach(c => { store.categories[c] = { seen:0, missed:0, casi:0 }; });
+  store.totalAnswered = 0;
+  store.updated = new Date().toISOString();
+  renderDriveRow();                       // immediate empty dashboard
+  const ok = await writeStore();
+  if(!ok){ dashNote = 'No se pudo guardar el reinicio en Drive.'; renderDriveRow(); }
+}
+
+// refresh the cumulative dashboard shown on the results screen (between-rounds refresh)
+function renderResultsDash(){
+  const el = document.getElementById('resultsDash');
+  if(el && store) el.innerHTML = dashboardHtml(false);
 }
 
 function startGen(){
@@ -750,6 +796,7 @@ async function persistRound(){
   if(!(store && driveToken)) return;          // not connected → no persistence, no line
   roundPersisted = true;
   updateStore();                              // in-memory store is authoritative for the session
+  renderResultsDash();                        // refresh the cumulative dashboard on the results screen
   setSaveStatus('saving');
   const ok = await writeStore();
   setSaveStatus(ok ? 'ok' : 'fail');
@@ -782,6 +829,7 @@ function showResults(){
         <div class="cb-title">Por función (Dimensión A)</div>
         ${rows}
       </div>
+      <div id="resultsDash"></div>
       <div id="saveStatus" class="save-status"></div>
       <div class="controls">
         <button class="btn-primary" data-restart>Otra ronda →</button>

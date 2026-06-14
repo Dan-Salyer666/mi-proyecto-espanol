@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formula la pregunta — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:#0a1628; --bg-card:#111d35; --bg-input:#0d1a2f; --border:#1e3355;
+  --text-primary:#e8edf5; --text-secondary:#9aabc6; --text-muted:#62779a;
+  --accent:#4ecdc4; --accent-soft:rgba(78,205,196,0.10); --accent-line:rgba(78,205,196,0.45);
+  --green:#34d399; --green-soft:rgba(52,211,153,0.12);
+  --yellow:#fbbf24; --yellow-soft:rgba(251,191,36,0.10);
+  --red:#f87171; --red-soft:rgba(248,113,113,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+.bg-photo{position:fixed;inset:0;background:url('../assets/los fondos/alhambra piscina.webp') center/cover no-repeat;filter:brightness(0.42);z-index:0;}
+.bg-overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(10,22,40,0.72),rgba(10,22,40,0.82));z-index:0;}
+
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0 6px;}
+.back-link,.review-link{color:var(--text-muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s;}
+.back-link:hover,.review-link:hover{color:var(--accent);}
+.review-link{color:var(--accent);font-weight:500;}
+
+.page-header{text-align:center;padding:14px 0 6px;}
+.page-header .overline{font-size:0.7rem;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.page-header h1{font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(1.9rem,5vw,2.5rem);font-weight:400;line-height:1.14;margin-bottom:10px;}
+.page-header .subtitle{font-size:0.96rem;color:var(--text-secondary);max-width:520px;margin:0 auto;line-height:1.55;}
+
+.hint{text-align:center;font-size:0.84rem;color:var(--text-muted);margin:20px 0 18px;font-style:italic;}
+
+/* progress */
+.progress{margin-bottom:18px;}
+.progress-meta{display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:7px;}
+.progress-meta .sc{color:var(--green);font-weight:600;}
+.progress-track{height:5px;background:var(--bg-input);border:1px solid var(--border);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.35s ease;}
+
+/* quiz card */
+.quiz-card{background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:28px 24px 24px;}
+
+/* dynamic-quiz item chrome */
+.dimA-chip{display:inline-block;font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:99px;padding:4px 12px;margin-bottom:16px;}
+.instruction{font-family:'DM Serif Display',serif;font-size:1.4rem;line-height:1.4;color:var(--text-primary);margin-bottom:18px;}
+.ans-label{font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:9px;}
+.ans-input{width:100%;font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text-primary);background:var(--bg-input);border:1px solid var(--border);border-radius:11px;padding:13px 15px;resize:vertical;line-height:1.4;transition:border-color 0.2s;}
+.ans-input:focus{outline:none;border-color:var(--accent);}
+.ans-input.pw{font-family:'Outfit',sans-serif;font-size:1rem;text-align:center;margin-top:4px;}
+.your-ans,.model-ans{display:flex;flex-direction:column;gap:3px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:11px 15px;}
+.your-ans{margin-bottom:14px;}
+.ya-label,.ma-label{font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);}
+.ya-text{font-family:'DM Serif Display',serif;font-size:1.12rem;color:var(--text-primary);}
+.model-ans{border-color:var(--accent-line);background:var(--accent-soft);margin-top:12px;}
+.ma-text{font-family:'DM Serif Display',serif;font-size:1.12rem;color:var(--accent);}
+
+/* feedback */
+.feedback{margin-top:18px;padding:13px 16px;border-radius:10px;font-size:0.92rem;line-height:1.55;}
+.feedback.ok{background:var(--green-soft);border-left:3px solid var(--green);color:var(--text-secondary);}
+.feedback.warn{background:var(--yellow-soft);border-left:3px solid var(--yellow);color:var(--text-secondary);}
+.feedback.bad{background:var(--red-soft);border-left:3px solid var(--red);color:var(--text-secondary);}
+.feedback .verdict{font-weight:600;margin-right:6px;}
+.feedback.ok .verdict{color:var(--green);}
+.feedback.warn .verdict{color:var(--yellow);}
+.feedback.bad .verdict{color:var(--red);}
+.feedback .note{display:block;margin-top:5px;font-size:0.88rem;color:var(--text-muted);font-style:italic;}
+
+/* loading / grading / error */
+.spinner{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:0.98rem;color:var(--text-secondary);}
+.grading{display:flex;flex-direction:column;align-items:center;gap:4px;padding:26px 0;color:var(--text-secondary);font-size:0.95rem;}
+.grading .spinner{margin-bottom:8px;}
+.pw-err{color:var(--red);font-size:0.85rem;margin:12px 0 0;}
+
+/* controls */
+.controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+.btn-primary{font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:600;padding:11px 26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);cursor:pointer;transition:all 0.2s;}
+.btn-primary:hover:not(:disabled){background:var(--accent);color:#0a1628;}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-ghost{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:500;padding:11px 22px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* start */
+.start-card{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:40px 26px;}
+.start-icon{font-family:'DM Serif Display',serif;font-style:italic;font-size:2.6rem;color:var(--accent);line-height:1;margin-bottom:14px;}
+.start-title{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text-primary);margin-bottom:10px;}
+.start-text{font-size:0.95rem;color:var(--text-secondary);max-width:440px;margin:0 auto 26px;line-height:1.55;}
+
+/* results */
+.results{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:36px 24px;}
+.results-label{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+.results-score{font-family:'DM Serif Display',serif;font-size:3rem;color:var(--accent);line-height:1;}
+.results-pct{font-size:1rem;color:var(--text-secondary);margin-top:6px;}
+.casi-tail{color:var(--yellow);font-weight:600;}
+.cat-breakdown{margin:26px auto 8px;max-width:380px;text-align:left;}
+.cat-breakdown .cb-title{font-size:0.66rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;text-align:center;}
+.cat-row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);font-size:0.9rem;color:var(--text-secondary);}
+.cat-row .cnt{font-variant-numeric:tabular-nums;color:var(--text-primary);}
+
+@media (max-width:520px){
+  .instruction{font-size:1.22rem;}
+  .quiz-card{padding:22px 16px 20px;}
+  .ans-input{font-size:1.08rem;}
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" class="back-link">← Menú</a>
+    <a href="../topics/formacion-de-preguntas.html" class="review-link">Repasar la teoría →</a>
+  </div>
+
+  <header class="page-header">
+    <div class="overline">Práctica · Dinámica</div>
+    <h1>Formula la pregunta</h1>
+    <p class="subtitle">La app te da una instrucción en inglés, tú escribes la pregunta en español y ella la califica.</p>
+  </header>
+
+  <div class="hint">Cada ronda genera seis preguntas nuevas con IA. Nada se guarda.</div>
+
+  <div id="quiz"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+//  Formación de Preguntas — Phase 4: dynamic quiz (general mode, session-scoped)
+//  generate 6 EN prompts → learner types the Spanish question → AI grades each.
+//  No Drive, no localStorage. State lives only for this page session.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const MODEL      = 'claude-sonnet-4-20250514';  // generation + grading
+const N_PER_RUN  = 6;
+
+const DIMA_NAMES = {
+  identidad:'Identidad', lugar:'Lugar', tiempo:'Tiempo', frecuencia:'Frecuencia',
+  cantidad:'Cantidad', manera:'Manera', razon:'Razón', eleccion:'Elección',
+  descripcion:'Descripción', formulas:'Fórmulas', si_no:'Sí / No'
+};
+
+const GEN_SYS = `You write practice items for a B2 learner of neutral Latin American Spanish.
+
+Your job: produce exactly 6 practice items as a JSON array and NOTHING else (no prose, no markdown fences). Each item gives an English instruction telling the learner which question to ask; the learner will then write that question in Spanish.
+
+Each item is an object with these fields:
+- "id": integer 1 to 6
+- "en": a short English instruction that elicits EXACTLY ONE natural Spanish question (e.g. "Ask a stranger where the train station is."). It must point to a single question, not an open-ended conversation.
+- "dimA": exactly one of these functional buckets: "identidad", "lugar", "tiempo", "frecuencia", "cantidad", "manera", "razon", "eleccion", "descripcion", "formulas". Spread the 6 items across DISTINCT buckets. Never use "si_no".
+- "ref": the model Spanish question, correctly accented and wrapped in the opening and closing marks: ¿ ... ?
+- "vars": an array of 0 to 3 OTHER fully acceptable Spanish phrasings of the same question (synonyms, word-order variants). Each must be a complete, correct, fully acceptable question. Use [] if there are none.
+
+Hard rules:
+- Neutral Latin American Spanish only. Use tú or usted, NEVER voseo (no "vos", "tenés", "sos", voseo imperatives). No Spain-specific forms.
+- No medical content.
+- Vary the interrogatives and structures across the 6 items.
+- Output ONLY the JSON array. No preamble, no explanation, no code fences.`;
+
+const GRADE_SYS = `You grade a learner's Spanish question against an English instruction, for a B2 learner of neutral Latin American Spanish.
+
+You receive JSON with: en (the English instruction the learner had to render as a Spanish question), ref (a model correct answer), vars (other fully acceptable answers), dimA, and studentAnswer. Treat any answer equivalent in meaning and structure to ref or any var as correct.
+
+Return ONLY this JSON object, nothing else:
+{"verdict":"correcto|casi|incorrecto","feedback":"<one short Spanish line>","dimA":"<echo the dimA you were given>"}
+
+Verdict rules:
+- "correcto": a natural, correct question that matches the instruction's intent and is equivalent to ref/vars. Both tú and usted are fully acceptable — never penalize the choice between them.
+- "casi": the right question with the right interrogative, but a FORM slip only — a missing opening ¿, a dropped or added accent, a minor typo, or a trivial agreement wobble that does not change the meaning. The feedback names the slip.
+- "incorrecto": wrong interrogative, wrong structure, wrong meaning, OR any voseo ("vos", "sos", "tenés", voseo imperatives, etc.). The feedback says why in one short line.
+
+"feedback" is ONE short line in Spanish. No English. No multi-sentence explanations. Output only the JSON object — no preamble, no code fences.`;
+
+// ───────── state (in-memory only) ─────────
+let sessionPw  = null;          // null = unverified; '' is a valid verified value
+let items      = [];
+let idx        = 0;
+let results    = [];            // {answer, verdict, feedback, modelShown}
+let score      = 0;            // count of "correcto"
+let casiCount  = 0;
+let dimaStats  = {};            // bucket -> {correcto, total}
+let curAnswer  = '';
+
+const quiz = document.getElementById('quiz');
+
+// ───────── helpers ─────────
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function stripFences(t){
+  return String(t || '')
+    .replace(/^```json\s*/i,'')
+    .replace(/^```\s*/i,'')
+    .replace(/```\s*$/,'')
+    .trim();
+}
+// fast-path normalize: trim, collapse whitespace, drop leading ¿ / trailing ?, lowercase.
+// Accents are PRESERVED on purpose so accent loss still surfaces as "casi".
+function normalize(s){
+  return String(s || '')
+    .trim()
+    .replace(/\s+/g,' ')
+    .replace(/^[¿]+/,'')
+    .replace(/[?]+$/,'')
+    .trim()
+    .toLowerCase();
+}
+function textOf(data){
+  const blocks = (data && Array.isArray(data.content)) ? data.content : [];
+  const t = blocks.find(b => b && b.type === 'text');
+  return t ? t.text : (blocks[0] && blocks[0].text) || '';
+}
+function progress(){
+  return `<div class="progress">
+    <div class="progress-meta"><span>Pregunta ${idx+1} de ${items.length}</span><span class="sc">${score} ✓</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:${(idx/items.length)*100}%"></div></div>
+  </div>`;
+}
+
+// ───────── API ─────────
+async function callClaude(system, content, maxTokens){
+  const res = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      system,
+      messages: [{ role:'user', content }],
+      model: MODEL,
+      max_tokens: maxTokens,
+      stream: false,
+      password: sessionPw
+    })
+  });
+  if(res.status === 401){ const e = new Error('auth'); e.auth = true; throw e; }
+  if(!res.ok){ throw new Error('http ' + res.status); }
+  return res.json();
+}
+
+async function verify(pw){
+  const res = await fetch('/api/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pw })
+  });
+  if(!res.ok) return false;          // 401 = wrong / required
+  const d = await res.json();
+  return d && d.valid === true;
+}
+
+// ───────── screens ─────────
+function showStart(){
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">¿?</div>
+      <h2 class="start-title">Practica formulando preguntas</h2>
+      <p class="start-text">La app te dará seis instrucciones en inglés. Para cada una, escribe en español la pregunta que pide. Luego la califica una por una.</p>
+      <div class="controls"><button class="btn-primary" data-gen>Generar ronda →</button></div>
+    </div>`;
+  quiz.querySelector('[data-gen]').addEventListener('click', startGen);
+}
+
+function startGen(){
+  if(sessionPw !== null){ generateRound(); return; }
+  // Probe: if no password is configured the server lets an empty one through.
+  verify('').then(ok => {
+    if(ok){ sessionPw = ''; generateRound(); }
+    else { showPassword(); }
+  }).catch(() => showPassword());
+}
+
+function showPassword(err){
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">&#128274;</div>
+      <h2 class="start-title">Contraseña</h2>
+      <p class="start-text">Esta práctica usa la API. Introduce la contraseña para continuar.</p>
+      <input type="password" id="pwInput" class="ans-input pw" placeholder="Contraseña" autocomplete="off">
+      ${err ? `<div class="pw-err">${esc(err)}</div>` : ''}
+      <div class="controls"><button class="btn-primary" data-pw>Continuar →</button></div>
+    </div>`;
+  const inp = document.getElementById('pwInput');
+  quiz.querySelector('[data-pw]').addEventListener('click', submitPw);
+  inp.addEventListener('keydown', e => { if(e.key === 'Enter') submitPw(); });
+  setTimeout(() => inp.focus(), 50);
+}
+
+function submitPw(){
+  const inp = document.getElementById('pwInput');
+  const pw = inp ? inp.value.trim() : '';
+  verify(pw).then(ok => {
+    if(ok){ sessionPw = pw; generateRound(); }          // store only once verified
+    else { showPassword('Contraseña incorrecta.'); }
+  }).catch(() => showPassword('No se pudo verificar. Intenta de nuevo.'));
+}
+
+function showLoading(msg){
+  quiz.innerHTML = `<div class="start-card"><div class="spinner"></div><div class="loading-text">${esc(msg)}</div></div>`;
+}
+
+function showError(msg, retryFn){
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">!</div>
+      <div class="loading-text">${esc(msg)}</div>
+      <div class="controls"><button class="btn-primary" data-retry>Reintentar</button></div>
+    </div>`;
+  quiz.querySelector('[data-retry]').addEventListener('click', retryFn);
+}
+
+// ───────── generation ─────────
+function validateItems(arr){
+  if(!Array.isArray(arr) || arr.length !== N_PER_RUN) return null;
+  const out = [];
+  for(let i=0; i<N_PER_RUN; i++){
+    const it = arr[i];
+    if(!it || typeof it.en !== 'string' || typeof it.dimA !== 'string' || typeof it.ref !== 'string') return null;
+    out.push({
+      id:   it.id || (i+1),
+      en:   it.en,
+      dimA: it.dimA,
+      ref:  it.ref,
+      vars: Array.isArray(it.vars) ? it.vars.filter(v => typeof v === 'string') : []
+    });
+  }
+  return out;
+}
+
+async function generateRound(){
+  showLoading('Generando preguntas…');
+  try{
+    const data = await callClaude(GEN_SYS, 'Genera la ronda de 6 ítems ahora.', 1500);
+    let parsed;
+    try { parsed = JSON.parse(stripFences(textOf(data))); }
+    catch(_){ parsed = null; }
+    const valid = validateItems(parsed);
+    if(!valid){ showError('La generación no devolvió seis ítems válidos.', generateRound); return; }
+    items = valid; idx = 0; results = []; score = 0; casiCount = 0; dimaStats = {};
+    loadItem();
+  }catch(e){
+    if(e && e.auth){ sessionPw = null; showPassword('La sesión expiró. Vuelve a introducir la contraseña.'); return; }
+    showError('No se pudo generar la ronda.', generateRound);
+  }
+}
+
+// ───────── per-item flow ─────────
+function loadItem(){
+  curAnswer = '';
+  renderPrompt();
+}
+
+function renderPrompt(){
+  const it = items[idx];
+  quiz.innerHTML = progress() + `
+    <div class="quiz-card">
+      <div class="dimA-chip">${DIMA_NAMES[it.dimA] || esc(it.dimA)}</div>
+      <div class="instruction">${esc(it.en)}</div>
+      <div class="ans-label">Escribe la pregunta en español</div>
+      <textarea id="ans" class="ans-input" rows="2" placeholder="¿…?" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="controls"><button class="btn-primary" data-check disabled>Comprobar</button></div>
+    </div>`;
+  const ta = document.getElementById('ans');
+  const cb = quiz.querySelector('[data-check]');
+  ta.addEventListener('input', () => { cb.disabled = ta.value.trim() === ''; });
+  ta.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); if(!cb.disabled) submitAnswer(); }
+  });
+  cb.addEventListener('click', submitAnswer);
+  setTimeout(() => ta.focus(), 50);
+}
+
+function showGrading(){
+  quiz.innerHTML = progress() + `<div class="quiz-card"><div class="grading"><div class="spinner"></div><span>Calificando…</span></div></div>`;
+}
+
+async function submitAnswer(){
+  const ta = document.getElementById('ans');
+  const ans = ta ? ta.value.trim() : '';
+  if(!ans) return;
+  curAnswer = ans;
+  const it = items[idx];
+
+  // local fast-path: exact normalized match → correcto, no API call
+  const na = normalize(ans);
+  if(na === normalize(it.ref) || it.vars.some(v => normalize(v) === na)){
+    recordVerdict('correcto', '', false);
+    return;
+  }
+
+  showGrading();
+  try{
+    const payload = JSON.stringify({ en: it.en, ref: it.ref, vars: it.vars, dimA: it.dimA, studentAnswer: ans });
+    const data = await callClaude(GRADE_SYS, payload, 300);
+    let g;
+    try { g = JSON.parse(stripFences(textOf(data))); }
+    catch(_){ g = null; }
+    const v = (g && ['correcto','casi','incorrecto'].includes(g.verdict)) ? g.verdict : null;
+    if(!v){ recordFallback(); return; }
+    recordVerdict(v, (g && typeof g.feedback === 'string') ? g.feedback : '', v !== 'correcto');
+  }catch(e){
+    if(e && e.auth){ sessionPw = null; showPassword('La sesión expiró. Vuelve a introducir la contraseña.'); return; }
+    recordFallback();
+  }
+}
+
+function recordVerdict(verdict, feedback, showModel){
+  const it = items[idx];
+  const b = it.dimA;
+  dimaStats[b] = dimaStats[b] || { correcto:0, total:0 };
+  dimaStats[b].total++;
+  if(verdict === 'correcto'){ score++; dimaStats[b].correcto++; }
+  else if(verdict === 'casi'){ casiCount++; }
+  results.push({ answer: curAnswer, verdict, feedback, modelShown: showModel });
+  renderVerdict(verdict, feedback, showModel);
+}
+
+// grading failed/malformed → neutral, NOT counted (score & bucket totals untouched)
+function recordFallback(){
+  const fb = 'No pude calificar con seguridad; compara con la respuesta modelo.';
+  results.push({ answer: curAnswer, verdict: 'fallo', feedback: fb, modelShown: true });
+  renderVerdict('fallo', fb, true);
+}
+
+function renderVerdict(verdict, feedback, showModel){
+  const it = items[idx];
+  const map = {
+    correcto: ['ok',   '¡Correcto!'],
+    casi:     ['warn', 'Casi'],
+    incorrecto:['bad', 'No exactamente.'],
+    fallo:    ['warn', 'Sin calificar']
+  };
+  const [cls, label] = map[verdict] || ['warn', '—'];
+  const noteHtml  = feedback ? `<span class="note">${esc(feedback)}</span>` : '';
+  const modelHtml = showModel
+    ? `<div class="model-ans"><span class="ma-label">Respuesta modelo</span><span class="ma-text">${esc(it.ref)}</span></div>`
+    : '';
+  const last = (idx + 1 >= items.length);
+  quiz.innerHTML = progress() + `
+    <div class="quiz-card">
+      <div class="dimA-chip">${DIMA_NAMES[it.dimA] || esc(it.dimA)}</div>
+      <div class="instruction">${esc(it.en)}</div>
+      <div class="your-ans"><span class="ya-label">Tu respuesta</span><span class="ya-text">${esc(curAnswer)}</span></div>
+      <div class="feedback ${cls}"><span class="verdict">${label}</span>${noteHtml}</div>
+      ${modelHtml}
+      <div class="controls"><button class="btn-primary" data-next>${last ? 'Ver resultados →' : 'Siguiente →'}</button></div>
+    </div>`;
+  quiz.querySelector('[data-next]').addEventListener('click', next);
+}
+
+function next(){
+  idx++;
+  if(idx >= items.length) showResults(); else loadItem();
+}
+
+// ───────── results ─────────
+function showResults(){
+  const casiTail = casiCount > 0 ? ` <span class="casi-tail">· ${casiCount} casi</span>` : '';
+  const keys = Object.keys(dimaStats).sort();
+  const rows = keys.length
+    ? keys.map(k => {
+        const v = dimaStats[k];
+        return `<div class="cat-row"><span>${DIMA_NAMES[k] || esc(k)}</span><span class="cnt">${v.correcto}/${v.total}</span></div>`;
+      }).join('')
+    : `<div class="cat-row"><span>Sin clasificar</span><span class="cnt">${score}/${items.length}</span></div>`;
+  quiz.innerHTML = `
+    <div class="results">
+      <div class="results-label">Resultado</div>
+      <div class="results-score">${score} / ${items.length}</div>
+      <div class="results-pct">correctas${casiTail}</div>
+      <div class="cat-breakdown">
+        <div class="cb-title">Por función (Dimensión A)</div>
+        ${rows}
+      </div>
+      <div class="controls">
+        <button class="btn-primary" data-restart>Otra ronda →</button>
+        <a class="btn-ghost" href="../topics/formacion-de-preguntas.html">Repasar la teoría →</a>
+      </div>
+    </div>`;
+  quiz.querySelector('[data-restart]').addEventListener('click', () => {
+    if(sessionPw !== null) generateRound(); else startGen();
+  });
+}
+
+showStart();
+</script>
+</body>
+</html>

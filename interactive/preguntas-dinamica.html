@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Formula la pregunta — Mi Proyecto Español</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -81,6 +82,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 .grading .spinner{margin-bottom:8px;}
 .pw-err{color:var(--red);font-size:0.85rem;margin:12px 0 0;}
 
+/* Drive connect / status (Phase 5) */
+.drive-row{margin-top:16px;text-align:center;}
+.drive-connect{font-size:0.86rem;}
+.drive-status{font-size:0.9rem;color:var(--text-secondary);display:inline-flex;align-items:center;gap:8px;justify-content:center;}
+.drive-status.ok{color:var(--green);}
+.drive-sub{color:var(--text-muted);font-size:0.8rem;}
+.drive-err{color:var(--red);font-size:0.82rem;margin-top:8px;}
+.spinner.sm{width:15px;height:15px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;}
+
 /* controls */
 .controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
 .btn-primary{font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:600;padding:11px 26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);cursor:pointer;transition:all 0.2s;}
@@ -147,6 +157,14 @@ const N_PER_RUN  = 6;
 // quick-insert keys for the answer box (chars that are awkward to type)
 const CHAR_KEYS  = ['¿','?','á','é','í','ó','ú','ñ'];
 
+// ── Phase 5: Drive-backed weakness store ──
+const CLIENT_ID      = '10393001786-l8rfutuihm2301jf6a5rkmqumtfla8t5.apps.googleusercontent.com';
+const DRIVE_SCOPE    = 'https://www.googleapis.com/auth/drive.file';
+const STORE_FILENAME = 'formacion-preguntas-weakness.json';
+const STORE_REV      = 1;
+const MIN_SAMPLE     = 5;   // categories below this are greyed / excluded from ranking
+const ALL_CATS = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','si_no','formulas'];
+
 const DIMA_NAMES = {
   identidad:'Identidad', lugar:'Lugar', tiempo:'Tiempo', frecuencia:'Frecuencia',
   cantidad:'Cantidad', manera:'Manera', razon:'Razón', eleccion:'Elección',
@@ -193,6 +211,15 @@ let score      = 0;            // count of "correcto"
 let casiCount  = 0;
 let dimaStats  = {};            // bucket -> {correcto, total}
 let curAnswer  = '';
+
+// Drive state (Phase 5)
+let driveReady  = false;
+let tokenClient = null;
+let driveToken  = null;
+let storeFileId = null;
+let store       = null;     // in-memory weakness store; null until connected
+let driveBusy   = false;
+let driveError  = '';
 
 const quiz = document.getElementById('quiz');
 
@@ -275,6 +302,96 @@ async function verify(pw){
   return d && d.valid === true;
 }
 
+// ───────── Drive: store model ─────────
+function seedStore(){
+  const cats = {};
+  ALL_CATS.forEach(c => { cats[c] = { seen:0, missed:0, casi:0 }; });
+  return { contentRev: STORE_REV, updated: new Date().toISOString(), totalAnswered: 0, categories: cats };
+}
+// defensive fill: guarantee all 11 categories and the casi field, bump rev
+function migrateStore(obj){
+  if(!obj || typeof obj !== 'object') return seedStore();
+  obj.categories = (obj.categories && typeof obj.categories === 'object') ? obj.categories : {};
+  ALL_CATS.forEach(c => {
+    const e = obj.categories[c] || {};
+    obj.categories[c] = { seen: e.seen||0, missed: e.missed||0, casi: e.casi||0 };
+  });
+  if(typeof obj.totalAnswered !== 'number') obj.totalAnswered = 0;
+  obj.contentRev = STORE_REV;
+  return obj;
+}
+
+// ───────── Drive: OAuth (Google Identity Services), CL pattern ─────────
+function initDriveAuth(){
+  if(typeof google === 'undefined' || !google.accounts){ setTimeout(initDriveAuth, 300); return; }
+  driveReady  = true;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: DRIVE_SCOPE, callback: handleTokenResponse
+  });
+}
+function connectDrive(){
+  if(!driveReady){ driveError = 'La biblioteca de Google aún se está cargando. Inténtalo de nuevo.'; renderDriveRow(); return; }
+  driveBusy = true; driveError = ''; renderDriveRow();
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+async function handleTokenResponse(resp){
+  if(resp.error){ driveBusy = false; driveError = 'No se pudo conectar con Drive.'; renderDriveRow(); return; }
+  driveToken = resp.access_token;
+  try{
+    await loadOrCreateStore();
+    driveBusy = false; driveError = ''; renderDriveRow();
+  }catch(e){
+    console.error('Drive setup error:', e);
+    driveToken = null; store = null; storeFileId = null;
+    driveBusy = false; driveError = 'No se pudo acceder a Drive.'; renderDriveRow();
+  }
+}
+async function driveRequest(url, options = {}){
+  const res = await fetch(url, {
+    ...options,
+    headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json', ...(options.headers||{}) }
+  });
+  if(res.status === 401){ driveToken = null; throw new Error('Drive token expired'); }
+  return res;
+}
+
+// ───────── Drive: find-or-create the single store file ─────────
+async function findStoreFile(){
+  const q = `name='${STORE_FILENAME}' and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=10`);
+  const data = await res.json();
+  return (data.files && data.files.length) ? data.files[0].id : null;
+}
+async function createStoreFile(obj){
+  const boundary = '-------314159265358979323846';
+  const body = [
+    `--${boundary}`, 'Content-Type: application/json; charset=UTF-8', '',
+    JSON.stringify({ name: STORE_FILENAME }),
+    `--${boundary}`, 'Content-Type: application/json', '',
+    JSON.stringify(obj), `--${boundary}--`
+  ].join('\r\n');
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':`multipart/related; boundary="${boundary}"` },
+    body
+  });
+  if(!res.ok) throw new Error('create failed ' + res.status);
+  return (await res.json()).id;
+}
+async function loadOrCreateStore(){
+  const id = await findStoreFile();
+  if(id){
+    storeFileId = id;
+    const fr = await driveRequest(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`);
+    let obj = null;
+    try { obj = await fr.json(); } catch(_){ obj = null; }
+    store = obj ? migrateStore(obj) : seedStore();   // unparseable → fresh in memory; first write repairs the file
+  } else {
+    store = seedStore();
+    storeFileId = await createStoreFile(store);
+  }
+}
+
 // ───────── screens ─────────
 function showStart(){
   quiz.innerHTML = `
@@ -283,8 +400,28 @@ function showStart(){
       <h2 class="start-title">Practica formulando preguntas</h2>
       <p class="start-text">La app te dará seis instrucciones en inglés. Para cada una, escribe en español la pregunta que pide. Luego la califica una por una.</p>
       <div class="controls"><button class="btn-primary" data-gen>Generar ronda →</button></div>
-    </div>`;
+    </div>
+    <div id="driveRow" class="drive-row"></div>`;
   quiz.querySelector('[data-gen]').addEventListener('click', startGen);
+  renderDriveRow();
+}
+
+// 5a: connect button / status. (5c will replace the connected state with the dashboard.)
+function renderDriveRow(){
+  const row = document.getElementById('driveRow');
+  if(!row) return;
+  if(driveBusy){
+    row.innerHTML = `<div class="drive-status"><span class="spinner sm"></span> Conectando con Drive…</div>`;
+    return;
+  }
+  if(driveToken && store){
+    row.innerHTML = `<div class="drive-status ok">Drive conectado ✓ <span class="drive-sub">tu progreso se guardará</span></div>`;
+    return;
+  }
+  const err = driveError ? `<div class="drive-err">${esc(driveError)}</div>` : '';
+  row.innerHTML = `<button type="button" class="btn-ghost drive-connect" data-drive>Conectar con Drive para guardar tu progreso</button>${err}`;
+  const b = row.querySelector('[data-drive]');
+  if(b) b.addEventListener('click', connectDrive);
 }
 
 function startGen(){
@@ -513,6 +650,7 @@ function showResults(){
 }
 
 showStart();
+initDriveAuth();
 </script>
 </body>
 </html>

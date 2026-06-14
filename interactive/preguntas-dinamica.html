@@ -94,6 +94,18 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 .save-status.ok{color:var(--green);}
 .save-status.fail{color:var(--red);}
 
+/* 5c: weakness dashboard */
+.dash{background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:16px;text-align:left;}
+.dash-head{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.dash-ok{color:var(--green);letter-spacing:0.03em;text-transform:none;font-size:0.8rem;}
+.dash-empty{font-size:0.9rem;color:var(--text-secondary);font-style:italic;}
+.dash-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--border);font-size:0.92rem;}
+.dash-row:first-of-type{border-top:none;}
+.dash-name{color:var(--text-primary);}
+.dash-stat{color:var(--text-secondary);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.dash-row.low{opacity:0.5;}
+.dash-casi{color:var(--yellow);}
+
 /* controls */
 .controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
 .btn-primary{font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:600;padding:11px 26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);cursor:pointer;transition:all 0.2s;}
@@ -451,13 +463,34 @@ function renderDriveRow(){
     return;
   }
   if(driveToken && store){
-    row.innerHTML = `<div class="drive-status ok">Drive conectado ✓ <span class="drive-sub">tu progreso se guardará</span></div>`;
+    row.innerHTML = dashboardHtml();
     return;
   }
   const err = driveError ? `<div class="drive-err">${esc(driveError)}</div>` : '';
   row.innerHTML = `<button type="button" class="btn-ghost drive-connect" data-drive>Conectar con Drive para guardar tu progreso</button>${err}`;
   const b = row.querySelector('[data-drive]');
   if(b) b.addEventListener('click', connectDrive);
+}
+
+// 5c: weakness dashboard built from the in-memory store
+function dashboardHtml(){
+  const cats = (store && store.categories) ? store.categories : {};
+  const rows = Object.keys(cats).map(k => ({ k, ...cats[k] })).filter(c => c.seen >= 1);
+  const head = `<div class="dash-head">Tu progreso <span class="dash-ok">conectado ✓</span></div>`;
+  if(rows.length === 0){
+    return `<div class="dash">${head}<div class="dash-empty">Aún no hay datos. Completa una ronda para empezar.</div></div>`;
+  }
+  rows.forEach(c => { c.rate = c.missed / c.seen; c.low = c.seen < MIN_SAMPLE; });
+  rows.sort((a, b) => (a.low !== b.low) ? (a.low ? 1 : -1) : (b.rate - a.rate));   // weakest first; low-data last
+  const rowHtml = rows.map(c => {
+    const name = DIMA_NAMES[c.k] || esc(c.k);
+    if(c.low){
+      return `<div class="dash-row low"><span class="dash-name">${name}</span><span class="dash-stat">${c.seen} vistas · pocos datos</span></div>`;
+    }
+    const casi = c.casi > 0 ? ` <span class="dash-casi">· ${c.casi} casi</span>` : '';
+    return `<div class="dash-row"><span class="dash-name">${name}</span><span class="dash-stat">${c.seen} vistas · ${Math.round(c.rate*100)}% errores${casi}</span></div>`;
+  }).join('');
+  return `<div class="dash">${head}${rowHtml}</div>`;
 }
 
 function startGen(){

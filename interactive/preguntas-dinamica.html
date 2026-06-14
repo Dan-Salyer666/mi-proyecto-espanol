@@ -182,29 +182,39 @@ Your job: produce exactly 6 practice items as a JSON array and NOTHING else (no 
 Each item is an object with these fields:
 - "id": integer 1 to 6
 - "en": a short English instruction that elicits EXACTLY ONE natural Spanish question (e.g. "Ask a stranger where the train station is."). It must point to a single question, not an open-ended conversation.
-- "dimA": exactly one of these functional buckets: "identidad", "lugar", "tiempo", "frecuencia", "cantidad", "manera", "razon", "eleccion", "descripcion", "formulas". Spread the 6 items across DISTINCT buckets. Never use "si_no".
+- "dimA": you will be told in the user message which six Dimension-A categories to use and in what exact order — assign exactly those, one item per category, in that order. Valid values: "identidad", "lugar", "tiempo", "frecuencia", "cantidad", "manera", "razon", "eleccion", "descripcion", "formulas".
 - "ref": the model Spanish question, correctly accented and wrapped in the opening and closing marks: ¿ ... ?
 - "vars": an array of 0 to 3 OTHER fully acceptable Spanish phrasings of the same question (synonyms, word-order variants). Each must be a complete, correct, fully acceptable question. Use [] if there are none.
 
 Hard rules:
 - Neutral Latin American Spanish only. Use tú or usted, NEVER voseo (no "vos", "tenés", "sos", voseo imperatives). No Spain-specific forms.
 - No medical content.
-- Vary the interrogatives and structures across the 6 items.
+- Vary the interrogatives, the structures, AND the everyday contexts across the 6 items. Make each round's wording fresh — do not fall back on the same stock textbook sentences every time (vary away from clichés like "¿dónde está el baño?" or "¿qué hora es?").
 - Output ONLY the JSON array. No preamble, no explanation, no code fences.`;
 
-const GRADE_SYS = `You grade a learner's Spanish question against an English instruction, for a B2 learner of neutral Latin American Spanish.
+const GRADE_SYS = `You grade a learner's Spanish question against an English instruction, for a B2 learner of neutral Latin American Spanish. The skill being tested is QUESTION FORMATION — choosing the right interrogative word and structure. It is NOT a spelling test and NOT a general-accent test.
 
-You receive JSON with: en (the English instruction the learner had to render as a Spanish question), ref (a model correct answer), vars (other fully acceptable answers), dimA, and studentAnswer. Treat any answer equivalent in meaning and structure to ref or any var as correct.
+You receive JSON with: en (the English instruction), ref (a model correct answer), vars (other fully acceptable answers), dimA, and studentAnswer. Treat any answer equivalent in meaning and structure to ref or a var as correct.
 
 Return ONLY this JSON object, nothing else:
 {"verdict":"correcto|casi|incorrecto","feedback":"<one short Spanish line>","dimA":"<echo the dimA you were given>"}
 
-Verdict rules:
-- "correcto": a natural, correct question that matches the instruction's intent and is equivalent to ref/vars. Both tú and usted are fully acceptable — never penalize the choice between them.
-- "casi": the right question with the right interrogative, but a FORM slip only — a missing opening ¿, a dropped or added accent, a minor typo, or a trivial agreement wobble that does not change the meaning. The feedback names the slip.
-- "incorrecto": wrong interrogative, wrong structure, wrong meaning, OR any voseo ("vos", "sos", "tenés", voseo imperatives, etc.). The feedback says why in one short line.
+IGNORE these completely — they never lower the verdict and must NOT be reported as errors:
+- capitalization of any word ("¿donde" and "¿Dónde" are equal);
+- accents on NON-interrogative words (e.g. "farmacía" vs "farmacia", "esta" vs "está", "mas" vs "más");
+- spelling typos on non-interrogative words;
+- the tú vs usted choice — both are always fully acceptable;
+- word-order or synonym differences that keep the meaning.
 
-"feedback" is ONE short line in Spanish. No English. No multi-sentence explanations. Output only the JSON object — no preamble, no code fences.`;
+Verdict rules:
+- "correcto": the right interrogative and structure, equivalent in meaning to ref/vars, with the interrogative word itself correctly accented. Apply the IGNORE list generously — if the only differences from ref are ignorable items, it is "correcto".
+- "casi": use ONLY for one of these two slips, and name the exact one in the feedback:
+    (a) the INTERROGATIVE WORD is missing its accent or is wrongly accented — e.g. "donde"→"dónde", "que"→"qué", "cuando"→"cuándo", "como"→"cómo", "cuanto/cuanta"→"cuánto/cuánta", "quien"→"quién", "cual"→"cuál". (The accent is what marks the word as interrogative, so it matters here.)
+    (b) the opening ¿ or the closing ? is missing.
+  If neither (a) nor (b) is present, do NOT use "casi".
+- "incorrecto": wrong interrogative, wrong structure, wrong meaning, OR any voseo ("vos", "sos", "tenés", voseo imperatives).
+
+"feedback" is ONE short line in Spanish that names the ACTUAL difference you found. NEVER invent a slip that is not there: if you cannot point to a real (a) or (b) slip or a real meaning/structure error, the answer is "correcto". No English, no multi-sentence explanations. Output only the JSON object — no preamble, no code fences.`;
 
 // ───────── state (in-memory only) ─────────
 let sessionPw  = null;          // null = unverified; '' is a valid verified value
@@ -519,12 +529,27 @@ function validateItems(arr){
 async function generateRound(){
   showLoading('Generando preguntas…');
   try{
-    const data = await callClaude(GEN_SYS, 'Genera la ronda de 6 ítems ahora.', 1500);
+    // entropy: shuffle the 10 generatable buckets, take 6, add a seed + random contexts
+    const pool = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','formulas'];
+    for(let i = pool.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [pool[i],pool[j]] = [pool[j],pool[i]]; }
+    const cats = pool.slice(0, 6);
+    const ctxPool = ['de viaje','en un restaurante','pidiendo direcciones en la calle','en el trabajo','de compras','en una fiesta','con un vecino','por teléfono','en un hotel','planeando un fin de semana','en una cafetería','con un compañero de clase'];
+    for(let i = ctxPool.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [ctxPool[i],ctxPool[j]] = [ctxPool[j],ctxPool[i]]; }
+    const flavors = ctxPool.slice(0, 3);
+    const seed = Math.floor(Math.random() * 1e9);
+    const userMsg =
+`Seed de variación: ${seed} (úsalo para no repetir rondas anteriores).
+Crea 6 ítems, uno por cada categoría dimA en este orden exacto: ${cats.join(', ')}.
+Varía los interrogativos y los contextos cotidianos (inspiración, no obligatoria: ${flavors.join('; ')}).
+Devuelve solo el arreglo JSON.`;
+
+    const data = await callClaude(GEN_SYS, userMsg, 1500);
     let parsed;
     try { parsed = JSON.parse(stripFences(textOf(data))); }
     catch(_){ parsed = null; }
     const valid = validateItems(parsed);
     if(!valid){ showError('La generación no devolvió seis ítems válidos.', generateRound); return; }
+    valid.forEach((it, i) => { it.dimA = cats[i]; });   // dimA authoritative from our dictated set
     items = valid; idx = 0; results = []; score = 0; casiCount = 0; dimaStats = {}; roundPersisted = false;
     loadItem();
   }catch(e){

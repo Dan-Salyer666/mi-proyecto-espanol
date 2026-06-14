@@ -90,6 +90,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 .drive-sub{color:var(--text-muted);font-size:0.8rem;}
 .drive-err{color:var(--red);font-size:0.82rem;margin-top:8px;}
 .spinner.sm{width:15px;height:15px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;}
+.save-status{min-height:18px;margin-top:14px;font-size:0.84rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;gap:7px;}
+.save-status.ok{color:var(--green);}
+.save-status.fail{color:var(--red);}
 
 /* controls */
 .controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
@@ -212,6 +215,7 @@ let score      = 0;            // count of "correcto"
 let casiCount  = 0;
 let dimaStats  = {};            // bucket -> {correcto, total}
 let curAnswer  = '';
+let roundPersisted = false;   // count + write a finished round only once
 
 // Drive state (Phase 5)
 let driveReady  = false;
@@ -521,7 +525,7 @@ async function generateRound(){
     catch(_){ parsed = null; }
     const valid = validateItems(parsed);
     if(!valid){ showError('La generación no devolvió seis ítems válidos.', generateRound); return; }
-    items = valid; idx = 0; results = []; score = 0; casiCount = 0; dimaStats = {};
+    items = valid; idx = 0; results = []; score = 0; casiCount = 0; dimaStats = {}; roundPersisted = false;
     loadItem();
   }catch(e){
     if(e && e.auth){ sessionPw = null; showPassword('La sesión expiró. Vuelve a introducir la contraseña.'); return; }
@@ -643,6 +647,65 @@ function next(){
 }
 
 // ───────── results ─────────
+// ───────── Phase 5b: accumulate this round into the store and persist ─────────
+function updateStore(){
+  if(!store) return;
+  for(let i = 0; i < results.length; i++){
+    const r = results[i];
+    if(!r || r.verdict === 'fallo') continue;            // grading-failure → unclassifiable, skip
+    const cat = items[i] && items[i].dimA;
+    if(!cat) continue;
+    if(!store.categories[cat]) store.categories[cat] = { seen:0, missed:0, casi:0 };
+    const c = store.categories[cat];
+    c.seen++;
+    if(r.verdict === 'incorrecto') c.missed++;
+    else if(r.verdict === 'casi')  c.casi++;
+    store.totalAnswered++;
+  }
+  store.updated = new Date().toISOString();
+}
+
+// whole-file overwrite (CL / Palabras Tramposas pattern): PATCH existing, create as fallback
+async function writeStore(){
+  if(!driveToken || !store) return false;
+  const json = JSON.stringify(store);
+  try{
+    if(storeFileId){
+      const res = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${storeFileId}?uploadType=media`, {
+        method: 'PATCH',
+        headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json' },
+        body: json
+      });
+      if(res.status === 401){ driveToken = null; return false; }   // session expired → surfaced as save failure
+      return res.ok;
+    }
+    storeFileId = await createStoreFile(store);
+    return true;
+  }catch(e){
+    console.error('Store write error:', e);
+    return false;
+  }
+}
+
+async function persistRound(){
+  if(roundPersisted) return;                 // once per round
+  if(!(store && driveToken)) return;          // not connected → no persistence, no line
+  roundPersisted = true;
+  updateStore();                              // in-memory store is authoritative for the session
+  setSaveStatus('saving');
+  const ok = await writeStore();
+  setSaveStatus(ok ? 'ok' : 'fail');
+}
+
+function setSaveStatus(state){
+  const el = document.getElementById('saveStatus');
+  if(!el) return;
+  if(state === 'saving')   el.innerHTML = `<span class="spinner sm"></span> Guardando progreso…`;
+  else if(state === 'ok')  el.innerHTML = `Progreso guardado.`;
+  else                     el.innerHTML = `No se pudo guardar el progreso.`;
+  el.className = 'save-status' + (state === 'ok' ? ' ok' : state === 'fail' ? ' fail' : '');
+}
+
 function showResults(){
   const casiTail = casiCount > 0 ? ` <span class="casi-tail">· ${casiCount} casi</span>` : '';
   const keys = Object.keys(dimaStats).sort();
@@ -661,6 +724,7 @@ function showResults(){
         <div class="cb-title">Por función (Dimensión A)</div>
         ${rows}
       </div>
+      <div id="saveStatus" class="save-status"></div>
       <div class="controls">
         <button class="btn-primary" data-restart>Otra ronda →</button>
         <a class="btn-ghost" href="../topics/formacion-de-preguntas.html">Repasar la teoría →</a>
@@ -669,6 +733,7 @@ function showResults(){
   quiz.querySelector('[data-restart]').addEventListener('click', () => {
     if(sessionPw !== null) generateRound(); else startGen();
   });
+  persistRound();
 }
 
 showStart();

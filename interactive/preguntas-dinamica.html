@@ -51,6 +51,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 .ans-input{width:100%;font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text-primary);background:var(--bg-input);border:1px solid var(--border);border-radius:11px;padding:13px 15px;resize:vertical;line-height:1.4;transition:border-color 0.2s;}
 .ans-input:focus{outline:none;border-color:var(--accent);}
 .ans-input.pw{font-family:'Outfit',sans-serif;font-size:1rem;text-align:center;margin-top:4px;}
+.char-pad{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
+.char-key{font-family:'DM Serif Display',serif;font-size:1.05rem;min-width:42px;padding:7px 11px;border-radius:8px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-secondary);cursor:pointer;transition:all 0.15s;user-select:none;line-height:1;}
+.char-key:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);}
+.char-key:active{transform:translateY(0);}
 .your-ans,.model-ans{display:flex;flex-direction:column;gap:3px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:11px 15px;}
 .your-ans{margin-bottom:14px;}
 .ya-label,.ma-label{font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);}
@@ -140,6 +144,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 const MODEL      = 'claude-sonnet-4-20250514';  // generation + grading
 const N_PER_RUN  = 6;
 
+// quick-insert keys for the answer box (chars that are awkward to type)
+const CHAR_KEYS  = ['¿','?','á','é','í','ó','ú','ñ'];
+
 const DIMA_NAMES = {
   identidad:'Identidad', lugar:'Lugar', tiempo:'Tiempo', frecuencia:'Frecuencia',
   cantidad:'Cantidad', manera:'Manera', razon:'Razón', eleccion:'Elección',
@@ -222,6 +229,20 @@ function progress(){
     <div class="progress-meta"><span>Pregunta ${idx+1} de ${items.length}</span><span class="sc">${score} ✓</span></div>
     <div class="progress-track"><div class="progress-fill" style="width:${(idx/items.length)*100}%"></div></div>
   </div>`;
+}
+
+// insert a character at the answer box's cursor (or replace the selection), keep focus
+function insertChar(ch){
+  const ta = document.getElementById('ans');
+  if(!ta) return;
+  const s = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+  const e = (ta.selectionEnd   != null) ? ta.selectionEnd   : ta.value.length;
+  ta.value = ta.value.slice(0, s) + ch + ta.value.slice(e);
+  const pos = s + ch.length;
+  ta.focus();
+  ta.setSelectionRange(pos, pos);
+  const cb = quiz.querySelector('[data-check]');
+  if(cb) cb.disabled = ta.value.trim() === '';
 }
 
 // ───────── API ─────────
@@ -363,6 +384,7 @@ function renderPrompt(){
       <div class="instruction">${esc(it.en)}</div>
       <div class="ans-label">Escribe la pregunta en español</div>
       <textarea id="ans" class="ans-input" rows="2" placeholder="¿…?" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="char-pad">${CHAR_KEYS.map(c => `<button type="button" class="char-key" data-ch="${esc(c)}">${esc(c)}</button>`).join('')}</div>
       <div class="controls"><button class="btn-primary" data-check disabled>Comprobar</button></div>
     </div>`;
   const ta = document.getElementById('ans');
@@ -372,6 +394,9 @@ function renderPrompt(){
     if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); if(!cb.disabled) submitAnswer(); }
   });
   cb.addEventListener('click', submitAnswer);
+  quiz.querySelectorAll('.char-key').forEach(b => {
+    b.addEventListener('click', () => insertChar(b.dataset.ch));
+  });
   setTimeout(() => ta.focus(), 50);
 }
 

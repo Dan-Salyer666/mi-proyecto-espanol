@@ -161,6 +161,7 @@ const CHAR_KEYS  = ['¿','?','á','é','í','ó','ú','ñ'];
 const CLIENT_ID      = '10393001786-l8rfutuihm2301jf6a5rkmqumtfla8t5.apps.googleusercontent.com';
 const DRIVE_SCOPE    = 'https://www.googleapis.com/auth/drive.file';
 const STORE_FILENAME = 'formacion-preguntas-weakness.json';
+const PARENT_FOLDER  = 'Spanish Learning';   // shared project folder (matches other Drive pages)
 const STORE_REV      = 1;
 const MIN_SAMPLE     = 5;   // categories below this are greyed / excluded from ranking
 const ALL_CATS = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','si_no','formulas'];
@@ -217,6 +218,7 @@ let driveReady  = false;
 let tokenClient = null;
 let driveToken  = null;
 let storeFileId = null;
+let folderId    = null;     // 'Spanish Learning' project folder
 let store       = null;     // in-memory weakness store; null until connected
 let driveBusy   = false;
 let driveError  = '';
@@ -338,11 +340,12 @@ async function handleTokenResponse(resp){
   if(resp.error){ driveBusy = false; driveError = 'No se pudo conectar con Drive.'; renderDriveRow(); return; }
   driveToken = resp.access_token;
   try{
+    folderId = await ensureFolder();
     await loadOrCreateStore();
     driveBusy = false; driveError = ''; renderDriveRow();
   }catch(e){
     console.error('Drive setup error:', e);
-    driveToken = null; store = null; storeFileId = null;
+    driveToken = null; store = null; storeFileId = null; folderId = null;
     driveBusy = false; driveError = 'No se pudo acceder a Drive.'; renderDriveRow();
   }
 }
@@ -355,9 +358,28 @@ async function driveRequest(url, options = {}){
   return res;
 }
 
-// ───────── Drive: find-or-create the single store file ─────────
+// ───────── Drive: find-or-create the Spanish Learning folder, then the store file ─────────
+async function findFolder(name, parentId){
+  const q = parentId
+    ? `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
+    : `name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)`);
+  const data = await res.json();
+  return (data.files && data.files.length) ? data.files[0].id : null;
+}
+async function createFolder(name, parentId){
+  const body = { name, mimeType:'application/vnd.google-apps.folder' };
+  if(parentId) body.parents = [parentId];
+  const res = await driveRequest('https://www.googleapis.com/drive/v3/files', { method:'POST', body:JSON.stringify(body) });
+  return (await res.json()).id;
+}
+async function ensureFolder(){
+  let p = await findFolder(PARENT_FOLDER, null);
+  if(!p) p = await createFolder(PARENT_FOLDER, null);
+  return p;
+}
 async function findStoreFile(){
-  const q = `name='${STORE_FILENAME}' and trashed=false`;
+  const q = `name='${STORE_FILENAME}' and '${folderId}' in parents and trashed=false`;
   const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=10`);
   const data = await res.json();
   return (data.files && data.files.length) ? data.files[0].id : null;
@@ -366,7 +388,7 @@ async function createStoreFile(obj){
   const boundary = '-------314159265358979323846';
   const body = [
     `--${boundary}`, 'Content-Type: application/json; charset=UTF-8', '',
-    JSON.stringify({ name: STORE_FILENAME }),
+    JSON.stringify({ name: STORE_FILENAME, parents: [folderId] }),
     `--${boundary}`, 'Content-Type: application/json', '',
     JSON.stringify(obj), `--${boundary}--`
   ].join('\r\n');

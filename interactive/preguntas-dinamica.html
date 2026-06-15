@@ -115,6 +115,13 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 .btn-mini.danger:hover{background:var(--red);color:#0a1628;border-color:var(--red);}
 .dash-note{margin-top:10px;font-size:0.8rem;color:var(--red);text-align:right;}
 
+/* 6b: most common errors */
+.dash-errs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.dash-errs-title{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+.err-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;font-size:0.9rem;}
+.err-name{color:var(--text-secondary);}
+.err-cnt{color:var(--red);font-variant-numeric:tabular-nums;font-weight:600;}
+
 /* 6a: mode toggle */
 .mode-row{margin:0 0 22px;}
 .mode-seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--bg-input);}
@@ -197,7 +204,7 @@ const CLIENT_ID      = '10393001786-l8rfutuihm2301jf6a5rkmqumtfla8t5.apps.google
 const DRIVE_SCOPE    = 'https://www.googleapis.com/auth/drive.file';
 const STORE_FILENAME = 'formacion-preguntas-weakness.json';
 const PARENT_FOLDER  = 'Spanish Learning';   // shared project folder (matches other Drive pages)
-const STORE_REV      = 1;
+const STORE_REV      = 2;   // 6b: + errorsByType (Dimension-B frequency tally)
 const MIN_SAMPLE     = 5;   // categories below this are greyed / excluded from ranking
 const ALL_CATS = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','si_no','formulas'];
 
@@ -206,6 +213,19 @@ const DIMA_NAMES = {
   cantidad:'Cantidad', manera:'Manera', razon:'Razón', eleccion:'Elección',
   descripcion:'Descripción', formulas:'Fórmulas', si_no:'Sí / No'
 };
+
+// 6b: Dimension-B error types (frequency tally) + their learner-facing Spanish labels
+const ERRTYPE_NAMES = {
+  que_cual:            'qué vs. cuál',
+  missing_prep:        'Falta la preposición',
+  wrong_prep:          'Preposición equivocada',
+  wrong_interrogative: 'Interrogativo equivocado',
+  agreement:           'Concordancia',
+  word_order:          'Orden de palabras',
+  spelling_accent:     'Ortografía / tilde',
+  other:               'Otro'
+};
+const ALL_ERRTYPES = Object.keys(ERRTYPE_NAMES);
 
 const GEN_SYS = `You write practice items for a B2 learner of neutral Latin American Spanish.
 
@@ -229,7 +249,7 @@ const GRADE_SYS = `You grade a learner's Spanish question against an English ins
 You receive JSON with: en (the English instruction), ref (a model correct answer), vars (other fully acceptable answers), dimA, and studentAnswer. Treat any answer equivalent in meaning and structure to ref or a var as correct.
 
 Return ONLY this JSON object, nothing else:
-{"verdict":"correcto|casi|incorrecto","feedback":"<one short Spanish line>","dimA":"<echo the dimA you were given>"}
+{"verdict":"correcto|casi|incorrecto","feedback":"<one short Spanish line>","dimA":"<echo the dimA you were given>","errorType":<null, or — only when verdict is "incorrecto" — one of the tags listed below>}
 
 IGNORE these completely — they never lower the verdict and must NOT be reported as errors:
 - capitalization of any word ("¿donde" and "¿Dónde" are equal);
@@ -245,6 +265,17 @@ Verdict rules:
     (b) the opening ¿ or the closing ? is missing.
   If neither (a) nor (b) is present, do NOT use "casi".
 - "incorrecto": wrong interrogative, wrong structure, wrong meaning, OR any voseo ("vos", "sos", "tenés", voseo imperatives).
+
+"errorType": null for "correcto" and "casi". ONLY when the verdict is "incorrecto", set it to the SINGLE tag that best names the mistake:
+- "que_cual": confused qué with cuál (or vice versa).
+- "missing_prep": a required fronted preposition is missing (e.g. "¿Dónde eres?" for "¿De dónde eres?").
+- "wrong_prep": a preposition is present but the wrong one (e.g. "¿A qué piensas?" for "¿En qué piensas?").
+- "wrong_interrogative": the wrong interrogative word was chosen, other than the qué/cuál case (e.g. "cuándo" where "dónde" was needed).
+- "agreement": an agreement error (e.g. "cuánto/cuánta/cuántos" not matching its noun, or other gender/number agreement).
+- "word_order": word order that makes the question wrong.
+- "spelling_accent": a spelling or accent problem severe enough to be wrong (rare — these are usually ignored or "casi").
+- "other": an "incorrecto" that none of the above fit (including voseo).
+Pick exactly ONE. If unsure, use "other".
 
 "feedback" is ONE short line in Spanish that names the ACTUAL difference you found. NEVER invent a slip that is not there: if you cannot point to a real (a) or (b) slip or a real meaning/structure error, the answer is "correcto". No English, no multi-sentence explanations. Output only the JSON object — no preamble, no code fences.`;
 
@@ -357,9 +388,11 @@ async function verify(pw){
 function seedStore(){
   const cats = {};
   ALL_CATS.forEach(c => { cats[c] = { seen:0, missed:0, casi:0 }; });
-  return { contentRev: STORE_REV, updated: new Date().toISOString(), totalAnswered: 0, categories: cats };
+  const errs = {};
+  ALL_ERRTYPES.forEach(e => { errs[e] = 0; });
+  return { contentRev: STORE_REV, updated: new Date().toISOString(), totalAnswered: 0, categories: cats, errorsByType: errs };
 }
-// defensive fill: guarantee all 11 categories and the casi field, bump rev
+// defensive fill: guarantee all 11 categories + casi field, all error types, bump rev
 function migrateStore(obj){
   if(!obj || typeof obj !== 'object') return seedStore();
   obj.categories = (obj.categories && typeof obj.categories === 'object') ? obj.categories : {};
@@ -367,6 +400,8 @@ function migrateStore(obj){
     const e = obj.categories[c] || {};
     obj.categories[c] = { seen: e.seen||0, missed: e.missed||0, casi: e.casi||0 };
   });
+  obj.errorsByType = (obj.errorsByType && typeof obj.errorsByType === 'object') ? obj.errorsByType : {};
+  ALL_ERRTYPES.forEach(e => { obj.errorsByType[e] = obj.errorsByType[e] || 0; });
   if(typeof obj.totalAnswered !== 'number') obj.totalAnswered = 0;
   obj.contentRev = STORE_REV;
   return obj;
@@ -539,13 +574,24 @@ function dashboardHtml(withReset){
     const casi = c.casi > 0 ? ` <span class="dash-casi">· ${c.casi} casi</span>` : '';
     return `<div class="dash-row"><span class="dash-name">${name}</span><span class="dash-stat">${c.seen} vistas · ${Math.round(c.rate*100)}% errores${casi}</span></div>`;
   }).join('');
+  // 6b: most common error types (frequency tally), shown once there's enough signal
+  const errs = (store && store.errorsByType) ? store.errorsByType : {};
+  const errEntries = Object.keys(errs).map(k => ({ k, n: errs[k] || 0 })).filter(e => e.n > 0).sort((a, b) => b.n - a.n);
+  const errTotal = errEntries.reduce((s, e) => s + e.n, 0);
+  let errHtml = '';
+  if(errTotal >= 3){
+    const top = errEntries.slice(0, 4).map(e =>
+      `<div class="err-row"><span class="err-name">${ERRTYPE_NAMES[e.k] || esc(e.k)}</span><span class="err-cnt">${e.n}</span></div>`
+    ).join('');
+    errHtml = `<div class="dash-errs"><div class="dash-errs-title">Errores más comunes</div>${top}</div>`;
+  }
   let footer = '';
   if(withReset){
     footer = resetConfirming
       ? `<div class="dash-reset confirm"><span class="dash-reset-q">¿Seguro? Esto borra todas tus estadísticas.</span><div class="dash-reset-btns"><button type="button" class="btn-mini danger" data-reset-yes>Confirmar</button><button type="button" class="btn-mini" data-reset-no>Cancelar</button></div></div>`
       : `<div class="dash-reset"><button type="button" class="btn-mini" data-reset>Reiniciar progreso</button></div>`;
   }
-  return `<div class="dash">${head}${rowHtml}${footer}${note}</div>`;
+  return `<div class="dash">${head}${rowHtml}${errHtml}${footer}${note}</div>`;
 }
 
 // 5d: reset control wiring + confirm
@@ -561,6 +607,8 @@ async function confirmReset(){
   resetConfirming = false;
   dashNote = '';
   ALL_CATS.forEach(c => { store.categories[c] = { seen:0, missed:0, casi:0 }; });
+  if(!store.errorsByType) store.errorsByType = {};
+  ALL_ERRTYPES.forEach(e => { store.errorsByType[e] = 0; });
   store.totalAnswered = 0;
   store.updated = new Date().toISOString();
   renderDriveRow();                       // immediate empty dashboard
@@ -770,21 +818,24 @@ async function submitAnswer(){
     catch(_){ g = null; }
     const v = (g && ['correcto','casi','incorrecto'].includes(g.verdict)) ? g.verdict : null;
     if(!v){ recordFallback(); return; }
-    recordVerdict(v, (g && typeof g.feedback === 'string') ? g.feedback : '', v !== 'correcto');
+    const et = (v === 'incorrecto')
+      ? (g && ALL_ERRTYPES.includes(g.errorType) ? g.errorType : 'other')   // unknown/missing → 'other'
+      : null;
+    recordVerdict(v, (g && typeof g.feedback === 'string') ? g.feedback : '', v !== 'correcto', et);
   }catch(e){
     if(e && e.auth){ sessionPw = null; showPassword('La sesión expiró. Vuelve a introducir la contraseña.'); return; }
     recordFallback();
   }
 }
 
-function recordVerdict(verdict, feedback, showModel){
+function recordVerdict(verdict, feedback, showModel, errorType){
   const it = items[idx];
   const b = it.dimA;
   dimaStats[b] = dimaStats[b] || { correcto:0, total:0 };
   dimaStats[b].total++;
   if(verdict === 'correcto'){ score++; dimaStats[b].correcto++; }
   else if(verdict === 'casi'){ casiCount++; }
-  results.push({ answer: curAnswer, verdict, feedback, modelShown: showModel });
+  results.push({ answer: curAnswer, verdict, feedback, modelShown: showModel, errorType: errorType || null });
   renderVerdict(verdict, feedback, showModel);
 }
 
@@ -838,7 +889,12 @@ function updateStore(){
     if(!store.categories[cat]) store.categories[cat] = { seen:0, missed:0, casi:0 };
     const c = store.categories[cat];
     c.seen++;
-    if(r.verdict === 'incorrecto') c.missed++;
+    if(r.verdict === 'incorrecto'){
+      c.missed++;
+      if(!store.errorsByType) store.errorsByType = {};
+      const et = ALL_ERRTYPES.includes(r.errorType) ? r.errorType : 'other';
+      store.errorsByType[et] = (store.errorsByType[et] || 0) + 1;
+    }
     else if(r.verdict === 'casi')  c.casi++;
     store.totalAnswered++;
   }

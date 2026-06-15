@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De la respuesta a la pregunta — Mi Proyecto Español</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:#0a1628; --bg-card:#111d35; --bg-input:#0d1a2f; --border:#1e3355;
+  --text-primary:#e8edf5; --text-secondary:#9aabc6; --text-muted:#62779a;
+  --accent:#4ecdc4; --accent-soft:rgba(78,205,196,0.10); --accent-line:rgba(78,205,196,0.45);
+  --green:#34d399; --green-soft:rgba(52,211,153,0.12);
+  --yellow:#fbbf24; --yellow-soft:rgba(251,191,36,0.10);
+  --red:#f87171; --red-soft:rgba(248,113,113,0.12);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-primary);min-height:100vh;line-height:1.6;overflow-x:hidden;}
+.bg-photo{position:fixed;inset:0;background:url('../assets/los fondos/alhambra piscina.webp') center/cover no-repeat;filter:brightness(0.42);z-index:0;}
+.bg-overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(10,22,40,0.72),rgba(10,22,40,0.82));z-index:0;}
+
+.wrap{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 22px 80px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:22px 0 6px;}
+.back-link,.review-link{color:var(--text-muted);text-decoration:none;font-size:0.9rem;transition:color 0.2s;}
+.back-link:hover,.review-link:hover{color:var(--accent);}
+.review-link{color:var(--accent);font-weight:500;}
+
+.page-header{text-align:center;padding:14px 0 6px;}
+.page-header .overline{font-size:0.7rem;font-weight:500;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+.page-header h1{font-family:'DM Serif Display',serif;font-style:italic;font-size:clamp(1.9rem,5vw,2.5rem);font-weight:400;line-height:1.14;margin-bottom:10px;}
+.page-header .subtitle{font-size:0.96rem;color:var(--text-secondary);max-width:520px;margin:0 auto;line-height:1.55;}
+
+.hint{text-align:center;font-size:0.84rem;color:var(--text-muted);margin:20px 0 18px;font-style:italic;}
+
+/* progress */
+.progress{margin-bottom:18px;}
+.progress-meta{display:flex;justify-content:space-between;font-size:0.78rem;color:var(--text-muted);margin-bottom:7px;}
+.progress-meta .sc{color:var(--green);font-weight:600;}
+.progress-track{height:5px;background:var(--bg-input);border:1px solid var(--border);border-radius:99px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:99px;transition:width 0.35s ease;}
+
+/* quiz card */
+.quiz-card{background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:28px 24px 24px;}
+
+/* dynamic-quiz item chrome */
+.dimA-chip{display:inline-block;font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:99px;padding:4px 12px;margin-bottom:16px;}
+.instruction{font-family:'DM Serif Display',serif;font-size:1.4rem;line-height:1.4;color:var(--text-primary);margin-bottom:18px;}
+.jeo-answer{font-family:'DM Serif Display',serif;font-size:1.4rem;line-height:1.5;color:var(--text-primary);margin-bottom:18px;}
+.jeo-target{text-decoration:none;background:var(--accent-soft);color:var(--accent);border-bottom:2px solid var(--accent);border-radius:3px;padding:0 3px;font-style:italic;}
+.ans-label{font-size:0.74rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);margin-bottom:9px;}
+.ans-input{width:100%;font-family:'DM Serif Display',serif;font-size:1.2rem;color:var(--text-primary);background:var(--bg-input);border:1px solid var(--border);border-radius:11px;padding:13px 15px;resize:vertical;line-height:1.4;transition:border-color 0.2s;}
+.ans-input:focus{outline:none;border-color:var(--accent);}
+.ans-input.pw{font-family:'Outfit',sans-serif;font-size:1rem;text-align:center;margin-top:4px;}
+.char-pad{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
+.char-key{font-family:'DM Serif Display',serif;font-size:1.05rem;min-width:42px;padding:7px 11px;border-radius:8px;border:1px solid var(--border);background:var(--bg-input);color:var(--text-secondary);cursor:pointer;transition:all 0.15s;user-select:none;line-height:1;}
+.char-key:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);}
+.char-key:active{transform:translateY(0);}
+.your-ans,.model-ans{display:flex;flex-direction:column;gap:3px;background:var(--bg-input);border:1px solid var(--border);border-radius:10px;padding:11px 15px;}
+.your-ans{margin-bottom:14px;}
+.ya-label,.ma-label{font-size:0.66rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);}
+.ya-text{font-family:'DM Serif Display',serif;font-size:1.12rem;color:var(--text-primary);}
+.model-ans{border-color:var(--accent-line);background:var(--accent-soft);margin-top:12px;}
+.ma-text{font-family:'DM Serif Display',serif;font-size:1.12rem;color:var(--accent);}
+
+/* feedback */
+.feedback{margin-top:18px;padding:13px 16px;border-radius:10px;font-size:0.92rem;line-height:1.55;}
+.feedback.ok{background:var(--green-soft);border-left:3px solid var(--green);color:var(--text-secondary);}
+.feedback.warn{background:var(--yellow-soft);border-left:3px solid var(--yellow);color:var(--text-secondary);}
+.feedback.bad{background:var(--red-soft);border-left:3px solid var(--red);color:var(--text-secondary);}
+.feedback .verdict{font-weight:600;margin-right:6px;}
+.feedback.ok .verdict{color:var(--green);}
+.feedback.warn .verdict{color:var(--yellow);}
+.feedback.bad .verdict{color:var(--red);}
+.feedback .note{display:block;margin-top:5px;font-size:0.88rem;color:var(--text-muted);font-style:italic;}
+
+/* loading / grading / error */
+.spinner{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:0.98rem;color:var(--text-secondary);}
+.grading{display:flex;flex-direction:column;align-items:center;gap:4px;padding:26px 0;color:var(--text-secondary);font-size:0.95rem;}
+.grading .spinner{margin-bottom:8px;}
+.pw-err{color:var(--red);font-size:0.85rem;margin:12px 0 0;}
+
+/* Drive connect / status (Phase 5) */
+.drive-row{margin-top:16px;text-align:center;}
+.drive-connect{font-size:0.86rem;}
+.drive-status{font-size:0.9rem;color:var(--text-secondary);display:inline-flex;align-items:center;gap:8px;justify-content:center;}
+.drive-status.ok{color:var(--green);}
+.drive-sub{color:var(--text-muted);font-size:0.8rem;}
+.drive-err{color:var(--red);font-size:0.82rem;margin-top:8px;}
+.spinner.sm{width:15px;height:15px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;}
+.save-status{min-height:18px;margin-top:14px;font-size:0.84rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;gap:7px;}
+.save-status.ok{color:var(--green);}
+.save-status.fail{color:var(--red);}
+
+/* 5c: weakness dashboard */
+.dash{background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:14px;padding:18px;margin-top:16px;text-align:left;}
+.dash-head{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.dash-ok{color:var(--green);letter-spacing:0.03em;text-transform:none;font-size:0.8rem;}
+.dash-empty{font-size:0.9rem;color:var(--text-secondary);font-style:italic;}
+.dash-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--border);font-size:0.92rem;}
+.dash-row:first-of-type{border-top:none;}
+.dash-name{color:var(--text-primary);}
+.dash-stat{color:var(--text-secondary);font-variant-numeric:tabular-nums;white-space:nowrap;}
+.dash-row.low{opacity:0.5;}
+.dash-casi{color:var(--yellow);}
+.dash-reset{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);text-align:right;}
+.dash-reset.confirm{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+.dash-reset-q{font-size:0.84rem;color:var(--text-secondary);}
+.dash-reset-btns{display:flex;gap:8px;}
+.btn-mini{font-family:'Outfit',sans-serif;font-size:0.78rem;font-weight:500;padding:6px 14px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.15s;}
+.btn-mini:hover{border-color:var(--accent);color:var(--accent);}
+.btn-mini.danger{border-color:var(--red);color:var(--red);}
+.btn-mini.danger:hover{background:var(--red);color:#0a1628;border-color:var(--red);}
+.dash-note{margin-top:10px;font-size:0.8rem;color:var(--red);text-align:right;}
+
+/* 6b: most common errors */
+.dash-errs{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);}
+.dash-errs-title{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
+.err-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;font-size:0.9rem;}
+.err-name{color:var(--text-secondary);}
+.err-cnt{color:var(--red);font-variant-numeric:tabular-nums;font-weight:600;}
+
+/* 6a: mode toggle */
+.mode-row{margin:0 0 22px;}
+.mode-seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--bg-input);}
+.seg-btn{font-family:'Outfit',sans-serif;font-size:0.86rem;font-weight:500;padding:9px 20px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.18s;}
+.seg-btn:hover:not(.disabled):not(.on){color:var(--text-secondary);}
+.seg-btn.on{background:var(--accent-soft);color:var(--accent);}
+.seg-btn.disabled{opacity:0.4;cursor:not-allowed;}
+.mode-hint{font-size:0.78rem;color:var(--text-muted);font-style:italic;margin-top:9px;}
+
+/* controls */
+.controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
+.btn-primary{font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:600;padding:11px 26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);cursor:pointer;transition:all 0.2s;}
+.btn-primary:hover:not(:disabled){background:var(--accent);color:#0a1628;}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-ghost{font-family:'Outfit',sans-serif;font-size:0.9rem;font-weight:500;padding:11px 22px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text-secondary);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;transition:all 0.2s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+
+/* start */
+.start-card{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:40px 26px;}
+.start-icon{font-family:'DM Serif Display',serif;font-style:italic;font-size:2.6rem;color:var(--accent);line-height:1;margin-bottom:14px;}
+.start-title{font-family:'DM Serif Display',serif;font-size:1.6rem;color:var(--text-primary);margin-bottom:10px;}
+.start-text{font-size:0.95rem;color:var(--text-secondary);max-width:440px;margin:0 auto 26px;line-height:1.55;}
+
+/* results */
+.results{text-align:center;background:rgba(17,29,53,0.6);border:1px solid var(--border);border-radius:16px;padding:36px 24px;}
+.results-label{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);margin-bottom:10px;}
+.results-score{font-family:'DM Serif Display',serif;font-size:3rem;color:var(--accent);line-height:1;}
+.results-pct{font-size:1rem;color:var(--text-secondary);margin-top:6px;}
+.casi-tail{color:var(--yellow);font-weight:600;}
+.cat-breakdown{margin:26px auto 8px;max-width:380px;text-align:left;}
+.cat-breakdown .cb-title{font-size:0.66rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;text-align:center;}
+.cat-row{display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);font-size:0.9rem;color:var(--text-secondary);}
+.cat-row .cnt{font-variant-numeric:tabular-nums;color:var(--text-primary);}
+
+@media (max-width:520px){
+  .instruction{font-size:1.22rem;}
+  .jeo-answer{font-size:1.22rem;}
+  .quiz-card{padding:22px 16px 20px;}
+  .ans-input{font-size:1.08rem;}
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="wrap">
+  <div class="topbar">
+    <a href="../index.html" class="back-link">← Menú</a>
+    <a href="../topics/formacion-de-preguntas.html" class="review-link">Repasar la teoría →</a>
+  </div>
+
+  <header class="page-header">
+    <div class="overline">Práctica · Pregunta inversa</div>
+    <h1>De la respuesta a la pregunta</h1>
+    <p class="subtitle">Te damos una respuesta en español con una parte subrayada; tú escribes la pregunta que la produce.</p>
+  </header>
+
+  <div class="hint">Cada ronda genera seis respuestas nuevas con IA.</div>
+
+  <div id="quiz"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+//  Formación de Preguntas — Phase 4: dynamic quiz (general mode, session-scoped)
+//  generate 6 EN prompts → learner types the Spanish question → AI grades each.
+//  No Drive, no localStorage. State lives only for this page session.
+// ═══════════════════════════════════════════════════════════════════════════
+
+const MODEL      = 'claude-sonnet-4-6';  // generation + grading
+const N_PER_RUN  = 6;
+const W0 = 1;   // 6a: floor weight — every category stays reachable (explore)
+const K  = 4;   // 6a: error-rate bonus — weight = W0 + K*errorRate (exploit)
+
+// quick-insert keys for the answer box (chars that are awkward to type)
+const CHAR_KEYS  = ['¿','?','á','é','í','ó','ú','ñ'];
+
+// ── Phase 5: Drive-backed weakness store ──
+const CLIENT_ID      = '10393001786-l8rfutuihm2301jf6a5rkmqumtfla8t5.apps.googleusercontent.com';
+const DRIVE_SCOPE    = 'https://www.googleapis.com/auth/drive.file';
+const STORE_FILENAME = 'formacion-preguntas-weakness.json';
+const PARENT_FOLDER  = 'Spanish Learning';   // shared project folder (matches other Drive pages)
+const STORE_REV      = 2;   // 6b: + errorsByType (Dimension-B frequency tally)
+const MIN_SAMPLE     = 5;   // categories below this are greyed / excluded from ranking
+const ALL_CATS = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','si_no','formulas'];
+
+const DIMA_NAMES = {
+  identidad:'Identidad', lugar:'Lugar', tiempo:'Tiempo', frecuencia:'Frecuencia',
+  cantidad:'Cantidad', manera:'Manera', razon:'Razón', eleccion:'Elección',
+  descripcion:'Descripción', formulas:'Fórmulas', si_no:'Sí / No'
+};
+
+// 6b: Dimension-B error types (frequency tally) + their learner-facing Spanish labels
+const ERRTYPE_NAMES = {
+  que_cual:            'qué vs. cuál',
+  missing_prep:        'Falta la preposición',
+  wrong_prep:          'Preposición equivocada',
+  wrong_interrogative: 'Interrogativo equivocado',
+  agreement:           'Concordancia',
+  word_order:          'Orden de palabras',
+  spelling_accent:     'Ortografía / tilde',
+  other:               'Otro'
+};
+const ALL_ERRTYPES = Object.keys(ERRTYPE_NAMES);
+
+const GEN_SYS = `You write "answer-first" practice items for a B2 learner of neutral Latin American Spanish. The learner sees a Spanish ANSWER with one element marked, and must write the QUESTION that would elicit exactly that marked element.
+
+Your job: produce exactly 6 practice items as a JSON array and NOTHING else (no prose, no markdown fences). Each item is an object with these fields:
+- "id": integer 1 to 6
+- "answer": a short, natural Spanish declarative sentence that answers a question. Mark the queried element by wrapping it in DOUBLE SQUARE BRACKETS, e.g. "Voy a la playa [[el sábado]]." EXACTLY ONE [[...]] per answer. The bracketed element must be the natural answer to a single clear question.
+- "dimA": the Dimension-A category of the BRACKETED element. You will be told in the user message which six categories to use and in what exact order — assign exactly those, one item per category, in that order. Valid values: "identidad", "lugar", "tiempo", "frecuencia", "cantidad", "manera", "razon", "eleccion", "descripcion", "formulas".
+- "ref": the model Spanish question that elicits the bracketed element, correctly accented and wrapped in the opening and closing marks: ¿ ... ?  (e.g. for "[[el sábado]]" → "¿Cuándo vas a la playa?")
+- "vars": an array of 0 to 3 OTHER fully acceptable Spanish phrasings of that question. Each must be a complete, correct question whose natural answer is the marked element. Use [] if there are none.
+
+Category → typical interrogative (guide, not a script): tiempo→cuándo; lugar→dónde / de dónde / adónde; cantidad→cuánto/cuánta/cuántos/cuántas; manera→cómo; razon→por qué; identidad→quién / cómo se llama; frecuencia→con qué frecuencia / cada cuánto; eleccion→cuál / qué (de un conjunto); descripcion→cómo es / qué…; formulas→fixed everyday expressions.
+
+Hard rules:
+- The bracketed element must be elicitable by ONE natural question that matches its dimA category.
+- Neutral Latin American Spanish only. Use tú or usted, NEVER voseo (no "vos", "tenés", "sos", voseo imperatives). No Spain-specific forms.
+- No medical content.
+- Vary the interrogatives, the structures, AND the everyday contexts across the 6 items. Make each round's wording fresh — avoid stock textbook clichés.
+- Output ONLY the JSON array. No preamble, no explanation, no code fences.`;
+
+const GRADE_SYS = `You grade a learner's Spanish QUESTION for a B2 learner of neutral Latin American Spanish. The learner was shown a Spanish answer with one element marked, and had to write the question that elicits exactly that marked element. The skill being tested is QUESTION FORMATION — choosing the right interrogative word and structure to target the marked element. It is NOT a spelling test and NOT a general-accent test.
+
+You receive JSON with: answer (the full sentence; the queried element is wrapped in [[...]]), target (the queried element), dimA, ref (a model correct question), vars (other fully acceptable questions), and studentQuestion. Treat any question equivalent in meaning and structure to ref or a var — i.e. one whose natural answer is the marked element — as correct.
+
+Return ONLY this JSON object, nothing else:
+{"verdict":"correcto|casi|incorrecto","feedback":"<one short Spanish line>","dimA":"<echo the dimA you were given>","errorType":<null, or — only when verdict is "incorrecto" — one of the tags listed below>}
+
+IGNORE these completely — they never lower the verdict and must NOT be reported as errors:
+- capitalization of any word ("¿donde" and "¿Dónde" are equal);
+- accents on NON-interrogative words (e.g. "farmacía" vs "farmacia", "esta" vs "está", "mas" vs "más");
+- spelling typos on non-interrogative words;
+- the tú vs usted choice — both are always fully acceptable;
+- word-order or synonym differences that keep the meaning;
+- whether the learner restated the rest of the sentence — only the QUESTION matters, not echoing the answer's wording.
+
+Verdict rules:
+- "correcto": the right interrogative and structure; the question's natural answer is the marked element; the interrogative word itself correctly accented. Apply the IGNORE list generously — if the only differences from ref are ignorable items, it is "correcto".
+- "casi": use ONLY for one of these two slips, and name the exact one in the feedback:
+    (a) the INTERROGATIVE WORD is missing its accent or is wrongly accented — e.g. "donde"→"dónde", "que"→"qué", "cuando"→"cuándo", "como"→"cómo", "cuanto/cuanta"→"cuánto/cuánta", "quien"→"quién", "cual"→"cuál".
+    (b) the opening ¿ or the closing ? is missing.
+  If neither (a) nor (b) is present, do NOT use "casi".
+- "incorrecto": wrong interrogative, wrong structure, a question that targets the WRONG element (not the marked one), wrong meaning, OR any voseo ("vos", "sos", "tenés", voseo imperatives).
+
+"errorType": null for "correcto" and "casi". ONLY when the verdict is "incorrecto", set it to the SINGLE tag that best names the mistake:
+- "que_cual": confused qué with cuál (or vice versa).
+- "missing_prep": a required fronted preposition is missing (e.g. "¿Dónde eres?" for "¿De dónde eres?").
+- "wrong_prep": a preposition is present but the wrong one (e.g. "¿A qué piensas?" for "¿En qué piensas?").
+- "wrong_interrogative": the wrong interrogative word was chosen, other than the qué/cuál case — including a question that targets the wrong element.
+- "agreement": an agreement error (e.g. "cuánto/cuánta/cuántos" not matching its noun, or other gender/number agreement).
+- "word_order": word order that makes the question wrong.
+- "spelling_accent": a spelling or accent problem severe enough to be wrong (rare — these are usually ignored or "casi").
+- "other": an "incorrecto" that none of the above fit (including voseo).
+Pick exactly ONE. If unsure, use "other".
+
+"feedback" is ONE short line in Spanish that names the ACTUAL difference you found. NEVER invent a slip that is not there: if you cannot point to a real (a) or (b) slip or a real meaning/structure/wrong-target error, the answer is "correcto". No English, no multi-sentence explanations. Output only the JSON object — no preamble, no code fences.`;
+
+// ───────── state (in-memory only) ─────────
+let sessionPw  = null;          // null = unverified; '' is a valid verified value
+let items      = [];
+let idx        = 0;
+let results    = [];            // {answer, verdict, feedback, modelShown}
+let score      = 0;            // count of "correcto"
+let casiCount  = 0;
+let dimaStats  = {};            // bucket -> {correcto, total}
+let curAnswer  = '';
+let roundPersisted = false;   // count + write a finished round only once
+let quizMode   = 'general';   // 6a: 'general' (uniform) | 'enfoque' (weakness-weighted); session-only
+
+// Drive state (Phase 5)
+let driveReady  = false;
+let tokenClient = null;
+let driveToken  = null;
+let storeFileId = null;
+let folderId    = null;     // 'Spanish Learning' project folder
+let store       = null;     // in-memory weakness store; null until connected
+let driveBusy   = false;
+let driveError  = '';
+let resetConfirming = false;   // dashboard reset confirm step
+let dashNote        = '';      // transient dashboard note (e.g. reset write failure)
+
+const quiz = document.getElementById('quiz');
+
+// ───────── helpers ─────────
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function stripFences(t){
+  return String(t || '')
+    .replace(/^```json\s*/i,'')
+    .replace(/^```\s*/i,'')
+    .replace(/```\s*$/,'')
+    .trim();
+}
+// fast-path normalize: trim, collapse whitespace, drop leading ¿ / trailing ?, lowercase.
+// Accents are PRESERVED on purpose so accent loss still surfaces as "casi".
+function normalize(s){
+  return String(s || '')
+    .trim()
+    .replace(/\s+/g,' ')
+    .replace(/^[¿]+/,'')
+    .replace(/[?]+$/,'')
+    .trim()
+    .toLowerCase();
+}
+function textOf(data){
+  const blocks = (data && Array.isArray(data.content)) ? data.content : [];
+  const t = blocks.find(b => b && b.type === 'text');
+  return t ? t.text : (blocks[0] && blocks[0].text) || '';
+}
+function progress(){
+  return `<div class="progress">
+    <div class="progress-meta"><span>Pregunta ${idx+1} de ${items.length}</span><span class="sc">${score} ✓</span></div>
+    <div class="progress-track"><div class="progress-fill" style="width:${(idx/items.length)*100}%"></div></div>
+  </div>`;
+}
+
+// insert a character at the answer box's cursor (or replace the selection), keep focus
+function insertChar(ch){
+  const ta = document.getElementById('ans');
+  if(!ta) return;
+  const s = (ta.selectionStart != null) ? ta.selectionStart : ta.value.length;
+  const e = (ta.selectionEnd   != null) ? ta.selectionEnd   : ta.value.length;
+  ta.value = ta.value.slice(0, s) + ch + ta.value.slice(e);
+  const pos = s + ch.length;
+  ta.focus();
+  ta.setSelectionRange(pos, pos);
+  const cb = quiz.querySelector('[data-check]');
+  if(cb) cb.disabled = ta.value.trim() === '';
+}
+
+// ───────── API ─────────
+async function callClaude(system, content, maxTokens){
+  const res = await fetch('/api/claude', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      system,
+      messages: [{ role:'user', content }],
+      model: MODEL,
+      max_tokens: maxTokens,
+      stream: false,
+      password: sessionPw
+    })
+  });
+  if(res.status === 401){ const e = new Error('auth'); e.auth = true; throw e; }
+  if(!res.ok){ throw new Error('http ' + res.status); }
+  return res.json();
+}
+
+async function verify(pw){
+  const res = await fetch('/api/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password: pw })
+  });
+  if(!res.ok) return false;          // 401 = wrong / required
+  const d = await res.json();
+  return d && d.valid === true;
+}
+
+// ───────── Drive: store model ─────────
+function seedStore(){
+  const cats = {};
+  ALL_CATS.forEach(c => { cats[c] = { seen:0, missed:0, casi:0 }; });
+  const errs = {};
+  ALL_ERRTYPES.forEach(e => { errs[e] = 0; });
+  return { contentRev: STORE_REV, updated: new Date().toISOString(), totalAnswered: 0, categories: cats, errorsByType: errs };
+}
+// defensive fill: guarantee all 11 categories + casi field, all error types, bump rev
+function migrateStore(obj){
+  if(!obj || typeof obj !== 'object') return seedStore();
+  obj.categories = (obj.categories && typeof obj.categories === 'object') ? obj.categories : {};
+  ALL_CATS.forEach(c => {
+    const e = obj.categories[c] || {};
+    obj.categories[c] = { seen: e.seen||0, missed: e.missed||0, casi: e.casi||0 };
+  });
+  obj.errorsByType = (obj.errorsByType && typeof obj.errorsByType === 'object') ? obj.errorsByType : {};
+  ALL_ERRTYPES.forEach(e => { obj.errorsByType[e] = obj.errorsByType[e] || 0; });
+  if(typeof obj.totalAnswered !== 'number') obj.totalAnswered = 0;
+  obj.contentRev = STORE_REV;
+  return obj;
+}
+
+// ───────── Drive: OAuth (Google Identity Services), CL pattern ─────────
+function initDriveAuth(){
+  if(typeof google === 'undefined' || !google.accounts){ setTimeout(initDriveAuth, 300); return; }
+  driveReady  = true;
+  tokenClient = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: DRIVE_SCOPE, callback: handleTokenResponse
+  });
+}
+function connectDrive(){
+  if(!driveReady){ driveError = 'La biblioteca de Google aún se está cargando. Inténtalo de nuevo.'; renderDriveRow(); return; }
+  driveBusy = true; driveError = ''; renderDriveRow();
+  tokenClient.requestAccessToken({ prompt: '' });
+}
+async function handleTokenResponse(resp){
+  if(resp.error){ driveBusy = false; driveError = 'No se pudo conectar con Drive.'; renderDriveRow(); return; }
+  driveToken = resp.access_token;
+  try{
+    folderId = await ensureFolder();
+    await loadOrCreateStore();
+    driveBusy = false; driveError = ''; renderDriveRow(); renderModeToggle();
+  }catch(e){
+    console.error('Drive setup error:', e);
+    driveToken = null; store = null; storeFileId = null; folderId = null;
+    driveBusy = false; driveError = 'No se pudo acceder a Drive.'; renderDriveRow();
+  }
+}
+async function driveRequest(url, options = {}){
+  const res = await fetch(url, {
+    ...options,
+    headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json', ...(options.headers||{}) }
+  });
+  if(res.status === 401){ driveToken = null; throw new Error('Drive token expired'); }
+  return res;
+}
+
+// ───────── Drive: find-or-create the Spanish Learning folder, then the store file ─────────
+async function findFolder(name, parentId){
+  const q = parentId
+    ? `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`
+    : `name='${name}' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)`);
+  const data = await res.json();
+  return (data.files && data.files.length) ? data.files[0].id : null;
+}
+async function createFolder(name, parentId){
+  const body = { name, mimeType:'application/vnd.google-apps.folder' };
+  if(parentId) body.parents = [parentId];
+  const res = await driveRequest('https://www.googleapis.com/drive/v3/files', { method:'POST', body:JSON.stringify(body) });
+  return (await res.json()).id;
+}
+async function ensureFolder(){
+  let p = await findFolder(PARENT_FOLDER, null);
+  if(!p) p = await createFolder(PARENT_FOLDER, null);
+  return p;
+}
+async function findStoreFile(){
+  const q = `name='${STORE_FILENAME}' and '${folderId}' in parents and trashed=false`;
+  const res = await driveRequest(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)&pageSize=10`);
+  const data = await res.json();
+  return (data.files && data.files.length) ? data.files[0].id : null;
+}
+async function createStoreFile(obj){
+  const boundary = '-------314159265358979323846';
+  const body = [
+    `--${boundary}`, 'Content-Type: application/json; charset=UTF-8', '',
+    JSON.stringify({ name: STORE_FILENAME, parents: [folderId] }),
+    `--${boundary}`, 'Content-Type: application/json', '',
+    JSON.stringify(obj), `--${boundary}--`
+  ].join('\r\n');
+  const res = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':`multipart/related; boundary="${boundary}"` },
+    body
+  });
+  if(!res.ok) throw new Error('create failed ' + res.status);
+  return (await res.json()).id;
+}
+async function loadOrCreateStore(){
+  const id = await findStoreFile();
+  if(id){
+    storeFileId = id;
+    const fr = await driveRequest(`https://www.googleapis.com/drive/v3/files/${id}?alt=media`);
+    let obj = null;
+    try { obj = await fr.json(); } catch(_){ obj = null; }
+    store = obj ? migrateStore(obj) : seedStore();   // unparseable → fresh in memory; first write repairs the file
+  } else {
+    store = seedStore();
+    storeFileId = await createStoreFile(store);
+  }
+}
+
+// ───────── screens ─────────
+function showStart(){
+  resetConfirming = false; dashNote = '';
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">¿?</div>
+      <h2 class="start-title">Encuentra la pregunta</h2>
+      <p class="start-text">Verás seis respuestas en español, cada una con una parte subrayada. Para cada una, escribe la pregunta cuya respuesta es esa parte. Luego la califica una por una.</p>
+      <div id="modeRow" class="mode-row"></div>
+      <div class="controls"><button class="btn-primary" data-gen>Generar ronda →</button></div>
+    </div>
+    <div id="driveRow" class="drive-row"></div>`;
+  quiz.querySelector('[data-gen]').addEventListener('click', startGen);
+  renderDriveRow();
+  renderModeToggle();
+}
+
+// 5a: connect button / status. (5c will replace the connected state with the dashboard.)
+function renderDriveRow(){
+  const row = document.getElementById('driveRow');
+  if(!row) return;
+  if(driveBusy){
+    row.innerHTML = `<div class="drive-status"><span class="spinner sm"></span> Conectando con Drive…</div>`;
+    return;
+  }
+  if(driveToken && store){
+    row.innerHTML = dashboardHtml(true);
+    wireDashButtons(row);
+    return;
+  }
+  const err = driveError ? `<div class="drive-err">${esc(driveError)}</div>` : '';
+  row.innerHTML = `<button type="button" class="btn-ghost drive-connect" data-drive>Conectar con Drive para guardar tu progreso</button>${err}`;
+  const b = row.querySelector('[data-drive]');
+  if(b) b.addEventListener('click', connectDrive);
+}
+
+// 6a: General / Enfoque segmented control. Enfoque greys out until there's data to steer from.
+function renderModeToggle(){
+  const row = document.getElementById('modeRow');
+  if(!row) return;
+  const avail = enfoqueAvailable();
+  if(!avail && quizMode === 'enfoque') quizMode = 'general';   // clamp if data went away (e.g. reset)
+  const hint = avail ? '' : `<div class="mode-hint">Conéctate con Drive y completa algunas rondas para activar el enfoque.</div>`;
+  row.innerHTML = `
+    <div class="mode-seg" role="group" aria-label="Modo de práctica">
+      <button type="button" class="seg-btn${quizMode==='general'?' on':''}" data-mode="general">General</button>
+      <button type="button" class="seg-btn${quizMode==='enfoque'?' on':''}${avail?'':' disabled'}" data-mode="enfoque"${avail?'':' disabled'}>Enfoque</button>
+    </div>${hint}`;
+  row.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(btn.disabled) return;
+      quizMode = btn.dataset.mode;
+      renderModeToggle();
+    });
+  });
+}
+
+// 5c/5d: weakness dashboard built from the in-memory store. withReset adds the reset control (start screen only).
+function dashboardHtml(withReset){
+  const cats = (store && store.categories) ? store.categories : {};
+  const rows = Object.keys(cats).map(k => ({ k, ...cats[k] })).filter(c => c.seen >= 1);
+  const head = `<div class="dash-head">Tu progreso <span class="dash-ok">conectado ✓</span></div>`;
+  const note = dashNote ? `<div class="dash-note">${esc(dashNote)}</div>` : '';
+  if(rows.length === 0){
+    return `<div class="dash">${head}<div class="dash-empty">Aún no hay datos. Completa una ronda para empezar.</div>${note}</div>`;
+  }
+  rows.forEach(c => { c.rate = c.missed / c.seen; c.low = c.seen < MIN_SAMPLE; });
+  rows.sort((a, b) => (a.low !== b.low) ? (a.low ? 1 : -1) : (b.rate - a.rate));   // weakest first; low-data last
+  const rowHtml = rows.map(c => {
+    const name = DIMA_NAMES[c.k] || esc(c.k);
+    if(c.low){
+      return `<div class="dash-row low"><span class="dash-name">${name}</span><span class="dash-stat">${c.seen} vistas · pocos datos</span></div>`;
+    }
+    const casi = c.casi > 0 ? ` <span class="dash-casi">· ${c.casi} casi</span>` : '';
+    return `<div class="dash-row"><span class="dash-name">${name}</span><span class="dash-stat">${c.seen} vistas · ${Math.round(c.rate*100)}% errores${casi}</span></div>`;
+  }).join('');
+  // 6b: most common error types (frequency tally), shown once there's enough signal
+  const errs = (store && store.errorsByType) ? store.errorsByType : {};
+  const errEntries = Object.keys(errs).map(k => ({ k, n: errs[k] || 0 })).filter(e => e.n > 0).sort((a, b) => b.n - a.n);
+  const errTotal = errEntries.reduce((s, e) => s + e.n, 0);
+  let errHtml = '';
+  if(errTotal >= 3){
+    const top = errEntries.slice(0, 4).map(e =>
+      `<div class="err-row"><span class="err-name">${ERRTYPE_NAMES[e.k] || esc(e.k)}</span><span class="err-cnt">${e.n}</span></div>`
+    ).join('');
+    errHtml = `<div class="dash-errs"><div class="dash-errs-title">Errores más comunes</div>${top}</div>`;
+  }
+  let footer = '';
+  if(withReset){
+    footer = resetConfirming
+      ? `<div class="dash-reset confirm"><span class="dash-reset-q">¿Seguro? Esto borra todas tus estadísticas.</span><div class="dash-reset-btns"><button type="button" class="btn-mini danger" data-reset-yes>Confirmar</button><button type="button" class="btn-mini" data-reset-no>Cancelar</button></div></div>`
+      : `<div class="dash-reset"><button type="button" class="btn-mini" data-reset>Reiniciar progreso</button></div>`;
+  }
+  return `<div class="dash">${head}${rowHtml}${errHtml}${footer}${note}</div>`;
+}
+
+// 5d: reset control wiring + confirm
+function wireDashButtons(container){
+  const r   = container.querySelector('[data-reset]');
+  const yes = container.querySelector('[data-reset-yes]');
+  const no  = container.querySelector('[data-reset-no]');
+  if(r)   r.addEventListener('click',   () => { resetConfirming = true;  dashNote = ''; renderDriveRow(); });
+  if(no)  no.addEventListener('click',  () => { resetConfirming = false; renderDriveRow(); });
+  if(yes) yes.addEventListener('click', confirmReset);
+}
+async function confirmReset(){
+  resetConfirming = false;
+  dashNote = '';
+  ALL_CATS.forEach(c => { store.categories[c] = { seen:0, missed:0, casi:0 }; });
+  if(!store.errorsByType) store.errorsByType = {};
+  ALL_ERRTYPES.forEach(e => { store.errorsByType[e] = 0; });
+  store.totalAnswered = 0;
+  store.updated = new Date().toISOString();
+  renderDriveRow();                       // immediate empty dashboard
+  renderModeToggle();                     // 6a: reset may have removed the data Enfoque needs
+  const ok = await writeStore();
+  if(!ok){ dashNote = 'No se pudo guardar el reinicio en Drive.'; renderDriveRow(); }
+}
+
+// refresh the cumulative dashboard shown on the results screen (between-rounds refresh)
+function renderResultsDash(){
+  const el = document.getElementById('resultsDash');
+  if(el && store) el.innerHTML = dashboardHtml(false);
+}
+
+function startGen(){
+  if(sessionPw !== null){ generateRound(); return; }
+  // Probe: if no password is configured the server lets an empty one through.
+  verify('').then(ok => {
+    if(ok){ sessionPw = ''; generateRound(); }
+    else { showPassword(); }
+  }).catch(() => showPassword());
+}
+
+function showPassword(err){
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">&#128274;</div>
+      <h2 class="start-title">Contraseña</h2>
+      <p class="start-text">Esta práctica usa la API. Introduce la contraseña para continuar.</p>
+      <input type="password" id="pwInput" class="ans-input pw" placeholder="Contraseña" autocomplete="off">
+      ${err ? `<div class="pw-err">${esc(err)}</div>` : ''}
+      <div class="controls"><button class="btn-primary" data-pw>Continuar →</button></div>
+    </div>`;
+  const inp = document.getElementById('pwInput');
+  quiz.querySelector('[data-pw]').addEventListener('click', submitPw);
+  inp.addEventListener('keydown', e => { if(e.key === 'Enter') submitPw(); });
+  setTimeout(() => inp.focus(), 50);
+}
+
+function submitPw(){
+  const inp = document.getElementById('pwInput');
+  const pw = inp ? inp.value.trim() : '';
+  verify(pw).then(ok => {
+    if(ok){ sessionPw = pw; generateRound(); }          // store only once verified
+    else { showPassword('Contraseña incorrecta.'); }
+  }).catch(() => showPassword('No se pudo verificar. Intenta de nuevo.'));
+}
+
+function showLoading(msg){
+  quiz.innerHTML = `<div class="start-card"><div class="spinner"></div><div class="loading-text">${esc(msg)}</div></div>`;
+}
+
+function showError(msg, retryFn){
+  quiz.innerHTML = `
+    <div class="start-card">
+      <div class="start-icon">!</div>
+      <div class="loading-text">${esc(msg)}</div>
+      <div class="controls"><button class="btn-primary" data-retry>Reintentar</button></div>
+    </div>`;
+  quiz.querySelector('[data-retry]').addEventListener('click', retryFn);
+}
+
+// ───────── 6a: category selection (Dimension-A target mode) ─────────
+// The 10 generatable buckets (si_no is intonation-only → not typeable, excluded).
+const GEN_POOL = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','formulas'];
+
+function shuffleInPlace(a){
+  for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+
+// Enfoque is meaningful only once at least one category has enough data to score.
+function enfoqueAvailable(){
+  if(!(driveToken && store && store.categories)) return false;
+  return Object.keys(store.categories).some(k => (store.categories[k].seen || 0) >= MIN_SAMPLE);
+}
+
+// uniform pick: shuffle the pool, take 6 (General mode / fallback)
+function pickUniform(){ return shuffleInPlace(GEN_POOL.slice()).slice(0, 6); }
+
+// weighted pick: weight = W0 + K*errorRate (errorRate only when seen >= MIN_SAMPLE).
+// Sample 6 without replacement ∝ weight; under-sampled cats stay at the floor so they keep appearing.
+function pickWeighted(){
+  const cats = (store && store.categories) ? store.categories : {};
+  const remaining = GEN_POOL.map(k => {
+    const c = cats[k] || {};
+    const seen = c.seen || 0, missed = c.missed || 0;
+    const rate = (seen >= MIN_SAMPLE) ? missed / seen : 0;
+    return { k, w: W0 + K * rate };
+  });
+  const out = [];
+  while(out.length < 6 && remaining.length){
+    const total = remaining.reduce((s, x) => s + x.w, 0);
+    let r = Math.random() * total, pick = remaining.length - 1;
+    for(let i = 0; i < remaining.length; i++){ r -= remaining[i].w; if(r <= 0){ pick = i; break; } }
+    out.push(remaining.splice(pick, 1)[0].k);
+  }
+  return shuffleInPlace(out);   // randomize presentation order so a heavy category isn't always first
+}
+
+function pickCategories(){
+  return (quizMode === 'enfoque' && enfoqueAvailable()) ? pickWeighted() : pickUniform();
+}
+
+// ───────── generation ─────────
+// parse exactly one [[...]] marker out of an answer → before / target / after
+function parseMarked(answer){
+  const open = answer.indexOf('[[');
+  const close = answer.indexOf(']]');
+  if(open < 0 || close < 0 || close < open + 2) return null;
+  if(answer.indexOf('[[', open + 2) !== -1 || answer.indexOf(']]', close + 2) !== -1) return null;  // only one marker
+  const target = answer.slice(open + 2, close).trim();
+  if(!target) return null;
+  return { before: answer.slice(0, open), target, after: answer.slice(close + 2) };
+}
+
+function validateItems(arr){
+  if(!Array.isArray(arr) || arr.length !== N_PER_RUN) return null;
+  const out = [];
+  for(let i=0; i<N_PER_RUN; i++){
+    const it = arr[i];
+    if(!it || typeof it.answer !== 'string' || typeof it.dimA !== 'string' || typeof it.ref !== 'string') return null;
+    const p = parseMarked(it.answer);
+    if(!p) return null;                       // must have a single well-formed [[...]]
+    if(it.ref.indexOf('?') < 0) return null;  // ref must be a question
+    out.push({
+      id:     it.id || (i+1),
+      answer: it.answer,
+      before: p.before, target: p.target, after: p.after,
+      dimA:   it.dimA,
+      ref:    it.ref,
+      vars:   Array.isArray(it.vars) ? it.vars.filter(v => typeof v === 'string') : []
+    });
+  }
+  return out;
+}
+
+async function generateRound(){
+  showLoading('Generando ronda…');
+  try{
+    // 6a: category selection — uniform (General) or weakness-weighted (Enfoque)
+    const cats = pickCategories();
+    const ctxPool = ['de viaje','en un restaurante','pidiendo direcciones en la calle','en el trabajo','de compras','en una fiesta','con un vecino','por teléfono','en un hotel','planeando un fin de semana','en una cafetería','con un compañero de clase'];
+    for(let i = ctxPool.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [ctxPool[i],ctxPool[j]] = [ctxPool[j],ctxPool[i]]; }
+    const flavors = ctxPool.slice(0, 3);
+    const seed = Math.floor(Math.random() * 1e9);
+    const userMsg =
+`Seed de variación: ${seed} (úsalo para no repetir rondas anteriores).
+Crea 6 ítems, uno por cada categoría dimA en este orden exacto: ${cats.join(', ')}.
+Varía los interrogativos y los contextos cotidianos (inspiración, no obligatoria: ${flavors.join('; ')}).
+Devuelve solo el arreglo JSON.`;
+
+    const data = await callClaude(GEN_SYS, userMsg, 1500);
+    let parsed;
+    try { parsed = JSON.parse(stripFences(textOf(data))); }
+    catch(_){ parsed = null; }
+    const valid = validateItems(parsed);
+    if(!valid){ showError('La generación no devolvió seis ítems válidos.', generateRound); return; }
+    valid.forEach((it, i) => { it.dimA = cats[i]; });   // dimA authoritative from our dictated set
+    items = valid; idx = 0; results = []; score = 0; casiCount = 0; dimaStats = {}; roundPersisted = false;
+    loadItem();
+  }catch(e){
+    if(e && e.auth){ sessionPw = null; showPassword('La sesión expiró. Vuelve a introducir la contraseña.'); return; }
+    showError('No se pudo generar la ronda.', generateRound);
+  }
+}
+
+// ───────── per-item flow ─────────
+function loadItem(){
+  curAnswer = '';
+  renderPrompt();
+}
+
+function renderPrompt(){
+  const it = items[idx];
+  quiz.innerHTML = progress() + `
+    <div class="quiz-card">
+      <div class="jeo-answer">${esc(it.before)}<u class="jeo-target">${esc(it.target)}</u>${esc(it.after)}</div>
+      <div class="ans-label">Escribe la pregunta cuya respuesta es la parte subrayada</div>
+      <textarea id="ans" class="ans-input" rows="2" placeholder="¿…?" autocomplete="off" autocapitalize="off" spellcheck="false"></textarea>
+      <div class="char-pad">${CHAR_KEYS.map(c => `<button type="button" class="char-key" data-ch="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+      <div class="controls"><button class="btn-primary" data-check disabled>Comprobar</button></div>
+    </div>`;
+  const ta = document.getElementById('ans');
+  const cb = quiz.querySelector('[data-check]');
+  ta.addEventListener('input', () => { cb.disabled = ta.value.trim() === ''; });
+  ta.addEventListener('keydown', e => {
+    if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); if(!cb.disabled) submitAnswer(); }
+  });
+  cb.addEventListener('click', submitAnswer);
+  quiz.querySelectorAll('.char-key').forEach(b => {
+    b.addEventListener('click', () => insertChar(b.dataset.ch));
+  });
+  setTimeout(() => ta.focus(), 50);
+}
+
+function showGrading(){
+  quiz.innerHTML = progress() + `<div class="quiz-card"><div class="grading"><div class="spinner"></div><span>Calificando…</span></div></div>`;
+}
+
+async function submitAnswer(){
+  const ta = document.getElementById('ans');
+  const ans = ta ? ta.value.trim() : '';
+  if(!ans) return;
+  curAnswer = ans;
+  const it = items[idx];
+
+  // local fast-path: exact normalized match → correcto, no API call
+  const na = normalize(ans);
+  if(na === normalize(it.ref) || it.vars.some(v => normalize(v) === na)){
+    recordVerdict('correcto', '', false);
+    return;
+  }
+
+  showGrading();
+  try{
+    const payload = JSON.stringify({ answer: it.answer, target: it.target, dimA: it.dimA, ref: it.ref, vars: it.vars, studentQuestion: ans });
+    const data = await callClaude(GRADE_SYS, payload, 300);
+    let g;
+    try { g = JSON.parse(stripFences(textOf(data))); }
+    catch(_){ g = null; }
+    const v = (g && ['correcto','casi','incorrecto'].includes(g.verdict)) ? g.verdict : null;
+    if(!v){ recordFallback(); return; }
+    const et = (v === 'incorrecto')
+      ? (g && ALL_ERRTYPES.includes(g.errorType) ? g.errorType : 'other')   // unknown/missing → 'other'
+      : null;
+    recordVerdict(v, (g && typeof g.feedback === 'string') ? g.feedback : '', v !== 'correcto', et);
+  }catch(e){
+    if(e && e.auth){ sessionPw = null; showPassword('La sesión expiró. Vuelve a introducir la contraseña.'); return; }
+    recordFallback();
+  }
+}
+
+function recordVerdict(verdict, feedback, showModel, errorType){
+  const it = items[idx];
+  const b = it.dimA;
+  dimaStats[b] = dimaStats[b] || { correcto:0, total:0 };
+  dimaStats[b].total++;
+  if(verdict === 'correcto'){ score++; dimaStats[b].correcto++; }
+  else if(verdict === 'casi'){ casiCount++; }
+  results.push({ answer: curAnswer, verdict, feedback, modelShown: showModel, errorType: errorType || null });
+  renderVerdict(verdict, feedback, showModel);
+}
+
+// grading failed/malformed → neutral, NOT counted (score & bucket totals untouched)
+function recordFallback(){
+  const fb = 'No pude calificar con seguridad; compara con la pregunta modelo.';
+  results.push({ answer: curAnswer, verdict: 'fallo', feedback: fb, modelShown: true });
+  renderVerdict('fallo', fb, true);
+}
+
+function renderVerdict(verdict, feedback, showModel){
+  const it = items[idx];
+  const map = {
+    correcto: ['ok',   '¡Correcto!'],
+    casi:     ['warn', 'Casi'],
+    incorrecto:['bad', 'No exactamente.'],
+    fallo:    ['warn', 'Sin calificar']
+  };
+  const [cls, label] = map[verdict] || ['warn', '—'];
+  const noteHtml  = feedback ? `<span class="note">${esc(feedback)}</span>` : '';
+  const modelHtml = showModel
+    ? `<div class="model-ans"><span class="ma-label">Pregunta modelo</span><span class="ma-text">${esc(it.ref)}</span></div>`
+    : '';
+  const last = (idx + 1 >= items.length);
+  quiz.innerHTML = progress() + `
+    <div class="quiz-card">
+      <div class="dimA-chip">${DIMA_NAMES[it.dimA] || esc(it.dimA)}</div>
+      <div class="jeo-answer">${esc(it.before)}<u class="jeo-target">${esc(it.target)}</u>${esc(it.after)}</div>
+      <div class="your-ans"><span class="ya-label">Tu pregunta</span><span class="ya-text">${esc(curAnswer)}</span></div>
+      <div class="feedback ${cls}"><span class="verdict">${label}</span>${noteHtml}</div>
+      ${modelHtml}
+      <div class="controls"><button class="btn-primary" data-next>${last ? 'Ver resultados →' : 'Siguiente →'}</button></div>
+    </div>`;
+  quiz.querySelector('[data-next]').addEventListener('click', next);
+}
+
+function next(){
+  idx++;
+  if(idx >= items.length) showResults(); else loadItem();
+}
+
+// ───────── results ─────────
+// ───────── Phase 5b: accumulate this round into the store and persist ─────────
+function updateStore(){
+  if(!store) return;
+  for(let i = 0; i < results.length; i++){
+    const r = results[i];
+    if(!r || r.verdict === 'fallo') continue;            // grading-failure → unclassifiable, skip
+    const cat = items[i] && items[i].dimA;
+    if(!cat) continue;
+    if(!store.categories[cat]) store.categories[cat] = { seen:0, missed:0, casi:0 };
+    const c = store.categories[cat];
+    c.seen++;
+    if(r.verdict === 'incorrecto'){
+      c.missed++;
+      if(!store.errorsByType) store.errorsByType = {};
+      const et = ALL_ERRTYPES.includes(r.errorType) ? r.errorType : 'other';
+      store.errorsByType[et] = (store.errorsByType[et] || 0) + 1;
+    }
+    else if(r.verdict === 'casi')  c.casi++;
+    store.totalAnswered++;
+  }
+  store.updated = new Date().toISOString();
+}
+
+// whole-file overwrite (CL / Palabras Tramposas pattern): PATCH existing, create as fallback
+async function writeStore(){
+  if(!driveToken || !store) return false;
+  const json = JSON.stringify(store);
+  try{
+    if(storeFileId){
+      const res = await fetch(`https://www.googleapis.com/upload/drive/v3/files/${storeFileId}?uploadType=media`, {
+        method: 'PATCH',
+        headers: { 'Authorization':'Bearer '+driveToken, 'Content-Type':'application/json' },
+        body: json
+      });
+      if(res.status === 401){ driveToken = null; return false; }   // session expired → surfaced as save failure
+      return res.ok;
+    }
+    storeFileId = await createStoreFile(store);
+    return true;
+  }catch(e){
+    console.error('Store write error:', e);
+    return false;
+  }
+}
+
+async function persistRound(){
+  if(roundPersisted) return;                 // once per round
+  if(!(store && driveToken)) return;          // not connected → no persistence, no line
+  roundPersisted = true;
+  updateStore();                              // in-memory store is authoritative for the session
+  renderResultsDash();                        // refresh the cumulative dashboard on the results screen
+  setSaveStatus('saving');
+  const ok = await writeStore();
+  setSaveStatus(ok ? 'ok' : 'fail');
+}
+
+function setSaveStatus(state){
+  const el = document.getElementById('saveStatus');
+  if(!el) return;
+  if(state === 'saving')   el.innerHTML = `<span class="spinner sm"></span> Guardando progreso…`;
+  else if(state === 'ok')  el.innerHTML = `Progreso guardado.`;
+  else                     el.innerHTML = `No se pudo guardar el progreso.`;
+  el.className = 'save-status' + (state === 'ok' ? ' ok' : state === 'fail' ? ' fail' : '');
+}
+
+function showResults(){
+  const casiTail = casiCount > 0 ? ` <span class="casi-tail">· ${casiCount} casi</span>` : '';
+  const keys = Object.keys(dimaStats).sort();
+  const rows = keys.length
+    ? keys.map(k => {
+        const v = dimaStats[k];
+        return `<div class="cat-row"><span>${DIMA_NAMES[k] || esc(k)}</span><span class="cnt">${v.correcto}/${v.total}</span></div>`;
+      }).join('')
+    : `<div class="cat-row"><span>Sin clasificar</span><span class="cnt">${score}/${items.length}</span></div>`;
+  quiz.innerHTML = `
+    <div class="results">
+      <div class="results-label">Resultado</div>
+      <div class="results-score">${score} / ${items.length}</div>
+      <div class="results-pct">correctas${casiTail}</div>
+      <div class="cat-breakdown">
+        <div class="cb-title">Por función (Dimensión A)</div>
+        ${rows}
+      </div>
+      <div id="resultsDash"></div>
+      <div id="saveStatus" class="save-status"></div>
+      <div class="controls">
+        <button class="btn-primary" data-restart>Otra ronda →</button>
+        <a class="btn-ghost" href="../topics/formacion-de-preguntas.html">Repasar la teoría →</a>
+      </div>
+    </div>`;
+  quiz.querySelector('[data-restart]').addEventListener('click', () => {
+    if(sessionPw !== null) generateRound(); else startGen();
+  });
+  persistRound();
+}
+
+showStart();
+initDriveAuth();
+</script>
+</body>
+</html>

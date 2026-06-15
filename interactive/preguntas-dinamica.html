@@ -115,6 +115,15 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 .btn-mini.danger:hover{background:var(--red);color:#0a1628;border-color:var(--red);}
 .dash-note{margin-top:10px;font-size:0.8rem;color:var(--red);text-align:right;}
 
+/* 6a: mode toggle */
+.mode-row{margin:0 0 22px;}
+.mode-seg{display:inline-flex;border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--bg-input);}
+.seg-btn{font-family:'Outfit',sans-serif;font-size:0.86rem;font-weight:500;padding:9px 20px;border:none;background:transparent;color:var(--text-muted);cursor:pointer;transition:all 0.18s;}
+.seg-btn:hover:not(.disabled):not(.on){color:var(--text-secondary);}
+.seg-btn.on{background:var(--accent-soft);color:var(--accent);}
+.seg-btn.disabled{opacity:0.4;cursor:not-allowed;}
+.mode-hint{font-size:0.78rem;color:var(--text-muted);font-style:italic;margin-top:9px;}
+
 /* controls */
 .controls{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;}
 .btn-primary{font-family:'Outfit',sans-serif;font-size:0.92rem;font-weight:600;padding:11px 26px;border-radius:9px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);cursor:pointer;transition:all 0.2s;}
@@ -177,6 +186,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg-deep);color:var(--text-
 
 const MODEL      = 'claude-sonnet-4-20250514';  // generation + grading
 const N_PER_RUN  = 6;
+const W0 = 1;   // 6a: floor weight — every category stays reachable (explore)
+const K  = 4;   // 6a: error-rate bonus — weight = W0 + K*errorRate (exploit)
 
 // quick-insert keys for the answer box (chars that are awkward to type)
 const CHAR_KEYS  = ['¿','?','á','é','í','ó','ú','ñ'];
@@ -247,6 +258,7 @@ let casiCount  = 0;
 let dimaStats  = {};            // bucket -> {correcto, total}
 let curAnswer  = '';
 let roundPersisted = false;   // count + write a finished round only once
+let quizMode   = 'general';   // 6a: 'general' (uniform) | 'enfoque' (weakness-weighted); session-only
 
 // Drive state (Phase 5)
 let driveReady  = false;
@@ -379,7 +391,7 @@ async function handleTokenResponse(resp){
   try{
     folderId = await ensureFolder();
     await loadOrCreateStore();
-    driveBusy = false; driveError = ''; renderDriveRow();
+    driveBusy = false; driveError = ''; renderDriveRow(); renderModeToggle();
   }catch(e){
     console.error('Drive setup error:', e);
     driveToken = null; store = null; storeFileId = null; folderId = null;
@@ -459,11 +471,13 @@ function showStart(){
       <div class="start-icon">¿?</div>
       <h2 class="start-title">Practica formulando preguntas</h2>
       <p class="start-text">La app te dará seis instrucciones en inglés. Para cada una, escribe en español la pregunta que pide. Luego la califica una por una.</p>
+      <div id="modeRow" class="mode-row"></div>
       <div class="controls"><button class="btn-primary" data-gen>Generar ronda →</button></div>
     </div>
     <div id="driveRow" class="drive-row"></div>`;
   quiz.querySelector('[data-gen]').addEventListener('click', startGen);
   renderDriveRow();
+  renderModeToggle();
 }
 
 // 5a: connect button / status. (5c will replace the connected state with the dashboard.)
@@ -483,6 +497,27 @@ function renderDriveRow(){
   row.innerHTML = `<button type="button" class="btn-ghost drive-connect" data-drive>Conectar con Drive para guardar tu progreso</button>${err}`;
   const b = row.querySelector('[data-drive]');
   if(b) b.addEventListener('click', connectDrive);
+}
+
+// 6a: General / Enfoque segmented control. Enfoque greys out until there's data to steer from.
+function renderModeToggle(){
+  const row = document.getElementById('modeRow');
+  if(!row) return;
+  const avail = enfoqueAvailable();
+  if(!avail && quizMode === 'enfoque') quizMode = 'general';   // clamp if data went away (e.g. reset)
+  const hint = avail ? '' : `<div class="mode-hint">Conéctate con Drive y completa algunas rondas para activar el enfoque.</div>`;
+  row.innerHTML = `
+    <div class="mode-seg" role="group" aria-label="Modo de práctica">
+      <button type="button" class="seg-btn${quizMode==='general'?' on':''}" data-mode="general">General</button>
+      <button type="button" class="seg-btn${quizMode==='enfoque'?' on':''}${avail?'':' disabled'}" data-mode="enfoque"${avail?'':' disabled'}>Enfoque</button>
+    </div>${hint}`;
+  row.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(btn.disabled) return;
+      quizMode = btn.dataset.mode;
+      renderModeToggle();
+    });
+  });
 }
 
 // 5c/5d: weakness dashboard built from the in-memory store. withReset adds the reset control (start screen only).
@@ -529,6 +564,7 @@ async function confirmReset(){
   store.totalAnswered = 0;
   store.updated = new Date().toISOString();
   renderDriveRow();                       // immediate empty dashboard
+  renderModeToggle();                     // 6a: reset may have removed the data Enfoque needs
   const ok = await writeStore();
   if(!ok){ dashNote = 'No se pudo guardar el reinicio en Drive.'; renderDriveRow(); }
 }
@@ -587,6 +623,48 @@ function showError(msg, retryFn){
   quiz.querySelector('[data-retry]').addEventListener('click', retryFn);
 }
 
+// ───────── 6a: category selection (Dimension-A target mode) ─────────
+// The 10 generatable buckets (si_no is intonation-only → not typeable, excluded).
+const GEN_POOL = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','formulas'];
+
+function shuffleInPlace(a){
+  for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]] = [a[j],a[i]]; }
+  return a;
+}
+
+// Enfoque is meaningful only once at least one category has enough data to score.
+function enfoqueAvailable(){
+  if(!(driveToken && store && store.categories)) return false;
+  return Object.keys(store.categories).some(k => (store.categories[k].seen || 0) >= MIN_SAMPLE);
+}
+
+// uniform pick: shuffle the pool, take 6 (General mode / fallback)
+function pickUniform(){ return shuffleInPlace(GEN_POOL.slice()).slice(0, 6); }
+
+// weighted pick: weight = W0 + K*errorRate (errorRate only when seen >= MIN_SAMPLE).
+// Sample 6 without replacement ∝ weight; under-sampled cats stay at the floor so they keep appearing.
+function pickWeighted(){
+  const cats = (store && store.categories) ? store.categories : {};
+  const remaining = GEN_POOL.map(k => {
+    const c = cats[k] || {};
+    const seen = c.seen || 0, missed = c.missed || 0;
+    const rate = (seen >= MIN_SAMPLE) ? missed / seen : 0;
+    return { k, w: W0 + K * rate };
+  });
+  const out = [];
+  while(out.length < 6 && remaining.length){
+    const total = remaining.reduce((s, x) => s + x.w, 0);
+    let r = Math.random() * total, pick = remaining.length - 1;
+    for(let i = 0; i < remaining.length; i++){ r -= remaining[i].w; if(r <= 0){ pick = i; break; } }
+    out.push(remaining.splice(pick, 1)[0].k);
+  }
+  return shuffleInPlace(out);   // randomize presentation order so a heavy category isn't always first
+}
+
+function pickCategories(){
+  return (quizMode === 'enfoque' && enfoqueAvailable()) ? pickWeighted() : pickUniform();
+}
+
 // ───────── generation ─────────
 function validateItems(arr){
   if(!Array.isArray(arr) || arr.length !== N_PER_RUN) return null;
@@ -608,10 +686,8 @@ function validateItems(arr){
 async function generateRound(){
   showLoading('Generando preguntas…');
   try{
-    // entropy: shuffle the 10 generatable buckets, take 6, add a seed + random contexts
-    const pool = ['identidad','lugar','tiempo','frecuencia','cantidad','manera','razon','eleccion','descripcion','formulas'];
-    for(let i = pool.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [pool[i],pool[j]] = [pool[j],pool[i]]; }
-    const cats = pool.slice(0, 6);
+    // 6a: category selection — uniform (General) or weakness-weighted (Enfoque)
+    const cats = pickCategories();
     const ctxPool = ['de viaje','en un restaurante','pidiendo direcciones en la calle','en el trabajo','de compras','en una fiesta','con un vecino','por teléfono','en un hotel','planeando un fin de semana','en una cafetería','con un compañero de clase'];
     for(let i = ctxPool.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [ctxPool[i],ctxPool[j]] = [ctxPool[j],ctxPool[i]]; }
     const flavors = ctxPool.slice(0, 3);

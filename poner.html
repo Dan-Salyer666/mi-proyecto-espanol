@@ -667,7 +667,7 @@ function WordModal({ word, family, onClose }) {
         method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
           password: pw,
-          model:'claude-sonnet-4-20250514',
+          model:'claude-sonnet-4-6',
           max_tokens:900,
           system:`You are a Spanish language teacher for an adult B2-level learner. Provide 3 example sentences showing real-world usage of a Spanish word or phrase. Respond ONLY with valid JSON — no markdown, no preamble, no explanation outside the JSON. Exact format:
 {"examples":[{"spanish":"...","english":"...","context":"..."},{"spanish":"...","english":"...","context":"..."},{"spanish":"...","english":"...","context":"..."}],"note":"One concise sentence: the single most important usage tip for this word."}
@@ -691,7 +691,7 @@ The context field is a short label like: everyday speech, formal writing, figura
     try {
       const res = await fetch('/api/claude', {
         method:'POST', headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({ password:pwInput, model:'claude-sonnet-4-20250514', max_tokens:10, messages:[{role:'user',content:'hi'}] })
+        body:JSON.stringify({ password:pwInput, model:'claude-sonnet-4-6', max_tokens:10, messages:[{role:'user',content:'hi'}] })
       });
       if (res.ok) {
         sessionPassword = pwInput;

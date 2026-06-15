@@ -42,7 +42,7 @@ It's a **question-FORMATION** test, not spelling/accents in general. The grader:
 
 ## Generation (current behavior)
 
-Each round the **client** shuffles the 10 generatable Dimension-A buckets (excludes `si_no`), takes 6, and dictates them + a random seed + 3 random everyday contexts to the model. The client then **overwrites each item's `dimA`** with the dictated category, so `dimA` is authoritative client-side (not the model's echo) and coverage stays even. `/api/claude` does **not** forward `temperature` (runs at API default) — variety comes from this prompt entropy. Model is `claude-sonnet-4-20250514` for both generation and grading.
+Each round the **client** shuffles the 10 generatable Dimension-A buckets (excludes `si_no`), takes 6, and dictates them + a random seed + 3 random everyday contexts to the model. The client then **overwrites each item's `dimA`** with the dictated category, so `dimA` is authoritative client-side (not the model's echo) and coverage stays even. `/api/claude` does **not** forward `temperature` (runs at API default) — variety comes from this prompt entropy. Model is `claude-sonnet-4-6` for both generation and grading.
 
 ---
 

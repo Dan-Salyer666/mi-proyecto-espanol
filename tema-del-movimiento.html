@@ -1266,7 +1266,7 @@ async function fetchExamples(verbId, idx) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         password: sessionPassword,
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-sonnet-4-6',
         max_tokens: 600,
         system: 'You are a Spanish language teaching assistant. Generate exactly 2 additional natural, varied example sentences for the verb usage pattern described. Return ONLY a raw JSON array with 2 objects, each with "es" (Spanish sentence) and "en" (English translation). No preamble, no markdown, no backticks.',
         messages: [{

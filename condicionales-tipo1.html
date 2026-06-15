@@ -578,7 +578,7 @@ function MasEjemplos() {
       const res = await fetch('/api/claude', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          password: pw, model: 'claude-sonnet-4-20250514', max_tokens: 800,
+          password: pw, model: 'claude-sonnet-4-6', max_tokens: 800,
           system: `You are a Spanish language teacher for an adult B2-level learner. Generate 3-4 example sentences showing Type 1 conditionals (condiciones abiertas — indicativo). ${dialectPrompt()} Respond ONLY with valid JSON — no markdown, no preamble. Format:
 {"examples":[{"spanish":"...","english":"..."}],"variant":"${v.id}","variant_label":"${v.label}"}
 Vary the subjects and situations. The sentences must match the specific variant requested.`,
@@ -597,7 +597,7 @@ Vary the subjects and situations. The sentences must match the specific variant 
     try {
       const res = await fetch('/api/claude', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pwInput, model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
+        body: JSON.stringify({ password: pwInput, model: 'claude-sonnet-4-6', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
       });
       if (res.ok) { sessionPassword = pwInput; setNeedsPw(false); fetchExamples(pwInput); }
       else { const d = await res.json(); setPwError(d.error || 'Contraseña incorrecta'); }

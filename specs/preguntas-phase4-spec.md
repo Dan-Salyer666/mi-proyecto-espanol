@@ -8,7 +8,7 @@
 
 ## 1. Locked decisions (this phase)
 
-1. **Model:** Sonnet (`claude-sonnet-4-20250514`) for **both** generation and grading. Promote grading to Opus only if field tolerance is poor (separate change).
+1. **Model:** Sonnet (`claude-sonnet-4-6`) for **both** generation and grading. Promote grading to Opus only if field tolerance is poor (separate change).
 2. **N per run:** 6.
 3. **Grader verdict:** three-way — `correcto` / `casi` / `incorrecto` (rules §4).
 4. **Background:** `../assets/los fondos/alhambra piscina.webp`.
@@ -42,7 +42,7 @@ Reuse the navy + teal idiom of `preguntas-trampas.html` verbatim (same `:root`, 
 
 ## 4. The two calls
 
-Both: `POST /api/claude`, body `{ system, messages:[{role:"user",content}], model:"claude-sonnet-4-20250514", max_tokens, password: sessionPw }`, non-streaming; read `data.content[0].text`; strip fences (`/^```json\s*/i`, `/^```\s*/i`, `/```\s*$/`) and `JSON.parse` inside try/catch.
+Both: `POST /api/claude`, body `{ system, messages:[{role:"user",content}], model:"claude-sonnet-4-6", max_tokens, password: sessionPw }`, non-streaming; read `data.content[0].text`; strip fences (`/^```json\s*/i`, `/^```\s*/i`, `/```\s*$/`) and `JSON.parse` inside try/catch.
 
 ### 4.1 Generation (one call, max_tokens ≈ 1500)
 

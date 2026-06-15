@@ -221,7 +221,7 @@ function PasswordGate({ onAuth }) {
     try {
       const res = await fetch('/api/claude', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pw, model: 'claude-sonnet-4-20250514', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
+        body: JSON.stringify({ password: pw, model: 'claude-sonnet-4-6', max_tokens: 10, messages: [{ role: 'user', content: 'hi' }] })
       });
       if (res.ok) { sessionPassword = pw; onAuth(); }
       else { const d = await res.json(); setErr(d.error || 'Contraseña incorrecta'); }
@@ -281,7 +281,7 @@ function MatchingQuiz() {
       const res = await fetch('/api/claude', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          password: sessionPassword, model: 'claude-sonnet-4-20250514', max_tokens: 1500,
+          password: sessionPassword, model: 'claude-sonnet-4-6', max_tokens: 1500,
           system: getMatchSystem(),
           messages: [{ role: 'user', content: 'Generate 9 conditional matching pairs. Mix all three types.' }]
         })
@@ -441,7 +441,7 @@ function FibQuiz() {
       const res = await fetch('/api/claude', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          password: sessionPassword, model: 'claude-sonnet-4-20250514', max_tokens: 2000,
+          password: sessionPassword, model: 'claude-sonnet-4-6', max_tokens: 2000,
           system: getFibSystem(),
           messages: [{ role: 'user', content: 'Generate 10 fill-in-the-blank conditional sentences. Mix all three types, include irregulars.' }]
         })

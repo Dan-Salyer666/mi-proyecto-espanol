@@ -378,7 +378,7 @@ async function generate(pw,level,theme,dialect){
   const d=dialect==='rioplatense'?'Usa español rioplatense argentino con formas de vos e imperativo voseante.':'Usa español neutro con formas de tú. No uses voseo.';
   const t=theme.trim()?`Tema del texto: ${theme.trim()}.`:`Elige un tema interesante y original. Sugerencia: "${SEEDS[Math.floor(Math.random()*SEEDS.length)]}". Sé creativo — no repitas temas.`;
   const system=`Eres un generador de textos para práctica de lectura en voz alta en español.\nGenera un texto de 4-5 párrafos cortos (3-4 oraciones cada uno) al nivel ${level}.\n${d}\n${t}\nEl texto debe fluir con naturalidad y contener buena variedad de combinaciones entre palabras:\nconsonante final + vocal inicial, vocal + vocal, y consonantes iguales entre palabras.\nNo fuerces estos patrones — simplemente escribí de forma natural y fluida.\nDevuelve SOLO el texto en párrafos, sin títulos, sin explicaciones, sin comillas.`;
-  const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw,model:'claude-sonnet-4-20250514',max_tokens:1200,system,messages:[{role:'user',content:'Genera el texto ahora.'}]})});
+  const res=await fetch('/api/claude',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw,model:'claude-sonnet-4-6',max_tokens:1200,system,messages:[{role:'user',content:'Genera el texto ahora.'}]})});
   if(!res.ok)throw new Error(res.status===401?'pw':'Error: '+res.status);
   const data=await res.json();
   return((data.content?.[0]?.text)||'').replace(/```[a-z]*\n?/g,'').replace(/```/g,'').trim();

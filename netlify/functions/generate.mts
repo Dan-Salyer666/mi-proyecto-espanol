@@ -115,7 +115,7 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model:      body.model      || "claude-sonnet-4-20250514",
+      model:      body.model      || "claude-sonnet-4-6",
       max_tokens: body.max_tokens || 4000,
       stream:     stream,
       system:     body.system     || "",

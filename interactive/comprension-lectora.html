@@ -2796,7 +2796,7 @@ Responde SOLO con el documento en texto plano.`;
     const res = await fetch('/api/claude', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        password: sessionPw, model: 'claude-sonnet-4-20250514',
+        password: sessionPw, model: 'claude-sonnet-4-6',
         max_tokens: 600, stream: false,
         system: 'Eres un asistente que crea documentos de continuidad narrativa. Responde solo con el documento.',
         messages: [{ role: 'user', content: biblePrompt }]

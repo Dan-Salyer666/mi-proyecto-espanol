@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedir Comida y Bebida — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accent palette (7 cards) */
+  --accent-alpha:   #4a90d9;  /* card 1 — blue       */
+  --accent-beta:    #c084fc;  /* card 2 — violet     */
+  --accent-gamma:   #fbbf24;  /* card 3 — gold       */
+  --accent-delta:   #4ecdc4;  /* card 4 — teal       */
+  --accent-epsilon: #f472b6;  /* card 5 — rose       */
+  --accent-zeta:    #34d399;  /* card 6 — green      */
+  --accent-eta:     #fb923c;  /* card 7 — orange     */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (alhambra) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/los fondos/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.55);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Guía Rápida badge ── */
+.cheat-badge {
+  position: absolute;
+  top: 18px;
+  right: 0;
+  padding: 6px 14px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  color: #fcd34d;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cheat-badge:hover { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.6); }
+
+/* ── Intro ── */
+.intro {
+  max-width: 700px;
+  margin: 2px auto 6px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  text-align: center;
+  font-size: 0.98rem;
+}
+.intro em { color: var(--accent); font-style: italic; }
+.intro strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Grammar card ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha    { border-left-color: var(--accent-alpha); }
+.card-beta     { border-left-color: var(--accent-beta); }
+.card-gamma    { border-left-color: var(--accent-gamma); }
+.card-delta    { border-left-color: var(--accent-delta); }
+.card-epsilon  { border-left-color: var(--accent-epsilon); }
+.card-zeta     { border-left-color: var(--accent-zeta); }
+.card-eta      { border-left-color: var(--accent-eta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Card image (top-right, optional, graceful when absent) ── */
+.card-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 64px;
+}
+.card-icon img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transform-origin: right center;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-icon img.magnified {
+  transform: scale(2.5);
+  z-index: 50;
+  cursor: zoom-out;
+  box-shadow: -8px 8px 24px rgba(0,0,0,0.5);
+  border-color: var(--accent);
+}
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Formula ── */
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+
+/* ── Example row (speak button + body) ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Region tags (textual flag; audio stays neutral) ── */
+.rio-tag {
+  display: inline-block;
+  background: rgba(20, 184, 166, 0.14);
+  color: #5eead4;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.esp-tag {
+  display: inline-block;
+  background: rgba(192, 132, 252, 0.14);
+  color: #d0a8ff;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+/* ── Decision guide ── */
+.decision-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-top: 30px;
+}
+.decision-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.45rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.decision-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  letter-spacing: 0.06em;
+  margin-bottom: 22px;
+}
+.decision-rows { display: grid; gap: 0; }
+.decision-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.decision-row:last-child  { border-bottom: none; padding-bottom: 2px; }
+.decision-row:first-child { padding-top: 2px; }
+.decision-condition { color: var(--text-secondary); font-size: 0.94rem; line-height: 1.45; }
+.decision-condition em { color: var(--text-primary); font-style: italic; }
+.decision-arrow { color: var(--accent); font-size: 1.2rem; }
+.decision-result { color: var(--text-primary); font-weight: 500; font-size: 0.94rem; }
+.decision-result em { font-style: italic; }
+.decision-result small {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Guía Rápida modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 760px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 24px 28px; overflow-y: auto; flex-grow: 1; }
+.modal-body > p { color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; font-size: 0.92rem; }
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .cheat-badge { position: static; display: inline-block; margin-top: 14px; }
+  .card-header { flex-direction: column-reverse; align-items: stretch; }
+  .card-icon {
+    justify-content: center;
+    height: auto;
+    max-height: 150px;
+    margin-bottom: 8px;
+  }
+  .card-icon img {
+    height: auto;
+    max-height: 150px;
+    width: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+  }
+  .card-icon img.magnified { transform: scale(1.8); }
+  .decision-row { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
+  .decision-arrow { display: none; }
+  .decision-result {
+    padding-left: 14px;
+    border-left: 2px solid var(--accent);
+  }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Vocabulario</div>
+    <h1>Pedir <em>Comida y Bebida</em></h1>
+    <p class="subtitle">Qué verbos funcionan, cuáles evitar y cómo cambia el registro según el lugar, con una sección dedicada al español rioplatense.</p>
+    <button class="cheat-badge" onclick="openCheat()">⚡ Guía Rápida</button>
+  </header>
+
+  <p class="intro">
+    Pedir algo en un mostrador o en una mesa parece simple, pero el verbo que elijas, el tiempo en que lo conjugues y el lugar donde estés cambian por completo el tono. Esta página reúne las fórmulas que suenan naturales, los errores que delatan al hablante de inglés y el vocabulario que más varía de un país a otro, con una sección dedicada a la <em>Argentina</em>.
+  </p>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ① -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Los verbos que sí funcionan</div>
+        <div class="card-title-en">Verbs that work</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/pedir/pedir-cafe-mostrador.png" alt="Un barista entrega un café sobre el mostrador de una cafetería." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <code class="formula">Quiero · Quería · Querría …   /   ¿Me da…? · ¿Me trae…?   /   Para mí, …</code>
+    <p class="explanation">
+      Para pedir existen varias fórmulas naturales, de la más directa a la más cortés. <em>Querer</em> es la base: <em>quiero</em> es claro pero algo seco sin un <em>por favor</em>; <em>quería</em>, en imperfecto, suena más suave y educado; <em>querría</em>, en condicional, es el registro más formal. <em>Dar</em> y <em>traer</em> funcionan en forma de pregunta: <em>¿me da…?</em> en el mostrador, <em>¿me trae…?</em> en la mesa. El verbo <em>poner</em> (<em>¿me pone un café?</em>) sirve para casi cualquier cosa, comida o bebida, y es la fórmula por excelencia en España; se entiende en Latinoamérica, pero allí no es lo habitual. Y la fórmula <em>para mí, …</em> es comodísima cuando se pide en grupo.
+    </p>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quería un café con leche, por favor.</div>
+          <div class="example-en">I'd like a coffee with milk, please. <em>— quería is softer than quiero.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me da una botella de agua sin gas?</div>
+          <div class="example-en">Could you give me a bottle of still water?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me trae la carta, por favor?</div>
+          <div class="example-en">Could you bring me the menu, please?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Para mí, una milanesa con puré.</div>
+          <div class="example-en">For me, a milanesa with mashed potatoes.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me pone una caña, por favor?</div>
+          <div class="example-en"><span class="esp-tag">España</span> Could you pour me a draft beer, please? <em>— in Spain, poner is the default ordering verb, for any item, food or drink.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Querría reservar una mesa para dos.</div>
+          <div class="example-en">I'd like to reserve a table for two. <em>— querría is the most formal.</em></div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Spanish often softens a request by pushing the verb one step into the <strong>past</strong> or the <strong>conditional</strong>. <em>Quería un café</em> literally says "I wanted a coffee," but native speakers hear a polite "I'd like a coffee" — the past tense distances the want and takes the edge off. <em>Querría</em> (conditional) is a notch more formal again. Both are gentler than the bare present <em>quiero</em>. One more thing about the verb itself: across most of Latin America and Spain, the verb for placing an order is <em>pedir</em>, not <em>ordenar</em>. <em>Ordenar comida</em> is normal in Mexico and US Spanish (calqued from English "to order") but sounds foreign elsewhere — say <em>pedir</em>.
+    </div>
+  </article>
+
+  <!-- ② -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Los verbos que evitar</div>
+        <div class="card-title-en">Verbs to avoid</div>
+      </div>
+    </div>
+    <p class="explanation">
+      Dos construcciones delatan al instante a quien traduce del inglés, y una tercera conviene usar con cuidado. <em>Poder tener</em> (<em>¿puedo tener un café?</em>) es un calco literal de <em>can I have</em>: en español no se "tiene" lo que se pide, así que no funciona. <em>Gustar</em> a secas describe lo que te agrada, no lo que pedís: <em>me gusta el café</em> dice que el café te cae bien, no que quieras uno. <em>Me gustaría un café</em>, en cambio, no es incorrecto y se escucha, pero suena más a un deseo que a un pedido concreto — como fórmula de cabecera es mejor <em>quería</em> o <em>¿me da…?</em>.
+    </p>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me da un café, por favor?</div>
+          <div class="example-en">Use this — not the calque <em>¿puedo tener un café?</em> ("can I have").</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quería una medialuna.</div>
+          <div class="example-en">A firm request. <em>Me gustaría una medialuna</em> leans toward a wish, not an order.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me gusta mucho el café de acá.</div>
+          <div class="example-en">This states that you <em>like</em> the coffee — it is not a way to order one.</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      English "can I have …?" has no direct Spanish equivalent — you don't <em>have</em> (<em>tener</em>) what you order, you <em>ask for</em> it (<em>pedir</em>) or ask the server to <em>give/bring</em> it (<em>dar/traer</em>). So <em>¿puedo tener…?</em> is the one to retire completely. <em>Gustar</em> is a different trap: it means "to be pleasing," so <em>me gusta X</em> reports a standing preference, not a request. The conditional <em>me gustaría</em> ("I would like / it would please me") <strong>can</strong> be used to order and is perfectly grammatical, but it carries a tentative, wishful tone — for a clean, native-sounding order, default to <em>quería</em>, <em>querría</em>, or <em>¿me da/trae…?</em>.
+    </div>
+  </article>
+
+  <!-- ③ -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">El registro: del <em>usted</em> al <em>vos</em></div>
+        <div class="card-title-en">Register: from usted to vos</div>
+      </div>
+    </div>
+    <p class="explanation">
+      El mismo pedido cambia de tono según a quién y dónde. En el extremo formal — un restaurante elegante, una persona mayor, un trato de respeto — se usa <em>usted</em> y el condicional: <em>¿me podría traer…?</em>, <em>¿sería tan amable de…?</em>. En el registro neutro y cotidiano basta la pregunta con <em>dar</em> o <em>traer</em>: <em>¿me da…?</em>, <em>¿me trae…?</em>. Y en lo más informal — entre conocidos, en un bar — aparece el imperativo, siempre suavizado con <em>por favor</em> o con entonación de pregunta: <em>dame…</em>, <em>traeme…</em>.
+    </p>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me podría traer la cuenta, por favor?</div>
+          <div class="example-en">Could you bring me the bill, please? <em>— formal: usted + conditional.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Sería tan amable de traernos más pan?</div>
+          <div class="example-en">Would you be so kind as to bring us more bread? <em>— very formal.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me das una servilleta?</div>
+          <div class="example-en">Can you give me a napkin? <em>— neutral / casual.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Traeme otra agua, por fa.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Bring me another water, please. <em>— casual voseo imperative.</em></div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ④ -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Según el lugar</div>
+        <div class="card-title-en">By setting</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/pedir/pedir-panaderia-vitrina.png" alt="La vitrina de una panadería con panes, facturas y una torta." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">
+      La fórmula se ajusta al lugar. En un <strong>restaurante</strong> te sientas y pides en la mesa (<em>para mí…</em>, <em>¿me trae…?</em>) y al final pides <em>la cuenta</em>. En un <strong>café</strong> o <strong>bar</strong> el pedido es más breve, en la barra o en la mesa: <em>un cortado, por favor</em>. En una <strong>panadería</strong> o <strong>confitería</strong> se pide por unidad o por peso: <em>media docena de medialunas</em>, <em>un cuarto de…</em>. En el <strong>supermercado</strong>, el único mostrador donde se pide es la <strong>fiambrería</strong>: <em>¿me da doscientos gramos de jamón cocido?</em>. Y a nivel de <strong>calle</strong> — un <em>kiosco</em>, un puesto, un carrito — el intercambio es mínimo: <em>¿tienen…?</em>, <em>dame uno</em>.
+    </p>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Para mí, el bife de chorizo, por favor.</div>
+          <div class="example-en">For me, the sirloin steak, please. <em>— restaurante.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me da medio kilo de pan, por favor?</div>
+          <div class="example-en">Could you give me half a kilo of bread? <em>— panadería, by weight.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me da trescientos gramos de queso?</div>
+          <div class="example-en">Could you give me 300 grams of cheese? <em>— supermarket deli counter.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Tenés monedas? Dame dos alfajores.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Got change? Give me two alfajores. <em>— kiosco, street level.</em></div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ⑤ -->
+  <article class="grammar-card card-epsilon">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Nota rioplatense</div>
+        <div class="card-title-en">Rioplatense: how you ask</div>
+      </div>
+    </div>
+    <p class="explanation">
+      En la Argentina y el Uruguay el pedido se hace con <em>vos</em>, no con <em>tú</em>. Los verbos de pedido cambian su forma: <em>¿me traés…?</em> (no <em>¿me traes?</em>) y <em>¿me das…?</em>. Al personal se lo llama <em>mozo</em> o <em>moza</em> (no <em>camarero</em> ni <em>mesero</em>), y para llamar su atención basta un <em>disculpá</em> o <em>perdoná</em>. El trato es cordial pero más informal que en otras regiones: el <em>usted</em> se reserva para personas mayores o contextos muy formales.
+    </p>
+    <div class="examples-block">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Mozo, ¿me traés la carta, por fa?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Waiter, could you bring me the menu, please? <em>— mozo + voseo.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me das un vaso de agua?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Can you give me a glass of water?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Disculpá, ¿me traés otra de estas?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Excuse me, could you bring me another one of these?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Tenés mesa para cuatro?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Do you have a table for four? <em>— tener for availability is fine.</em></div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      In Argentina and Uruguay, <em>vos</em> replaces <em>tú</em>, and the present-tense verb forms shift with it. For the ordering verbs: <em>tú traes → vos traés</em>, <em>tú das → vos das</em> (same), <em>tú quieres → vos querés</em> (and Spain's <em>poner</em> follows the same shift: <em>pones → ponés</em>). The pattern for <code>-er/-ir</code> verbs is a stressed final syllable: drop the <em>-r</em> of the infinitive and add an accent — <em>traer → traés</em>, <em>poner → ponés</em>. The affirmative <em>vos</em> command uses the same trick: <em>traé</em>, <em>poné</em>, <em>dame</em> (<em>da</em> + <em>me</em>). You'll be understood perfectly with <em>tú</em> forms, but matching the local <em>vos</em> makes you sound far less like a tourist.
+    </div>
+  </article>
+
+  <!-- ⑥ -->
+  <article class="grammar-card card-zeta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Vocabulario: qué se pide</div>
+        <div class="card-title-en">What you order (Argentina)</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/pedir/pedir-facturas-bandeja.png" alt="Una bandeja con una docena de facturas surtidas." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">
+      Más allá de cómo se pide, conviene saber cómo se llaman las cosas — y acá la Argentina tiene su propio mapa. En materia de dulces, la palabra clave es <strong>torta</strong>: lo que en México es <em>pastel</em> y en España <em>tarta</em>, en la Argentina es una <em>torta</em> (la de cumpleaños, de varias capas de bizcochuelo). Una <strong>tarta</strong> es otra cosa: una base de masa con relleno, y puede ser dulce (<em>tarta de frutillas</em>, pastafrola) o salada (<em>tarta pascualina</em>, de jamón y queso). <strong>Pastel</strong> casi nunca es un dulce: <em>pastel de papa</em> es un plato salado, y los <em>pastelitos</em> son masas fritas rellenas de membrillo o batata. Las <strong>facturas</strong> son la bollería dulce que acompaña el café o el mate — <em>medialunas</em>, <em>vigilantes</em>, <em>bolas de fraile</em> — y se compran por docena. Para el café: un <strong>cortado</strong> (espresso con un poco de leche), una <strong>lágrima</strong> (mucha leche, apenas café) o un <strong>café con leche</strong>.
+    </p>
+    <div class="examples-block">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quería una docena de facturas surtidas.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> I'd like a dozen assorted pastries. <em>— facturas: the pastry category.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me hace una torta de cumpleaños para diez personas?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Could you make me a birthday cake for ten? <em>— torta = cake in Argentina.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Para mí, un cortado y dos medialunas de manteca.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> For me, a cortado and two butter croissants.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Una porción de tarta de manzana, por favor.</div>
+          <div class="example-en">A slice of apple tart, please. <em>— tarta = tart/pie, sweet or savory.</em></div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      The same three words rearrange across borders, which is exactly why a learner gets corrected. In <strong>Argentina</strong> (and most of South America) a layered celebration cake is a <em>torta</em>; a <em>tarta</em> is a single-crust tart or pie, sweet <strong>or</strong> savory; a <em>pastel</em> is usually savory (<em>pastel de papa</em>). In <strong>Mexico</strong> that celebration cake is a <em>pastel</em> — and beware, a <em>torta</em> there is a sandwich. In <strong>Spain</strong> the same cake is a <em>tarta</em> or <em>pastel</em>, and <em>torta</em> means something flatter and simpler. When in doubt anywhere, describing it (<em>un postre con capas de bizcocho y crema</em>) always lands.
+    </div>
+  </article>
+
+  <!-- ⑦ -->
+  <article class="grammar-card card-eta">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title">Cerrar la cuenta</div>
+        <div class="card-title-en">Closing out</div>
+      </div>
+    </div>
+    <p class="explanation">
+      Cerrar bien el pedido es tan importante como abrirlo. Para indicar si comes en el local o te lo llevas, se usa <em>para acá</em> o <em>para llevar</em>. Durante la comida, los pedidos se hacen igual que al principio: <em>¿me trae más agua?</em>, <em>¿nos trae más pan?</em>. Para terminar, se pide <strong>la cuenta</strong>: la fórmula neutra es <em>¿me trae la cuenta, por favor?</em>; en la Argentina es comodísimo el <em>¿me cobrás?</em>. Sobre la <strong>propina</strong>: lo habitual ronda el 10 %, y conviene no confundir el <strong>cubierto</strong> de la cuenta con la propina — es un cargo aparte por el servicio de mesa, y no va al mozo.
+    </p>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me trae la cuenta, por favor?</div>
+          <div class="example-en">Could you bring me the bill, please? <em>— neutral.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me cobrás?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Can I pay? <em>— the everyday Argentine way to ask for the bill.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Un café para llevar, por favor.</div>
+          <div class="example-en">A coffee to go, please.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me trae un poco más de agua?</div>
+          <div class="example-en">Could you bring me a little more water?</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Two things trip up visitors at payment time in Argentina. First, the <em>cubierto</em> (or <em>servicio de mesa</em>) printed on the bill is a per-person cover charge for bread, water and table service — it is <strong>not</strong> a tip and does not go to the staff, so it doesn't replace the <em>propina</em>. Second, how to leave the tip: the social norm is about 10% (up to ~15% for great service), and cash left on the table or handed to the <em>mozo</em> is still the most reliable. Since a 2024 decree, tipping by card or digital wallet is now legal and some places offer it on the terminal, but adoption is uneven — many spots still can't add it to a card, so carry some cash for tips. Counter tip jars are often labeled <em>Propi</em> or <em>Tips</em>.
+    </div>
+  </article>
+
+  <!-- Decision guide -->
+  <section class="decision-card">
+    <h2 class="decision-title">¿Cuál uso?</h2>
+    <div class="decision-subtitle">Cómo pedir según la situación</div>
+    <div class="decision-rows">
+      <div class="decision-row">
+        <div class="decision-condition">Lugar formal, persona mayor o trato de respeto</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result"><em>Usted</em> + condicional <small>¿Me podría traer…? · ¿Sería tan amable de…?</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">Café, bar o el día a día</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Pregunta con <em>dar</em> o <em>traer</em> <small>¿Me da…? · Para mí, …</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">Para sonar natural y cortés</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Imperfecto de cortesía <small><em>Quería…</em> mejor que <em>quiero</em></small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">En la Argentina o el Uruguay</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result"><em>Vos</em> y <em>mozo</em> <small>¿Me traés…? · ¿Me cobrás?</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">Para no delatar el inglés</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Evita el calco <small>Nunca <em>¿puedo tener…?</em>; tampoco <em>me gustaría</em> como pedido firme</small></div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-wrap -->
+
+<!-- Guía Rápida modal -->
+<div class="modal-overlay" id="modal-cheat" onclick="handleCheatOverlayClick(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Guía Rápida (Cheat Sheet)</div>
+      <button class="close-btn" onclick="closeCheat()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>A quick phrasebook for ordering — the neutral Latin American form alongside the Rioplatense (Argentina) version. Phrases are Spanish; situations are in English.</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Situation</th><th>Neutral</th><th>Rioplatense</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Get the server's attention</td><td><em>Disculpe, por favor</em></td><td><em>Disculpá · Mozo</em></td></tr>
+            <tr><td>Ask to be seated</td><td><em>¿Tienen mesa para dos?</em></td><td><em>¿Tenés mesa para dos?</em></td></tr>
+            <tr><td>Order (polite default)</td><td><em>Quería… · ¿Me da…?</em></td><td><em>Quería… · ¿Me traés…?</em></td></tr>
+            <tr><td>Order for the group</td><td><em>Para mí, …</em></td><td><em>Para mí, …</em></td></tr>
+            <tr><td>Ask if they have something</td><td><em>¿Tienen…?</em></td><td><em>¿Tenés…?</em></td></tr>
+            <tr><td>Coffee</td><td><em>Un café con leche</em></td><td><em>Un cortado · una lágrima</em></td></tr>
+            <tr><td>Sweet baked goods</td><td><em>Una porción de torta</em></td><td><em>Una docena de facturas</em></td></tr>
+            <tr><td>Ask for more of something</td><td><em>¿Me trae más agua?</em></td><td><em>¿Me traés más agua?</em></td></tr>
+            <tr><td>For here / to go</td><td><em>Para acá · para llevar</em></td><td><em>Para acá · para llevar</em></td></tr>
+            <tr><td>Ask for the bill</td><td><em>¿Me trae la cuenta?</em></td><td><em>¿Me cobrás?</em></td></tr>
+            <tr><td>Cover charge (not a tip)</td><td><em>El cubierto / servicio</em></td><td><em>El cubierto</em></td></tr>
+            <tr><td>Tip</td><td><em>La propina (~10 %)</em></td><td><em>La propina (~10 %, efectivo)</em></td></tr>
+            <tr><td>Avoid (calque)</td><td><em>✗ ¿Puedo tener…?</em></td><td><em>✗ ¿Puedo tener…?</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only
+//  Default per project convention: neutral LatAm
+//  voice for all rows; data-region="rioplatense"
+//  is forward-compat markup and is ignored here.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Image magnification (click to zoom). Images are
+//  optional; missing files hide their slot via the
+//  per-img onerror handler, so this simply finds
+//  whichever images did load.
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.card-icon img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (activeImage) {
+      activeImage.classList.remove('magnified');
+      activeImage = null;
+    }
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) {
+        img.classList.remove('magnified');
+        activeImage = null;
+      } else {
+        resetZoom();
+        img.classList.add('magnified');
+        activeImage = img;
+      }
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+});
+
+// ═══════════════════════════════════════════════
+//  Guía Rápida modal
+// ═══════════════════════════════════════════════
+function openCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.remove('active');
+  document.body.style.overflow = '';
+}
+function handleCheatOverlayClick(e) {
+  if (e.target.id === 'modal-cheat') closeCheat();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCheat();
+});
+</script>
+</body>
+</html>

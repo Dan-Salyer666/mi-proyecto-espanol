@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuando las cosas se rompen — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accent palette — cycles α·β·γ·δ across the 8 cards */
+  --accent-alpha:   #4a90d9;  /* blue   */
+  --accent-beta:    #c084fc;  /* violet */
+  --accent-gamma:   #fbbf24;  /* gold   */
+  --accent-delta:   #4ecdc4;  /* teal   */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (swap this one line for any file in assets/los fondos/) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/los fondos/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.55);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Title-card badges (two: Guía Rápida + Parecidos) ── */
+.badge-row {
+  position: absolute;
+  top: 16px;
+  right: 0;
+  display: flex;
+  gap: 8px;
+}
+.cheat-badge, .warn-badge, .vocab-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.vocab-badge {
+  background: rgba(74, 144, 217, 0.12);
+  border: 1px solid rgba(74, 144, 217, 0.4);
+  color: #93c5fd;
+}
+.vocab-badge:hover { background: rgba(74, 144, 217, 0.2); border-color: rgba(74, 144, 217, 0.6); }
+.cheat-badge {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  color: #fcd34d;
+}
+.cheat-badge:hover { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.6); }
+.warn-badge {
+  background: rgba(244, 114, 182, 0.12);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  color: #f9a8d4;
+}
+.warn-badge:hover { background: rgba(244, 114, 182, 0.2); border-color: rgba(244, 114, 182, 0.6); }
+
+/* ── Intro ── */
+.intro {
+  max-width: 720px;
+  margin: 2px auto 6px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  text-align: center;
+  font-size: 0.98rem;
+}
+.intro em { color: var(--accent); font-style: italic; }
+.intro strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Card ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha { border-left-color: var(--accent-alpha); }
+.card-beta  { border-left-color: var(--accent-beta); }
+.card-gamma { border-left-color: var(--accent-gamma); }
+.card-delta { border-left-color: var(--accent-delta); }
+.card-alpha .card-number { color: var(--accent-alpha); opacity: 0.75; }
+.card-beta  .card-number { color: var(--accent-beta);  opacity: 0.75; }
+.card-gamma .card-number { color: var(--accent-gamma); opacity: 0.75; }
+.card-delta .card-number { color: var(--accent-delta); opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Card image (top-right, optional, graceful when absent) ── */
+.card-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 64px;
+}
+.card-icon img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transform-origin: right center;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-icon img.magnified {
+  transform: scale(2.5);
+  z-index: 50;
+  cursor: zoom-out;
+  box-shadow: -8px 8px 24px rgba(0,0,0,0.5);
+  border-color: var(--accent);
+}
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 12px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Verb entries (mini-glossary inside a card) ── */
+.verb-list { margin-top: 6px; }
+.verb-entry {
+  padding: 12px 0;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.verb-entry:first-child { border-top: none; padding-top: 2px; }
+.verb-headline {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+.verb-word {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.12rem;
+  font-style: italic;
+  color: var(--accent);
+}
+.verb-gloss { font-size: 0.86rem; color: var(--text-secondary); }
+
+/* ── Chips: region (orange) vs register (slate) ── */
+.chip {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  padding: 0.13rem 0.5rem;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.chip-region { background: rgba(251, 146, 60, 0.16); color: #fdba74; }
+.chip-reg    { background: rgba(138, 155, 184, 0.14); color: var(--text-secondary); }
+
+/* ── Example row (speak button + body) ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.verb-entry .example-row { border-top: none; padding-top: 4px; margin-top: 2px; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Regional table (Card ⑥) & modal tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td .chip { font-family: 'Outfit', sans-serif; font-style: normal; font-size: 0.6rem; margin-left: 4px; }
+
+/* ── Section divider (grammar review) ── */
+.section-divider { text-align: center; margin: 40px 0 20px; }
+.section-divider .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.section-divider h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.5rem, 4vw, 1.9rem);
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+/* ── Repaso (matching quiz) ── */
+.repaso-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 26px 26px 24px;
+  margin-top: 24px;
+}
+[hidden] { display: none !important; }
+/* collapsed banner */
+.repaso-banner {
+  width: 100%;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+}
+.repaso-banner-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.45rem;
+  font-style: italic;
+  color: var(--text-primary);
+}
+.repaso-banner-hint {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+.repaso-banner:hover .repaso-banner-hint { color: var(--accent); }
+.repaso-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.45rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.repaso-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 18px;
+}
+.repaso-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 14px;
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  min-height: 56px;
+  margin-bottom: 18px;
+}
+.meaning-badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  background: rgba(74, 144, 217, 0.12);
+  border: 1px solid rgba(74, 144, 217, 0.3);
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.meaning-badge:hover { border-color: var(--border-focus); }
+.meaning-badge.selected {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+.repaso-board { display: grid; gap: 10px; }
+.repaso-row { display: flex; flex-direction: column; gap: 4px; }
+.repaso-pair {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 14px;
+  align-items: center;
+}
+.repaso-verb-cell { display: flex; align-items: center; gap: 8px; }
+.repaso-verb {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  color: var(--text-primary);
+}
+.repaso-reveal {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  padding-left: 4px;
+}
+.repaso-reveal:empty { display: none; }
+.repaso-slot {
+  min-height: 44px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  background: var(--bg-input);
+  transition: border-color 0.15s, background 0.15s;
+}
+.repaso-slot:hover { border-color: var(--border-focus); }
+.repaso-slot .meaning-badge { cursor: pointer; }
+.repaso-slot.correct   { border-style: solid; border-color: var(--green); background: rgba(52, 211, 153, 0.1); }
+.repaso-slot.incorrect { border-style: solid; border-color: var(--red);   background: rgba(248, 113, 113, 0.1); }
+.repaso-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 22px;
+}
+.btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn:hover { border-color: var(--border-focus); color: var(--text-primary); }
+.btn-primary {
+  background: rgba(74, 144, 217, 0.15);
+  border-color: rgba(74, 144, 217, 0.4);
+  color: var(--accent);
+}
+.btn-primary:hover { background: rgba(74, 144, 217, 0.25); }
+.repaso-score {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.15rem;
+  color: var(--text-primary);
+  margin-left: auto;
+}
+
+/* ── Vocab list (📖 modal) ── */
+.vocab-legend {
+  font-size: 0.8rem !important;
+  color: var(--text-muted) !important;
+  line-height: 1.55;
+}
+.vocab-legend code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+#vocabList { padding-bottom: 6px; }
+.vocab-group { margin-bottom: 16px; }
+.vocab-group-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 16px 0 6px;
+}
+.vocab-item {
+  padding: 9px 0;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.vocab-group .vocab-item:first-of-type { border-top: none; }
+.vocab-line { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; line-height: 1.5; }
+.vocab-line + .vocab-line { margin-top: 2px; }
+.vocab-tag {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  min-width: 34px;
+}
+.vocab-form-pron { font-family: 'DM Serif Display', serif; font-style: italic; color: var(--accent); font-size: 1rem; }
+.vocab-state {
+  font-size: 0.58rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0 4px;
+}
+.vocab-def { font-size: 0.86rem; color: var(--text-secondary); }
+.vocab-line-muted .vocab-def { color: var(--text-muted); font-style: italic; }
+
+/* hover tooltip (desktop) */
+.vocab-verb {
+  position: relative;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--accent);
+  cursor: help;
+  border-bottom: 1px dotted var(--text-muted);
+}
+.vocab-verb.tip-irr  { border-bottom-color: rgba(251, 191, 36, 0.55); }
+.vocab-verb.tip-orto { border-bottom-color: rgba(147, 197, 253, 0.5); }
+.vocab-verb .vocab-tip {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 6px);
+  z-index: 200;
+  display: none;
+  width: max-content;
+  max-width: 270px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-focus);
+  border-radius: 8px;
+  padding: 8px 11px;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  pointer-events: none;
+  white-space: normal;
+}
+.vocab-verb:hover .vocab-tip { display: block; }
+.vocab-verb.tip-reg  .vocab-tip { color: var(--green); }
+.vocab-verb.tip-orto .vocab-tip { color: #93c5fd; }
+.vocab-verb.tip-irr  .vocab-tip { color: var(--yellow); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 760px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 24px 28px; overflow-y: auto; flex-grow: 1; }
+.modal-body > p { color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6; font-size: 0.92rem; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .badge-row { position: static; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+  .card-header { flex-direction: column-reverse; align-items: stretch; }
+  .card-icon {
+    justify-content: center;
+    height: auto;
+    max-height: 150px;
+    margin-bottom: 8px;
+  }
+  .card-icon img {
+    height: auto;
+    max-height: 150px;
+    width: 100%;
+    object-fit: contain;
+    transform-origin: center center;
+  }
+  .card-icon img.magnified { transform: scale(1.8); }
+  .repaso-pair { grid-template-columns: 1fr; gap: 5px; }
+  .repaso-score { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a class="back-link" href="/">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Vocabulario</div>
+    <h1>Cuando las cosas <em>se rompen</em></h1>
+    <p class="subtitle">Romper, dañar, estropear, averiarse: el vocabulario de la rotura, el daño y los accidentes, con sus variantes regionales y la gramática del <em>se</em>.</p>
+    <div class="badge-row">
+      <button class="cheat-badge" onclick="openModal('modal-cheat')">⚡ Guía Rápida</button>
+      <button class="warn-badge" onclick="openModal('modal-parecidos')">⚠ Parecidos</button>
+      <button class="vocab-badge" onclick="openModal('modal-vocab')">📖 Vocab</button>
+    </div>
+  </header>
+
+  <p class="intro">
+    En español, lo que se rompe casi siempre se puede decir de dos maneras: <strong>alguien lo rompe</strong>, o <strong>se rompe solo</strong>. Esta página reúne los verbos más útiles para hablar de roturas, daños, averías y accidentes —de los más comunes a los más regionales— y termina con la gramática que los gobierna: el contraste <em>transitivo / pronominal</em> y el <em>se</em> accidental.
+  </p>
+
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    Almost every verb on this page has <strong>two faces</strong>. A <strong>transitive</strong> one — someone breaks something: <em>Juan rompió el vaso</em>. And a <strong>pronominal</strong> one with <em>se</em> — the thing breaks "on its own," with no one named: <em>El vaso se rompió</em>. That little <em>se</em> quietly deletes the doer and presents the event as spontaneous. Watch for the pairs (<em>romper / romperse</em>, <em>derribar / derrumbarse</em>, <em>dañar / dañarse</em>) as you read — and see the grammar review at the bottom for the full picture, including the <em>se me rompió</em> "accidental" construction.
+  </div>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ① Romper, quebrar y partir -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Romper, quebrar y partir</div>
+        <div class="card-title-en">Breaking &amp; snapping</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-vaso.png" alt="Un vaso de vidrio hecho añicos." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">El núcleo del tema: un objeto se parte, se quiebra o se hace pedazos. <em>Romper</em> es el verbo general y neutro; el resto añade matices de cómo se rompe — de un golpe seco, en dos, en astillas o en mil pedazos.</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">romper / romperse</span><span class="verb-gloss">to break</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es"><strong>Rompí</strong> el plato sin querer.</div><div class="example-en">I broke the plate by accident.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">quebrar / quebrarse</span><span class="chip chip-region">Lat. Am.</span><span class="verb-gloss">to break, to snap</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Me <strong>quebré</strong> el tobillo jugando.</div><div class="example-en">I broke my ankle playing.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">partir / partirse</span><span class="verb-gloss">to split, to break in two</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El rayo <strong>partió</strong> el árbol en dos.</div><div class="example-en">The lightning split the tree in two.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">fracturar / fracturarse</span><span class="chip chip-reg">técnico</span><span class="verb-gloss">to fracture</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se <strong>fracturó</strong> dos costillas en la caída.</div><div class="example-en">He fractured two ribs in the fall.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">destrozar</span><span class="verb-gloss">to smash, to wreck</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El perro <strong>destrozó</strong> el sillón.</div><div class="example-en">The dog wrecked the couch.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">rajar / rajarse</span><span class="verb-gloss">to crack, to split</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se <strong>rajó</strong> el parabrisas con la piedra.</div><div class="example-en">The windshield cracked from the stone.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">agrietarse</span><span class="verb-gloss">to crack (form cracks)</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La pared se <strong>agrietó</strong> con el temblor.</div><div class="example-en">The wall cracked in the tremor.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">astillarse</span><span class="chip chip-reg">poco frecuente</span><span class="verb-gloss">to splinter</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La madera vieja se <strong>astilló</strong>.</div><div class="example-en">The old wood splintered.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">hacerse añicos / hacerse pedazos</span><span class="verb-gloss">to shatter (to pieces)</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El jarrón se <strong>hizo añicos</strong>.</div><div class="example-en">The vase shattered to pieces.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>Romperse</em> is the <strong>neutral, universal</strong> verb for breaking — including bones (<em>me rompí el brazo</em>). Across Latin America <em>quebrarse</em> is just as common for bones and brittle things (<em>me quebré la pierna</em>), where Spain leans on <em>romperse</em>. Two false-friend traps: <em>quebrar</em> also means <strong>to go bankrupt</strong> (<em>la empresa quebró</em>), and <em>partirse</em> colloquially means <strong>to crack up laughing</strong> (<em>me partí de risa</em>).
+    </div>
+  </article>
+
+  <!-- ② Destruir, demoler y derribar -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Destruir, demoler y derribar</div>
+        <div class="card-title-en">Destruction &amp; collapse</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-demolicion.png" alt="Una bola de demolición golpea un muro de ladrillos." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">Cuando la rotura es a gran escala — un edificio, un puente, un pueblo entero. Aquí la fuerza es total: se destruye, se demuele, se derriba o, sin que nadie lo empuje, se derrumba.</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">destruir</span><span class="verb-gloss">to destroy</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El incendio <strong>destruyó</strong> la casa.</div><div class="example-en">The fire destroyed the house.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">demoler</span><span class="verb-gloss">to demolish</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es"><strong>Demolieron</strong> el viejo estadio.</div><div class="example-en">They demolished the old stadium.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">derribar</span><span class="verb-gloss">to knock down, to topple</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es"><strong>Derribaron</strong> el muro en una hora.</div><div class="example-en">They knocked down the wall in an hour.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">derrumbar / derrumbarse</span><span class="verb-gloss">to collapse, to cave in</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El puente se <strong>derrumbó</strong> tras el sismo.</div><div class="example-en">The bridge collapsed after the quake.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">arrasar</span><span class="verb-gloss">to raze, to devastate</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El huracán <strong>arrasó</strong> el pueblo.</div><div class="example-en">The hurricane razed the town.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">aplastar</span><span class="verb-gloss">to crush, to flatten</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La roca <strong>aplastó</strong> el techo del auto.</div><div class="example-en">The rock crushed the car roof.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      This pair is the cleanest live demo of the page's grammar. <em>Derribar</em> is <strong>transitive</strong> — a force knocks something down: <em>derribar un muro</em>, <em>derribar un avión</em> (shoot it down), <em>derribar al gobierno</em> (topple it). <em>Derrumbarse</em> is <strong>pronominal</strong> — it comes down on its own: <em>el edificio se derrumbó</em>. Same event, but <em>derribar</em> names a culprit and <em>derrumbarse</em> doesn't.
+    </div>
+  </article>
+
+  <!-- ③ Chocar, estrellar y volcar -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Chocar, estrellar y volcar</div>
+        <div class="card-title-en">Crashes &amp; collisions</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-choque.png" alt="Dos autos en un choque frontal." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">Los accidentes de impacto: vehículos que chocan, se estrellan o vuelcan. El matiz va de la colisión cotidiana al choque violento que destroza.</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">chocar</span><span class="verb-gloss">to crash, to collide</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El auto <strong>chocó</strong> contra un árbol.</div><div class="example-en">The car crashed into a tree.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">estrellar / estrellarse</span><span class="verb-gloss">to crash (violently), to smash</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El avión se <strong>estrelló</strong> en la montaña.</div><div class="example-en">The plane crashed into the mountain.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">volcar / volcarse</span><span class="verb-gloss">to overturn, to tip over</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El camión <strong>volcó</strong> en la curva.</div><div class="example-en">The truck overturned on the curve.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">atropellar</span><span class="verb-gloss">to run over (a person/animal)</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Un coche <strong>atropelló</strong> a un peatón.</div><div class="example-en">A car ran over a pedestrian.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">colisionar</span><span class="chip chip-reg">formal</span><span class="verb-gloss">to collide</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Dos trenes <strong>colisionaron</strong> de frente.</div><div class="example-en">Two trains collided head-on.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>Chocar (con / contra)</em> is the everyday "crash/collide." <em>Estrellarse (contra)</em> is more violent — a smash that wrecks (a plane <em>se estrella</em>, never just <em>choca</em>). <em>Volcar</em> is the tip-over/overturn verb and reappears in Card ④ at table-top scale. Note <em>chocar</em> also carries idioms we're leaving out: <em>me choca</em> (it bugs me, Mexico) and <em>¡chócala!</em> (high five).
+    </div>
+  </article>
+
+  <!-- ④ Derramar, volcar y tirar -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Derramar, volcar y tirar</div>
+        <div class="card-title-en">Spills &amp; knocking over</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-derrame.png" alt="Una taza volcada con el café derramándose." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">Los accidentes domésticos por excelencia: líquidos que se derraman y objetos que se vuelcan o se tiran al suelo. Aquí vive el <em>se</em> accidental (lo vemos a fondo al final).</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">derramar / derramarse</span><span class="verb-gloss">to spill</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es"><strong>Derramé</strong> el café sobre el teclado.</div><div class="example-en">I spilled coffee on the keyboard.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">volcar / volcarse</span><span class="verb-gloss">to knock over, to tip over</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es"><strong>Volqué</strong> el vaso sin querer.</div><div class="example-en">I knocked the glass over by accident.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">tirar</span><span class="verb-gloss">to knock over, to drop, to spill</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El gato <strong>tiró</strong> la planta.</div><div class="example-en">The cat knocked the plant over.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      This is where the <strong>"accidental <em>se</em>"</strong> lives (full treatment in the grammar review). <em>Se me cayó</em>, <em>se me derramó</em>, <em>se me volcó</em> — the <em>me</em> says it happened <strong>to</strong> you and frames it as an accident, not a clumsy act. A regional aside: in Mexico and Central America <em>regar</em> is colloquial for spilling (<em>regué el agua</em>) — recognition only, not the neutral default.
+    </div>
+  </article>
+
+  <!-- ⑤ Dañar, estropear y arruinar -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Dañar, estropear y arruinar</div>
+        <div class="card-title-en">Damage, ruin &amp; spoil</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-dano.png" alt="La pantalla de un celular rajada." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">Cuando algo no se parte, pero queda inservible: se daña, se echa a perder, se arruina. Es el campo del deterioro, no de la rotura limpia.</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">dañar / dañarse</span><span class="verb-gloss">to damage</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La humedad <strong>dañó</strong> los libros.</div><div class="example-en">The damp damaged the books.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">estropear / estropearse</span><span class="chip chip-region">España</span><span class="verb-gloss">to ruin, to spoil, to break</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se <strong>estropeó</strong> la comida con el calor.</div><div class="example-en">The food spoiled in the heat.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">arruinar / arruinarse</span><span class="verb-gloss">to ruin</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La lluvia <strong>arruinó</strong> el picnic.</div><div class="example-en">The rain ruined the picnic.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">echar(se) a perder</span><span class="verb-gloss">to spoil, to go bad; to ruin</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se <strong>echó a perder</strong> la leche.</div><div class="example-en">The milk went bad.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">deteriorar / deteriorarse</span><span class="verb-gloss">to deteriorate</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El edificio se <strong>deterioró</strong> con los años.</div><div class="example-en">The building deteriorated over the years.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      For food going off and plans getting ruined, <em>estropear(se)</em> is the <strong>Spain</strong> reflex; across Latin America the neutral choices are <em>echar(se) a perder</em> (<em>se echó a perder la fruta</em>) and <em>dañar(se)</em>. Keep <em>echar a perder</em> / <em>dañar</em> as your default and read <em>estropear</em> as Peninsular.
+    </div>
+  </article>
+
+  <!-- ⑥ Dejar de funcionar (regional table) -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Dejar de funcionar — <em>cuando un aparato se rompe</em></div>
+        <div class="card-title-en">Stopped working</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-averia.png" alt="Un auto averiado al costado del camino con el capó levantado." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">Cómo decir que un aparato "se rompió" cambia muchísimo según el país. La forma neutra siempre funciona; las regionales conviene <strong>reconocerlas</strong>, no producirlas.</p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Quiero decir…</th><th>Neutral (seguro)</th><th>Por región</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>it broke down / stopped working</td>
+            <td><em>dejó de funcionar · no funciona · se rompió</em></td>
+            <td><em>se estropeó · se averió</em><span class="chip chip-region">España</span> · <em>se descompuso</em><span class="chip chip-region">México</span> · <em>se malogró</em><span class="chip chip-region">Perú</span> · <em>se dañó</em><span class="chip chip-region">Caribe/Col.</span> · <em>no anda</em><span class="chip chip-region">Cono Sur</span></td>
+          </tr>
+          <tr>
+            <td>the bulb burned out</td>
+            <td><em>se quemó el foco</em></td>
+            <td><em>se fundió la bombilla</em><span class="chip chip-region">España</span></td>
+          </tr>
+          <tr>
+            <td>it's acting up / glitching</td>
+            <td><em>está fallando</em></td>
+            <td><em>(universal)</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      "My car broke down" has no single pan-Spanish verb — each region has its own, and using the wrong one marks you instantly. <strong>Produce</strong> the neutral <em>dejó de funcionar</em> / <em>no funciona</em> / <em>se rompió</em>; <strong>recognize</strong> the rest. Two specifics: <em>descomponerse</em> means "break down" mainly in <strong>Mexico</strong> (and it doubles as "to decompose/rot" — see Card ⑦, a true two-job verb); and bulbs <em>se funden</em> in Spain but <em>se queman</em> across Latin America (<em>se quemó el foco</em>).
+    </div>
+  </article>
+
+  <!-- ⑦ Pudrirse y oxidarse -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title">Pudrirse y oxidarse</div>
+        <div class="card-title-en">Rot, decay &amp; rust</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-podrido.png" alt="Una fruta podrida junto a un perno oxidado." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">La rotura lenta del tiempo: lo orgánico se pudre, el metal se oxida, todo se descompone. No hay golpe — solo deterioro gradual.</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">pudrir / pudrirse</span><span class="verb-gloss">to rot</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La fruta se <strong>pudrió</strong> en el cajón.</div><div class="example-en">The fruit rotted in the drawer.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">descomponerse</span><span class="verb-gloss">to decompose, to rot</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La materia orgánica se <strong>descompone</strong> rápido.</div><div class="example-en">Organic matter decomposes fast.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">oxidarse</span><span class="verb-gloss">to rust</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La bicicleta se <strong>oxidó</strong> bajo la lluvia.</div><div class="example-en">The bike rusted in the rain.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">enmohecerse</span><span class="chip chip-reg">poco frecuente</span><span class="verb-gloss">to go moldy</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El pan se <strong>enmoheció</strong>.</div><div class="example-en">The bread went moldy.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">corroerse</span><span class="chip chip-reg">formal</span><span class="verb-gloss">to corrode</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El ácido <strong>corroyó</strong> el metal.</div><div class="example-en">The acid corroded the metal.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>Pudrirse</em> is organic rot (fruit, wood, food); <em>descomponerse</em> is the more clinical "decompose" — and the same verb that means "break down" in Mexico (Card ⑥). <em>Oxidarse</em> is rust on metal. For mold, <em>enmohecerse</em> is correct but bookish; everyday speech prefers <em>ponerse mohoso</em> or <em>llenarse de moho</em>.
+    </div>
+  </article>
+
+  <!-- ⑧ Gastarse y agotarse -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">⑧</div>
+      <div class="card-title-group">
+        <div class="card-title">Gastarse y agotarse</div>
+        <div class="card-title-en">Wearing out &amp; running out</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/romper/rotura-gastado.png" alt="La suela gastada de un zapato." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+    <p class="explanation">El desgaste por el uso: las cosas se gastan, se desgastan, se agotan, se acaban. La rotura aquí es el final natural de algo que se usó hasta el límite.</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">gastar / gastarse</span><span class="verb-gloss">to wear out, to wear down</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se <strong>gastaron</strong> las suelas de los zapatos.</div><div class="example-en">The shoe soles wore out.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">desgastar / desgastarse</span><span class="verb-gloss">to wear down (by friction)</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El uso diario <strong>desgastó</strong> las teclas.</div><div class="example-en">Daily use wore down the keys.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">agotar / agotarse</span><span class="verb-gloss">to use up, to run out; to exhaust</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se <strong>agotaron</strong> las entradas en minutos.</div><div class="example-en">The tickets sold out in minutes.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">acabarse</span><span class="verb-gloss">to run out</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se <strong>acabó</strong> la batería.</div><div class="example-en">The battery ran out.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="verb-headline"><span class="verb-word">consumirse</span><span class="chip chip-reg">poco frecuente</span><span class="verb-gloss">to burn down, to waste away</span></div>
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La vela se <strong>consumió</strong>.</div><div class="example-en">The candle burned down.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>Gastar</em> is double-duty: <strong>to spend</strong> (money) and <strong>to wear out</strong> (<em>se gastaron los frenos</em>). <em>Desgastar</em> is wearing down by friction or erosion specifically. <em>Agotarse</em> / <em>acabarse</em> are "to run out" — of tickets, battery, patience.
+    </div>
+  </article>
+
+  <!-- ════════ Grammar review ════════ -->
+  <div class="section-divider">
+    <div class="overline">Gramática</div>
+    <h2>La gramática de estos verbos</h2>
+  </div>
+
+  <!-- Block A -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">A</div>
+      <div class="card-title-group">
+        <div class="card-title">Transitivo vs. pronominal</div>
+        <div class="card-title-en">The anticausative <em>se</em></div>
+      </div>
+    </div>
+    <p class="explanation">El mismo hecho, dos encuadres: con culpable nombrado (transitivo) o como algo que sucede solo (pronominal). Escuchá el contraste en cada par.</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">El terremoto <strong>derrumbó</strong> el edificio. El edificio se <strong>derrumbó</strong>.</div><div class="example-en">(transitive) The quake collapsed the building. → (pronominal) The building collapsed.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Alguien <strong>rompió</strong> el vaso. El vaso se <strong>rompió</strong>.</div><div class="example-en">(transitive) Someone broke the glass. → (pronominal) The glass broke.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">La humedad <strong>dañó</strong> la pared. La pared se <strong>dañó</strong>.</div><div class="example-en">(transitive) The damp damaged the wall. → (pronominal) The wall got damaged.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Spanish constantly chooses between naming a culprit and not. The <strong>transitive</strong> form puts an agent in the subject slot (<em>el calor estropeó la comida</em>). Add <em>se</em> and the agent vanishes — the <strong>pronominal / anticausative</strong> form presents the change as something that just <em>happened</em> to the subject (<em>la comida se estropeó</em>). It's not passive and there's no "by"; the event is simply framed as spontaneous. This is why so many verbs here travel in <em>—ar / —arse</em> pairs.
+    </div>
+  </article>
+
+  <!-- Block B -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">B</div>
+      <div class="card-title-group">
+        <div class="card-title">El <em>se</em> accidental</div>
+        <div class="card-title-en">The involuntary <em>se</em></div>
+      </div>
+    </div>
+    <p class="explanation">Sumá un pronombre de objeto indirecto al pronominal y obtenés la estructura del accidente: <em>se + me/te/le + verbo</em>. Marca a quién le pasó y dice "no fue mi culpa".</p>
+    <div class="verb-list">
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se me <strong>rompió</strong> el vaso.</div><div class="example-en">I broke the glass (it broke on me).</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se me <strong>cayó</strong> el celular.</div><div class="example-en">I dropped my phone.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se nos <strong>descompuso</strong> el auto.</div><div class="example-en">Our car broke down (on us).</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se le <strong>quemó</strong> la comida.</div><div class="example-en">She burned the food.</div></div></div>
+      </div>
+      <div class="verb-entry">
+        <div class="example-row" data-region="neutral"><div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div><div class="example-body"><div class="example-es">Se me <strong>rompieron</strong> los lentes.</div><div class="example-en">My glasses broke. <em>— verb agrees with</em> los lentes.</div></div></div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Stack an indirect-object pronoun onto the pronominal form and you get the <strong>"accidental <em>se</em>"</strong>: <strong>se + me/te/le/nos/les + verb</strong>. The pronoun marks the <strong>person it happened to</strong>, and the construction quietly says <em>it wasn't my fault</em>. Two mechanics to nail: (1) the verb agrees with the <strong>thing</strong>, not the person — <em>se me rompió el vaso</em> but <em>se me rompieron los vasos</em>; (2) it's the default way to narrate everyday mishaps, so <em>se me cayó</em> sounds natural where the blunt <em>yo tiré</em> sounds like a confession.
+    </div>
+  </article>
+
+  <!-- ════════ Repaso (matching quiz) ════════ -->
+  <section class="repaso-section">
+    <button class="repaso-banner" id="repasoBanner" onclick="openRepaso()">
+      <span class="repaso-banner-title">Repaso rápido</span>
+      <span class="repaso-banner-hint">Empareja verbos y significados →</span>
+    </button>
+    <div class="repaso-body" id="repasoBody" hidden>
+      <div class="repaso-title">Repaso rápido</div>
+      <p class="repaso-subtitle">Diez verbos, diez significados. Arrastra (o toca) cada significado al casillero del verbo correcto y pulsa <strong>Calificar</strong>. Cada ronda es distinta; nada se guarda.</p>
+      <div class="repaso-tray" id="repasoTray"></div>
+      <div class="repaso-board" id="repasoBoard"></div>
+      <div class="repaso-controls">
+        <button class="btn btn-primary" onclick="gradeRepaso()">Calificar</button>
+        <button class="btn" onclick="newRepasoRound()">Otra ronda</button>
+        <button class="btn" onclick="closeRepaso()">Salir del repaso</button>
+        <span class="repaso-score" id="repasoScore"></span>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-wrap -->
+
+<!-- Guía Rápida modal -->
+<div class="modal-overlay" id="modal-cheat" onclick="if(event.target===this)closeModal('modal-cheat')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Guía Rápida — verbos de cabecera</div>
+      <button class="close-btn" onclick="closeModal('modal-cheat')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>If you remember one verb per situation, remember these — the neutral Latin-American go-to for each.</p>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Para decir…</th><th>Verbo de cabecera</th><th>Ejemplo</th></tr></thead>
+          <tbody>
+            <tr><td>break (an object)</td><td><em>romper(se)</em></td><td><em>Se rompió el vaso.</em></td></tr>
+            <tr><td>destroy / demolish</td><td><em>destruir</em></td><td><em>El incendio destruyó la casa.</em></td></tr>
+            <tr><td>collapse</td><td><em>derrumbarse</em></td><td><em>Se derrumbó el techo.</em></td></tr>
+            <tr><td>crash</td><td><em>chocar</em></td><td><em>Chocó contra un poste.</em></td></tr>
+            <tr><td>spill</td><td><em>derramar</em></td><td><em>Derramé el café.</em></td></tr>
+            <tr><td>damage / ruin</td><td><em>dañar</em></td><td><em>El agua dañó el motor.</em></td></tr>
+            <tr><td>spoil (food)</td><td><em>echarse a perder</em></td><td><em>Se echó a perder la leche.</em></td></tr>
+            <tr><td>stop working</td><td><em>dejar de funcionar</em></td><td><em>El auto dejó de funcionar.</em></td></tr>
+            <tr><td>rot</td><td><em>pudrirse</em></td><td><em>Se pudrió la fruta.</em></td></tr>
+            <tr><td>rust</td><td><em>oxidarse</em></td><td><em>Se oxidó la reja.</em></td></tr>
+            <tr><td>wear out</td><td><em>gastarse</em></td><td><em>Se gastaron los frenos.</em></td></tr>
+            <tr><td>run out</td><td><em>acabarse</em></td><td><em>Se acabó la batería.</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Parecidos modal -->
+<div class="modal-overlay" id="modal-parecidos" onclick="if(event.target===this)closeModal('modal-parecidos')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">No los confundas</div>
+      <button class="close-btn" onclick="closeModal('modal-parecidos')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Five verbs that look almost identical and mean completely different things.</p>
+      <div class="table-wrapper">
+        <table>
+          <thead><tr><th>Verbo</th><th>Significado</th><th>Ejemplo</th></tr></thead>
+          <tbody>
+            <tr><td><em>derramar</em></td><td>to spill</td><td><em>Derramé el vino.</em></td></tr>
+            <tr><td><em>derribar</em></td><td>to knock down / topple</td><td><em>Derribaron el muro.</em></td></tr>
+            <tr><td><em>derrumbarse</em></td><td>to collapse</td><td><em>Se derrumbó el edificio.</em></td></tr>
+            <tr><td><em>derretirse</em></td><td>to melt</td><td><em>Se derritió el hielo.</em></td></tr>
+            <tr><td><em>derrochar</em></td><td>to squander / waste</td><td><em>Derrocha el dinero.</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Vocab List modal -->
+<div class="modal-overlay" id="modal-vocab" onclick="if(event.target===this)closeModal('modal-vocab')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Vocabulario completo</div>
+      <button class="close-btn" onclick="closeModal('modal-vocab')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="vocab-legend">Todos los verbos de la página, con sus formas <strong>transitiva</strong> y <strong>pronominal</strong> (esta última = el estado). Pasa el cursor sobre cada verbo para ver su conjugación <em>(función de escritorio)</em>. Indicadores, solo del indicativo: <code>ps</code> presente · <code>pr</code> pretérito · <code>im</code> imperfecto · <code>c/f</code> condicional-futuro · <code>part.</code> participio.</p>
+      <div id="vocabList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+  const clone = esEl.cloneNode(true);
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+  if (!voicesReady) await ensureVoices();
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Image magnification (click to zoom)
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.card-icon img');
+  let activeImage = null;
+  const resetZoom = () => {
+    if (activeImage) { activeImage.classList.remove('magnified'); activeImage = null; }
+  };
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) { img.classList.remove('magnified'); activeImage = null; }
+      else { resetZoom(); img.classList.add('magnified'); activeImage = img; }
+    });
+  });
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+});
+
+// ═══════════════════════════════════════════════
+//  Modals (generic open/close for both)
+// ═══════════════════════════════════════════════
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    document.body.style.overflow = '';
+  }
+});
+
+// ═══════════════════════════════════════════════
+//  Repaso — static matching quiz (nothing saved)
+// ═══════════════════════════════════════════════
+const VERBS = [
+  { es: "romper",        meanings: ["to break"] },
+  { es: "quebrar",       meanings: ["to break", "to snap", "to go bankrupt"] },
+  { es: "partir",        meanings: ["to split", "to break in two"] },
+  { es: "fracturar",     meanings: ["to fracture"] },
+  { es: "destrozar",     meanings: ["to smash", "to wreck"] },
+  { es: "rajar",         meanings: ["to crack", "to split"] },
+  { es: "agrietarse",    meanings: ["to crack"] },
+  { es: "astillarse",    meanings: ["to splinter"] },
+  { es: "destruir",      meanings: ["to destroy"] },
+  { es: "demoler",       meanings: ["to demolish"] },
+  { es: "derribar",      meanings: ["to knock down", "to topple"] },
+  { es: "derrumbarse",   meanings: ["to collapse", "to cave in"] },
+  { es: "arrasar",       meanings: ["to raze", "to devastate"] },
+  { es: "aplastar",      meanings: ["to crush", "to flatten"] },
+  { es: "chocar",        meanings: ["to crash", "to collide"] },
+  { es: "estrellarse",   meanings: ["to crash", "to smash"] },
+  { es: "volcar",        meanings: ["to overturn", "to tip over", "to knock over"] },
+  { es: "atropellar",    meanings: ["to run over"] },
+  { es: "colisionar",    meanings: ["to collide"] },
+  { es: "derramar",      meanings: ["to spill"] },
+  { es: "tirar",         meanings: ["to knock over", "to drop", "to spill"] },
+  { es: "dañar",         meanings: ["to damage"] },
+  { es: "estropear",     meanings: ["to ruin", "to spoil", "to break down"] },
+  { es: "arruinar",      meanings: ["to ruin"] },
+  { es: "deteriorarse",  meanings: ["to deteriorate"] },
+  { es: "averiarse",     meanings: ["to break down"] },
+  { es: "descomponerse", meanings: ["to break down", "to decompose", "to rot"] },
+  { es: "malograrse",    meanings: ["to break down", "to spoil"] },
+  { es: "fundirse",      meanings: ["to burn out"] },
+  { es: "quemarse",      meanings: ["to burn out", "to burn"] },
+  { es: "fallar",        meanings: ["to fail", "to malfunction"] },
+  { es: "pudrirse",      meanings: ["to rot"] },
+  { es: "oxidarse",      meanings: ["to rust"] },
+  { es: "enmohecerse",   meanings: ["to go moldy"] },
+  { es: "corroerse",     meanings: ["to corrode"] },
+  { es: "gastarse",      meanings: ["to wear out"] },
+  { es: "desgastarse",   meanings: ["to wear down"] },
+  { es: "agotarse",      meanings: ["to run out", "to use up"] },
+  { es: "acabarse",      meanings: ["to run out"] },
+  { es: "consumirse",    meanings: ["to burn down", "to waste away"] }
+];
+
+const ROUND_SIZE = 10;
+let roundVerbs = [];
+let selectedBadge = null;
+let draggedBadge = null;
+let trayEl = null;
+let boardEl = null;
+let scoreEl = null;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function escAttr(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+function buildRound() {
+  const pool = shuffle(VERBS);
+  const used = new Set();
+  const chosen = [];
+  for (const v of pool) {
+    if (chosen.length >= ROUND_SIZE) break;
+    const avail = v.meanings.filter(m => !used.has(m));
+    if (avail.length === 0) continue;
+    const shown = avail[Math.floor(Math.random() * avail.length)];
+    used.add(shown);
+    chosen.push({ es: v.es, meanings: v.meanings, shown });
+  }
+  return chosen;
+}
+
+function clearSelection() {
+  if (selectedBadge) { selectedBadge.classList.remove('selected'); selectedBadge = null; }
+}
+
+function placeBadgeInSlot(slot, badge) {
+  const existing = slot.querySelector('.meaning-badge');
+  if (existing && existing !== badge) trayEl.appendChild(existing);
+  slot.appendChild(badge);
+  slot.classList.remove('correct', 'incorrect');
+}
+
+function onBadgeClick(e) {
+  const badge = e.currentTarget;
+  if (selectedBadge === badge) { clearSelection(); return; }
+  clearSelection();
+  selectedBadge = badge;
+  badge.classList.add('selected');
+}
+
+function onSlotClick(e) {
+  const slot = e.currentTarget;
+  const existing = slot.querySelector('.meaning-badge');
+  if (selectedBadge) {
+    placeBadgeInSlot(slot, selectedBadge);
+    clearSelection();
+  } else if (existing) {
+    trayEl.appendChild(existing);
+    slot.classList.remove('correct', 'incorrect');
+  }
+}
+
+function onBadgeDragStart(e) {
+  draggedBadge = e.currentTarget;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', e.currentTarget.dataset.meaning || '');
+}
+function onSlotDragOver(e) { e.preventDefault(); }
+function onSlotDrop(e) {
+  e.preventDefault();
+  if (!draggedBadge) return;
+  placeBadgeInSlot(e.currentTarget, draggedBadge);
+  draggedBadge = null;
+}
+function onTrayDrop(e) {
+  e.preventDefault();
+  if (draggedBadge) { trayEl.appendChild(draggedBadge); draggedBadge = null; }
+}
+
+function newRepasoRound() {
+  roundVerbs = buildRound();
+  boardEl.innerHTML = roundVerbs.map((v, i) =>
+    `<div class="repaso-row">` +
+      `<div class="repaso-pair">` +
+        `<div class="repaso-verb-cell">` +
+          `<button type="button" class="speak-btn repaso-speak" data-word="${escAttr(v.es)}" title="Escuchar">🔊</button>` +
+          `<span class="repaso-verb">${escAttr(v.es)}</span>` +
+        `</div>` +
+        `<div class="repaso-slot" data-verb-idx="${i}"></div>` +
+      `</div>` +
+      `<div class="repaso-reveal" data-reveal-idx="${i}"></div>` +
+    `</div>`
+  ).join('');
+  const badges = shuffle(roundVerbs.map(v => v.shown));
+  trayEl.innerHTML = badges.map(m =>
+    `<button type="button" class="meaning-badge" draggable="true" data-meaning="${escAttr(m)}">${escAttr(m)}</button>`
+  ).join('');
+  if (scoreEl) scoreEl.textContent = '';
+  clearSelection();
+  draggedBadge = null;
+
+  trayEl.querySelectorAll('.meaning-badge').forEach(b => {
+    b.addEventListener('click', onBadgeClick);
+    b.addEventListener('dragstart', onBadgeDragStart);
+  });
+  boardEl.querySelectorAll('.repaso-slot').forEach(slot => {
+    slot.addEventListener('click', onSlotClick);
+    slot.addEventListener('dragover', onSlotDragOver);
+    slot.addEventListener('drop', onSlotDrop);
+  });
+  boardEl.querySelectorAll('.repaso-speak').forEach(b => {
+    b.addEventListener('click', (e) => { e.stopPropagation(); speakRepasoWord(b); });
+  });
+}
+
+function gradeRepaso() {
+  let correct = 0;
+  document.querySelectorAll('.repaso-slot').forEach(slot => {
+    slot.classList.remove('correct', 'incorrect');
+    const badge = slot.querySelector('.meaning-badge');
+    if (!badge) return;
+    const meaning = badge.dataset.meaning;
+    const v = roundVerbs[parseInt(slot.dataset.verbIdx, 10)];
+    if (v && v.meanings.includes(meaning)) { slot.classList.add('correct'); correct++; }
+    else slot.classList.add('incorrect');
+  });
+  // reveal each verb's full meaning list under its row
+  roundVerbs.forEach((v, i) => {
+    const rev = boardEl.querySelector('.repaso-reveal[data-reveal-idx="' + i + '"]');
+    if (rev) rev.textContent = v.es + ' — ' + v.meanings.join(' · ');
+  });
+  if (scoreEl) scoreEl.textContent = correct + ' / ' + roundVerbs.length + ' correctas';
+}
+
+// ── speak a single Spanish word (quiz verbs) ──
+async function speakRepasoWord(btn) {
+  if (!window.speechSynthesis) return;
+  const text = cleanForTTS(btn.dataset.word || '');
+  if (!text) return;
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+  if (!voicesReady) await ensureVoices();
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ── collapse / expand the quiz ──
+function openRepaso() {
+  const banner = document.getElementById('repasoBanner');
+  const body = document.getElementById('repasoBody');
+  if (banner) banner.hidden = true;
+  if (body) body.hidden = false;
+  newRepasoRound();
+}
+function closeRepaso() {
+  const banner = document.getElementById('repasoBanner');
+  const body = document.getElementById('repasoBody');
+  if (body) body.hidden = true;
+  if (banner) banner.hidden = false;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  trayEl = document.getElementById('repasoTray');
+  boardEl = document.getElementById('repasoBoard');
+  scoreEl = document.getElementById('repasoScore');
+  if (trayEl) {
+    trayEl.addEventListener('dragover', onSlotDragOver);
+    trayEl.addEventListener('drop', onTrayDrop);
+    trayEl.addEventListener('click', (e) => { if (e.target === trayEl) clearSelection(); });
+  }
+  // quiz starts collapsed; the round is built on openRepaso()
+});
+
+// ═══════════════════════════════════════════════
+//  Vocab list modal (rendered once on load)
+//  k: reg | orto | irr  (drives tooltip color + underline)
+// ═══════════════════════════════════════════════
+const VOCAB = [
+  { group: "① Romper, quebrar y partir", items: [
+    { t: "romper", td: "to break (sth)", p: "romperse", pd: "to break, to end up broken", c: "irregular (part.) — participio: roto", k: "irr" },
+    { t: "quebrar", td: "to break/snap (sth); to go bankrupt", p: "quebrarse", pd: "to break/snap; to fracture (a bone)", c: "irregular (ps) — e→ie: quiebro", k: "irr" },
+    { t: "partir", td: "to split, to cut in two; (intr.) to depart", p: "partirse", pd: "to split, to crack; partirse de risa", c: "regular", k: "reg" },
+    { t: "fracturar", td: "to fracture (sth)", p: "fracturarse", pd: "to fracture (me fracturé el brazo)", c: "regular", k: "reg" },
+    { t: "destrozar", td: "to smash, to wreck", p: "destrozarse", pd: "to get smashed/wrecked", c: "regular (ortográfico) (pr) — destrocé", k: "orto" },
+    { t: "rajar", td: "to crack, to slash", p: "rajarse", pd: "to crack; (coloq.) to back out", c: "regular", k: "reg" },
+    { t: "agrietar", td: "to cause to crack", p: "agrietarse", pd: "to crack, to get cracked (walls, skin)", c: "regular", k: "reg" },
+    { t: "astillar", td: "to splinter (sth)", p: "astillarse", pd: "to splinter", c: "regular", k: "reg" },
+    { t: "hacer añicos", td: "to smash to bits", p: "hacerse añicos / pedazos", pd: "to shatter", c: "irregular (ps, pr, c/f, part.) — hacer: hago, hice, haré, hecho", k: "irr" }
+  ]},
+  { group: "② Destruir, demoler y derribar", items: [
+    { t: "destruir", td: "to destroy", p: "destruirse", pd: "to be destroyed", c: "irregular (ps, pr) — añade y: destruyo, destruyó", k: "irr" },
+    { t: "demoler", td: "to demolish", p: "", pd: "(raro)", c: "irregular (ps) — o→ue: demuele", k: "irr" },
+    { t: "derribar", td: "to knock down, to topple, to shoot down", p: "", pd: "(raro — casi siempre transitivo)", c: "regular", k: "reg" },
+    { t: "derrumbar", td: "to bring down", p: "derrumbarse", pd: "to collapse, to cave in", c: "regular", k: "reg" },
+    { t: "arrasar", td: "to raze, to devastate", p: "", pd: "(raro)", c: "regular", k: "reg" },
+    { t: "aplastar", td: "to crush, to flatten", p: "aplastarse", pd: "to get crushed/flattened", c: "regular", k: "reg" }
+  ]},
+  { group: "③ Chocar, estrellar y volcar", items: [
+    { t: "chocar", td: "(con/contra) to crash, to collide; to clash", p: "", pd: "(raro)", c: "regular (ortográfico) (pr) — choqué", k: "orto" },
+    { t: "estrellar", td: "to smash (sth against)", p: "estrellarse", pd: "to crash, to smash (a plane se estrella)", c: "regular", k: "reg" },
+    { t: "volcar", td: "to overturn, to tip over, to knock over", p: "volcarse", pd: "to overturn; (fig.) to throw oneself into", c: "irregular (ps, pr) — o→ue, c→qu: vuelco, volqué", k: "irr" },
+    { t: "atropellar", td: "to run over (person/animal)", p: "", pd: "(raro)", c: "regular", k: "reg" },
+    { t: "colisionar", td: "(con/contra) to collide", p: "", pd: "(raro)", c: "regular", k: "reg" }
+  ]},
+  { group: "④ Derramar, volcar y tirar", items: [
+    { t: "derramar", td: "to spill (sth)", p: "derramarse", pd: "to spill, to overflow", c: "regular", k: "reg" },
+    { t: "tirar", td: "to throw; to knock over; to drop; to throw away", p: "tirarse", pd: "to throw oneself; (coloq.) to lie down", c: "regular", k: "reg" }
+  ]},
+  { group: "⑤ Dañar, estropear y arruinar", items: [
+    { t: "dañar", td: "to damage, to harm", p: "dañarse", pd: "to get damaged; (Car./Col.) to break down; (food) to spoil", c: "regular", k: "reg" },
+    { t: "estropear", td: "to ruin, to spoil, to damage (España)", p: "estropearse", pd: "to break down, to spoil (España)", c: "regular", k: "reg" },
+    { t: "arruinar", td: "to ruin", p: "arruinarse", pd: "to be ruined; to go bankrupt", c: "regular (acento, ps): arruíno", k: "reg" },
+    { t: "echar a perder", td: "to ruin, to spoil", p: "echarse a perder", pd: "to go bad, to spoil (food)", c: "regular (locución con echar)", k: "reg" },
+    { t: "deteriorar", td: "to damage, to wear down", p: "deteriorarse", pd: "to deteriorate, to get worse", c: "regular", k: "reg" }
+  ]},
+  { group: "⑥ Dejar de funcionar (stop working)", items: [
+    { t: "averiar", td: "to cause to break down (a machine)", p: "averiarse", pd: "to break down (España)", c: "irregular (acento, ps): se avería / averío", k: "irr" },
+    { t: "descomponer", td: "to break into parts; to decompose; (Méx.) to break", p: "descomponerse", pd: "to break down (Méx.); to decompose/rot; (persona) to feel ill", c: "irregular (ps, pr, c/f, part.) — como poner: descompongo, descompuse, descompuesto", k: "irr" },
+    { t: "malograr", td: "to waste, to spoil (an opportunity)", p: "malograrse", pd: "to break down (Perú); to spoil; to die young", c: "regular", k: "reg" },
+    { t: "fundir", td: "to melt, to smelt; to blow (a fuse)", p: "fundirse", pd: "to burn out (bulb/fuse, España); to melt", c: "regular", k: "reg" },
+    { t: "quemar", td: "to burn", p: "quemarse", pd: "to burn out (bulb); to get burned", c: "regular", k: "reg" },
+    { t: "fallar", td: "to rule (a verdict); (intr.) to fail, to miss", p: "", pd: "(raro)", c: "regular", k: "reg" }
+  ]},
+  { group: "⑦ Pudrirse y oxidarse", items: [
+    { t: "pudrir", td: "to rot (sth)", p: "pudrirse", pd: "to rot, to go rotten", c: "irregular (pr, part.) — pudrió; participio podrido", k: "irr" },
+    { t: "oxidar", td: "to rust, to oxidize (sth)", p: "oxidarse", pd: "to rust, to get rusty", c: "regular", k: "reg" },
+    { t: "enmohecer", td: "to make moldy", p: "enmohecerse", pd: "to go moldy", c: "irregular (ps) — c→zc: enmohezco", k: "irr" },
+    { t: "corroer", td: "to corrode, to eat away", p: "corroerse", pd: "to corrode", c: "irregular (ps, pr, part.) — corroo, corroyó, corroído", k: "irr" }
+  ]},
+  { group: "⑧ Gastarse y agotarse", items: [
+    { t: "gastar", td: "to spend; to wear out (sth)", p: "gastarse", pd: "to wear out; to be used up", c: "regular", k: "reg" },
+    { t: "desgastar", td: "to wear down (by friction)", p: "desgastarse", pd: "to wear down, to get worn", c: "regular", k: "reg" },
+    { t: "agotar", td: "to use up, to exhaust, to deplete", p: "agotarse", pd: "to run out, to sell out; to get exhausted", c: "regular", k: "reg" },
+    { t: "acabar", td: "to finish (sth)", p: "acabarse", pd: "to run out, to come to an end", c: "regular", k: "reg" },
+    { t: "consumir", td: "to consume, to use up", p: "consumirse", pd: "to burn down, to waste away", c: "regular", k: "reg" }
+  ]}
+];
+
+function renderVocab() {
+  const host = document.getElementById('vocabList');
+  if (!host) return;
+  host.innerHTML = VOCAB.map(g => {
+    const items = g.items.map(it => {
+      const tip = `<span class="vocab-verb tip-${it.k}">${escAttr(it.t)}<span class="vocab-tip">${escAttr(it.c)}</span></span>`;
+      const transLine = `<div class="vocab-line"><span class="vocab-tag">trans.</span>${tip}<span class="vocab-def">— ${escAttr(it.td)}</span></div>`;
+      const pronLine = it.p
+        ? `<div class="vocab-line"><span class="vocab-tag">pron.</span><span class="vocab-form-pron">${escAttr(it.p)}</span><span class="vocab-state">estado</span><span class="vocab-def">— ${escAttr(it.pd)}</span></div>`
+        : `<div class="vocab-line vocab-line-muted"><span class="vocab-tag">pron.</span><span class="vocab-def">${escAttr(it.pd || '(raro)')}</span></div>`;
+      return `<div class="vocab-item">${transLine}${pronLine}</div>`;
+    }).join('');
+    return `<div class="vocab-group"><div class="vocab-group-title">${escAttr(g.group)}</div>${items}</div>`;
+  }).join('');
+}
+
+document.addEventListener('DOMContentLoaded', renderVocab);
+</script>
+</body>
+</html>

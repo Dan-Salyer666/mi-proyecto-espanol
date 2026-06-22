@@ -483,7 +483,19 @@ async function handleTokenResponse(resp) {
     if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(false); }
     return;
   }
-  driveToken = resp.access_token;
+driveToken = resp.access_token;
+
+  // Re-auth triggered mid-operation (e.g. a save retry after a 401): just hand
+  // the fresh token back to the caller. Do NOT reload from Drive here — doing so
+  // would overwrite the unsaved in-memory `entries` (the pair just added) with
+  // the stale Drive copy, and the new pair would be lost on the retry save.
+  if (_connectResolve) {
+    setDriveUI('connected', 'Google Drive: conectado ✓');
+    const r = _connectResolve; _connectResolve = null; r(true);
+    return;
+  }
+
+  // First / normal connect: load existing data from Drive.
   setDriveUI('busy', 'Verificando carpeta…');
   try {
     folderId   = await ensureFolder();
@@ -497,7 +509,6 @@ async function handleTokenResponse(resp) {
     renderEntries();
     showWorkspace(true);
     if (!dataFileId) await saveData();   // create the seeded file on first connect
-    if (_connectResolve) { const r = _connectResolve; _connectResolve = null; r(true); }
   } catch (e) {
     console.error('Drive setup error:', e);
     setDriveUI('disconnected', 'Error al acceder a Drive');

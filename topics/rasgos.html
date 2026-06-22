@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Las cinco A — Mi Proyecto Español</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  /* Per-card accent palette — α·β·γ·δ·ε across the 5 words */
+  --accent-alpha:   #4a90d9;  /* amable    — blue   */
+  --accent-beta:    #4ecdc4;  /* agradable — teal   */
+  --accent-gamma:   #fbbf24;  /* alegre    — gold   */
+  --accent-delta:   #c084fc;  /* amigable  — violet */
+  --accent-epsilon: #e891b8;  /* amistoso  — rose   */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (swap this one line for any file in assets/los fondos/) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/los fondos/alhambra_garden.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header { text-align: center; padding: 14px 0 6px; }
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 22px 0 4px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── Memory strip (the arrow row) ── */
+.memory-strip {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 18px 0 22px;
+}
+.mem-q { text-align: center; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 14px; line-height: 1.55; }
+.mem-q em { color: var(--accent); font-style: italic; }
+.mem-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.mem-cell { flex: 1; min-width: 118px; text-align: center; padding: 10px 8px; background: var(--bg-input); border-radius: 8px; }
+.mem-arrow { font-size: 1.5rem; line-height: 1; }
+.mem-word { font-family: 'DM Serif Display', serif; font-size: 1rem; color: var(--text-primary); margin-top: 5px; }
+.mem-dir { font-size: 0.72rem; color: var(--text-muted); margin-top: 3px; line-height: 1.3; }
+
+/* ── Word cards ── */
+.word-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 0 0 8px;
+}
+.word-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s, background 0.2s;
+}
+.word-card:hover { background: var(--bg-card-hover); border-color: #2a4a75; transform: translateY(-2px); }
+.word-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.card-img-banner { position: relative; height: 128px; background: var(--bg-input); overflow: hidden; }
+.card-img-banner .img-ph {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.card-img-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+
+.card-body { padding: 14px 16px 16px; }
+.word-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.word-name { font-family: 'DM Serif Display', serif; font-size: 1.5rem; line-height: 1.1; }
+.card-alpha   .word-name, .card-alpha   .anchor-arrow { color: var(--accent-alpha); }
+.card-beta    .word-name, .card-beta    .anchor-arrow { color: var(--accent-beta); }
+.card-gamma   .word-name, .card-gamma   .anchor-arrow { color: var(--accent-gamma); }
+.card-delta   .word-name, .card-delta   .anchor-arrow { color: var(--accent-delta); }
+.card-epsilon .word-name, .card-epsilon .anchor-arrow { color: var(--accent-epsilon); }
+
+.anchor-badge {
+  display: inline-block;
+  margin-top: 9px;
+  font-size: 0.72rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 3px 9px;
+  border-radius: 5px;
+  line-height: 1.4;
+}
+.anchor-badge em { color: var(--text-primary); font-style: italic; }
+.word-gloss { margin-top: 10px; font-size: 0.92rem; color: var(--text-primary); }
+.word-dir { margin-top: 6px; font-size: 0.8rem; color: var(--text-muted); }
+.word-dir .anchor-arrow { font-weight: 700; margin-right: 4px; }
+
+/* ── Speak button ── */
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Chips ── */
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 16px 0 6px; }
+.chip {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  padding: 0.16rem 0.55rem;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.chip-reg    { background: rgba(138, 155, 184, 0.14); color: var(--text-secondary); }
+.chip-region { background: rgba(251, 146, 60, 0.16); color: #fdba74; }
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label { display: inline-block; font-weight: 600; color: var(--accent); margin-right: 6px; letter-spacing: 0.02em; }
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+
+/* ── Modals ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 100;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%; max-width: 640px; max-height: 86vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-header {
+  padding: 20px 26px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title-wrap { display: flex; align-items: center; gap: 10px; }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--text-primary); }
+.close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; transition: color 0.2s; line-height: 1; }
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 22px 26px; overflow-y: auto; flex-grow: 1; }
+.modal-body > p { color: var(--text-secondary); margin-bottom: 14px; line-height: 1.65; font-size: 0.95rem; }
+.modal-body > p strong { color: var(--text-primary); font-weight: 600; }
+.modal-body > p em { color: var(--accent); font-style: italic; }
+.origin-line { font-size: 0.86rem; color: var(--text-muted); font-style: italic; margin-bottom: 16px !important; }
+.origin-line em { color: var(--text-secondary); }
+.m-sub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 18px 0 6px;
+}
+
+/* ── Example rows ── */
+.example-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--text-primary); line-height: 1.5; }
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en { font-size: 0.86rem; color: var(--text-muted); font-style: italic; margin-top: 3px; line-height: 1.45; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .mem-cell { min-width: 100px; }
+  .modal-header { padding: 18px 20px; }
+  .modal-body { padding: 18px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Vocabulario · Adjetivos</div>
+    <h1>Las cinco <em>A</em></h1>
+    <p class="subtitle">Cinco adjetivos amables que es fácil confundir — y cómo separarlos sin que se vuelvan una sola idea borrosa.</p>
+  </header>
+
+  <!-- Rate bar -->
+  <div class="rate-bar">
+    <span class="rate-label">🔊 Velocidad:</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- Memory strip -->
+  <div class="memory-strip">
+    <p class="mem-q">Dos preguntas separan las cinco: <em>¿qué palabra pequeña se esconde dentro?</em> · <em>¿hacia dónde apunta?</em></p>
+    <div class="mem-row">
+      <div class="mem-cell">
+        <div class="mem-arrow" style="color:var(--accent-alpha)">→</div>
+        <div class="mem-word">amable</div>
+        <div class="mem-dir">hacia los demás</div>
+      </div>
+      <div class="mem-cell">
+        <div class="mem-arrow" style="color:var(--accent-beta)">←</div>
+        <div class="mem-word">agradable</div>
+        <div class="mem-dir">al que percibe</div>
+      </div>
+      <div class="mem-cell">
+        <div class="mem-arrow" style="color:var(--accent-gamma)">↻</div>
+        <div class="mem-word">alegre</div>
+        <div class="mem-dir">desde dentro</div>
+      </div>
+      <div class="mem-cell">
+        <div class="mem-arrow" style="color:var(--accent-delta)">⇢</div>
+        <div class="mem-word">amigable</div>
+        <div class="mem-dir">se abre hacia fuera</div>
+      </div>
+      <div class="mem-cell">
+        <div class="mem-arrow" style="color:var(--accent-epsilon)">⇄</div>
+        <div class="mem-word">amistoso</div>
+        <div class="mem-dir">entre dos partes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Word cards -->
+  <div class="word-grid">
+
+    <div class="word-card card-alpha" role="button" tabindex="0" onclick="openModal('m-amable')" onkeydown="cardKey(event,'m-amable')">
+      <div class="card-img-banner">
+        <span class="img-ph">amable</span>
+        <img src="../assets/rasgos/amable.png" alt="Un joven sostiene un paraguas sobre una señora mayor bajo la lluvia." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">amable</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="amable" aria-label="Escuchar amable">🔊</button>
+        </div>
+        <span class="anchor-badge"><em>amar</em> (amor) → trato cálido</span>
+        <div class="word-gloss">kind · polite · courteous</div>
+        <div class="word-dir"><span class="anchor-arrow">→</span> hacia los demás (cómo los tratas)</div>
+      </div>
+    </div>
+
+    <div class="word-card card-beta" role="button" tabindex="0" onclick="openModal('m-agradable')" onkeydown="cardKey(event,'m-agradable')">
+      <div class="card-img-banner">
+        <span class="img-ph">agradable</span>
+        <img src="../assets/rasgos/agradable.png" alt="Un rincón de lectura cálido y acogedor que transmite calma." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">agradable</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="agradable" aria-label="Escuchar agradable">🔊</button>
+        </div>
+        <span class="anchor-badge"><em>agradar</em> → "to please"</span>
+        <div class="word-gloss">pleasant · nice to be around</div>
+        <div class="word-dir"><span class="anchor-arrow">←</span> recae en quien lo percibe</div>
+      </div>
+    </div>
+
+    <div class="word-card card-gamma" role="button" tabindex="0" onclick="openModal('m-alegre')" onkeydown="cardKey(event,'m-alegre')">
+      <div class="card-img-banner">
+        <span class="img-ph">alegre</span>
+        <img src="../assets/rasgos/alegre.png" alt="Una persona sola en la cocina baila con auriculares mientras cocina." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">alegre</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="alegre" aria-label="Escuchar alegre">🔊</button>
+        </div>
+        <span class="anchor-badge"><em>alegría</em> → "joy"</span>
+        <div class="word-gloss">cheerful · in good spirits</div>
+        <div class="word-dir"><span class="anchor-arrow">↻</span> irradia desde dentro, sin destinatario</div>
+      </div>
+    </div>
+
+    <div class="word-card card-delta" role="button" tabindex="0" onclick="openModal('m-amigable')" onkeydown="cardKey(event,'m-amigable')">
+      <div class="card-img-banner">
+        <span class="img-ph">amigable</span>
+        <img src="../assets/rasgos/amigable.png" alt="Una persona acogedora en un picnic invita con la mano abierta a acercarse." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">amigable</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="amigable" aria-label="Escuchar amigable">🔊</button>
+        </div>
+        <span class="anchor-badge"><em>amigo</em> + -able → "befriend-able"</span>
+        <div class="word-gloss">friendly · approachable</div>
+        <div class="word-dir"><span class="anchor-arrow">⇢</span> se abre hacia fuera (una invitación)</div>
+      </div>
+    </div>
+
+    <div class="word-card card-epsilon" role="button" tabindex="0" onclick="openModal('m-amistoso')" onkeydown="cardKey(event,'m-amistoso')">
+      <div class="card-img-banner">
+        <span class="img-ph">amistoso</span>
+        <img src="../assets/rasgos/amistoso.png" alt="Dos jugadores de equipos rivales se dan la mano sonriendo tras un partido amistoso." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">amistoso</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="amistoso" aria-label="Escuchar amistoso">🔊</button>
+        </div>
+        <span class="anchor-badge"><em>amistad</em> + -oso → "full of friendship"</span>
+        <div class="word-gloss">friendly (gesture / relation)</div>
+        <div class="word-dir"><span class="anchor-arrow">⇄</span> entre dos partes</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<div class="modal-overlay" id="m-amable" onclick="if(event.target===this)closeModal('m-amable')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">amable</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="amable" aria-label="Escuchar amable">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-amable')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>amar / amor</em> — gancho mnemónico (no es una traducción literal)</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>Other-directed warmth — <strong>kind, polite, courteous</strong>. It's both a disposition (<em>es muy amable</em>) and something shown in how you treat people; not just a single action.</p>
+
+      <div class="m-sub">Usos clave</div>
+      <p>The courtesy-formula word: <em>¿sería tan amable de…?</em> — the polite way to ask for something.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The <em>amar → warmth</em> hook is a memory aid, not an etymology you should quote: <em>amable</em> comes from Latin <em>amabilis</em> ("lovable"), but its modern meaning is firmly <strong>kind / courteous</strong>, not "loving."
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">ser</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Fue muy <strong>amable</strong> conmigo cuando llegué.</div>
+          <div class="example-en">He was very kind to me when I arrived.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Sería tan <strong>amable</strong> de repetirlo?</div>
+          <div class="example-en">Would you be so kind as to repeat it?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-agradable" onclick="if(event.target===this)closeModal('m-agradable')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">agradable</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="agradable" aria-label="Escuchar agradable">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-agradable')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>agradar</em> (to please)</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>The <strong>effect</strong> something has on the perceiver — pleasant, easy to be around. You don't have to <em>do</em> anything; it's about the experience created, the vibe, not a specific action.</p>
+
+      <div class="m-sub">Rango</div>
+      <p>Applies freely to non-people: <em>un día agradable</em>, <em>un lugar agradable</em>, <em>un olor agradable</em>, <em>una conversación agradable</em>.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> Calling a <strong>person</strong> <em>agradable</em> is positive but <strong>mild</strong> — pleasant company — noticeably cooler than <em>encantador</em> or <em>simpático</em>. Fine for places and things; for people it can land as faint praise.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">ser</span>
+        <span class="chip chip-reg">personas = elogio suave</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Pasamos una tarde muy <strong>agradable</strong>.</div>
+          <div class="example-en">We spent a very pleasant afternoon.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es una persona <strong>agradable</strong>, fácil de tratar.</div>
+          <div class="example-en">He's a pleasant person, easy to deal with.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-alegre" onclick="if(event.target===this)closeModal('m-alegre')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">alegre</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="alegre" aria-label="Escuchar alegre">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-alegre')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>alegría</em> (joy)</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>The happiness and energy a person <strong>radiates</strong> — self-contained, needs no social target. You can be <em>alegre</em> completely alone.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> <strong>ser vs. estar</strong> — the one word here where it really matters. <em>ser alegre</em> = cheerful <strong>by nature</strong> (a trait). <em>estar alegre</em> = happy / in good spirits <strong>right now</strong> (a state). The other four are essentially always <em>ser</em>. Heads-up: <em>estar alegre</em> is also a mild colloquial euphemism for <strong>tipsy / buzzed</strong>, so context matters.
+      </div>
+
+      <div class="m-sub">Rango</div>
+      <p>Stretches to things: <em>colores alegres</em>, <em>música alegre</em>, <em>una habitación alegre</em> — bright, lively, upbeat.</p>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">ser / estar</span>
+        <span class="chip chip-reg">estar alegre = achispado (coloq.)</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es una niña <strong>alegre</strong> que siempre está cantando.</div>
+          <div class="example-en">She's a cheerful girl who's always singing.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hoy está muy <strong>alegre</strong> porque aprobó el examen.</div>
+          <div class="example-en">She's in great spirits today because she passed the exam.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-amigable" onclick="if(event.target===this)closeModal('m-amigable')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">amigable</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="amigable" aria-label="Escuchar amigable">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-amigable')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>amigo</em> + <em>-able</em> → "befriend-able"</p>
+
+      <div class="m-sub">Sentido principal (personas)</div>
+      <p>Open, welcoming, easy to approach — an outward <strong>invitation to connect</strong>. A quality of <strong>one person</strong>.</p>
+
+      <div class="m-sub">Segundo sentido (cosas / relaciones)</div>
+      <p><em>-friendly / amicable</em>: <em>una interfaz amigable</em>, <em>amigable con el medio ambiente</em>.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> <strong>amigable vs. amistoso</strong> — the split that fixes the blur. <em>amigable</em> describes <strong>one person's</strong> openness (you're easy to approach). <em>amistoso</em> describes the <strong>friendship between two parties</strong> — a gesture, tone, relation, or event. Anchor fact: <em>un partido amistoso</em> (a friendly match) is <strong>never</strong> <em>amigable</em>. Think amigo-<strong>able</strong> (you can be befriended) vs. amist-<strong>ad</strong> (the friendship that exists between you).
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> <strong>En la calle (LatAm):</strong> for "a friendly person," <em>simpático</em> is the more everyday spoken choice; <em>amigable</em> is correct but a touch more formal.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">ser</span>
+        <span class="chip chip-reg">cosas = -friendly</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El nuevo vecino es muy <strong>amigable</strong>.</div>
+          <div class="example-en">The new neighbor is very friendly.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La aplicación tiene una interfaz <strong>amigable</strong>.</div>
+          <div class="example-en">The app has a user-friendly interface.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="m-amistoso" onclick="if(event.target===this)closeModal('m-amistoso')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">amistoso</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="amistoso" aria-label="Escuchar amistoso">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-amistoso')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>amistad</em> (friendship) + <em>-oso</em> → "full of friendship"</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>Describes a <strong>gesture, tone, relation, or event</strong> marked by friendship / lack of hostility — the friendly arrow already drawn between two parties. Less a standing personal quality, more the character of an interaction.</p>
+
+      <div class="m-sub">Usos emblemáticos</div>
+      <p><em>un partido amistoso</em> (friendly match), <em>un gesto amistoso</em>, <em>un acuerdo / arreglo amistoso</em> (amicable agreement), <em>en términos amistosos</em>.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The contrast to lock in: one person's openness is <em>amigable</em>; the friendship <strong>between</strong> parties is <em>amistoso</em>. When English says a "friendly match" or an "amicable split," that's <em>amistoso</em> — never <em>amigable</em>.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">ser</span>
+        <span class="chip chip-reg">gestos / relaciones / eventos</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El domingo jugaron un partido <strong>amistoso</strong>.</div>
+          <div class="example-en">On Sunday they played a friendly match.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llegaron a un acuerdo <strong>amistoso</strong>.</div>
+          <div class="example-en">They reached an amicable agreement.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function speakText(text, btn) {
+  if (!window.speechSynthesis) return;
+  text = cleanForTTS(text);
+  if (!text) return;
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  if (!voicesReady) { ensureVoices().then(() => { if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; } speechSynthesis.speak(u); }); }
+  else { speechSynthesis.speak(u); }
+}
+
+function speakWord(btn) {
+  speakText(btn.dataset.word || '', btn);
+}
+
+function speakExample(btn) {
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+  speakText(esEl.textContent, btn);
+}
+
+// ═══════════════════════════════════════════════
+//  Modals
+// ═══════════════════════════════════════════════
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove('active');
+  document.body.style.overflow = '';
+  speechSynthesis && speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+}
+function cardKey(e, id) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(id); }
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    document.body.style.overflow = '';
+    speechSynthesis && speechSynthesis.cancel();
+    document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+  }
+});
+</script>
+</body>
+</html>

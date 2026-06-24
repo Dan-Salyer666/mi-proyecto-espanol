@@ -25,8 +25,8 @@
 // `weight` (default 1) and `noneWeight` (default 1, optional fields only) let fire-rates
 // and preferences be tuned with no code change.
 const SEMILLAS = {
-  version: 2,
-  rollOrder: ['genero', 'lugar', 'tiempo', 'personaje', 'motor', 'nucleo', 'tono', 'final'],
+  version: 3,
+  rollOrder: ['genero', 'lugar', 'tiempo', 'personaje', 'eje', 'motor', 'nucleo', 'tono', 'final'],
   fields: {
 
     // ── SPINE (always fire) ────────────────────────────────────────────────
@@ -104,6 +104,47 @@ const SEMILLAS = {
         { id: 'empleada',     label: 'una empleada doméstica' },
         { id: 'impostor',     label: 'un impostor' },
         { id: 'desconocidos', label: 'un grupo de desconocidos' }
+      ]
+    },
+
+    // ── EJE NARRATIVO (always fires; gated by genre) ────────────────────────
+    // The concrete thing the plot orbits — an object, figure, discovery,
+    // condition, or event. Added v3 to break the model's house "central object"
+    // default (the recurring caja de madera / llave / sobre). Unlike the optional
+    // fields below it has NO silent _none and is NOT `optional`: a silent none
+    // would hand the slot back to the model and it would drift to a box again.
+    // Instead `sin_eje` is an explicit, weighted option that instructs a
+    // device-free story. Gated on genre ONLY (the engine can't gate on the rolled
+    // `tiempo`), so genre is used here as an era proxy — devices were chosen so
+    // that proxy holds (e.g. "una luz" not "un OVNI"). The 7 genre-agnostic
+    // options (no `requires`) guarantee no genre ever drains empty. `sin_eje`
+    // weight is the dial for how often stories run device-free (~8–14% per genre
+    // at weight 1); raise it for more character/situation-driven stories.
+    eje: {
+      label: 'Eje narrativo',
+      gated: true,
+      options: [
+        // OBJETO
+        { id: 'grabacion', label: 'en torno a una grabación que nadie recuerda haber hecho', requires: ['misterio', 'noir', 'terror', 'scifi', 'distopia', 'thriller', 'drama'] },
+        { id: 'mapa',      label: 'en torno a un mapa que no coincide con el territorio',     requires: ['aventura', 'historica', 'misterio', 'western', 'magico', 'fabula'] },
+        { id: 'reloj',     label: 'en torno a un reloj detenido a una hora imposible',        requires: ['misterio', 'terror', 'magico', 'drama', 'cotidiana', 'historica', 'thriller'] },
+        // FIGURA
+        { id: 'tuerto',    label: 'en torno a un desconocido tuerto que reaparece' },
+        { id: 'doble',     label: 'en torno a un doble idéntico del protagonista' },
+        { id: 'nino_sabe', label: 'en torno a un niño que sabe cosas que no debería',         requires: ['terror', 'misterio', 'magico', 'drama', 'fabula'] },
+        // HALLAZGO
+        { id: 'analisis',  label: 'en torno a un análisis clínico con resultados imposibles', requires: ['scifi', 'distopia', 'terror', 'misterio', 'thriller', 'drama'] },
+        { id: 'cuerpo',    label: 'en torno a un cuerpo que no debería estar ahí' },
+        { id: 'documento', label: 'en torno a un documento que prueba algo imposible' },
+        // CONDICIÓN
+        { id: 'insomnio',  label: 'en torno a una aldea entera que ha dejado de dormir',      requires: ['magico', 'terror', 'distopia', 'fabula', 'scifi'] },
+        { id: 'olvido',    label: 'en torno a un objeto cotidiano que desaparece de la memoria de todos', requires: ['magico', 'scifi', 'distopia', 'terror', 'misterio'] },
+        // SUCESO
+        { id: 'plazo',     label: 'en torno a un plazo que vence al amanecer' },
+        { id: 'regreso',   label: 'en torno al regreso de alguien dado por muerto' },
+        { id: 'luz',       label: 'en torno a una luz que aparece cada noche en el mismo lugar', requires: ['terror', 'magico', 'scifi', 'misterio', 'distopia', 'fabula'] },
+        // NINGUNO (explicit — never a silent none)
+        { id: 'sin_eje',   label: 'sin un objeto o figura central, sostenida por los personajes y la situación' }
       ]
     },
 

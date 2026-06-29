@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adverbios: -mente y locuciones — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accent palette */
+  --accent-alpha:   #4a90d9;  /* 1 — blue        formación   */
+  --accent-beta:    #c084fc;  /* 2 — violet      por qué      */
+  --accent-gamma:   #fbbf24;  /* 3 — gold        con          */
+  --accent-delta:   #4ecdc4;  /* 4 — teal        de           */
+  --accent-epsilon: #f472b6;  /* 5 — rose        en           */
+  --accent-zeta:    #34d399;  /* 6 — green       por          */
+  --accent-eta:     #fb923c;  /* 7 — orange      a            */
+  --accent-theta:   #fb7185;  /* 8 — rose-coral  falsos amigos*/
+  --accent-iota:    #a5b4fc;  /* 9 — indigo      regional     */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (girona) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/los fondos/girona.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.58);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  position: relative;
+  text-align: center;
+  padding: 14px 0 22px;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 660px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Guía Rápida badge ── */
+.cheat-badge {
+  position: absolute;
+  top: 6px;
+  right: 0;
+  padding: 6px 14px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  color: #fcd34d;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cheat-badge:hover { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.6); }
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0 4px;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota ol { margin: 8px 0 2px; padding-left: 22px; }
+.nota li { margin-bottom: 6px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Grammar card ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha   { border-left-color: var(--accent-alpha);   --card-accent: var(--accent-alpha); }
+.card-beta    { border-left-color: var(--accent-beta);    --card-accent: var(--accent-beta); }
+.card-gamma   { border-left-color: var(--accent-gamma);   --card-accent: var(--accent-gamma); }
+.card-delta   { border-left-color: var(--accent-delta);   --card-accent: var(--accent-delta); }
+.card-epsilon { border-left-color: var(--accent-epsilon); --card-accent: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta);    --card-accent: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta);     --card-accent: var(--accent-eta); }
+.card-theta   { border-left-color: var(--accent-theta);   --card-accent: var(--accent-theta); }
+.card-iota    { border-left-color: var(--accent-iota);    --card-accent: var(--accent-iota); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+.card-theta   .card-number { color: var(--accent-theta);   opacity: 0.75; }
+.card-iota    .card-number { color: var(--accent-iota);    opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--card-accent, var(--accent));
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.92em;
+  font-weight: 500;
+}
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+.gloss {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin: 10px 0 14px;
+  line-height: 1.6;
+}
+.gloss em { color: var(--card-accent, var(--accent)); font-style: italic; }
+.gloss strong { color: var(--text-primary); font-weight: 600; }
+.gloss code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--card-accent, var(--accent));
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Adverb table ── */
+.adv-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 8px;
+  font-size: 0.9rem;
+}
+.adv-table th, .adv-table td {
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: middle;
+  border: 1px solid var(--border);
+}
+.adv-table thead th {
+  background: var(--bg-input);
+  color: var(--card-accent, var(--accent));
+  border-bottom: 2px solid var(--card-accent, var(--accent));
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.adv-table tbody tr:hover td { background: rgba(255, 255, 255, 0.02); }
+.adv-table .loc-es {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  color: var(--text-primary);
+  font-size: 1.0rem;
+}
+.adv-table .mean { color: var(--text-secondary); }
+.adv-table .mente { font-style: italic; color: var(--text-secondary); }
+.adv-table .mente.none { color: var(--text-muted); font-style: normal; }
+.adv-table .mente small, .adv-table .mean small {
+  display: block;
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 0.8em;
+  margin-top: 2px;
+}
+.adv-table .region {
+  color: var(--card-accent, var(--accent));
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* ── Inline speak button (table cells) ── */
+.speak-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px; height: 24px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.72rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+.speak-inline:hover,
+.speak-inline.playing {
+  color: var(--card-accent, var(--accent));
+  border-color: var(--card-accent, var(--accent));
+}
+.speak-inline.playing { background: var(--accent-glow); }
+
+/* ── Example row ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+}
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--card-accent, var(--accent)); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.examples-wrap { margin-top: 14px; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover,
+.speak-btn.playing {
+  color: var(--card-accent, var(--accent));
+  border-color: var(--card-accent, var(--accent));
+}
+.speak-btn.playing { background: var(--accent-glow); }
+
+/* ── Compact vs. pair ── */
+.compact-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+.compact-pair .col {
+  background: rgba(74, 144, 217, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.compact-pair .col-label {
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.compact-pair .col.heavy .col-label { color: var(--red); }
+.compact-pair .col.light .col-label { color: var(--green); }
+.compact-pair .col-es {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+.compact-pair .col-en {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* ── Decision card ── */
+.decision-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 28px;
+  margin-top: 30px;
+}
+.decision-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.45rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.decision-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  letter-spacing: 0.04em;
+  margin-bottom: 22px;
+}
+.decision-rows { display: grid; gap: 0; }
+.decision-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+.decision-row:last-child  { border-bottom: none; padding-bottom: 2px; }
+.decision-row:first-child { padding-top: 2px; }
+.decision-condition { color: var(--text-secondary); font-size: 0.94rem; line-height: 1.45; }
+.decision-condition em { color: var(--text-primary); font-style: italic; }
+.decision-arrow { color: var(--accent); font-size: 1.2rem; }
+.decision-result { color: var(--text-primary); font-weight: 500; font-size: 0.94rem; }
+.decision-result em { font-style: italic; color: var(--accent); }
+.decision-result small {
+  display: block;
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-weight: 400;
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Guía Rápida modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 760px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-header {
+  padding: 22px 28px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  color: var(--text-primary);
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 24px 28px; overflow-y: auto; flex-grow: 1; }
+.modal-body > p { color: var(--text-secondary); margin-bottom: 8px; line-height: 1.6; font-size: 0.92rem; }
+.modal-group {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  color: var(--accent);
+  font-size: 1.15rem;
+  margin: 20px 0 8px;
+}
+.table-wrapper {
+  overflow-x: auto;
+  margin: 8px 0 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  font-weight: 600;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+}
+.table-wrapper td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td .dash { color: var(--text-muted); font-style: normal; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .cheat-badge { position: static; display: inline-block; margin-top: 14px; }
+  .adv-table { font-size: 0.8rem; }
+  .adv-table th, .adv-table td { padding: 8px 8px; }
+  .adv-table .loc-es { font-size: 0.92rem; }
+  .compact-pair { grid-template-columns: 1fr; }
+  .decision-row { grid-template-columns: 1fr; gap: 6px; padding: 14px 0; }
+  .decision-arrow { display: none; }
+  .decision-result {
+    padding-left: 14px;
+    border-left: 2px solid var(--accent);
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+
+  <a href="../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <button class="cheat-badge" onclick="openCheat()">⚡ Guía Rápida</button>
+    <div class="overline">Adverbios de modo · formación y registro</div>
+    <h1>Los adverbios en <em>-mente</em> y la <em>locución</em></h1>
+    <p class="subtitle">El español guarda dos registros para los adverbios de modo: la forma en <em>-mente</em>, más larga y formal, y la locución adverbial —preposición + sustantivo—, más ágil y propia del habla. Aquí está cómo se forman, cuándo se prefiere cada una, y dónde una no sustituye a la otra.</p>
+  </header>
+
+  <!-- Rate bar -->
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ═══ CARD 1 — Formación en -mente ═══ -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">La formación en <code>-mente</code></div>
+        <div class="card-title-en">BUILDING THE -MENTE ADVERB</div>
+      </div>
+    </div>
+    <p class="gloss">El adverbio en <em>-mente</em> se forma sobre el adjetivo. Si el adjetivo termina en <strong>-o</strong>, se pasa al femenino antes de añadir el sufijo; si termina en <strong>-e</strong> o en <strong>consonante</strong>, se añade directamente. Los adverbios son <strong>invariables</strong>: no cambian por género ni número (<em>ellas hablan claramente</em>, nunca «claramentas»).</p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Adjetivo</th><th>Adverbio</th><th>Regla</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="loc-es">rápido</span></td><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="rápidamente" title="Escuchar">🔊</button><span class="loc-es">rápidamente</span></td><td class="mean">-o → -a + -mente <small>la tilde se conserva</small></td></tr>
+        <tr><td><span class="loc-es">lento</span></td><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="lentamente" title="Escuchar">🔊</button><span class="loc-es">lentamente</span></td><td class="mean">-o → -a + -mente</td></tr>
+        <tr><td><span class="loc-es">triste</span></td><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="tristemente" title="Escuchar">🔊</button><span class="loc-es">tristemente</span></td><td class="mean">-e: se añade -mente</td></tr>
+        <tr><td><span class="loc-es">fácil</span></td><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="fácilmente" title="Escuchar">🔊</button><span class="loc-es">fácilmente</span></td><td class="mean">consonante: + -mente <small>la tilde se conserva</small></td></tr>
+        <tr><td><span class="loc-es">feliz</span></td><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="felizmente" title="Escuchar">🔊</button><span class="loc-es">felizmente</span></td><td class="mean">consonante: + -mente</td></tr>
+        <tr><td><span class="loc-es">bueno</span></td><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="bien" title="Escuchar">🔊</button><span class="loc-es">bien</span></td><td class="mean">irregular: no usa -mente</td></tr>
+        <tr><td><span class="loc-es">malo</span></td><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="mal" title="Escuchar">🔊</button><span class="loc-es">mal</span></td><td class="mean">irregular: no usa -mente</td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Habló <strong>clara</strong> y <strong>cortésmente</strong> durante toda la reunión.</div>
+          <div class="example-en">She spoke clearly and courteously throughout the meeting.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Where the suffix comes from — and why it doubles up.</strong> <em>-mente</em> descends from the Latin noun <em>mente</em> ("mind, manner"). <em>Habla clara mente</em> once meant "she speaks with a clear mind/manner," where <em>clara</em> agreed with the feminine noun <em>mente</em>. That frozen agreement is exactly why, in a <strong>series</strong>, only the last adverb keeps <em>-mente</em> and the earlier ones surface as feminine adjectives (<em>clara y cortésmente</em>) — they still agree with a <em>mente</em> that is now only implied. It also explains the rhythm: a <em>-mente</em> adverb carries <strong>two stresses</strong> (<code>RÁ-pi-da-MÉN-te</code>), and stacked across a sentence that double beat is what makes these words feel heavy — the seed of the next card.
+    </div>
+  </article>
+
+  <!-- ═══ CARD 2 — Por qué se evitan ═══ -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Por qué los hablantes los evitan</div>
+        <div class="card-title-en">WHY SPEAKERS REACH FOR PHRASES</div>
+      </div>
+    </div>
+    <p class="gloss">En el habla cotidiana, los adverbios en <em>-mente</em> pueden sonar pesados o rebuscados. Por eso el español recurre a las <strong>locuciones adverbiales</strong> —preposición + sustantivo o adjetivo— que cumplen la misma función con más agilidad. Encadenar dos <em>-mente</em> resulta especialmente torpe, y la locución lo resuelve.</p>
+
+    <div class="compact-pair">
+      <div class="col heavy">
+        <div class="col-label">Dos -mente · pesado</div>
+        <div class="col-es">Caminaba lenta y silenciosamente.</div>
+        <div class="col-en">He walked slowly and silently.</div>
+      </div>
+      <div class="col light">
+        <div class="col-label">Locución · ágil</div>
+        <div class="col-es">Caminaba despacio y en silencio.</div>
+        <div class="col-en">He walked slowly and silently.</div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>It's register, not right vs. wrong.</strong>
+      <ol>
+        <li><strong>Spoken, messages, everyday register</strong> → the locución (<em>con cuidado</em>, <em>por suerte</em>, <em>de repente</em>). Punchy, immediate, light on the ear.</li>
+        <li><strong>Academic, technical, legal, or formal writing</strong> → <em>-mente</em> is actually <strong>preferred</strong>; the suffix raises the register. (The same point the source spec makes: the suffix suits legal, formal, or literary contexts.)</li>
+      </ol>
+      And plenty of <em>-mente</em> adverbs have no phrase alternative and are perfectly neutral in any register (<em>claramente</em>, <em>finalmente</em>, <em>generalmente</em>). The skill is matching the register — not avoiding the suffix on reflex.
+    </div>
+  </article>
+
+  <!-- ═══ CARD 3 — CON ═══ -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>con</code> + sustantivo</div>
+        <div class="card-title-en">MANNER &amp; METHOD — HOW SOMETHING IS DONE</div>
+      </div>
+    </div>
+    <p class="gloss">La forma más directa de sustituir un adverbio de modo: <em>con</em> + sustantivo dice <strong>cómo</strong> se hace algo.</p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Locución</th><th>Significado</th><th>En -mente</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con cuidado" title="Escuchar">🔊</button><span class="loc-es">con cuidado</span></td><td class="mean">carefully</td><td class="mente">cuidadosamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con rapidez" title="Escuchar">🔊</button><span class="loc-es">con rapidez</span></td><td class="mean">quickly</td><td class="mente">rápidamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con frecuencia" title="Escuchar">🔊</button><span class="loc-es">con frecuencia</span></td><td class="mean">frequently</td><td class="mente">frecuentemente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con facilidad" title="Escuchar">🔊</button><span class="loc-es">con facilidad</span></td><td class="mean">easily</td><td class="mente">fácilmente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con calma" title="Escuchar">🔊</button><span class="loc-es">con calma</span></td><td class="mean">calmly</td><td class="mente">tranquilamente <small>otra raíz</small></td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con claridad" title="Escuchar">🔊</button><span class="loc-es">con claridad</span></td><td class="mean">clearly</td><td class="mente">claramente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con atención" title="Escuchar">🔊</button><span class="loc-es">con atención</span></td><td class="mean">attentively</td><td class="mente">atentamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="con cariño" title="Escuchar">🔊</button><span class="loc-es">con cariño</span></td><td class="mean">affectionately</td><td class="mente">cariñosamente</td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Maneja <strong>con cuidado</strong>, que la carretera está mojada.</div>
+          <div class="example-en">Drive carefully — the road's wet.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Resolvió el problema <strong>con facilidad</strong>.</div>
+          <div class="example-en">He solved the problem easily.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Respóndeme <strong>con calma</strong>, no hay prisa.</div>
+          <div class="example-en">Answer me calmly, there's no rush.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>con + [noun]</em> is the most <strong>productive</strong> manner template — you can coin new ones on the fly and natives will follow (<em>con elegancia</em>, <em>con torpeza</em>, <em>con paciencia</em>). The noun is abstract and usually takes no article.
+    </div>
+  </article>
+
+  <!-- ═══ CARD 4 — DE ═══ -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>de</code> + sustantivo</div>
+        <div class="card-title-en">STATE, TIME &amp; SUDDENNESS</div>
+      </div>
+    </div>
+    <p class="gloss"><em>De</em> fija el momento o confirma la realidad de algo. Varias de estas locuciones <strong>no tienen contraparte en -mente</strong>: son la única manera de decirlo.</p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Locución</th><th>Significado</th><th>En -mente</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de verdad" title="Escuchar">🔊</button><span class="loc-es">de verdad</span></td><td class="mean">really / truly</td><td class="mente">realmente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de nuevo" title="Escuchar">🔊</button><span class="loc-es">de nuevo</span></td><td class="mean">again</td><td class="mente">nuevamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de repente" title="Escuchar">🔊</button><span class="loc-es">de repente</span></td><td class="mean">suddenly</td><td class="mente">repentinamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de pronto" title="Escuchar">🔊</button><span class="loc-es">de pronto</span></td><td class="mean">suddenly</td><td class="mente">repentinamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de inmediato" title="Escuchar">🔊</button><span class="loc-es">de inmediato</span></td><td class="mean">immediately</td><td class="mente">inmediatamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de golpe" title="Escuchar">🔊</button><span class="loc-es">de golpe</span></td><td class="mean">all at once / abruptly</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de hecho" title="Escuchar">🔊</button><span class="loc-es">de hecho</span></td><td class="mean">in fact / actually</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de paso" title="Escuchar">🔊</button><span class="loc-es">de paso</span></td><td class="mean">in passing / while at it</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de memoria" title="Escuchar">🔊</button><span class="loc-es">de memoria</span></td><td class="mean">by heart</td><td class="mente none">—</td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>De repente</strong> se apagó la luz.</div>
+          <div class="example-en">Suddenly the light went out.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me sé el poema <strong>de memoria</strong>.</div>
+          <div class="example-en">I know the poem by heart.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ya que vas a la cocina, tráeme agua <strong>de paso</strong>.</div>
+          <div class="example-en">Since you're going to the kitchen, grab me water on the way.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>de repente</em> and <em>de pronto</em> are interchangeable for "suddenly"; in parts of South America <em>de pronto</em> also means "maybe/perhaps." <em>de golpe</em> adds an abruptness/impact nuance. The <em>de hecho / de paso / de memoria</em> group has <strong>no -mente form at all</strong> — these aren't casual stand-ins, they're the only word for the job.
+    </div>
+  </article>
+
+  <!-- ═══ CARD 5 — EN ═══ -->
+  <article class="grammar-card card-epsilon">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>en</code> + sustantivo</div>
+        <div class="card-title-en">STATE &amp; REALITY</div>
+      </div>
+    </div>
+    <p class="gloss">Parecido a <em>de</em>, suele confirmar la naturaleza de una situación.</p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Locución</th><th>Significado</th><th>En -mente</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="en serio" title="Escuchar">🔊</button><span class="loc-es">en serio</span></td><td class="mean">seriously</td><td class="mente">seriamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="en realidad" title="Escuchar">🔊</button><span class="loc-es">en realidad</span></td><td class="mean">actually / in reality</td><td class="mente">realmente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="en especial" title="Escuchar">🔊</button><span class="loc-es">en especial</span></td><td class="mean">especially</td><td class="mente">especialmente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="en general" title="Escuchar">🔊</button><span class="loc-es">en general</span></td><td class="mean">in general</td><td class="mente">generalmente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="en definitiva" title="Escuchar">🔊</button><span class="loc-es">en definitiva</span></td><td class="mean">in short / all in all</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="en voz alta" title="Escuchar">🔊</button><span class="loc-es">en voz alta</span></td><td class="mean">aloud</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="en voz baja" title="Escuchar">🔊</button><span class="loc-es">en voz baja</span></td><td class="mean">in a low voice</td><td class="mente none">—</td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Lo dices <strong>en serio</strong>?</div>
+          <div class="example-en">Are you serious?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>En realidad</strong>, no me molesta.</div>
+          <div class="example-en">Actually, it doesn't bother me.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lee el texto <strong>en voz alta</strong>.</div>
+          <div class="example-en">Read the text aloud.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>en realidad</em> and <em>de verdad</em> both land near "really," but they split: <em>en realidad</em> <strong>corrects or clarifies</strong> ("actually, the truth is…"), while <em>de verdad</em> <strong>intensifies or asks for sincerity</strong> ("truly / really?"). And <em>en voz alta / en voz baja</em> have no <em>-mente</em> equivalent — manner-of-speaking phrases live only as locuciones.
+    </div>
+  </article>
+
+  <!-- ═══ CARD 6 — POR ═══ -->
+  <article class="grammar-card card-zeta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>por</code> + sustantivo</div>
+        <div class="card-title-en">FRAME &amp; CIRCUMSTANCE — SENTENCE MODIFIERS</div>
+      </div>
+    </div>
+    <p class="gloss">Con <em>por</em>, muchas locuciones modifican <strong>toda la oración</strong>: enmarcan el comentario entero, suelen ir al principio y se separan con una coma.</p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Locución</th><th>Significado</th><th>En -mente</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por lo general" title="Escuchar">🔊</button><span class="loc-es">por lo general</span></td><td class="mean">generally / as a rule</td><td class="mente">generalmente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por suerte" title="Escuchar">🔊</button><span class="loc-es">por suerte</span></td><td class="mean">luckily</td><td class="mente">afortunadamente <small>otra raíz</small></td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por desgracia" title="Escuchar">🔊</button><span class="loc-es">por desgracia</span></td><td class="mean">unfortunately</td><td class="mente">desgraciadamente · lamentablemente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por completo" title="Escuchar">🔊</button><span class="loc-es">por completo</span></td><td class="mean">completely</td><td class="mente">completamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por casualidad" title="Escuchar">🔊</button><span class="loc-es">por casualidad</span></td><td class="mean">by chance</td><td class="mente">casualmente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por lo visto" title="Escuchar">🔊</button><span class="loc-es">por lo visto</span></td><td class="mean">apparently</td><td class="mente">aparentemente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por supuesto" title="Escuchar">🔊</button><span class="loc-es">por supuesto</span></td><td class="mean">of course</td><td class="mente none">— <small>supuestamente = supposedly</small></td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="por fin" title="Escuchar">🔊</button><span class="loc-es">por fin</span></td><td class="mean">finally / at last</td><td class="mente none">— <small>finalmente = lastly</small></td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Por lo general</strong>, ceno temprano.</div>
+          <div class="example-en">I generally have dinner early.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Por suerte</strong>, llegamos a tiempo.</div>
+          <div class="example-en">Luckily, we made it on time.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¡<strong>Por fin</strong> terminé el proyecto!</div>
+          <div class="example-en">I finally finished the project!</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      These are <strong>sentence adverbs</strong>: they color the whole clause and sit up front behind a comma. Two false-friend traps worth flagging: <em>por supuesto</em> = "of course," but <em>supuestamente</em> = "supposedly" (opposite confidence). And <em>por fin</em> (relief — "at last!") is <strong>not</strong> <em>finalmente</em> (neutral sequencing — "finally, lastly").
+    </div>
+  </article>
+
+  <!-- ═══ CARD 7 — A ═══ -->
+  <article class="grammar-card card-eta">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title"><code>a</code> + sustantivo / adjetivo</div>
+        <div class="card-title-en">ACTION &amp; INTENTION — THE IDIOMATIC SET</div>
+      </div>
+    </div>
+    <p class="gloss">Con <em>a</em> las locuciones son muy idiomáticas; describen la ejecución física o mental de una acción. Un grupo productivo sigue el molde <em>a + [adjetivo femenino plural]</em>.</p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Locución</th><th>Significado</th><th>En -mente</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a propósito" title="Escuchar">🔊</button><span class="loc-es">a propósito</span></td><td class="mean">on purpose</td><td class="mente">intencionalmente <small>otra raíz</small></td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a ciegas" title="Escuchar">🔊</button><span class="loc-es">a ciegas</span></td><td class="mean">blindly</td><td class="mente">ciegamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a escondidas" title="Escuchar">🔊</button><span class="loc-es">a escondidas</span></td><td class="mean">secretly / on the sly</td><td class="mente">secretamente <small>matiz distinto</small></td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a oscuras" title="Escuchar">🔊</button><span class="loc-es">a oscuras</span></td><td class="mean">in the dark</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a tientas" title="Escuchar">🔊</button><span class="loc-es">a tientas</span></td><td class="mean">gropingly / by feel</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a medias" title="Escuchar">🔊</button><span class="loc-es">a medias</span></td><td class="mean">halfway / unfinished</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a menudo" title="Escuchar">🔊</button><span class="loc-es">a menudo</span></td><td class="mean">often</td><td class="mente">frecuentemente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a veces" title="Escuchar">🔊</button><span class="loc-es">a veces</span></td><td class="mean">sometimes</td><td class="mente none">—</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="a lo mejor" title="Escuchar">🔊</button><span class="loc-es">a lo mejor</span></td><td class="mean">maybe / perhaps</td><td class="mente none">— <small>≈ quizá(s) · tal vez</small></td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo hizo <strong>a propósito</strong> para molestarme.</div>
+          <div class="example-en">He did it on purpose to annoy me.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Entró <strong>a escondidas</strong> para no despertar a nadie.</div>
+          <div class="example-en">She slipped in secretly so as not to wake anyone.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>A veces</strong> salgo a caminar de noche.</div>
+          <div class="example-en">Sometimes I go out walking at night.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Three things to watch.</strong>
+      <ol>
+        <li><em>a propósito</em> has a second, unrelated meaning — <strong>"by the way"</strong> — used to open a tangent (<em>A propósito, ¿viste a Marta?</em>). Context disambiguates.</li>
+        <li>The <em>a + [feminine plural]</em> set (<em>a ciegas, a escondidas, a oscuras, a tientas, a medias</em>) is a <strong>frozen</strong> idiom — always feminine plural, no singular «a ciega». Treat them as fixed units, not a template to extend freely.</li>
+        <li>Mood note: <em>a lo mejor</em> means "maybe," but unlike <em>quizás</em> it takes the <strong>indicative</strong> — <em>a lo mejor viene</em> (not <em>venga</em>).</li>
+      </ol>
+    </div>
+  </article>
+
+  <!-- ═══ CARD 8 — Falsos amigos en -mente ═══ -->
+  <article class="grammar-card card-theta">
+    <div class="card-header">
+      <div class="card-number">⑧</div>
+      <div class="card-title-group">
+        <div class="card-title">Falsos amigos en <code>-mente</code></div>
+        <div class="card-title-en">ADVERBS THAT DON'T MEAN WHAT THEY LOOK LIKE</div>
+      </div>
+    </div>
+    <p class="gloss">No todo <em>-mente</em> significa lo que aparenta. Algunos se construyen sobre la base equivocada; otros se parecen a una palabra inglesa pero apuntan a otra cosa. Estos son los tropiezos más comunes.</p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Adverbio</th><th>Parece…</th><th>Significa de verdad</th><th>Para decir lo que parece</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="sorprendidamente" title="Escuchar">🔊</button><span class="loc-es">sorprendidamente</span></td><td class="mean">"surprisingly"</td><td class="mean">in a surprised way</td><td class="mente">sorprendentemente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="interesadamente" title="Escuchar">🔊</button><span class="loc-es">interesadamente</span></td><td class="mean">"interestingly"</td><td class="mean">self-interestedly, with ulterior motives</td><td class="mente">de forma interesante · curiosamente</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="actualmente" title="Escuchar">🔊</button><span class="loc-es">actualmente</span></td><td class="mean">"actually"</td><td class="mean">currently, nowadays</td><td class="mente">en realidad · de hecho</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="eventualmente" title="Escuchar">🔊</button><span class="loc-es">eventualmente</span></td><td class="mean">"eventually"</td><td class="mean">possibly, occasionally</td><td class="mente">finalmente · con el tiempo</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="últimamente" title="Escuchar">🔊</button><span class="loc-es">últimamente</span></td><td class="mean">"ultimately"</td><td class="mean">lately, recently</td><td class="mente">en definitiva · a fin de cuentas</td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Actualmente</strong> vivo en Lima.</div>
+          <div class="example-en">I currently live in Lima. <span style="opacity:.7">(not "actually")</span></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Eventualmente</strong> viajo por trabajo.</div>
+          <div class="example-en">I occasionally travel for work. <span style="opacity:.7">(not "eventually")</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Two different traps are at work here.</strong>
+      <ol>
+        <li><strong>Wrong base.</strong> Building from the <em>past participle</em> (<em>sorprendido</em>, <em>interesado</em>) yields an "in an X-ed manner" meaning — different from the <em>-nte</em> adjective. "Surprisingly" comes from <em>sorprendente</em> → <em>sorprendentemente</em>, not from <em>sorprendido</em>.</li>
+        <li><strong>Cognate trap.</strong> <em>actualmente</em>, <em>eventualmente</em>, and <em>últimamente</em> look like English words but diverge completely. These three are among the most reliable B2 stumbles, so they're worth memorizing as a set.</li>
+      </ol>
+    </div>
+  </article>
+
+  <!-- ═══ CARD 9 — Variación regional ═══ -->
+  <article class="grammar-card card-iota">
+    <div class="card-header">
+      <div class="card-number">⑨</div>
+      <div class="card-title-group">
+        <div class="card-title">Variación regional</div>
+        <div class="card-title-en">REGIONAL PHRASES ACROSS LATIN AMERICA</div>
+      </div>
+    </div>
+    <p class="gloss">Estas locuciones son habituales en zonas concretas. En el español neutro se prefieren las equivalentes generales, pero conviene reconocerlas. <em>El audio suena con voz neutra en todos los casos.</em></p>
+
+    <table class="adv-table">
+      <thead>
+        <tr><th>Locución</th><th>Región</th><th>Significado</th><th>Equivalente neutro</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de una" title="Escuchar">🔊</button><span class="loc-es">de una</span></td><td class="region">Río de la Plata</td><td class="mean">right away / no hesitation</td><td class="mente">de inmediato · en seguida</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="al toque" title="Escuchar">🔊</button><span class="loc-es">al toque</span></td><td class="region">Río de la Plata · Perú</td><td class="mean">right away</td><td class="mente">en seguida</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="al tiro" title="Escuchar">🔊</button><span class="loc-es">al tiro</span></td><td class="region">Chile</td><td class="mean">right away</td><td class="mente">de inmediato</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="de a poco" title="Escuchar">🔊</button><span class="loc-es">de a poco</span></td><td class="region">Cono Sur</td><td class="mean">little by little</td><td class="mente">poco a poco</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="recién" title="Escuchar">🔊</button><span class="loc-es">recién</span></td><td class="region">Cono Sur · Andes</td><td class="mean">just (now)</td><td class="mente">acabar de + inf.</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="nomás" title="Escuchar">🔊</button><span class="loc-es">nomás</span></td><td class="region">Méx · Andes · Cono Sur</td><td class="mean">just / go ahead (softener)</td><td class="mente none">sin equivalente fijo</td></tr>
+        <tr><td class="cell-loc"><button class="speak-inline" onclick="speakPhrase(this)" data-tts="ahorita" title="Escuchar">🔊</button><span class="loc-es">ahorita</span></td><td class="region">Méx · Centroamérica</td><td class="mean">right now / in a bit (ambiguous)</td><td class="mente">ahora mismo · en un rato</td></tr>
+      </tbody>
+    </table>
+
+    <div class="examples-wrap">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Dale, lo hago <strong>de una</strong>.</div>
+          <div class="example-en">Sure, I'll do it right away.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Recién</strong> me enteré.</div>
+          <div class="example-en">I just found out.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Pase <strong>nomás</strong>, está abierto.</div>
+          <div class="example-en">Go right ahead, it's open.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>ahorita</em> is the famous ambiguity: in Mexico it stretches from "this very second" to "in a little while," read from tone and context — the diminutive <strong>softens</strong>, it doesn't intensify. And <em>recién</em> in the Southern Cone/Andes works as "just (now)" with a simple past (<em>recién comí</em>), where neutral Spanish uses <em>acabar de</em> (<em>acabo de comer</em>).
+    </div>
+  </article>
+
+  <!-- ═══ Decision guide ═══ -->
+  <div class="decision-card">
+    <div class="decision-title">¿Locución o <em>-mente</em>?</div>
+    <div class="decision-subtitle">Cómo elegir el registro adecuado</div>
+    <div class="decision-rows">
+      <div class="decision-row">
+        <div class="decision-condition">Conversación, mensajes, habla cotidiana</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result"><em>Locución</em><small>con cuidado · por suerte</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">Texto académico, técnico, legal o formal</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Forma en <em>-mente</em><small>cuidadosamente · afortunadamente</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">Dos adverbios de modo seguidos</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Evita dos <em>-mente</em><small>usa una locución, o la serie: con claridad y cortesía / clara y cortésmente</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">No existe forma en <em>-mente</em></div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Locución obligatoria<small>de memoria · a medias · por fin</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">El <em>-mente</em> es un falso amigo</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Revisa el significado real<small>actualmente ≠ "actually"</small></div>
+      </div>
+      <div class="decision-row">
+        <div class="decision-condition">Buscas ritmo ágil vs. registro elevado</div>
+        <div class="decision-arrow">→</div>
+        <div class="decision-result">Locución / <em>-mente</em><small>la misma idea, dos tonos</small></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Guía Rápida modal -->
+<div class="modal-overlay" id="modal-cheat" onclick="handleCheatOverlayClick(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Guía Rápida</div>
+      <button class="close-btn" onclick="closeCheat()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>The most useful adverbial phrases beside their <em>-mente</em> equivalent. A dash (—) means no <em>-mente</em> form exists — the phrase is the only option.</p>
+
+      <div class="modal-group">Con — modo y método</div>
+      <div class="table-wrapper"><table>
+        <thead><tr><th>Locución</th><th>Significado</th><th>-mente</th></tr></thead>
+        <tbody>
+          <tr><td><em>con cuidado</em></td><td>carefully</td><td>cuidadosamente</td></tr>
+          <tr><td><em>con rapidez</em></td><td>quickly</td><td>rápidamente</td></tr>
+          <tr><td><em>con frecuencia</em></td><td>frequently</td><td>frecuentemente</td></tr>
+          <tr><td><em>con facilidad</em></td><td>easily</td><td>fácilmente</td></tr>
+          <tr><td><em>con calma</em></td><td>calmly</td><td>tranquilamente</td></tr>
+          <tr><td><em>con claridad</em></td><td>clearly</td><td>claramente</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="modal-group">De — estado, tiempo y realidad</div>
+      <div class="table-wrapper"><table>
+        <thead><tr><th>Locución</th><th>Significado</th><th>-mente</th></tr></thead>
+        <tbody>
+          <tr><td><em>de verdad</em></td><td>really / truly</td><td>realmente</td></tr>
+          <tr><td><em>de nuevo</em></td><td>again</td><td>nuevamente</td></tr>
+          <tr><td><em>de repente</em></td><td>suddenly</td><td>repentinamente</td></tr>
+          <tr><td><em>de inmediato</em></td><td>immediately</td><td>inmediatamente</td></tr>
+          <tr><td><em>de hecho</em></td><td>in fact / actually</td><td><span class="dash">—</span></td></tr>
+          <tr><td><em>de memoria</em></td><td>by heart</td><td><span class="dash">—</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="modal-group">En — estado y realidad</div>
+      <div class="table-wrapper"><table>
+        <thead><tr><th>Locución</th><th>Significado</th><th>-mente</th></tr></thead>
+        <tbody>
+          <tr><td><em>en serio</em></td><td>seriously</td><td>seriamente</td></tr>
+          <tr><td><em>en realidad</em></td><td>actually / in reality</td><td>realmente</td></tr>
+          <tr><td><em>en especial</em></td><td>especially</td><td>especialmente</td></tr>
+          <tr><td><em>en general</em></td><td>in general</td><td>generalmente</td></tr>
+          <tr><td><em>en voz alta / baja</em></td><td>aloud / in a low voice</td><td><span class="dash">—</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="modal-group">Por — circunstancia y frecuencia</div>
+      <div class="table-wrapper"><table>
+        <thead><tr><th>Locución</th><th>Significado</th><th>-mente</th></tr></thead>
+        <tbody>
+          <tr><td><em>por lo general</em></td><td>generally</td><td>generalmente</td></tr>
+          <tr><td><em>por suerte</em></td><td>luckily</td><td>afortunadamente</td></tr>
+          <tr><td><em>por desgracia</em></td><td>unfortunately</td><td>desgraciadamente</td></tr>
+          <tr><td><em>por completo</em></td><td>completely</td><td>completamente</td></tr>
+          <tr><td><em>por supuesto</em></td><td>of course</td><td><span class="dash">—</span></td></tr>
+          <tr><td><em>por fin</em></td><td>finally / at last</td><td><span class="dash">—</span></td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="modal-group">A — acción e intención</div>
+      <div class="table-wrapper"><table>
+        <thead><tr><th>Locución</th><th>Significado</th><th>-mente</th></tr></thead>
+        <tbody>
+          <tr><td><em>a propósito</em></td><td>on purpose</td><td>intencionalmente</td></tr>
+          <tr><td><em>a ciegas</em></td><td>blindly</td><td>ciegamente</td></tr>
+          <tr><td><em>a escondidas</em></td><td>secretly</td><td>secretamente</td></tr>
+          <tr><td><em>a menudo</em></td><td>often</td><td>frecuentemente</td></tr>
+          <tr><td><em>a medias</em></td><td>halfway / unfinished</td><td><span class="dash">—</span></td></tr>
+          <tr><td><em>a lo mejor</em></td><td>maybe (+ indicativo)</td><td><span class="dash">—</span></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══ TTS — neutral Latin American Spanish only ═══
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function doSpeak(btn, raw) {
+  if (!window.speechSynthesis) return;
+  const text = cleanForTTS(raw);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing, .speak-inline.playing').forEach(b => b.classList.remove('playing'));
+
+  const go = () => {
+    const u = new SpeechSynthesisUtterance(text);
+    if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+    else { u.lang = 'es-419'; }
+    u.rate = ttsRate;
+    u.pitch = 1.0;
+    u.onstart = () => btn.classList.add('playing');
+    u.onend   = () => btn.classList.remove('playing');
+    u.onerror = () => btn.classList.remove('playing');
+    speechSynthesis.speak(u);
+  };
+
+  if (!voicesReady) ensureVoices().then(go); else go();
+}
+
+function speakExample(btn) {
+  const row = btn.closest('.example-row');
+  const es = row && row.querySelector('.example-es');
+  if (es) doSpeak(btn, es.textContent);
+}
+
+function speakPhrase(btn) {
+  doSpeak(btn, btn.getAttribute('data-tts') || '');
+}
+
+// ═══ Guía Rápida modal ═══
+function openCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.remove('active');
+  document.body.style.overflow = '';
+}
+function handleCheatOverlayClick(e) {
+  if (e.target.id === 'modal-cheat') closeCheat();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCheat();
+});
+</script>
+
+</body>
+</html>

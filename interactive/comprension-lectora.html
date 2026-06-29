@@ -2128,9 +2128,15 @@ function mintFilteredSeed(){
 }
 
 async function doGenerate() {
+  // Clear the stale context badge up front so the "Planeando la historia…"
+  // screen never shows the PREVIOUS story's header (mode / Ep. y/y / old seed).
+  // It's repopulated below with the new story's info before generation begins.
+  { const _ctx = document.getElementById('genContextLabel');
+    if (_ctx) { _ctx.textContent = ''; _ctx.style.display = 'none'; } }
   // In seed mode, ensure a seed exists before generating (auto-mint if the user
   // enabled the toggle but didn't tap "Generar semilla").
   if (cfg.seedMode && !cfg.seed) rollNewSeed();
+
   const theme   = cfg.seedMode
     ? cfg.seedTheme
     : (document.getElementById('surpriseMe').checked ? null : document.getElementById('themeInput').value.trim() || null);
@@ -2750,6 +2756,11 @@ function clearStoryState() {
   storyBible = null; prevBible = null; plannedEnding = null; storyPlan = null; storyId = null;
   episodeNum = 0; episodeTarget = 0; biblePromise = null;
   regenerating = false; currentStarRating = null;
+  // Reset the seed to a fresh empty state so returning to the front page never
+  // reuses the previous story's seed. The error-retry path does NOT call this
+  // (it restores _snap for a same-seed retry), so retries keep their seed.
+  cfg.seed = null; cfg.seedTheme = null; cfg.seedVersion = null;
+  const _seedDisp = document.getElementById('seedDisplay'); if (_seedDisp) _seedDisp.textContent = '';
 }
 
 // ═══════════════════════════════════════════════

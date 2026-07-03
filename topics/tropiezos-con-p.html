@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tropiezos con P — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  /* Per-card accents — eight P-words that look alike at a glance */
+  --a-premio:    #fbbf24;  /* premio       — gold   */
+  --a-precio:    #4ecdc4;  /* precio       — teal   */
+  --a-despre:    #ef7a7a;  /* desprecio    — coral  */
+  --a-presion:   #f97362;  /* presión      — warm   */
+  --a-pasion:    #ec5a8a;  /* pasión       — magenta*/
+  --a-prensa:    #5aa9d9;  /* prensa       — cyan   */
+  --a-propio:    #c084fc;  /* propio       — violet */
+  --a-proposito: #4a90d9;  /* a propósito  — blue   */
+  --a-primero:   #5ec77a;  /* primero      — green  */
+  --a-primo:     #fb923c;  /* primo        — orange */
+
+  /* three additions — prueba · propina · pista */
+  --a-prueba:    #a3e635;  /* prueba       — lime   */
+  --a-propina:   #f472b6;  /* propina      — pink   */
+  --a-pista:     #38bdf8;  /* pista        — sky    */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (swap this one line for any file in assets/los fondos/) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/los fondos/girona.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header { text-align: center; padding: 14px 0 6px; }
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 22px 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── Word cards ── */
+.word-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+  margin: 0 0 8px;
+}
+.word-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s, background 0.2s;
+}
+.word-card:hover { background: var(--bg-card-hover); border-color: #2a4a75; transform: translateY(-2px); }
+.word-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.card-img-banner { position: relative; height: 128px; background: var(--bg-input); overflow: hidden; }
+.card-img-banner .img-ph {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+}
+.card-img-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+
+/* Split banner for the precio / desprecio pair */
+.split-banner { display: flex; }
+.split-banner .split-half { position: relative; flex: 1; height: 128px; background: var(--bg-input); overflow: hidden; }
+.split-banner .split-half + .split-half { border-left: 2px solid var(--bg-deep); }
+.split-banner .split-half .img-ph {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); font-size: 0.66rem; letter-spacing: 0.16em; text-transform: uppercase;
+}
+.split-banner .split-half img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+
+.card-body { padding: 14px 16px 16px; }
+.word-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.word-name { font-family: 'DM Serif Display', serif; font-size: 1.5rem; line-height: 1.1; }
+.word-name.pair { font-size: 1.28rem; }
+
+.card-premio    .word-name, .card-premio    .anchor-arrow { color: var(--a-premio); }
+.card-presion   .word-name, .card-presion   .anchor-arrow { color: var(--a-presion); }
+.card-pasion    .word-name, .card-pasion    .anchor-arrow { color: var(--a-pasion); }
+.card-prensa    .word-name, .card-prensa    .anchor-arrow { color: var(--a-prensa); }
+.card-propio    .word-name, .card-propio    .anchor-arrow { color: var(--a-propio); }
+.card-proposito .word-name, .card-proposito .anchor-arrow { color: var(--a-proposito); }
+.card-primero   .word-name, .card-primero   .anchor-arrow { color: var(--a-primero); }
+.card-primo     .word-name, .card-primo     .anchor-arrow { color: var(--a-primo); }
+.card-prueba    .word-name, .card-prueba    .anchor-arrow { color: var(--a-prueba); }
+.card-propina   .word-name, .card-propina   .anchor-arrow { color: var(--a-propina); }
+.card-pista     .word-name, .card-pista     .anchor-arrow { color: var(--a-pista); }
+.tone-precio { color: var(--a-precio); }
+.tone-despre { color: var(--a-despre); }
+.pair-slash  { color: var(--text-muted); font-style: normal; }
+
+.anchor-badge {
+  display: inline-block;
+  margin-top: 9px;
+  font-size: 0.72rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 3px 9px;
+  border-radius: 5px;
+  line-height: 1.4;
+}
+.anchor-badge em { color: var(--text-primary); font-style: italic; }
+.anchor-badge .hl { color: var(--text-primary); font-weight: 700; font-style: normal; }
+.word-gloss { margin-top: 10px; font-size: 0.92rem; color: var(--text-primary); }
+.word-dir { margin-top: 6px; font-size: 0.8rem; color: var(--text-muted); }
+.word-dir strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ── Speak button ── */
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Chips ── */
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin: 16px 0 6px; }
+.chip {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 600;
+  padding: 0.16rem 0.55rem;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.chip-reg    { background: rgba(138, 155, 184, 0.14); color: var(--text-secondary); }
+.chip-region { background: rgba(251, 146, 60, 0.16); color: #fdba74; }
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label { display: inline-block; font-weight: 600; color: var(--accent); margin-right: 6px; letter-spacing: 0.02em; }
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+
+/* ── Modals ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 100;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%; max-width: 640px; max-height: 86vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-content { transform: translateY(0); }
+.modal-header {
+  padding: 20px 26px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 12px;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.modal-title { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--text-primary); }
+.close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; transition: color 0.2s; line-height: 1; }
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 22px 26px; overflow-y: auto; flex-grow: 1; }
+.modal-body > p { color: var(--text-secondary); margin-bottom: 14px; line-height: 1.65; font-size: 0.95rem; }
+.modal-body > p strong { color: var(--text-primary); font-weight: 600; }
+.modal-body > p em { color: var(--accent); font-style: italic; }
+.origin-line { font-size: 0.86rem; color: var(--text-muted); font-style: italic; margin-bottom: 16px !important; }
+.origin-line em { color: var(--text-secondary); }
+.m-sub {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: var(--accent);
+  margin: 18px 0 6px;
+}
+.m-sub.precio { color: var(--a-precio); }
+.m-sub.despre { color: var(--a-despre); }
+.pair-rule { border: none; border-top: 1px solid var(--border); margin: 22px 0 4px; }
+
+/* ── Example rows ── */
+.example-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--text-primary); line-height: 1.5; }
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en { font-size: 0.86rem; color: var(--text-muted); font-style: italic; margin-top: 3px; line-height: 1.45; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .modal-header { padding: 18px 20px; }
+  .modal-body { padding: 18px 20px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Vocabulario · Miscelánea</div>
+    <h1>Tropiezos con <em>P</em></h1>
+    <p class="subtitle">Las palabras con P que se parecen demasiado de un vistazo — las que te hacen frenar a media lectura. Aquí, separadas una por una.</p>
+  </header>
+
+  <!-- Rate bar -->
+  <div class="rate-bar">
+    <span class="rate-label">🔊 Velocidad:</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- Word cards -->
+  <div class="word-grid">
+
+    <!-- premio -->
+    <div class="word-card card-premio" role="button" tabindex="0" onclick="openModal('m-premio')" onkeydown="cardKey(event,'m-premio')">
+      <div class="card-img-banner">
+        <span class="img-ph">premio</span>
+        <img src="../assets/tropiezos-p/premio.png" alt="Una mano levanta un trofeo dorado bajo una lluvia de confeti." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">premio</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="premio" aria-label="Escuchar premio">🔊</button>
+        </div>
+        <span class="anchor-badge">pr·<span class="hl">em</span>·io — lo que <em>ganas</em></span>
+        <div class="word-gloss">prize · award · reward</div>
+        <div class="word-dir">No confundir con <strong>precio</strong> (lo que pagas).</div>
+      </div>
+    </div>
+
+    <!-- precio / desprecio (split) -->
+    <div class="word-card card-pair" role="button" tabindex="0" onclick="openModal('m-precio')" onkeydown="cardKey(event,'m-precio')">
+      <div class="card-img-banner split-banner">
+        <div class="split-half">
+          <span class="img-ph">precio</span>
+          <img src="../assets/tropiezos-p/precio.png" alt="Una etiqueta de precio colgando de un producto en una tienda." onerror="this.remove()">
+        </div>
+        <div class="split-half">
+          <span class="img-ph">desprecio</span>
+          <img src="../assets/tropiezos-p/desprecio.png" alt="Una persona aparta la mirada con un gesto de desdén hacia otra." onerror="this.remove()">
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name pair"><span class="tone-precio">precio</span> <span class="pair-slash">/</span> <span class="tone-despre">desprecio</span></span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="precio, desprecio" aria-label="Escuchar precio y desprecio">🔊</button>
+        </div>
+        <span class="anchor-badge">des + <em>precio</em> → quitarle el <span class="hl">valor</span></span>
+        <div class="word-gloss"><span class="tone-precio">price</span> · <span class="tone-despre">contempt</span></div>
+        <div class="word-dir">Una contiene a la otra — por eso se cruzan al leer.</div>
+      </div>
+    </div>
+
+    <!-- presión -->
+    <div class="word-card card-presion" role="button" tabindex="0" onclick="openModal('m-presion')" onkeydown="cardKey(event,'m-presion')">
+      <div class="card-img-banner">
+        <span class="img-ph">presión</span>
+        <img src="../assets/tropiezos-p/presion.png" alt="Un manómetro con la aguja marcando una presión alta." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">presión</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="presión" aria-label="Escuchar presión">🔊</button>
+        </div>
+        <span class="anchor-badge">pr·<span class="hl">e</span>·sión — lo que <em>aprieta</em></span>
+        <div class="word-gloss">pressure (física y figurada)</div>
+        <div class="word-dir">No confundir con <strong>pasión</strong> (pa-, no pre-).</div>
+      </div>
+    </div>
+
+    <!-- pasión -->
+    <div class="word-card card-pasion" role="button" tabindex="0" onclick="openModal('m-pasion')" onkeydown="cardKey(event,'m-pasion')">
+      <div class="card-img-banner">
+        <span class="img-ph">pasión</span>
+        <img src="../assets/tropiezos-p/pasion.png" alt="Un guitarrista toca con los ojos cerrados, entregado a la música." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">pasión</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="pasión" aria-label="Escuchar pasión">🔊</button>
+        </div>
+        <span class="anchor-badge">p·<span class="hl">a</span>·sión — el <em>fuego</em></span>
+        <div class="word-gloss">passion · intense feeling</div>
+        <div class="word-dir">No confundir con <strong>presión</strong> (pre-, no pa-).</div>
+      </div>
+    </div>
+
+    <!-- prensa -->
+    <div class="word-card card-prensa" role="button" tabindex="0" onclick="openModal('m-prensa')" onkeydown="cardKey(event,'m-prensa')">
+      <div class="card-img-banner">
+        <span class="img-ph">prensa</span>
+        <img src="../assets/tropiezos-p/prensa.png" alt="Reporteros con micrófonos y cámaras en una rueda de prensa." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">prensa</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="prensa" aria-label="Escuchar prensa">🔊</button>
+        </div>
+        <span class="anchor-badge">pr·<span class="hl">ensa</span> — los <em>medios</em></span>
+        <div class="word-gloss">the press · the media</div>
+        <div class="word-dir">Misma raíz que <strong>presión</strong>: algo que aprieta.</div>
+      </div>
+    </div>
+
+    <!-- propio -->
+    <div class="word-card card-propio" role="button" tabindex="0" onclick="openModal('m-propio')" onkeydown="cardKey(event,'m-propio')">
+      <div class="card-img-banner">
+        <span class="img-ph">propio</span>
+        <img src="../assets/tropiezos-p/propio.png" alt="Una persona sostiene con orgullo una llave de su propia casa nueva." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">propio</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="propio" aria-label="Escuchar propio">🔊</button>
+        </div>
+        <span class="anchor-badge">lo <span class="hl">propio</span> — lo de <em>uno mismo</em></span>
+        <div class="word-gloss">(one's) own · typical of · -self</div>
+        <div class="word-dir">No confundir con <strong>propósito</strong> (pro-pósito).</div>
+      </div>
+    </div>
+
+    <!-- a propósito -->
+    <div class="word-card card-proposito" role="button" tabindex="0" onclick="openModal('m-proposito')" onkeydown="cardKey(event,'m-proposito')">
+      <div class="card-img-banner">
+        <span class="img-ph">a propósito</span>
+        <img src="../assets/tropiezos-p/a-proposito.png" alt="Una persona deja caer algo con intención evidente mientras otra la observa." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">a propósito</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="a propósito" aria-label="Escuchar a propósito">🔊</button>
+        </div>
+        <span class="anchor-badge">pro·<span class="hl">pósito</span> — la <em>intención</em></span>
+        <div class="word-gloss">on purpose · by the way</div>
+        <div class="word-dir">Dos trabajos: <strong>intención</strong> y <strong>cambio de tema</strong>.</div>
+      </div>
+    </div>
+
+    <!-- propina -->
+    <div class="word-card card-propina" role="button" tabindex="0" onclick="openModal('m-propina')" onkeydown="cardKey(event,'m-propina')">
+      <div class="card-img-banner">
+        <span class="img-ph">propina</span>
+        <img src="../assets/tropiezos-p/propina.png" alt="Unos billetes y monedas dejados junto a la cuenta en la mesa de un restaurante." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">propina</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="propina" aria-label="Escuchar propina">🔊</button>
+        </div>
+        <span class="anchor-badge">pro·<span class="hl">pina</span> — lo que <em>dejas</em></span>
+        <div class="word-gloss">tip · gratuity</div>
+        <div class="word-dir">Mismo <strong>pro-p</strong> que <strong>propio</strong> y <strong>propósito</strong>.</div>
+      </div>
+    </div>
+
+    <!-- primero -->
+    <div class="word-card card-primero" role="button" tabindex="0" onclick="openModal('m-primero')" onkeydown="cardKey(event,'m-primero')">
+      <div class="card-img-banner">
+        <span class="img-ph">primero</span>
+        <img src="../assets/tropiezos-p/primero.png" alt="Un corredor cruza la meta en primer lugar, con el número uno en el pecho." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">primero</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="primero" aria-label="Escuchar primero">🔊</button>
+        </div>
+        <span class="anchor-badge"><span class="hl">prim</span>·ero — el <em>primero</em></span>
+        <div class="word-gloss">first · firstly</div>
+        <div class="word-dir">No es <strong>premio</strong> ni <strong>primo</strong> (cousin).</div>
+      </div>
+    </div>
+
+    <!-- primo -->
+    <div class="word-card card-primo" role="button" tabindex="0" onclick="openModal('m-primo')" onkeydown="cardKey(event,'m-primo')">
+      <div class="card-img-banner">
+        <span class="img-ph">primo</span>
+        <img src="../assets/tropiezos-p/primo.png" alt="Dos primos jóvenes ríen juntos en una reunión familiar." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">primo</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="primo" aria-label="Escuchar primo">🔊</button>
+        </div>
+        <span class="anchor-badge"><span class="hl">prim</span>·o — el <em>familiar</em></span>
+        <div class="word-gloss">cousin · (number) prime</div>
+        <div class="word-dir">A una letra de <strong>primero</strong>; misma raíz visual que <strong>premio</strong>.</div>
+      </div>
+    </div>
+
+    <!-- prueba -->
+    <div class="word-card card-prueba" role="button" tabindex="0" onclick="openModal('m-prueba')" onkeydown="cardKey(event,'m-prueba')">
+      <div class="card-img-banner">
+        <span class="img-ph">prueba</span>
+        <img src="../assets/tropiezos-p/prueba.png" alt="Una mano con guante sostiene un tubo de ensayo a contraluz mientras revisa un resultado." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">prueba</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="prueba" aria-label="Escuchar prueba">🔊</button>
+        </div>
+        <span class="anchor-badge">una <span class="hl">prueba</span> — <em>proof</em> · <em>test</em> · <em>trial</em></span>
+        <div class="word-gloss">proof · test · trial · (medical) test</div>
+        <div class="word-dir">Un solo sustantivo, muchos oficios.</div>
+      </div>
+    </div>
+
+    <!-- pista -->
+    <div class="word-card card-pista" role="button" tabindex="0" onclick="openModal('m-pista')" onkeydown="cardKey(event,'m-pista')">
+      <div class="card-img-banner">
+        <span class="img-ph">pista</span>
+        <img src="../assets/tropiezos-p/pista.png" alt="Una lupa sobre unas huellas en la tierra, siguiendo un rastro." onerror="this.remove()">
+      </div>
+      <div class="card-body">
+        <div class="word-head">
+          <span class="word-name">pista</span>
+          <button class="speak-btn" onclick="event.stopPropagation(); speakWord(this)" data-word="pista" aria-label="Escuchar pista">🔊</button>
+        </div>
+        <span class="anchor-badge">una <span class="hl">pista</span> — la <em>huella</em> que se <em>sigue</em></span>
+        <div class="word-gloss">clue · track · runway · court</div>
+        <div class="word-dir">De la <strong>huella</strong> a la <strong>pista de baile</strong>.</div>
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- premio -->
+<div class="modal-overlay" id="m-premio" onclick="if(event.target===this)closeModal('m-premio')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">premio</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="premio" aria-label="Escuchar premio">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-premio')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>premiar</em> (to reward) · sustantivo masculino</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>What you <strong>win or earn</strong> — covers <em>prize</em> (lottery, contest), <em>award</em> (premio Nobel), and <em>reward</em>. It's the payoff, not the cost.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The look-alike trap is <em>premio</em> (pr-<strong>em</strong>-io, what you win) vs <em>precio</em> (pr-<strong>ec</strong>-io, what you pay) — one letter apart. Hook: <strong>e-M</strong> for <strong>M</strong>edalla; <strong>e-C</strong> for <strong>C</strong>osto.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ganó el primer <strong>premio</strong> del concurso.</div>
+          <div class="example-en">She won first prize in the contest.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le dieron un <strong>premio</strong> por su trayectoria.</div>
+          <div class="example-en">They gave him an award for his career.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- precio / desprecio -->
+<div class="modal-overlay" id="m-precio" onclick="if(event.target===this)closeModal('m-precio')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title"><span class="tone-precio">precio</span> <span class="pair-slash">/</span> <span class="tone-despre">desprecio</span></span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="precio, desprecio" aria-label="Escuchar precio y desprecio">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-precio')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">una palabra vive dentro de la otra: <em>des</em> + <em>precio</em></p>
+
+      <div class="m-sub precio">precio · sustantivo masculino</div>
+      <p>What something <strong>costs</strong> — the amount you pay. <em>el precio de la gasolina</em>, <em>¿qué precio tiene?</em>, <em>a precio de oferta</em>.</p>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <strong>precio</strong> subió otra vez este mes.</div>
+          <div class="example-en">The price went up again this month.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Cuál es el <strong>precio</strong> final, con todo incluido?</div>
+          <div class="example-en">What's the final price, all included?</div>
+        </div>
+      </div>
+
+      <hr class="pair-rule">
+
+      <div class="m-sub despre">desprecio · sustantivo masculino</div>
+      <p>Treating someone or something as <strong>worthless</strong> — contempt, scorn, disdain. From <em>despreciar</em> (to despise). The verb also means to <strong>turn down / spurn</strong> an offer.</p>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo miró con <strong>desprecio</strong> y se fue.</div>
+          <div class="example-en">She looked at him with contempt and left.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Rechazó la oferta con <strong>desprecio</strong>.</div>
+          <div class="example-en">He turned the offer down scornfully.</div>
+        </div>
+      </div>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The memory hook is literal: <em>des-</em> often means <strong>undo / strip away</strong>, so <em>des·precio</em> = "to strip the <em>value</em> off" someone → to look down on them. Seeing <em>precio</em> hiding inside <em>desprecio</em> is exactly why they snag the eye — and exactly what links their meanings.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">par confundible</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- presión -->
+<div class="modal-overlay" id="m-presion" onclick="if(event.target===this)closeModal('m-presion')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">presión</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="presión" aria-label="Escuchar presión">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-presion')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>presionar</em> · del latín <em>pressio</em> · sustantivo femenino</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>Force pressing on something — works <strong>physically</strong> (<em>presión arterial</em>, <em>presión atmosférica</em>) and <strong>figuratively</strong> (<em>presión social</em>, <em>trabajar bajo presión</em>).</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The reading snag is <em>presión</em> (pr<strong>e</strong>-) vs <em>pasión</em> (p<strong>a</strong>-): pressure squeezes from outside, passion burns from inside. Same family as <em>prensa</em> and <em>presionar</em> — all about something that <strong>presses</strong>.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hay que controlar la <strong>presión</strong> arterial del paciente.</div>
+          <div class="example-en">The patient's blood pressure needs to be monitored.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Trabaja muy bien bajo <strong>presión</strong>.</div>
+          <div class="example-en">She works very well under pressure.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- pasión -->
+<div class="modal-overlay" id="m-pasion" onclick="if(event.target===this)closeModal('m-pasion')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">pasión</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="pasión" aria-label="Escuchar pasión">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-pasion')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">del latín <em>passio</em> ("padecer") · sustantivo femenino</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>Intense emotion or enthusiasm — <em>hablar con pasión</em>, <em>la pasión por la música</em>. Capitalized, <em>la Pasión</em> is the religious Passion.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> Don't let <em>pasión</em> and <em>presión</em> blur: <em>p<strong>a</strong>sión</em> is fire from within, <em>pr<strong>e</strong>sión</em> is force from outside. Its Latin root is "to suffer" (cf. <em>padecer</em>, <em>paciente</em>) — but in everyday use it's <strong>passion / drive</strong>.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Habla de su trabajo con verdadera <strong>pasión</strong>.</div>
+          <div class="example-en">He talks about his work with real passion.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La cirugía es su gran <strong>pasión</strong>.</div>
+          <div class="example-en">Surgery is her great passion.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- prensa -->
+<div class="modal-overlay" id="m-prensa" onclick="if(event.target===this)closeModal('m-prensa')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">prensa</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="prensa" aria-label="Escuchar prensa">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-prensa')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>prensar</em> (to press) · sustantivo femenino</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>The <strong>news media</strong> as a whole — <em>la prensa local</em>, <em>rueda de prensa</em> (press conference), <em>libertad de prensa</em>, <em>prensa amarilla</em> (tabloids). Literally a machine that presses (the printing press), then the media by extension.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> Same root as <em>presión</em> / <em>presionar</em> — all from "to press." That shared family is why <em>prensa</em> and <em>presión</em> read as cousins: <em>pr<strong>ensa</strong></em> (the press) vs <em>pr<strong>esión</strong></em> (the squeeze).
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <strong>prensa</strong> cubrió el caso durante semanas.</div>
+          <div class="example-en">The press covered the case for weeks.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El hospital dio una rueda de <strong>prensa</strong>.</div>
+          <div class="example-en">The hospital held a press conference.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- propio -->
+<div class="modal-overlay" id="m-propio" onclick="if(event.target===this)closeModal('m-propio')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">propio</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="propio" aria-label="Escuchar propio">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-propio')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">del latín <em>proprius</em> · adjetivo</p>
+
+      <div class="m-sub">Sentidos</div>
+      <p><strong>(1) one's own</strong> — <em>mi propio consultorio</em>. <strong>(2) characteristic / typical of</strong> — <em>es muy propio de él</em>. <strong>(3) proper, fitting</strong> — <em>no es propio de un acto formal</em>. <strong>(4) emphatic "-self"</strong> — <em>el propio director lo dijo</em> (the director himself).</p>
+
+      <div class="m-sub">Expresiones útiles</div>
+      <p><em>amor propio</em> (self-esteem / pride), <em>nombre propio</em> (proper noun), <em>en defensa propia</em>, <em>por iniciativa propia</em>.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The trip-up is <em>propio</em> (pro-<strong>pio</strong>, "own") vs <em>propósito</em> (pro-<strong>pósito</strong>, "purpose"). Different words, just a shared <em>pro-</em> head. Also note <em>propio</em> agrees: <em>propio / propia / propios / propias</em>.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">adjetivo</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quiero abrir mi <strong>propio</strong> consultorio.</div>
+          <div class="example-en">I want to open my own practice.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Esa reacción es muy <strong>propia</strong> de ella.</div>
+          <div class="example-en">That reaction is so typical of her.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- a propósito -->
+<div class="modal-overlay" id="m-proposito" onclick="if(event.target===this)closeModal('m-proposito')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">a propósito</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="a propósito" aria-label="Escuchar a propósito">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-proposito')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>propósito</em> (purpose, intention) · del latín <em>propositum</em></p>
+
+      <div class="m-sub">Dos trabajos</div>
+      <p><strong>(1) on purpose</strong> — deliberately: <em>Lo hizo a propósito</em>. <strong>(2) by the way</strong> — a topic-changer: <em>A propósito, ¿hablaste con ella?</em> Position and tone tell them apart.</p>
+
+      <div class="m-sub">La palabra suelta</div>
+      <p>On its own, <em>propósito</em> = <strong>purpose / intention</strong>, and in the plural, <strong>resolutions</strong>: <em>los propósitos de Año Nuevo</em>.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> Visually it brushes against <em>propio</em> — same <em>pro-</em> start, different word. And don't read the "by the way" sense as accidental: <em>a propósito</em> as a connector still carries that flavor of "now that it comes to mind, <strong>on purpose</strong> I'll mention it."
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">locución</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No fue <strong>a propósito</strong>, fue un accidente.</div>
+          <div class="example-en">It wasn't on purpose, it was an accident.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>A propósito</strong>, ¿confirmaste la cita?</div>
+          <div class="example-en">By the way, did you confirm the appointment?</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- propina -->
+<div class="modal-overlay" id="m-propina" onclick="if(event.target===this)closeModal('m-propina')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">propina</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="propina" aria-label="Escuchar propina">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-propina')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>propinar</em> · del latín <em>propinare</em> ("convidar a beber") · sustantivo femenino</p>
+
+      <div class="m-sub">Sentido principal</div>
+      <p>The <strong>tip / gratuity</strong> you leave for service — <em>dejar propina</em>, <em>¿está incluida la propina?</em>. Neutral and everyday across Latin America.</p>
+
+      <div class="m-sub">Expresión útil</div>
+      <p><em>de propina</em> = <strong>as a bonus / on top of that / to boot</strong> — a little extra, wanted or not: <em>Llegó tarde y, de propina, sin avisar.</em></p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The eye-trap: <em>propina</em> shares its <em>pro-p</em> opening with <em>propio</em> (own) and <em>propósito</em> (purpose) — three unrelated words, one silhouette. Etymology bonus: it comes from an old sense of <strong>buying someone a drink</strong> (<em>propinar</em>), so the coin for a round became the coin for good service.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Dejamos una buena <strong>propina</strong> al mesero.</div>
+          <div class="example-en">We left the waiter a good tip.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿La <strong>propina</strong> ya está incluida en la cuenta?</div>
+          <div class="example-en">Is the tip already included in the bill?</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llegó tarde y, de <strong>propina</strong>, sin avisar.</div>
+          <div class="example-en">He showed up late and, on top of that, without warning.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- primero -->
+<div class="modal-overlay" id="m-primero" onclick="if(event.target===this)closeModal('m-primero')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">primero</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="primero" aria-label="Escuchar primero">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-primero')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">del latín <em>primarius</em> · adjetivo / adverbio / sustantivo</p>
+
+      <div class="m-sub">Sentidos</div>
+      <p><strong>"first"</strong> as an ordinal (<em>el primero de la fila</em>) and <strong>"firstly / first of all"</strong> as an adverb (<em>Primero, lávate las manos</em>). As a noun: <em>lo primero</em>, <em>el primero en llegar</em>.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> Drops to <em>primer</em> before a masculine singular noun — <em>el primer paso</em>, <em>el primer día</em> — but stays full when it stands alone: <em>llegó primero</em>. Eye-trap cluster: <em>primero</em> (first) · <em>premio</em> (prize) · <em>primo</em> (cousin) all share that <em>pr-m</em> skeleton.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">apócope: <em>primer</em></span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llegó <strong>primero</strong> a la meta.</div>
+          <div class="example-en">He arrived first at the finish line.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Primero</strong> revisamos los signos vitales.</div>
+          <div class="example-en">First we check the vital signs.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- primo -->
+<div class="modal-overlay" id="m-primo" onclick="if(event.target===this)closeModal('m-primo')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">primo</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="primo" aria-label="Escuchar primo">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-primo')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">del latín <em>primus</em> ("primero") · sustantivo / adjetivo</p>
+
+      <div class="m-sub">Sentidos</div>
+      <p><strong>(1) cousin</strong> — the family relation: <em>primo / prima / primos / primas</em>. <strong>(2) prime</strong> — in math, <em>número primo</em>. The two share an origin: a cousin is "first-degree" kin, a prime is a "first" number, divisible only by 1 and itself.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The eye-trap: <em>primo</em> sits one letter from <em>primero</em> (cousin vs. first) and shares the <em>pr-m</em> skeleton with <em>premio</em> (prize). In some regions (mainly Spain) <em>hacer el primo</em> means to be played for a fool — colloquial, and not part of neutral Latin American usage.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo / adjetivo</span>
+        <span class="chip chip-region">"tonto" = coloquial · España</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Mi <strong>primo</strong> estudia medicina en Bogotá.</div>
+          <div class="example-en">My cousin studies medicine in Bogotá.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El siete es un número <strong>primo</strong>.</div>
+          <div class="example-en">Seven is a prime number.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- prueba -->
+<div class="modal-overlay" id="m-prueba" onclick="if(event.target===this)closeModal('m-prueba')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">prueba</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="prueba" aria-label="Escuchar prueba">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-prueba')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">de <em>probar</em> (to test / try / prove) · sustantivo femenino</p>
+
+      <div class="m-sub">Sentidos</div>
+      <p><strong>(1) proof / evidence</strong> — <em>no había pruebas</em>, <em>pruebas del delito</em>. <strong>(2) test / exam</strong> — <em>aprobar la prueba</em>. <strong>(3) trial / try</strong> — <em>a prueba</em> (on a trial basis), <em>poner a prueba</em> (to put to the test), <em>período de prueba</em>. <strong>(4) medical test</strong> — <em>prueba de esfuerzo</em>, <em>prueba PCR</em>, <em>prueba de embarazo</em>.</p>
+
+      <div class="m-sub">El marco "-proof"</div>
+      <p><em>a prueba de</em> + sustantivo = <strong>X-proof</strong>: <em>a prueba de agua</em> (waterproof), <em>a prueba de balas</em> (bulletproof), <em>a prueba de golpes</em> (shockproof).</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> The trip here isn't a look-alike — it's one word wearing many hats. Everything traces back to <em>probar</em> (to try / test / prove), so a courtroom <strong>proof</strong>, a school <strong>test</strong>, a <strong>trial</strong> run, and a lab <strong>test</strong> are all the same noun. And it's <em>la prueba</em> — feminine.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo</span>
+        <span class="chip chip-reg">muchos sentidos</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le hicieron una <strong>prueba</strong> de esfuerzo al paciente.</div>
+          <div class="example-en">They gave the patient a stress test.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No había <strong>pruebas</strong> suficientes para condenarlo.</div>
+          <div class="example-en">There wasn't enough evidence to convict him.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Esta funda es a <strong>prueba</strong> de golpes.</div>
+          <div class="example-en">This case is shockproof.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- pista -->
+<div class="modal-overlay" id="m-pista" onclick="if(event.target===this)closeModal('m-pista')">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title-wrap">
+        <span class="modal-title">pista</span>
+        <button class="speak-btn" onclick="speakWord(this)" data-word="pista" aria-label="Escuchar pista">🔊</button>
+      </div>
+      <button class="close-btn" onclick="closeModal('m-pista')" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="origin-line">del italiano <em>pista</em> ("huella, rastro") · sustantivo femenino</p>
+
+      <div class="m-sub">Sentidos</div>
+      <p><strong>(1) clue / lead</strong> — <em>seguir la pista</em>, <em>dar una pista</em>, <em>pistas del caso</em>. <strong>(2) trail / track</strong> — <em>tras la pista de</em>. <strong>(3) runway</strong> — <em>pista de aterrizaje</em>. <strong>(4) court / rink / floor / slope</strong> — <em>pista de tenis</em>, <em>pista de hielo</em>, <em>pista de baile</em>, <em>pista de esquí</em>. <strong>(5) audio track</strong> — <em>pista de audio</em>.</p>
+
+      <div class="nota">
+        <span class="nota-label">NOTA*</span> Like <em>prueba</em>, the trip is range, not resemblance. One core image holds it together: a <strong>track</strong> — a strip you follow or move along. A <strong>clue</strong> is the track that leads you to the answer; a <strong>runway</strong>, a <strong>court</strong>, and a <strong>dance floor</strong> are all marked tracks you move on.
+      </div>
+
+      <div class="chips">
+        <span class="chip chip-reg">neutral</span>
+        <span class="chip chip-reg">sustantivo</span>
+        <span class="chip chip-reg">muchos sentidos</span>
+      </div>
+
+      <div class="m-sub">Ejemplos</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La policía sigue una <strong>pista</strong> prometedora.</div>
+          <div class="example-en">The police are following a promising lead.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El avión aterrizó en la <strong>pista</strong> número dos.</div>
+          <div class="example-en">The plane landed on runway two.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" aria-label="Escuchar ejemplo">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Salimos a la <strong>pista</strong> a bailar.</div>
+          <div class="example-en">We went out onto the dance floor to dance.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function speakText(text, btn) {
+  if (!window.speechSynthesis) return;
+  text = cleanForTTS(text);
+  if (!text) return;
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  if (!voicesReady) { ensureVoices().then(() => { if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; } speechSynthesis.speak(u); }); }
+  else { speechSynthesis.speak(u); }
+}
+
+function speakWord(btn) {
+  speakText(btn.dataset.word || '', btn);
+}
+
+function speakExample(btn) {
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+  speakText(esEl.textContent, btn);
+}
+
+// ═══════════════════════════════════════════════
+//  Modals
+// ═══════════════════════════════════════════════
+function openModal(id) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove('active');
+  document.body.style.overflow = '';
+  speechSynthesis && speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+}
+function cardKey(e, id) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(id); }
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    document.body.style.overflow = '';
+    speechSynthesis && speechSynthesis.cancel();
+    document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+  }
+});
+</script>
+</body>
+</html>

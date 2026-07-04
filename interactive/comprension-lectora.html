@@ -1847,6 +1847,12 @@ PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). E
 
 REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo registro que el pasaje. No introduzcas vocabulario que no aparecería en ese registro. Por ejemplo, en registro cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
 
+PARIDAD DE OPCIONES (regla crítica): Las cuatro opciones de cada pregunta deben ser indistinguibles por su forma; un lector que no comprendió el pasaje no debe poder acertar fijándose solo en la longitud o el nivel de detalle.
+- EXTENSIÓN PAREJA: las cuatro opciones tienen una longitud similar. La opción correcta NO puede ser la más larga ni la más detallada del grupo. Empareja las longitudes agregando detalle concreto del texto a los distractores —nunca relleno vacío—, no recortando la información necesaria de la correcta.
+- ESPECIFICIDAD PAREJA: cada distractor es una interpretación errónea verosímil, tan concreta y completa como la correcta, anclada en algo que sí aparece en el pasaje pero mal interpretado. Nada de opciones vagas o absurdas que se descartan de un vistazo.
+- FORMA PARALELA: las cuatro opciones comparten tipo y estructura gramatical (todas frases nominales, o todas oraciones completas).
+- SIN DELATORES: la opción correcta no debe ser la única con justificación, la única con salvedades o matices («probablemente», «en cierto modo», «salvo que»), ni la única gramaticalmente impecable.
+
 JSON requerido:
 ${jsonSchema}
 
@@ -1912,7 +1918,7 @@ async function generateStoryPlan({ moduleKey, mode, level, register, region, the
       body: JSON.stringify({
         password:   sessionPw,
         provider:   generator || 'claude',
-        model:      'claude-sonnet-4-6',
+        model:      'claude-sonnet-5',
         max_tokens: 1500,
         stream:     false,
         system:     spec,
@@ -2227,7 +2233,7 @@ async function doGenerate() {
       body: JSON.stringify({
         password:   sessionPw,
         provider:   currentCfg.generator || 'claude',
-        model:      'claude-opus-4-7',
+        model:      'claude-opus-4-8',
         max_tokens: 8000,
         stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
@@ -2810,7 +2816,7 @@ Responde SOLO con el documento en texto plano.`;
     const res = await fetch('/api/claude', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        password: sessionPw, model: 'claude-sonnet-4-6',
+        password: sessionPw, model: 'claude-sonnet-5',
         max_tokens: 600, stream: false,
         system: 'Eres un asistente que crea documentos de continuidad narrativa. Responde solo con el documento.',
         messages: [{ role: 'user', content: biblePrompt }]

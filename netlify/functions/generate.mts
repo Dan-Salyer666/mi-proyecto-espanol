@@ -25,18 +25,23 @@ import type { Context, Config } from "@netlify/functions";
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
 const GEMINI_BASE   = "https://generativelanguage.googleapis.com/v1beta/models";
-const GEMINI_MODEL  = "gemini-2.5-pro";
+const GEMINI_MODEL  = "gemini-3.1-pro-preview";
 
-// Gemini 2.5 Pro: thinking CANNOT be disabled (floor 128, ceiling 32768) and
-// thinking tokens are charged against maxOutputTokens. Default kept modest to
-// limit the latency gap before the first prose token streams; the front-end
-// can override per-call via body.thinking_budget once we tune in Phase 3.
-const GEMINI_THINKING_MIN     = 128;
-const GEMINI_THINKING_MAX     = 32768;
-const GEMINI_THINKING_DEFAULT = 512;
-// Extra output headroom on top of (requested prose tokens + thinking budget)
-// so a thinking overflow can never silently truncate the story JSON.
-const GEMINI_OUTPUT_PAD = 4096;
+// Gemini 3.x uses discrete thinking LEVELS (low | medium | high), NOT the
+// legacy numeric thinking_budget — and the two cannot be combined in one
+// request (400 error). 3.1 Pro does not support "minimal". Default kept at
+// "low" to preserve the original latency intent (reach the first prose token
+// fast); the front-end can override per-call via body.thinking_level, and it
+// can be raised to "medium" for richer stories at some latency/cost.
+const GEMINI_THINKING_LEVELS  = new Set(["low", "medium", "high"]);
+const GEMINI_THINKING_DEFAULT = "low";
+// Output headroom above the prose budget so a thinking overflow can never
+// silently truncate the story JSON (thinking is billed against the output cap).
+// Scales with the thinking level, bounded by the model's 64k output ceiling.
+const GEMINI_OUTPUT_CEILING   = 65536;
+const GEMINI_THINKING_HEADROOM: Record<string, number> = {
+  low: 8192, medium: 16384, high: 32768,
+};
 
 // Transient-error retry policy for Gemini calls. The 2.5 Pro endpoint can
 // return 503 "service unavailable" under load even when the user did nothing
@@ -115,7 +120,7 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
       "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model:      body.model      || "claude-sonnet-4-6",
+      model:      body.model      || "claude-sonnet-5",
       max_tokens: body.max_tokens || 4000,
       stream:     stream,
       system:     body.system     || "",
@@ -146,16 +151,15 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
 //  GEMINI PATH — translate request in, translate response out
 // ─────────────────────────────────────────────────────────────────────────
 async function handleGemini(body: any, apiKey: string, stream: boolean): Promise<Response> {
-  const thinkingBudget = clamp(
-    Number(body.thinking_budget ?? GEMINI_THINKING_DEFAULT),
-    GEMINI_THINKING_MIN,
-    GEMINI_THINKING_MAX
-  );
+  const reqLevel      = String(body.thinking_level ?? GEMINI_THINKING_DEFAULT).toLowerCase();
+  const thinkingLevel = GEMINI_THINKING_LEVELS.has(reqLevel) ? reqLevel : GEMINI_THINKING_DEFAULT;
 
   // Treat body.max_tokens as the PROSE budget (provider-agnostic meaning).
-  // Gemini charges thinking against the output cap, so add it back plus a pad.
+  // Gemini charges thinking against the output cap, so pad above the prose
+  // budget by a level-appropriate headroom, bounded by the 64k output ceiling.
   const proseTokens     = Number(body.max_tokens) || 4000;
-  const maxOutputTokens = proseTokens + thinkingBudget + GEMINI_OUTPUT_PAD;
+  const headroom        = GEMINI_THINKING_HEADROOM[thinkingLevel] ?? 8192;
+  const maxOutputTokens = Math.min(proseTokens + headroom, GEMINI_OUTPUT_CEILING);
 
   const geminiReq: any = {
     contents: (Array.isArray(body.messages) ? body.messages : []).map((m: any) => ({
@@ -164,8 +168,11 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
     })),
     generationConfig: {
       maxOutputTokens,
-      temperature: typeof body.temperature === "number" ? body.temperature : 1.0,
-      thinkingConfig: { thinkingBudget },
+      // Gemini 3 strongly recommends leaving temperature at its 1.0 default;
+      // values below 1.0 can cause looping or degraded reasoning. Only forward
+      // an explicit temperature when the caller actually sends one.
+      ...(typeof body.temperature === "number" ? { temperature: body.temperature } : {}),
+      thinkingConfig: { thinkingLevel },
       // Force structured JSON output. With this on, Gemini guarantees the
       // emitted text concatenates to valid JSON — kills the "unterminated
       // string" class of errors the front-end repair pipeline can't always
@@ -273,11 +280,6 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
 // ─────────────────────────────────────────────────────────────────────────
 //  helpers
 // ─────────────────────────────────────────────────────────────────────────
-function clamp(n: number, lo: number, hi: number): number {
-  if (Number.isNaN(n)) return lo;
-  return Math.min(Math.max(n, lo), hi);
-}
-
 function json(obj: any, status: number): Response {
   return new Response(JSON.stringify(obj), {
     status,

@@ -1843,6 +1843,8 @@ PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especif
 
 PRONOMBRES EN DIÁLOGO: La variedad regional especificada arriba controla qué pronombres usar en TODAS las líneas de diálogo. Si la variedad es neutral o Latin American sin voseo, los personajes NUNCA dicen «vos», «sabés», «tenés», «sos», «querés», «podés» — dicen «tú», «sabes», «tienes», «eres», «quieres», «puedes». Si la variedad es rioplatense o Latin American con voseo, los personajes usan voseo. Verifica cada línea de diálogo contra esta regla antes de entregar. ${seInstr}
 
+PUNTUACIÓN DEL DIÁLOGO: Marca TODO el diálogo hablado con comillas angulares («…»), nunca con raya (—) para abrir la intervención. Ejemplo: «¿Qué pasa, Leo?», preguntó el sargento. No uses NUNCA comillas rectas (") en ninguna parte del texto —ni en el pasaje, ni en las preguntas, opciones o explicaciones—; usa exclusivamente «…». La raya (—) queda reservada para incisos narrativos, no para el diálogo.
+
 PREGUNTAS: Exactamente 6 preguntas de opción múltiple, 4 opciones (A/B/C/D). Evalúan inferencia y comprensión profunda — no localización literal de palabras. Incluye preguntas sobre motivaciones de personajes, implicaciones y lo que el texto sugiere sin decir directamente. IMPORTANTE: la inferencia funciona en cualquier registro — no eleves la prosa ni introduzcas lenguaje literario solo para generar subtexto. Las situaciones cotidianas tienen suficiente subtexto por sí mismas.
 
 REGISTRO DE PREGUNTAS Y OPCIONES: Las preguntas y TODAS las opciones (correctas y distractores) usan el mismo registro que el pasaje. No introduzcas vocabulario que no aparecería en ese registro. Por ejemplo, en registro cotidiano, verbos como «ahuyentar», «proferir», «divisar», «vislumbrar», «tornar», «yacer», «henchir», «acaecer», «discurrir» son inadecuados — usa «espantar», «decir», «ver», «volverse», «estar tendido», «llenar», «ocurrir», «pasar el tiempo». Esta regla aplica con igual fuerza a los distractores que a las opciones correctas, porque el lector los lee todos.
@@ -2235,6 +2237,8 @@ async function doGenerate() {
         provider:   currentCfg.generator || 'claude',
         model:      'claude-opus-4-8',
         max_tokens: 8000,
+        thinking:       { type: 'enabled', budget_tokens: 6000 }, // Claude path: richer reasoning before writing
+        thinking_level: 'medium',                                  // Gemini path: balanced richer tier
         stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
 Return ONLY valid JSON matching the exact schema. No preamble, no explanation, no markdown fences.
@@ -2281,6 +2285,10 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
             const pct = Math.min(90, 8 + Math.round((tokenCount / 900) * 82));
             const phase = pct < 35 ? epMsg : pct < 65 ? 'Construyendo las preguntas…' : 'Finalizando…';
             setProgress(pct, phase, `≈ ${tokenCount} tokens`);
+          } else if (evt.type === 'content_block_delta' && evt.delta?.type === 'thinking_delta') {
+            // Extended-thinking phase (Claude): no prose yet, so keep the bar
+            // parked and show that the model is reasoning rather than stalled.
+            setProgress(8, 'Pensando en la historia…', '');
           }
         } catch {}
       }
@@ -2288,6 +2296,15 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
 
     setProgress(98, 'Procesando…', '');
     let clean = fullText.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();
+    // Parse-first: most models (esp. Gemini JSON mode) return already-valid JSON.
+    // Try the raw output before the aggressive pre-cleaner below — that cleaner's
+    // quote heuristic can itself corrupt valid JSON on Spanish dialogue (an inner
+    // quote followed by a comma gets misread as a string's closing quote, which is
+    // exactly the "Expected ',' or '}'" class of parse error). Only clean if the
+    // raw parse actually fails.
+    let quizParsed = null;
+    try { quizParsed = JSON.parse(clean); } catch (_) { /* fall back to pre-clean */ }
+
     // Pre-clean: escape literal newlines and fix unescaped quotes inside JSON string values
     let inStr = false, esc = false, preCleaned = '';
     for (let i = 0; i < clean.length; i++) {
@@ -2323,13 +2340,15 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       preCleaned += c;
     }
     clean = preCleaned;
-    let quiz;
-    try {
-      quiz = JSON.parse(clean);
-    } catch (parseErr) {
-      // Attempt lightweight repair
-      quiz = tryRepairJSON(clean);
-      if (!quiz) throw new Error(`JSON inválido del modelo: ${parseErr.message}`);
+    let quiz = quizParsed;
+    if (!quiz) {
+      try {
+        quiz = JSON.parse(clean);
+      } catch (parseErr) {
+        // Attempt lightweight repair
+        quiz = tryRepairJSON(clean);
+        if (!quiz) throw new Error(`JSON inválido del modelo: ${parseErr.message}`);
+      }
     }
 
     if (!quiz.questions || !Array.isArray(quiz.questions) || quiz.questions.length === 0)
@@ -2824,7 +2843,13 @@ Responde SOLO con el documento en texto plano.`;
     });
     if (!res.ok) throw new Error('Bible failed');
     const data = await res.json();
-    storyBible = data.content[0].text.trim();
+    // Safely pull the first TEXT block — a Claude response can lead with a
+    // non-text block or come back without content, so don't assume [0].text
+    // (that raw access is what threw "Cannot read properties of undefined").
+    const textBlock = Array.isArray(data.content)
+      ? data.content.find(b => b && b.type === 'text' && typeof b.text === 'string')
+      : null;
+    storyBible = textBlock ? textBlock.text.trim() : null;
     return storyBible;
   } catch (err) { console.warn('Bible failed:', err); storyBible = null; return null; }
 }

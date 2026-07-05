@@ -2237,9 +2237,9 @@ async function doGenerate() {
         provider:   currentCfg.generator || 'claude',
         model:      'claude-opus-4-8',
         max_tokens: 8000,
-        thinking:       { type: 'enabled', budget_tokens: 6000 }, // Claude path: richer reasoning before writing
-        thinking_level: 'medium',                                  // Gemini path: balanced richer tier
-        stream:     true,
+        thinking:       { type: 'enabled', budget_tokens: 6000 }, // Claude path: richer reasoning before writing 
+      thinking_level: 'low',                                     // Gemini path: low tier — fast time-to-first-token, avoids 30s function timeout (504). Revisit vs 'medium' once latency is understood.
+       stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
 Return ONLY valid JSON matching the exact schema. No preamble, no explanation, no markdown fences.
 CRITICAL JSON RULES:
@@ -2836,7 +2836,7 @@ Responde SOLO con el documento en texto plano.`;
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         password: sessionPw, model: 'claude-sonnet-5',
-        max_tokens: 600, stream: false,
+        max_tokens: 1400, stream: false,
         system: 'Eres un asistente que crea documentos de continuidad narrativa. Responde solo con el documento.',
         messages: [{ role: 'user', content: biblePrompt }]
       })

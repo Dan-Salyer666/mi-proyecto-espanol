@@ -1071,6 +1071,7 @@ let storyBible       = null;
 let prevBible        = null;
 let plannedEnding    = null;  // legacy: {thematic_core, final_beat, thread_resolution} — committed on ep 1 by the Opus call itself, frozen thereafter. Used when no storyPlan is present (legacy saves, prep-call failure).
 let storyPlan        = null;  // module-driven plan from Sonnet prep call: {central_question, ending_type, locked_ending, beat_plan, ...}. When present, takes precedence over plannedEnding for prompt injection.
+let storyCanon       = null;  // HECHOS FIJOS: immutable facts (names, cause of a death, hiding spot, fixed relationships) captured once on ep 1, frozen thereafter, injected into every continuation. Prevents cross-episode fact drift.
 let episodeNum       = 0;
 let episodeTarget    = 0;
 let storyId          = null;
@@ -1636,6 +1637,13 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
     ? `\n\nCONTINUIDAD (episodio ${p.epNum}):\n${p.bible}\n\nEscribe el siguiente episodio. Mantén continuidad de personajes, lugar y tono. Avanza la trama.`
     : '';
 
+  // HECHOS FIJOS — immutable canon captured on ep 1, injected verbatim into every
+  // continuation and never regenerated. This is what stops facts drifting across
+  // episodes (e.g. a "car accident" mutating into a "river accident").
+  const canonSection = (Array.isArray(p.canon) && p.canon.length)
+    ? `\n\nHECHOS FIJOS (canon inmutable de esta historia — ya establecido, NO puede cambiar):\n${p.canon.map(f => `- ${f}`).join('\n')}\nRespeta cada dato al pie de la letra. Si un episodio anterior estableció cómo ocurrió algo (una muerte, un nombre, un lugar, un objeto), mantenlo idéntico; nunca lo contradigas ni des una versión distinta. Puedes revelar información nueva siempre que sea compatible con estos hechos, nunca en contra de ellos.`
+    : '';
+
   // ── Story structure flags ──
   const isFreshStart  = !p.bible;
   const isFinalEp     = p.epTarget > 0 && p.epNum === p.epTarget;
@@ -1649,6 +1657,7 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
   const hasStoryPlan    = !!p.storyPlan;
   const needsEndingPlan = isFreshStart && (isMultiEpFirst || isSoloStory) && !hasStoryPlan;
   const hasEndingPlan   = !!p.plannedEnding && !hasStoryPlan;
+  const needsCanon      = isMultiEpFirst;  // ep 1 of a fija story — capture immutable canon once, regardless of storyPlan presence.
 
   // Variation forcing: fires only for fresh stories when a theme is specified
   // AND no Sonnet plan is in play. The plan's central_question + ending_type
@@ -1826,10 +1835,20 @@ ${planLines.join('\n')}${beatLines}${finalEpInstructions}
 RECORDATORIO DE REGISTRO: este plan es estructural. Escribe el pasaje en el registro especificado al inicio del prompt, no en el registro de este bloque. El plan dicta QUÉ pasa; el registro dicta CÓMO se escribe.`;
   }
 
+  // HECHOS FIJOS extraction — ep 1 of a fija story only. Has the prose model list the
+  // immutable facts it just established, captured once into storyCanon.
+  const canonInstructionBlock = needsCanon ? `\n\nHECHOS FIJOS (OBLIGATORIO): En el campo "hechos_fijos" del JSON enumera los datos que quedan fijados para siempre por este primer episodio y que ningún episodio posterior puede cambiar: nombres propios de los personajes, cómo y dónde ocurrió cualquier hecho pasado importante (por ejemplo, la causa y el lugar de una muerte), las relaciones entre personajes, y los lugares y objetos clave. Escribe cada dato como una frase corta y concreta. No incluyas cosas que todavía pueden desarrollarse o revelarse más adelante; solo lo que ya es un hecho establecido.` : '';
+
   // JSON schema: conditionally includes planned_ending on episodes that need to commit.
-  const jsonSchema = needsEndingPlan
-    ? `{"title":"título","passage":"texto con \\n\\n entre párrafos","planned_ending":{"thematic_core":"una oración","final_beat":"dos o tres oraciones","thread_resolution":"qué se resuelve, qué queda abierto, qué se recontextualiza"},"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"answer":"copia EXACTA y literal de la opción correcta, idéntica carácter por carácter a su texto en options","explanation":"por qué"}]}`
-    : `{"title":"título","passage":"texto con \\n\\n entre párrafos","questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"answer":"copia EXACTA y literal de la opción correcta, idéntica carácter por carácter a su texto en options","explanation":"por qué"}]}`;
+  // JSON schema: passage-level fields planned_ending (ending commitment) and
+  // hechos_fijos (immutable canon, ep 1 of a fija story) are conditional inserts.
+  const plannedEndingField = needsEndingPlan
+    ? `"planned_ending":{"thematic_core":"una oración","final_beat":"dos o tres oraciones","thread_resolution":"qué se resuelve, qué queda abierto, qué se recontextualiza"},`
+    : '';
+  const hechosFijosField = needsCanon
+    ? `"hechos_fijos":["dato inmutable y concreto ya establecido en el pasaje — una frase corta por dato"],`
+    : '';
+  const jsonSchema = `{"title":"título","passage":"texto con \\n\\n entre párrafos",${plannedEndingField}${hechosFijosField}"questions":[{"question":"texto de la pregunta sin número","options":["primera opción sin letra","segunda opción","tercera opción","cuarta opción"],"correct":0,"answer":"copia EXACTA y literal de la opción correcta, idéntica carácter por carácter a su texto en options","explanation":"por qué"}]}`;
 
   return `Crea un cuestionario de comprensión lectora en español. Responde SOLO con JSON válido, sin texto adicional ni comillas de código.
 
@@ -1837,7 +1856,7 @@ Nivel: ${levelMap[p.level] || p.level}
 Registro: ${registerMap[p.register] || p.register}
 Variedad: ${regionDesc[p.region] || p.region}
 ${themeStr}${epLabel}
-${bibleSection}${endingContext}${finalExecutionBlock}${variationBlock}${planningBlock}${storyPlanBlock}
+${canonSection}${bibleSection}${endingContext}${finalExecutionBlock}${variationBlock}${planningBlock}${storyPlanBlock}${canonInstructionBlock}
 
 PASAJE: 3-4 párrafos. Escribe prosa natural y auténtica en el registro especificado arriba. El registro es una instrucción obligatoria, no una sugerencia — respétalo en vocabulario, sintaxis, uso del subjuntivo, densidad de lenguaje figurado y estructura de las oraciones.
 
@@ -2158,10 +2177,10 @@ async function doGenerate() {
   const isContinuation = (cfg.mode !== 'individual') && storyId !== null;
 
   // Snapshot state so we can restore on auth failure
-  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, storyPlan, biblePromise, regenerating };
+  const _snap = { storyId, episodeNum, episodeTarget, storyBible, prevBible, plannedEnding, storyPlan, storyCanon, biblePromise, regenerating };
 
   if (!isContinuation) {
-    storyBible   = null; prevBible = null; plannedEnding = null; biblePromise = null;
+    storyBible   = null; prevBible = null; plannedEnding = null; biblePromise = null; storyCanon = null;
     storyPlan    = null;  // Fresh story → reset; will be repopulated by the prep call below if a module spec is active.
     storyId      = cfg.mode === 'individual' ? null : 'story-' + Date.now();
     episodeNum   = cfg.mode === 'individual' ? 0 : 1;
@@ -2203,7 +2222,7 @@ async function doGenerate() {
   }
 
   currentCfg = { ...cfg, theme, seOn, voseo,
-    bible: storyBible, plannedEnding, storyPlan, epNum: episodeNum, epTarget: episodeTarget };
+    bible: storyBible, plannedEnding, storyPlan, canon: storyCanon, epNum: episodeNum, epTarget: episodeTarget };
 
   const epMsg = episodeNum > 0
     ? (episodeTarget > 0 ? `Generando episodio ${episodeNum} de ${episodeTarget}…` : `Generando episodio ${episodeNum}…`)
@@ -2237,9 +2256,9 @@ async function doGenerate() {
         provider:   currentCfg.generator || 'claude',
         model:      'claude-opus-4-8',
         max_tokens: 8000,
-        thinking:       { type: 'enabled', budget_tokens: 6000 }, // Claude path: richer reasoning before writing 
-      thinking_level: 'low',                                     // Gemini path: low tier — fast time-to-first-token, avoids 30s function timeout (504). Revisit vs 'medium' once latency is understood.
-       stream:     true,
+        thinking:       { type: 'enabled', budget_tokens: 6000 }, // Claude path: richer reasoning before writing
+        thinking_level: 'low',                                     // Gemini path: low tier — fast time-to-first-token, avoids 30s function timeout (504). Revisit vs 'medium' once latency is understood.
+        stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
 Return ONLY valid JSON matching the exact schema. No preamble, no explanation, no markdown fences.
 CRITICAL JSON RULES:
@@ -2258,7 +2277,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       sessionPw = null;
       // Restore story state so next attempt starts clean
       storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; biblePromise = _snap.biblePromise;
+      storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; storyCanon = _snap.storyCanon; biblePromise = _snap.biblePromise;
       regenerating = _snap.regenerating;
       showScreen('sParams'); alert('Contraseña incorrecta.'); return;
     }
@@ -2374,6 +2393,15 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     }
     if (quiz.planned_ending) delete quiz.planned_ending;
 
+    // ── Capture hechos_fijos (immutable canon) once, on ep 1 of a fija story.
+    //    Frozen into storyCanon; injected verbatim into every continuation and
+    //    never regenerated — this is what prevents facts from drifting.
+    if (!storyCanon && Array.isArray(quiz.hechos_fijos)) {
+      const facts = quiz.hechos_fijos.map(x => String(x).trim()).filter(Boolean);
+      storyCanon = facts.length ? facts : null;
+    }
+    if (quiz.hechos_fijos) delete quiz.hechos_fijos;
+
     // Strip letter prefixes (A. B. C. D.) and question numbers from AI output
     // Also strip any SE markup that leaked into non-passage fields (only passage should have markup)
     const stripSE = s => (s || '').replace(/\[SE:\w+\]([\s\S]*?)\[\/SE\]/g, '$1');
@@ -2428,7 +2456,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     isProcessing = false;
     // Restore story state so retry starts from correct episode
     storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
-    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; biblePromise = _snap.biblePromise;
+    storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; storyCanon = _snap.storyCanon; biblePromise = _snap.biblePromise;
     regenerating = _snap.regenerating;
     goParams();
     const canRetry = generateRetries < 3;
@@ -2778,7 +2806,7 @@ async function actionDeleteSeries() {
 }
 
 function clearStoryState() {
-  storyBible = null; prevBible = null; plannedEnding = null; storyPlan = null; storyId = null;
+  storyBible = null; prevBible = null; plannedEnding = null; storyPlan = null; storyCanon = null; storyId = null;
   episodeNum = 0; episodeTarget = 0; biblePromise = null;
   regenerating = false; currentStarRating = null;
   // Reset the seed to a fresh empty state so returning to the front page never
@@ -3120,6 +3148,7 @@ async function saveQuizToDrive(extraFields = {}) {
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
     questions: currentQuiz.questions, story_bible: storyBible || null,
     planned_ending: plannedEnding || null,
+    hechos_fijos: storyCanon || null,
     story_plan: storyPlan || null,
     score: { correct: lastScore?.correct??null, total: lastScore?.total??null, percent: lastScore?.percent??null },
     star_rating: extraFields.star_rating || null, ...extraFields
@@ -3254,6 +3283,7 @@ async function resumeStory(s) {
   storyBible = s.story_bible || null; prevBible = null; biblePromise = null; regenerating = false;
   // Restore planned ending if the saved record has one (pre-planned-ending-update records won't).
   plannedEnding = (s.planned_ending && typeof s.planned_ending === 'object') ? s.planned_ending : null;
+  storyCanon = Array.isArray(s.hechos_fijos) ? s.hechos_fijos : null;  // legacy saves → null → behaves as before
   // Restore Sonnet-supplied story plan if the save has one (legacy saves pre-module-wiring won't).
   // Falling back to null means the legacy planning path runs for this resume — fine, the bible carries continuity.
   storyPlan = (s.story_plan && typeof s.story_plan === 'object') ? s.story_plan : null;

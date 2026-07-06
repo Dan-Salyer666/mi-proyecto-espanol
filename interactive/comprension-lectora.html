@@ -1595,6 +1595,62 @@ function tryRepairJSON(str) {
 // ═══════════════════════════════════════════════
 //  PROMPT BUILDER
 // ═══════════════════════════════════════════════
+// Strict structured-output schema for the Gemini path (constrained decoding).
+// Mirrors the needsEndingPlan / needsCanon conditions used for the jsonSchema
+// text above, so the enforced shape matches what the prompt requests:
+//   planned_ending → only when needsEndingPlan (legacy/no-plan ep 1, or solo)
+//   hechos_fijos   → only when needsCanon (ep 1 of a fija story; freezes canon)
+// generate.mts forwards this as responseSchema for Gemini only; Claude ignores it.
+function buildResponseSchema(p) {
+  const isFreshStart   = !p.bible;
+  const isMultiEpFirst = isFreshStart && (p.epNum === 1 || p.epTarget > 0);
+  const isSoloStory    = p.epNum === 0;
+  const hasStoryPlan   = !!p.storyPlan;
+  const needsEndingPlan= isFreshStart && (isMultiEpFirst || isSoloStory) && !hasStoryPlan;
+  const needsCanon     = isMultiEpFirst;
+
+  const ordering   = ['title', 'passage'];
+  const required   = ['title', 'passage'];
+  const properties = { title: { type: 'string' }, passage: { type: 'string' } };
+
+  if (needsEndingPlan) {
+    ordering.push('planned_ending'); required.push('planned_ending');
+    properties.planned_ending = {
+      type: 'object',
+      propertyOrdering: ['thematic_core', 'final_beat', 'thread_resolution'],
+      required: ['thematic_core', 'final_beat', 'thread_resolution'],
+      properties: {
+        thematic_core:     { type: 'string' },
+        final_beat:        { type: 'string' },
+        thread_resolution: { type: 'string' },
+      },
+    };
+  }
+  if (needsCanon) {
+    ordering.push('hechos_fijos'); required.push('hechos_fijos');
+    properties.hechos_fijos = { type: 'array', minItems: 1, items: { type: 'string' } };
+  }
+
+  ordering.push('questions'); required.push('questions');
+  properties.questions = {
+    type: 'array', minItems: 6, maxItems: 6,
+    items: {
+      type: 'object',
+      propertyOrdering: ['question', 'options', 'correct', 'answer', 'explanation'],
+      required: ['question', 'options', 'correct', 'answer', 'explanation'],
+      properties: {
+        question:    { type: 'string' },
+        options:     { type: 'array', minItems: 4, maxItems: 4, items: { type: 'string' } },
+        correct:     { type: 'integer', minimum: 0, maximum: 3 },
+        answer:      { type: 'string' },
+        explanation: { type: 'string' },
+      },
+    },
+  };
+
+  return { type: 'object', propertyOrdering: ordering, required, properties };
+}
+
 function buildPrompt(p) {
   const levelMap = {
     A2:'elementary A2 — simple sentences, basic vocabulary, present and simple past only',
@@ -2294,7 +2350,8 @@ CRITICAL QUESTION RULES:
 - Each question must be answerable from the current episode's prose alone. Do not write questions whose correct answer depends on events from future episodes in the plan; the plan guides narrative structure, not the reader's knowledge state at this moment.
 - For each question, set "answer" to the verbatim text of the correct option (an exact, character-for-character copy of the matching entry in "options") and set "correct" to that option's 0-based index (A=0, B=1, C=2, D=3). "answer", "correct", and "explanation" must all point to the SAME option. The grader resolves the correct answer from "answer" when present, so an "answer" that does not exactly match one of the options will be rejected.
 Spanish must be natural and authentic. Never include medical, clinical, or doctor-patient content.`,
-        messages: [{ role: 'user', content: buildPrompt(currentCfg) }]
+        messages: [{ role: 'user', content: buildPrompt(currentCfg) }],
+        response_schema: buildResponseSchema(currentCfg)
       })
     });
 

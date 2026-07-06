@@ -178,6 +178,11 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
       // string" class of errors the front-end repair pipeline can't always
       // recover from when a quotation mark slips through unescaped.
       responseMimeType: "application/json",
+      // Strict structured output: the front end sends response_schema on the
+      // story+quiz call. Constrained decoding forces schema-conforming JSON,
+      // retiring the malformed-JSON class (unescaped quotes, trailing content)
+      // on the Gemini path.
+      ...(body.response_schema ? { responseSchema: body.response_schema } : {}),
     },
   };
   // Anthropic's top-level `system` maps to Gemini's systemInstruction.

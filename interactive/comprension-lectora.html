@@ -602,6 +602,28 @@
       color: #cbd5e1;                /* neutral slate */
     }
 
+    /* Clickable seed reveal on the results page — distinct from the static top pill.
+       Collapsed: "Ver semilla"; first tap reveals the number; second tap copies it. */
+    .seed-reveal-btn {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      background: rgba(148, 163, 184, 0.12);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      color: #cbd5e1;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .seed-reveal-btn:hover {
+      background: rgba(148, 163, 184, 0.22);
+      border-color: rgba(148, 163, 184, 0.70);
+      color: #e2e8f0;
+    }
+    .seed-reveal-btn.revealed { font-variant-numeric: tabular-nums; letter-spacing: 0.03em; }
+
     /* ── Password modal ── */
     .modal-overlay {
       position: fixed;
@@ -1008,6 +1030,9 @@
         <button id="star1" class="star-btn" onclick="pickStar(1)" title="No me gustó">★</button>
         <button id="star2" class="star-btn" onclick="pickStar(2)" title="Neutral">★</button>
         <button id="star3" class="star-btn" onclick="pickStar(3)" title="Me gustó">★</button>
+      </div>
+      <div id="seedRevealWrap" class="hidden" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+        <button type="button" id="seedRevealBtn" class="seed-reveal-btn" onclick="revealResultSeed()">Ver semilla</button>
       </div>
     </div>
 
@@ -2629,6 +2654,43 @@ function pickStar(n) {
 }
 
 // ═══════════════════════════════════════════════
+//  SEED REVEAL (results page) — tap to reveal, tap again to copy
+// ═══════════════════════════════════════════════
+let seedRevealed = false;
+function revealResultSeed() {
+  const btn = document.getElementById('seedRevealBtn');
+  if (!btn || !currentCfg.seed) return;
+  if (!seedRevealed) {
+    seedRevealed = true;
+    btn.textContent = 'Semilla ' + currentCfg.seed;
+    btn.classList.add('revealed');
+    btn.title = 'Toca para copiar';
+    return;
+  }
+  const val = String(currentCfg.seed);
+  const restore = 'Semilla ' + currentCfg.seed;
+  const flash = ok => {
+    btn.textContent = ok ? '¡Copiada!' : 'Copia manual';
+    setTimeout(() => { if (seedRevealed) btn.textContent = restore; }, 1200);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(val).then(() => flash(true)).catch(() => flash(copySeedFallback(val)));
+  } else {
+    flash(copySeedFallback(val));
+  }
+}
+function copySeedFallback(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  } catch (e) { return false; }
+}
+
+// ═══════════════════════════════════════════════
 //  BUILD GRADED ACTIONS
 // ═══════════════════════════════════════════════
 function buildGradedActions() {
@@ -2643,6 +2705,18 @@ function buildGradedActions() {
     starSection.classList.toggle('hidden', !isFinal);
     currentStarRating = null;
     [1,2,3].forEach(i => { const b = document.getElementById('star'+i); if(b) b.classList.remove('active'); });
+  }
+
+  // Seed reveal lives inside the stars box, so it only appears on the final page.
+  // Reset to collapsed each time; show only when the story was generated from a seed.
+  const seedWrap = document.getElementById('seedRevealWrap');
+  const seedBtn  = document.getElementById('seedRevealBtn');
+  if (seedWrap && seedBtn) {
+    seedWrap.classList.toggle('hidden', !(isFinal && !!currentCfg.seed));
+    seedRevealed = false;
+    seedBtn.textContent = 'Ver semilla';
+    seedBtn.classList.remove('revealed');
+    seedBtn.title = '';
   }
 
   if (mode === 'individual') {

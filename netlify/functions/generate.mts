@@ -24,8 +24,14 @@ import type { Context, Config } from "@netlify/functions";
 // ═══════════════════════════════════════════════════════════════════════
 
 const ANTHROPIC_URL = "https://api.anthropic.com/v1/messages";
-const GEMINI_BASE   = "https://generativelanguage.googleapis.com/v1beta/models";
-const GEMINI_MODEL  = "gemini-3.1-pro-preview";
+const GEMINI_BASE          = "https://generativelanguage.googleapis.com/v1beta/models";
+const GEMINI_MODEL_DEFAULT = "gemini-3.1-pro-preview";
+// Models the front end is allowed to request. Anything not listed falls back to the default.
+const GEMINI_ALLOWED_MODELS = new Set([
+  "gemini-3.1-pro-preview",
+  "gemini-3.5-flash",
+  "gemini-2.5-flash",
+]);
 
 // Gemini 3.x uses discrete thinking LEVELS (low | medium | high), NOT the
 // legacy numeric thinking_budget — and the two cannot be combined in one
@@ -151,14 +157,32 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
 //  GEMINI PATH — translate request in, translate response out
 // ─────────────────────────────────────────────────────────────────────────
 async function handleGemini(body: any, apiKey: string, stream: boolean): Promise<Response> {
-  const reqLevel      = String(body.thinking_level ?? GEMINI_THINKING_DEFAULT).toLowerCase();
-  const thinkingLevel = GEMINI_THINKING_LEVELS.has(reqLevel) ? reqLevel : GEMINI_THINKING_DEFAULT;
+  // ── Model selection: accept from client, validate against allowlist ──
+  const requestedModel = String(body.gemini_model || "");
+  const model = GEMINI_ALLOWED_MODELS.has(requestedModel) ? requestedModel : GEMINI_MODEL_DEFAULT;
+
+  // ── Thinking config: 2.5 models use numeric thinkingBudget, 3.x uses string thinkingLevel ──
+  const is25Family = model.startsWith("gemini-2.5") || model.startsWith("gemini-2.0");
+
+  let thinkingConfigObj: any;
+  let headroom: number;
+
+  if (is25Family) {
+    // Gemini 2.5 thinking: numeric budget (tokens). 1024 ≈ "low" equivalent.
+    const budget = 1024;
+    thinkingConfigObj = { thinkingBudget: budget };
+    headroom = budget * 4;  // 4096 — generous since budget caps thinking output
+  } else {
+    const reqLevel      = String(body.thinking_level ?? GEMINI_THINKING_DEFAULT).toLowerCase();
+    const thinkingLevel = GEMINI_THINKING_LEVELS.has(reqLevel) ? reqLevel : GEMINI_THINKING_DEFAULT;
+    thinkingConfigObj = { thinkingLevel };
+    headroom = GEMINI_THINKING_HEADROOM[thinkingLevel] ?? 8192;
+  }
 
   // Treat body.max_tokens as the PROSE budget (provider-agnostic meaning).
   // Gemini charges thinking against the output cap, so pad above the prose
   // budget by a level-appropriate headroom, bounded by the 64k output ceiling.
   const proseTokens     = Number(body.max_tokens) || 4000;
-  const headroom        = GEMINI_THINKING_HEADROOM[thinkingLevel] ?? 8192;
   const maxOutputTokens = Math.min(proseTokens + headroom, GEMINI_OUTPUT_CEILING);
 
   const geminiReq: any = {
@@ -172,7 +196,7 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
       // values below 1.0 can cause looping or degraded reasoning. Only forward
       // an explicit temperature when the caller actually sends one.
       ...(typeof body.temperature === "number" ? { temperature: body.temperature } : {}),
-      thinkingConfig: { thinkingLevel },
+      thinkingConfig: thinkingConfigObj,
       // Force structured JSON output. With this on, Gemini guarantees the
       // emitted text concatenates to valid JSON — kills the "unterminated
       // string" class of errors the front-end repair pipeline can't always
@@ -191,8 +215,8 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
   }
 
   const endpoint = stream
-    ? `${GEMINI_BASE}/${GEMINI_MODEL}:streamGenerateContent?alt=sse`
-    : `${GEMINI_BASE}/${GEMINI_MODEL}:generateContent`;
+    ? `${GEMINI_BASE}/${model}:streamGenerateContent?alt=sse`
+    : `${GEMINI_BASE}/${model}:generateContent`;
 
   const upstream = await fetchGeminiWithRetry(endpoint, {
     method: "POST",

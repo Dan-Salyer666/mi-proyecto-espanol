@@ -897,6 +897,15 @@
         <button class="btn-module selected" data-generator="claude" onclick="pickGenerator(this)">Claude</button>
         <button class="btn-module" data-generator="gemini" onclick="pickGenerator(this)">Gemini</button>
       </div>
+      <div id="geminiModelRow" style="display:none;margin-top:10px">
+        <div class="card-label" style="font-size:0.7rem;margin-bottom:4px">Modelo Gemini</div>
+        <div class="btn-group">
+          <button class="btn-module selected" data-gmodel="gemini-3.1-pro-preview" onclick="pickGeminiModel(this)">Pro</button>
+          <button class="btn-module" data-gmodel="gemini-3.5-flash" onclick="pickGeminiModel(this)">Flash</button>
+          <button class="btn-module" data-gmodel="gemini-2.5-flash" onclick="pickGeminiModel(this)">2.5 Flash</button>
+        </div>
+        <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Pro = mejor calidad · Flash = más rápido · 2.5 = más ligero</div>
+      </div>
     </div>
 
     <!-- SE Highlight — DISABLED 2026-04-18 per Daniel's request.
@@ -1112,7 +1121,7 @@ let lastScore        = null;
 let currentStarRating= null;
 let isProcessing     = false;
 
-const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false, module:'sorprendeme', generator:'claude', seedMode:false, seed:null, seedTheme:null, seedVersion:null };
+const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false, module:'sorprendeme', generator:'claude', geminiModel:'gemini-3.1-pro-preview', seedMode:false, seed:null, seedTheme:null, seedVersion:null };
 
 // ═══════════════════════════════════════════════
 //  TTS
@@ -1404,6 +1413,13 @@ function pickGenerator(btn) {
   document.querySelectorAll('[data-generator]').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   cfg.generator = newGenerator;
+  document.getElementById('geminiModelRow').style.display = newGenerator === 'gemini' ? '' : 'none';
+}
+
+function pickGeminiModel(btn) {
+  document.querySelectorAll('[data-gmodel]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  cfg.geminiModel = btn.dataset.gmodel;
 }
 
 function pickRegion(btn) {
@@ -1993,7 +2009,7 @@ function startGenerate() {
 //  treats it as a non-fatal miss and proceeds via the legacy inline
 //  planning path. The legacy plannedEnding mechanism is the safety net.
 // ═══════════════════════════════════════════════
-async function generateStoryPlan({ moduleKey, mode, level, register, region, theme, episodeCount, generator }) {
+async function generateStoryPlan({ moduleKey, mode, level, register, region, theme, episodeCount, generator, geminiModel }) {
   const spec = MODULE_SPECS[moduleKey];
   if (!spec) return null;  // No spec text → no prep call → legacy path runs.
 
@@ -2020,6 +2036,7 @@ async function generateStoryPlan({ moduleKey, mode, level, register, region, the
       body: JSON.stringify({
         password:   sessionPw,
         provider:   generator || 'claude',
+        gemini_model: geminiModel || 'gemini-3.1-pro-preview',
         model:      'claude-sonnet-5',
         max_tokens: 1500,
         stream:     false,
@@ -2298,7 +2315,8 @@ async function doGenerate() {
       region:       cfg.region,
       theme,
       episodeCount: epCountForPlan,
-      generator:    cfg.generator
+      generator:    cfg.generator,
+      geminiModel:  cfg.geminiModel
     });
   }
 
@@ -2329,12 +2347,10 @@ async function doGenerate() {
   setProgress(0, epMsg, '');
 
   try {
-    const res = await fetch('/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    const _genBody = {
         password:   sessionPw,
         provider:   currentCfg.generator || 'claude',
+        gemini_model: currentCfg.geminiModel || 'gemini-3.1-pro-preview',
         model:      'claude-opus-4-8',
         max_tokens: 8000,
         thinking:       { type: 'enabled', budget_tokens: 6000 }, // Claude path: richer reasoning before writing
@@ -2352,17 +2368,32 @@ CRITICAL QUESTION RULES:
 Spanish must be natural and authentic. Never include medical, clinical, or doctor-patient content.`,
         messages: [{ role: 'user', content: buildPrompt(currentCfg) }],
         response_schema: buildResponseSchema(currentCfg)
-      })
-    });
+    };
+    const _genOpts = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(_genBody) };
+    let res = await fetch('/api/generate', _genOpts);
 
     if (res.status === 401) {
       sessionPw = null;
-      // Restore story state so next attempt starts clean
       storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
       storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; storyCanon = _snap.storyCanon; biblePromise = _snap.biblePromise;
       regenerating = _snap.regenerating;
       showScreen('sParams'); alert('Contraseña incorrecta.'); return;
     }
+
+    // ── Client-side auto-retry on server timeout (one silent attempt) ──
+    if (!res.ok && [502, 503, 504].includes(res.status)) {
+      setProgress(5, 'Reintentando la conexión…', 'Intento 2');
+      await new Promise(r => setTimeout(r, 2500));
+      res = await fetch('/api/generate', _genOpts);
+      if (res.status === 401) {
+        sessionPw = null;
+        storyId = _snap.storyId; episodeNum = _snap.episodeNum; episodeTarget = _snap.episodeTarget;
+        storyBible = _snap.storyBible; prevBible = _snap.prevBible; plannedEnding = _snap.plannedEnding; storyPlan = _snap.storyPlan; storyCanon = _snap.storyCanon; biblePromise = _snap.biblePromise;
+        regenerating = _snap.regenerating;
+        showScreen('sParams'); alert('Contraseña incorrecta.'); return;
+      }
+    }
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const reader = res.body.getReader(), decoder = new TextDecoder();
@@ -2544,7 +2575,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     const canRetry = generateRetries < 3;
     generateRetries++;
     const retryBtn = canRetry
-      ? `<button class="btn-primary" style="margin-top:12px;width:auto;padding:10px 24px" onclick="this.closest('.err-box').remove();regenerating=true;requirePw(doGenerate)">Reintentar</button>`
+      ? `<button class="btn-primary" style="margin-top:12px;width:auto;padding:10px 24px" onclick="this.closest('.err-box').remove();requirePw(doGenerate)">Reintentar</button>`
       : '';
     const errHtml = `<div class="err-box" style="margin-bottom:16px">
       <strong>Error al generar el cuestionario</strong>
@@ -2569,7 +2600,9 @@ function renderQuiz(quiz, seOn) {
   if (currentCfg.region !== 'neutral') tags.push(currentCfg.region.replace('_',' '));
   document.getElementById('qTags').innerHTML = tags.map(t => `<span class="tag">${t}</span>`).join('');
   // Provider provenance badge — reads currentCfg.generator (correct on fresh gen and resume)
-  const genLabel = currentCfg.generator === 'gemini' ? 'Gemini' : 'Claude';
+  const _gm = currentCfg.geminiModel || '';
+  const _gemTier = _gm.includes('3.5') ? 'Flash' : _gm.includes('2.5') ? '2.5' : 'Pro';
+  const genLabel = currentCfg.generator === 'gemini' ? `Gemini ${_gemTier}` : 'Claude';
   document.getElementById('qTags').insertAdjacentHTML('beforeend',
     `<span class="gen-badge gen-${currentCfg.generator === 'gemini' ? 'gemini' : 'claude'}">${genLabel}</span>`);
   // Seed pill — only when the story was generated from a seed.
@@ -3274,6 +3307,7 @@ async function saveQuizToDrive(extraFields = {}) {
     theme: currentCfg.theme || null,
     module: currentCfg.module || 'sorprendeme',
     generator: currentCfg.generator || 'claude',
+    geminiModel: currentCfg.geminiModel || 'gemini-3.1-pro-preview',
     seed: currentCfg.seed || null,
     seedVersion: currentCfg.seedVersion || null,
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
@@ -3427,6 +3461,8 @@ async function resumeStory(s) {
   cfg.module = s.module || 'sorprendeme';
   // Restore generator. Legacy saves predate the field — default to claude.
   cfg.generator = s.generator || 'claude';
+  // Restore Gemini model tier. Legacy saves predate the field — default to Pro.
+  cfg.geminiModel = s.geminiModel || 'gemini-3.1-pro-preview';
   // Seed: restore as metadata for the badge. For a seed story the resolved world
   // is reused for continuation via cfg.seedTheme — never exposed in the Tema box.
   cfg.seed        = s.seed || null;
@@ -3445,6 +3481,11 @@ async function resumeStory(s) {
   // Sync generator button highlight to restored cfg.generator
   document.querySelectorAll('[data-generator]').forEach(b =>
     b.classList.toggle('selected', b.dataset.generator === cfg.generator)
+  );
+  // Sync Gemini model row visibility and selection
+  document.getElementById('geminiModelRow').style.display = cfg.generator === 'gemini' ? '' : 'none';
+  document.querySelectorAll('[data-gmodel]').forEach(b =>
+    b.classList.toggle('selected', b.dataset.gmodel === cfg.geminiModel)
   );
   // Populate theme from saved record
   if (s.theme && !s.seed) { document.getElementById('themeInput').value = s.theme; document.getElementById('surpriseMe').checked = false; document.getElementById('themeInput').disabled = false; }

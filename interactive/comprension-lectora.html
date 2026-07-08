@@ -3083,6 +3083,8 @@ async function confirmDeleteActiveStory(sid, type) {
   if (!confirm('Se eliminarán todos los episodios guardados. Esta acción es permanente.')) return;
   if (driveToken) await deleteStoryFromDrive(sid);
   if (type === 'fixed') activeFixedStory = null;
+  // If the deleted story is the one currently loaded in memory, clear it.
+  if (storyId === sid) clearStoryState();
   closeConflictModal();
   await loadActiveStories();
 }
@@ -3431,6 +3433,9 @@ async function hubDeleteStory(sid, type, slotEl) {
   if (driveToken) await deleteStoryFromDrive(sid);
   slotEl.remove();
   activeFixedStory = null;
+  // If the deleted story is the one currently loaded in memory, clear it
+  // so the next generation starts fresh instead of continuing the old story.
+  if (storyId === sid) clearStoryState();
   if (!document.getElementById('trackSlots').children.length)
     document.getElementById('trackHub').classList.add('hidden');
 }

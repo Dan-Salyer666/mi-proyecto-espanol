@@ -429,6 +429,18 @@ h1 {
   font-size: 0.72rem;
 }
 
+/* Inline speakers sitting beside terms */
+.legend-term .speak-inline,
+.variant-line .speak-inline,
+.extra-item .speak-inline {
+  vertical-align: middle;
+  margin: 0 2px 0 5px;
+  position: relative;
+  top: -1px;
+}
+.legend-term { line-height: 1.9; }
+.variant-line { align-items: center; }
+
 /* ── Extra terms block (no-pin lists) ───────── */
 .extra-block {
   margin-top: 16px;
@@ -763,7 +775,7 @@ h1 {
     <div class="legend-row" data-n="1">
       <div class="legend-num">1</div>
       <div class="legend-body">
-        <div class="legend-term">la pelota <span class="alt">· el balón</span></div>
+        <div class="legend-term">la pelota <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la pelota">🔊</button> <span class="alt">· el balón <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el balón">🔊</button></span></div>
         <div class="legend-gloss">the ball</div>
         <div class="legend-note"><em>Pelota</em> es la palabra de todos los días en casi toda Latinoamérica; <em>balón</em> suena algo más formal o periodístico.</div>
         <div class="example-row">
@@ -779,10 +791,10 @@ h1 {
     <div class="legend-row" data-n="2">
       <div class="legend-num">2</div>
       <div class="legend-body">
-        <div class="legend-term">la cancha</div>
+        <div class="legend-term">la cancha <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la cancha">🔊</button></div>
         <div class="legend-gloss">the field, the pitch</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el campo (de juego)</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el campo (de juego)</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el campo de juego">🔊</button></div>
         </div>
         <div class="legend-note">En Latinoamérica se dice <em>cancha</em> sin excepción; <em>campo de juego</em> es neutro y aparece sobre todo en la escritura.</div>
         <div class="example-row">
@@ -798,7 +810,7 @@ h1 {
     <div class="legend-row" data-n="3">
       <div class="legend-num">3</div>
       <div class="legend-body">
-        <div class="legend-term">el estadio</div>
+        <div class="legend-term">el estadio <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el estadio">🔊</button></div>
         <div class="legend-gloss">the stadium</div>
         <div class="legend-note">El recinto entero, con tribunas y todo. La <em>cancha</em> es solamente la superficie de juego que está adentro.</div>
       </div>
@@ -807,10 +819,10 @@ h1 {
     <div class="legend-row" data-n="4">
       <div class="legend-num">4</div>
       <div class="legend-body">
-        <div class="legend-term">la portería <span class="alt">· el arco</span></div>
+        <div class="legend-term">la portería <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la portería">🔊</button> <span class="alt">· el arco <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el arco">🔊</button></span></div>
         <div class="legend-gloss">the goal</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el arco</span></div>
+          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el arco</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el arco">🔊</button></div>
         </div>
         <div class="legend-note"><em>El arco</em> es el término cotidiano en Latinoamérica y en el Río de la Plata; <em>la portería</em> domina en España y en el registro formal.</div>
         <div class="example-row">
@@ -826,10 +838,10 @@ h1 {
     <div class="legend-row" data-n="5">
       <div class="legend-num">5</div>
       <div class="legend-body">
-        <div class="legend-term">el poste <span class="alt">· el palo</span></div>
+        <div class="legend-term">el poste <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el poste">🔊</button> <span class="alt">· el palo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el palo">🔊</button></span></div>
         <div class="legend-gloss">the goalpost</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-coloq">Coloq.</span><span class="v-term">el palo</span></div>
+          <div class="variant-line"><span class="reg-badge reg-coloq">Coloq.</span><span class="v-term">el palo</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el palo">🔊</button></div>
         </div>
         <div class="legend-note">Los dos verticales. <em>Palo</em> es lo coloquial y lo que se grita en la tribuna: <em>la pelota dio en el palo</em>.</div>
       </div>
@@ -838,10 +850,10 @@ h1 {
     <div class="legend-row" data-n="6">
       <div class="legend-num">6</div>
       <div class="legend-body">
-        <div class="legend-term">el travesaño</div>
+        <div class="legend-term">el travesaño <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el travesaño">🔊</button></div>
         <div class="legend-gloss">the crossbar</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el larguero</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el larguero</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el larguero">🔊</button></div>
         </div>
         <div class="legend-note">El horizontal, el que cierra el arco por arriba.</div>
       </div>
@@ -850,11 +862,11 @@ h1 {
     <div class="legend-row" data-n="7">
       <div class="legend-num">7</div>
       <div class="legend-body">
-        <div class="legend-term">los botines</div>
+        <div class="legend-term">los botines <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="los botines">🔊</button></div>
         <div class="legend-gloss">the boots, the cleats</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">las botas</span></div>
-          <div class="variant-line"><span class="reg-badge reg-mex">México</span><span class="v-term">los tacos</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">las botas</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="las botas">🔊</button></div>
+          <div class="variant-line"><span class="reg-badge reg-mex">México</span><span class="v-term">los tacos</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="los tacos">🔊</button> <span class="reg-badge reg-coloq">Coloq.</span></div>
         </div>
         <div class="legend-note">En el Río de la Plata siempre <em>botines</em>, nunca <em>botas</em>.</div>
         <div class="example-row">
@@ -870,11 +882,11 @@ h1 {
     <div class="legend-row" data-n="8">
       <div class="legend-num">8</div>
       <div class="legend-body">
-        <div class="legend-term">la camiseta</div>
+        <div class="legend-term">la camiseta <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la camiseta">🔊</button></div>
         <div class="legend-gloss">the jersey, the shirt</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la casaca</span></div>
-          <div class="variant-line"><span class="reg-badge reg-mex">México</span><span class="v-term">la playera</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la casaca</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la casaca">🔊</button></div>
+          <div class="variant-line"><span class="reg-badge reg-mex">México</span><span class="v-term">la playera</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la playera">🔊</button></div>
         </div>
         <div class="legend-note"><em>La casaca</em> vive casi solo en la crónica deportiva escrita, no en la charla común.</div>
         <div class="example-row">
@@ -890,10 +902,10 @@ h1 {
     <div class="legend-row" data-n="9">
       <div class="legend-num">9</div>
       <div class="legend-body">
-        <div class="legend-term">el silbato</div>
+        <div class="legend-term">el silbato <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el silbato">🔊</button></div>
         <div class="legend-gloss">the whistle</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-coloq">Coloq.</span><span class="v-term">el pito</span></div>
+          <div class="variant-line"><span class="reg-badge reg-coloq">Coloq.</span><span class="v-term">el pito</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el pito">🔊</button></div>
         </div>
         <div class="legend-note">El verbo es <em>pitar</em>: <em>el árbitro pitó falta</em>.</div>
       </div>
@@ -902,7 +914,7 @@ h1 {
     <div class="legend-row" data-n="10">
       <div class="legend-num">10</div>
       <div class="legend-body">
-        <div class="legend-term">los guantes</div>
+        <div class="legend-term">los guantes <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="los guantes">🔊</button></div>
         <div class="legend-gloss">the (keeper's) gloves</div>
         <div class="legend-note">La única pieza del equipamiento que pertenece a un solo puesto: <em>los guantes del arquero</em>.</div>
       </div>
@@ -911,10 +923,10 @@ h1 {
     <div class="legend-row" data-n="11">
       <div class="legend-num">11</div>
       <div class="legend-body">
-        <div class="legend-term">las espinilleras</div>
+        <div class="legend-term">las espinilleras <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="las espinilleras">🔊</button></div>
         <div class="legend-gloss">the shin guards</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">las canilleras</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">las canilleras</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="las canilleras">🔊</button></div>
         </div>
         <div class="legend-note">De <em>canilla</em>, que en el Río de la Plata es la espinilla.</div>
       </div>
@@ -952,7 +964,7 @@ h1 {
     <div class="legend-row" data-n="1">
       <div class="legend-num">1</div>
       <div class="legend-body">
-        <div class="legend-term">el/la futbolista <span class="alt">· el jugador / la jugadora</span></div>
+        <div class="legend-term">el/la futbolista <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el futbolista">🔊</button> <span class="alt">· el jugador / la jugadora <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el jugador">🔊</button></span></div>
         <div class="legend-gloss">the player</div>
         <div class="legend-note"><em>Futbolista</em> nombra la profesión y no cambia de forma según el género; <em>jugador</em> sirve para cualquier deporte.</div>
       </div>
@@ -961,11 +973,11 @@ h1 {
     <div class="legend-row" data-n="2">
       <div class="legend-num">2</div>
       <div class="legend-body">
-        <div class="legend-term">el portero <span class="alt">· el arquero</span></div>
+        <div class="legend-term">el portero <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el portero">🔊</button> <span class="alt">· el arquero <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el arquero">🔊</button></span></div>
         <div class="legend-gloss">the goalkeeper</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el guardameta</span></div>
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el golero</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el guardameta</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el guardameta">🔊</button></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el golero</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el golero">🔊</button></div>
         </div>
         <div class="legend-note"><em>Arquero</em> es lo normal en casi toda Latinoamérica; <em>golero</em> es marcadamente uruguayo.</div>
         <div class="example-row">
@@ -981,11 +993,11 @@ h1 {
     <div class="legend-row" data-n="3">
       <div class="legend-num">3</div>
       <div class="legend-body">
-        <div class="legend-term">el defensa / la defensa</div>
+        <div class="legend-term">el defensa / la defensa <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el defensa">🔊</button></div>
         <div class="legend-gloss">the defender</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el defensor</span></div>
-          <div class="variant-line"><span class="v-term">el zaguero</span> <span class="reg-badge reg-coloq">Periodístico</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el defensor</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el defensor">🔊</button></div>
+          <div class="variant-line"><span class="v-term">el zaguero</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el zaguero">🔊</button> <span class="reg-badge reg-coloq">Periodístico</span></div>
         </div>
         <div class="legend-note">Cuidado con el artículo: <em>la defensa</em> también nombra a toda la línea defensiva como conjunto.</div>
       </div>
@@ -994,11 +1006,11 @@ h1 {
     <div class="legend-row" data-n="4">
       <div class="legend-num">4</div>
       <div class="legend-body">
-        <div class="legend-term">el mediocampista</div>
+        <div class="legend-term">el mediocampista <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el mediocampista">🔊</button></div>
         <div class="legend-gloss">the midfielder</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el volante</span></div>
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el centrocampista</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el volante</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el volante">🔊</button></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el centrocampista</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el centrocampista">🔊</button></div>
         </div>
         <div class="legend-note"><em>Volante</em> es la palabra argentina de uso diario; <em>mediocampista</em> se entiende en todas partes.</div>
         <div class="example-row">
@@ -1014,11 +1026,11 @@ h1 {
     <div class="legend-row" data-n="5">
       <div class="legend-num">5</div>
       <div class="legend-body">
-        <div class="legend-term">el delantero <span class="alt">· el atacante</span></div>
+        <div class="legend-term">el delantero <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el delantero">🔊</button> <span class="alt">· el atacante <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el atacante">🔊</button></span></div>
         <div class="legend-gloss">the forward, the striker</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el punta</span></div>
-          <div class="variant-line"><span class="v-term">el goleador</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el punta</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el punta">🔊</button></div>
+          <div class="variant-line"><span class="v-term">el goleador</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el goleador">🔊</button></div>
         </div>
         <div class="legend-note"><em>El goleador</em> no es un puesto sino una descripción: el que convierte los goles.</div>
       </div>
@@ -1027,7 +1039,7 @@ h1 {
     <div class="legend-row" data-n="6">
       <div class="legend-num">6</div>
       <div class="legend-body">
-        <div class="legend-term">el suplente</div>
+        <div class="legend-term">el suplente <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el suplente">🔊</button></div>
         <div class="legend-gloss">the substitute</div>
         <div class="legend-note"><em>El banco (de suplentes)</em> es donde esperan. <em>Entrar</em> es salir a jugar desde ahí.</div>
       </div>
@@ -1036,11 +1048,11 @@ h1 {
     <div class="legend-row" data-n="7">
       <div class="legend-num">7</div>
       <div class="legend-body">
-        <div class="legend-term">el entrenador <span class="alt">· el técnico</span></div>
+        <div class="legend-term">el entrenador <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el entrenador">🔊</button> <span class="alt">· el técnico <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el técnico">🔊</button></span></div>
         <div class="legend-gloss">the coach, the manager</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el director técnico (el DT)</span></div>
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el míster</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
+          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el director técnico</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el director técnico">🔊</button> · <span class="v-term">el DT</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el de te">🔊</button></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el míster</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el míster">🔊</button> <span class="reg-badge reg-coloq">Coloq.</span></div>
         </div>
         <div class="legend-note">En Argentina <em>el DT</em> se dice tal cual, letra por letra, hasta en la conversación más corriente.</div>
         <div class="example-row">
@@ -1056,11 +1068,11 @@ h1 {
     <div class="legend-row" data-n="8">
       <div class="legend-num">8</div>
       <div class="legend-body">
-        <div class="legend-term">el árbitro / la árbitra</div>
+        <div class="legend-term">el árbitro / la árbitra <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el árbitro">🔊</button></div>
         <div class="legend-gloss">the referee</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el referí</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
-          <div class="variant-line"><span class="v-term">el juez</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el referí</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el referí">🔊</button> <span class="reg-badge reg-coloq">Coloq.</span></div>
+          <div class="variant-line"><span class="v-term">el juez</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el juez">🔊</button></div>
         </div>
         <div class="legend-note"><em>Referí</em> viene del inglés <em>referee</em> y suena informal; en la escritura seria se prefiere <em>árbitro</em>.</div>
       </div>
@@ -1069,10 +1081,10 @@ h1 {
     <div class="legend-row" data-n="9">
       <div class="legend-num">9</div>
       <div class="legend-body">
-        <div class="legend-term">el árbitro asistente</div>
+        <div class="legend-term">el árbitro asistente <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el árbitro asistente">🔊</button></div>
         <div class="legend-gloss">the assistant referee</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="v-term">el juez de línea</span> <span class="reg-badge reg-coloq">Tradicional</span></div>
+          <div class="variant-line"><span class="v-term">el juez de línea</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el juez de línea">🔊</button> <span class="reg-badge reg-coloq">Tradicional</span></div>
         </div>
         <div class="legend-note"><em>Juez de línea</em> —y el más antiguo <em>abanderado</em>— son los nombres viejos. Hoy la designación oficial es <em>árbitro asistente</em>, aunque nadie en la tribuna la use.</div>
       </div>
@@ -1081,12 +1093,12 @@ h1 {
     <div class="legend-row" data-n="10">
       <div class="legend-num">10</div>
       <div class="legend-body">
-        <div class="legend-term">el hincha <span class="alt">· el aficionado</span></div>
+        <div class="legend-term">el hincha <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el hincha">🔊</button> <span class="alt">· el aficionado <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el aficionado">🔊</button></span></div>
         <div class="legend-gloss">the fan, the supporter</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el hincha</span></div>
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="reg-badge reg-mex">México</span><span class="v-term">el aficionado</span></div>
-          <div class="variant-line"><span class="v-term">el seguidor · el fanático</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el hincha</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el hincha">🔊</button></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="reg-badge reg-mex">México</span><span class="v-term">el aficionado</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el aficionado">🔊</button></div>
+          <div class="variant-line"><span class="v-term">el seguidor</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el seguidor">🔊</button> · <span class="v-term">el fanático</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el fanático">🔊</button></div>
         </div>
         <div class="legend-note"><em>Hincha</em> no cambia de forma: <em>el hincha</em> y <em>la hincha</em>.</div>
         <div class="example-row">
@@ -1102,7 +1114,7 @@ h1 {
     <div class="legend-row" data-n="11">
       <div class="legend-num">11</div>
       <div class="legend-body">
-        <div class="legend-term">el VAR <span class="alt">· el videoarbitraje</span></div>
+        <div class="legend-term">el VAR <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el var">🔊</button> <span class="alt">· el videoarbitraje <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el videoarbitraje">🔊</button></span></div>
         <div class="legend-gloss">the video assistant referee</div>
         <div class="legend-note">Se usa como sigla masculina y se pronuncia como palabra: <em>el VAR revisó la jugada</em>.</div>
       </div>
@@ -1114,19 +1126,19 @@ h1 {
     <div class="extra-title">Sin punto en la imagen · el colectivo</div>
 
     <div class="extra-item">
-      <div class="legend-term">el capitán / la capitana</div>
+      <div class="legend-term">el capitán / la capitana <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el capitán">🔊</button></div>
       <div class="legend-gloss">the captain</div>
       <div class="legend-note">Lleva la cinta en el brazo y es el único que habla con el árbitro en nombre del equipo.</div>
     </div>
 
     <div class="extra-item">
-      <div class="legend-term">el equipo</div>
+      <div class="legend-term">el equipo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el equipo">🔊</button></div>
       <div class="legend-gloss">the team</div>
       <div class="legend-note">El de club. Para el país entero se usa otra palabra.</div>
     </div>
 
     <div class="extra-item">
-      <div class="legend-term">la selección (nacional)</div>
+      <div class="legend-term">la selección (nacional) <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la selección nacional">🔊</button></div>
       <div class="legend-gloss">the national team</div>
       <div class="legend-note">Cada selección tiene su apodo por los colores: <em>la albiceleste</em> es Argentina, <em>la verdeamarela</em>, Brasil.</div>
       <div class="example-row">
@@ -1139,11 +1151,11 @@ h1 {
     </div>
 
     <div class="extra-item">
-      <div class="legend-term">la hinchada</div>
+      <div class="legend-term">la hinchada <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la hinchada">🔊</button></div>
       <div class="legend-gloss">the supporters (as a body)</div>
       <div class="legend-variants">
-        <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="reg-badge reg-mex">México</span><span class="v-term">la afición</span></div>
-        <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la barra · la barra brava</span></div>
+        <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="reg-badge reg-mex">México</span><span class="v-term">la afición</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la afición">🔊</button></div>
+        <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la barra</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la barra">🔊</button> · <span class="v-term">la barra brava</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la barra brava">🔊</button></div>
       </div>
       <div class="legend-note">Ojo con el registro: <em>la barra brava</em> no es la hinchada en general sino el grupo organizado, y la palabra arrastra connotaciones de violencia.</div>
     </div>
@@ -1202,7 +1214,7 @@ h1 {
     <div class="legend-row" data-n="1">
       <div class="legend-num">1</div>
       <div class="legend-body">
-        <div class="legend-term">el saque de inicio</div>
+        <div class="legend-term">el saque de inicio <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el saque de inicio">🔊</button></div>
         <div class="legend-gloss">the kick-off</div>
         <div class="legend-note">Desde el círculo central, al comienzo de cada tiempo y después de cada gol. También <em>el saque inicial</em>: son lo mismo.</div>
       </div>
@@ -1211,10 +1223,10 @@ h1 {
     <div class="legend-row" data-n="2">
       <div class="legend-num">2</div>
       <div class="legend-body">
-        <div class="legend-term">el saque de banda</div>
+        <div class="legend-term">el saque de banda <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el saque de banda">🔊</button></div>
         <div class="legend-gloss">the throw-in</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el lateral</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el lateral</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el lateral">🔊</button></div>
         </div>
         <div class="legend-note">El único saque que se hace con las manos, desde la línea de costado.</div>
         <div class="example-row">
@@ -1230,7 +1242,7 @@ h1 {
     <div class="legend-row" data-n="3">
       <div class="legend-num">3</div>
       <div class="legend-body">
-        <div class="legend-term">el tiro de esquina <span class="alt">· el córner</span></div>
+        <div class="legend-term">el tiro de esquina <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiro de esquina">🔊</button> <span class="alt">· el córner <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el córner">🔊</button></span></div>
         <div class="legend-gloss">the corner kick</div>
         <div class="legend-note"><em>Córner</em> está totalmente asentado y convive con la forma española: se <em>tira un córner</em> o se <em>saca de esquina</em>.</div>
         <div class="example-row">
@@ -1246,10 +1258,10 @@ h1 {
     <div class="legend-row" data-n="4">
       <div class="legend-num">4</div>
       <div class="legend-body">
-        <div class="legend-term">el saque de meta <span class="alt">· el saque de arco</span></div>
+        <div class="legend-term">el saque de meta <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el saque de meta">🔊</button> <span class="alt">· el saque de arco <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el saque de arco">🔊</button></span></div>
         <div class="legend-gloss">the goal kick</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el saque de puerta</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el saque de puerta</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el saque de puerta">🔊</button></div>
         </div>
         <div class="legend-note">Cada versión acompaña a su palabra para el arco: <em>saque de arco</em> donde se dice <em>arco</em>, <em>saque de puerta</em> donde se dice <em>portería</em>.</div>
       </div>
@@ -1258,7 +1270,7 @@ h1 {
     <div class="legend-row" data-n="5">
       <div class="legend-num">5</div>
       <div class="legend-body">
-        <div class="legend-term">el tiro libre <span class="alt">· la barrera</span></div>
+        <div class="legend-term">el tiro libre <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiro libre">🔊</button> <span class="alt">· la barrera <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la barrera">🔊</button></span></div>
         <div class="legend-gloss">the free kick · the wall</div>
         <div class="legend-note"><em>Directo</em> si se puede convertir de una; <em>indirecto</em> si otro jugador tiene que tocarla antes. <em>La barrera</em> es la fila de defensores que se para a nueve metros y quince.</div>
         <div class="example-row">
@@ -1274,10 +1286,10 @@ h1 {
     <div class="legend-row" data-n="6">
       <div class="legend-num">6</div>
       <div class="legend-body">
-        <div class="legend-term">el penal <span class="alt">· el tiro penal</span></div>
+        <div class="legend-term">el penal <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el penal">🔊</button> <span class="alt">· el tiro penal <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiro penal">🔊</button></span></div>
         <div class="legend-gloss">the penalty kick</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el penalti</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el penalti</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el penalti">🔊</button></div>
         </div>
         <div class="legend-note">En Latinoamérica siempre <em>penal</em>, plural <em>penales</em>. La forma <em>penalti</em> (plural <em>penaltis</em>) no se usa de este lado del Atlántico.</div>
         <div class="example-row">
@@ -1318,7 +1330,7 @@ h1 {
     <div class="legend-row" data-n="1">
       <div class="legend-num">1</div>
       <div class="legend-body">
-        <div class="legend-term">el cabezazo</div>
+        <div class="legend-term">el cabezazo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el cabezazo">🔊</button></div>
         <div class="legend-gloss">the header</div>
         <div class="legend-note">El verbo es <em>cabecear</em>. Fuera del fútbol, <em>cabecear</em> también es dar cabezadas de sueño.</div>
       </div>
@@ -1327,10 +1339,10 @@ h1 {
     <div class="legend-row" data-n="2">
       <div class="legend-num">2</div>
       <div class="legend-body">
-        <div class="legend-term">la chilena</div>
+        <div class="legend-term">la chilena <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la chilena">🔊</button></div>
         <div class="legend-gloss">the bicycle kick</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="v-term">la tijera</span></div>
+          <div class="variant-line"><span class="v-term">la tijera</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la tijera">🔊</button></div>
         </div>
         <div class="legend-note">La jugada más espectacular del repertorio, y una de las pocas que lleva gentilicio.</div>
         <div class="example-row">
@@ -1346,10 +1358,10 @@ h1 {
     <div class="legend-row" data-n="3">
       <div class="legend-num">3</div>
       <div class="legend-body">
-        <div class="legend-term">la atajada</div>
+        <div class="legend-term">la atajada <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la atajada">🔊</button></div>
         <div class="legend-gloss">the save</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">la parada</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">la parada</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la parada">🔊</button></div>
         </div>
         <div class="legend-note">El verbo latinoamericano es <em>atajar</em>; en España, <em>parar</em>.</div>
         <div class="example-row">
@@ -1365,11 +1377,11 @@ h1 {
     <div class="legend-row" data-n="4">
       <div class="legend-num">4</div>
       <div class="legend-body">
-        <div class="legend-term">el regate <span class="alt">· la gambeta</span></div>
+        <div class="legend-term">el regate <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el regate">🔊</button> <span class="alt">· la gambeta <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la gambeta">🔊</button></span></div>
         <div class="legend-gloss">the dribble</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la gambeta</span></div>
-          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el drible · driblear</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la gambeta</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la gambeta">🔊</button></div>
+          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el drible</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el drible">🔊</button> · <span class="v-term">driblear</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="driblear">🔊</button></div>
         </div>
         <div class="legend-note"><em>Gambeta</em> es la palabra argentina por excelencia, la que se asocia con Maradona y con Messi. Viene de <em>gamba</em>, pierna en lunfardo.</div>
         <div class="example-row">
@@ -1385,7 +1397,7 @@ h1 {
     <div class="legend-row" data-n="5">
       <div class="legend-num">5</div>
       <div class="legend-body">
-        <div class="legend-term">la tarjeta amarilla / roja</div>
+        <div class="legend-term">la tarjeta amarilla <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la tarjeta amarilla">🔊</button> <span class="alt">/ roja <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la tarjeta roja">🔊</button></span></div>
         <div class="legend-gloss">the yellow / red card</div>
         <div class="legend-note">Cada una tiene su verbo: <em>amonestar</em> es sacar la amarilla, <em>expulsar</em> es sacar la roja.</div>
       </div>
@@ -1394,11 +1406,11 @@ h1 {
     <div class="legend-row" data-n="6">
       <div class="legend-num">6</div>
       <div class="legend-body">
-        <div class="legend-term">el fuera de juego</div>
+        <div class="legend-term">el fuera de juego <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el fuera de juego">🔊</button></div>
         <div class="legend-gloss">offside</div>
         <div class="legend-variants">
-          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el orsái</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
-          <div class="variant-line"><span class="v-term">la posición adelantada</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el orsái</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el orsái">🔊</button> <span class="reg-badge reg-coloq">Coloq.</span></div>
+          <div class="variant-line"><span class="v-term">la posición adelantada</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la posición adelantada">🔊</button></div>
         </div>
         <div class="legend-note"><em>Orsái</em> es el inglés <em>offside</em> escrito tal como lo pronuncia Buenos Aires — uno de los préstamos más queridos del dialecto.</div>
         <div class="example-row">
@@ -1414,7 +1426,7 @@ h1 {
     <div class="legend-row" data-n="7">
       <div class="legend-num">7</div>
       <div class="legend-body">
-        <div class="legend-term">el contragolpe <span class="alt">· el contraataque</span></div>
+        <div class="legend-term">el contragolpe <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el contragolpe">🔊</button> <span class="alt">· el contraataque <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el contraataque">🔊</button></span></div>
         <div class="legend-gloss">the counter-attack</div>
         <div class="legend-note">Recuperar la pelota y salir rápido mientras el rival todavía está adelantado.</div>
         <div class="example-row">
@@ -1433,7 +1445,7 @@ h1 {
     <div class="extra-title">Sin punto en la imagen · acciones relacionadas</div>
 
     <div class="extra-item">
-      <div class="legend-term">el gol</div>
+      <div class="legend-term">el gol <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el gol">🔊</button></div>
       <div class="legend-gloss">the goal</div>
       <div class="legend-note"><em>El golazo</em> es el gol extraordinario — el sufijo <em>-azo</em> hace todo el trabajo. <em>El autogol</em> es en contra; <em>el triplete</em> (o <em>el hat-trick</em>) son tres en un partido.</div>
       <div class="example-row">
@@ -1446,19 +1458,19 @@ h1 {
     </div>
 
     <div class="extra-item">
-      <div class="legend-term">el pase <span class="alt">· la asistencia</span></div>
+      <div class="legend-term">el pase <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el pase">🔊</button> <span class="alt">· la asistencia <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la asistencia">🔊</button></span></div>
       <div class="legend-gloss">the pass · the assist</div>
       <div class="legend-note"><em>La asistencia</em> es el pase que termina en gol; el resto son <em>pases</em>.</div>
     </div>
 
     <div class="extra-item">
-      <div class="legend-term">el tiro <span class="alt">· el remate · el disparo</span></div>
+      <div class="legend-term">el tiro <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiro">🔊</button> <span class="alt">· el remate <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el remate">🔊</button> · el disparo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el disparo">🔊</button></span></div>
       <div class="legend-gloss">the shot</div>
       <div class="legend-note"><em>El remate</em> sugiere el golpe que cierra una jugada; <em>el disparo</em>, la potencia.</div>
     </div>
 
     <div class="extra-item">
-      <div class="legend-term">la falta</div>
+      <div class="legend-term">la falta <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la falta">🔊</button></div>
       <div class="legend-gloss">the foul</div>
       <div class="legend-note">La causa detrás de casi todo el balón parado: una falta se cobra con <em>tiro libre</em>, o con <em>penal</em> si fue dentro del área.</div>
     </div>
@@ -1477,7 +1489,7 @@ h1 {
       <div class="br-gloss">the tournament</div>
     </div>
     <div class="bracket-row bw-88">
-      <div class="br-term">el Mundial · la Copa del Mundo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el Mundial, la Copa del Mundo">🔊</button></div>
+      <div class="br-term">el Mundial <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el Mundial">🔊</button> · la Copa del Mundo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la Copa del Mundo">🔊</button></div>
       <div class="br-gloss">the World Cup</div>
     </div>
     <div class="bracket-row bw-76">
@@ -1524,7 +1536,7 @@ h1 {
     </div>
 
     <div class="tl-item">
-      <div class="tl-term">el medio tiempo <span class="alt">· el descanso</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el medio tiempo, el descanso">🔊</button></div>
+      <div class="tl-term">el medio tiempo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el medio tiempo">🔊</button> <span class="alt">· el descanso <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el descanso">🔊</button></span></div>
       <div class="tl-gloss">half-time</div>
       <div class="tl-note">El intervalo. <em>El entretiempo</em> es la forma rioplatense y también se oye mucho.</div>
     </div>
@@ -1535,7 +1547,7 @@ h1 {
     </div>
 
     <div class="tl-item">
-      <div class="tl-term">el tiempo de descuento <span class="alt">· el tiempo adicionado</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiempo de descuento">🔊</button></div>
+      <div class="tl-term">el tiempo de descuento <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiempo de descuento">🔊</button> <span class="alt">· el tiempo adicionado <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiempo adicionado">🔊</button></span></div>
       <div class="tl-gloss">stoppage time, injury time</div>
       <div class="tl-note">Los minutos que el árbitro devuelve al final de cada tiempo por las interrupciones. El nombre engaña: se llama <em>descuento</em> pero se suma.</div>
       <div class="example-row">
@@ -1548,13 +1560,13 @@ h1 {
     </div>
 
     <div class="tl-item">
-      <div class="tl-term">la prórroga <span class="alt">· el tiempo extra</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la prórroga, el tiempo extra">🔊</button></div>
+      <div class="tl-term">la prórroga <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la prórroga">🔊</button> <span class="alt">· el tiempo extra <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiempo extra">🔊</button></span></div>
       <div class="tl-gloss">extra time</div>
       <div class="tl-note">Treinta minutos más cuando el partido no puede terminar empatado. <span class="reg-badge reg-rio">Rioplatense</span> <em>el alargue</em>.</div>
     </div>
 
     <div class="tl-item">
-      <div class="tl-term">la tanda de penales <span class="alt">· los penales</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la tanda de penales">🔊</button></div>
+      <div class="tl-term">la tanda de penales <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la tanda de penales">🔊</button> <span class="alt">· los penales <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="los penales">🔊</button></span></div>
       <div class="tl-gloss">the penalty shoot-out</div>
       <div class="tl-note">El último recurso. En la conversación basta con <em>los penales</em>: <em>fueron a los penales</em>.</div>
       <div class="example-row">

@@ -1,0 +1,2013 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fútbol: el idioma del mundo — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  /* Accent trio — pitch & trophy (spec §2) */
+  --accent-alpha:   #34d399;  /* green — el campo   */
+  --accent-beta:    #fbbf24;  /* gold  — el trofeo  */
+  --accent-gamma:   #4a90d9;  /* blue  — site       */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+  padding: 32px 20px 80px;
+}
+
+/* Background — azulejo Option C, eight-point stars */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%234a90d9' stroke-width='1.1'%3E%3Cpath d='M45 9 L53 37 L81 45 L53 53 L45 81 L37 53 L9 45 L37 37 Z'/%3E%3Cpath d='M45 17 L50 40 L73 45 L50 50 L45 73 L40 50 L17 45 L40 40 Z'/%3E%3Ccircle cx='45' cy='45' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container {
+  max-width: 820px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Back nav ───────────────────────────────── */
+.back-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 6px 0;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back-nav:hover { color: var(--accent); }
+
+/* ── Title card ─────────────────────────────── */
+.title-card {
+  text-align: center;
+  padding: 44px 24px 48px;
+  margin-bottom: 28px;
+  background: linear-gradient(180deg, rgba(52,211,153,0.05), rgba(74,144,217,0));
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent-alpha);
+  margin-bottom: 18px;
+}
+h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5.5vw, 3.2rem);
+  font-weight: normal;
+  line-height: 1.05;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 20px auto 14px;
+  color: var(--accent-beta);
+  opacity: 0.65;
+  max-width: 280px;
+}
+.ornament::before, .ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-beta), transparent);
+}
+.subtitle {
+  font-size: 0.98rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.intro-prose {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0 4px 18px;
+  padding: 0 6px;
+}
+.intro-prose strong { color: var(--text-primary); font-weight: 600; }
+.intro-prose em { color: var(--accent-alpha); font-style: italic; }
+
+/* ── Rate bar ───────────────────────────────── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 30px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── Section headers ────────────────────────── */
+.section-head {
+  margin: 46px 0 4px;
+  padding-left: 14px;
+  border-left: 4px solid var(--accent-alpha);
+}
+.section-head.beta  { border-left-color: var(--accent-beta); }
+.section-head.gamma { border-left-color: var(--accent-gamma); }
+.section-num {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.72rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+.section-sub {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── Scene figure + pin overlay ─────────────── */
+.scene-figure {
+  position: relative;
+  margin: 20px 0 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-input);
+  line-height: 0;
+}
+.scene-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.scene-figure .img-fallback {
+  display: none;
+  line-height: 1.6;
+  padding: 40px 24px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+.scene-figure.img-missing img { display: none; }
+.scene-figure.img-missing .img-fallback { display: block; }
+.scene-figure.img-missing .pin { display: none; }
+
+.pin {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border-radius: 50%;
+  background: rgba(10, 22, 40, 0.86);
+  border: 2px solid var(--accent-beta);
+  color: var(--accent-beta);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.18s, background 0.18s, box-shadow 0.18s;
+  box-shadow: 0 0 0 2px rgba(10,22,40,0.5);
+  padding: 0;
+}
+.pin:hover,
+.pin.lit {
+  background: var(--accent-beta);
+  color: #0a1628;
+  transform: scale(1.28);
+  box-shadow: 0 0 0 3px rgba(251,191,36,0.28);
+  z-index: 3;
+}
+
+/* ── Legend ─────────────────────────────────── */
+.legend {
+  margin-top: 0;
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.legend-row {
+  display: flex;
+  gap: 12px;
+  padding: 14px 16px;
+  border-top: 1px solid var(--border);
+  transition: background 0.2s;
+}
+.legend-row:first-child { border-top: none; }
+.legend-row:hover,
+.legend-row.lit { background: var(--bg-card-hover); }
+.legend-num {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-beta);
+  color: var(--accent-beta);
+  font-size: 0.74rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 3px;
+  cursor: pointer;
+}
+.legend-row.lit .legend-num {
+  background: var(--accent-beta);
+  color: #0a1628;
+}
+.legend-body { flex: 1; min-width: 0; }
+.legend-term {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.08rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+.legend-term .alt { color: var(--accent-alpha); }
+.legend-gloss {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 1px;
+}
+.legend-note {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 6px;
+}
+.legend-note em { color: var(--accent-alpha); font-style: italic; }
+.legend-variants {
+  margin-top: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.variant-line {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.variant-line .v-term {
+  font-family: 'DM Serif Display', serif;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+/* ── Region badges ──────────────────────────── */
+.reg-badge {
+  display: inline-block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+.reg-rio {
+  color: #7dd3fc;
+  border-color: rgba(125, 211, 252, 0.35);
+  background: rgba(125, 211, 252, 0.10);
+}
+.reg-esp {
+  color: #fbbf24;
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.10);
+}
+.reg-mex {
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.35);
+  background: rgba(52, 211, 153, 0.10);
+}
+.reg-coloq {
+  color: #c084fc;
+  border-color: rgba(192, 132, 252, 0.35);
+  background: rgba(192, 132, 252, 0.10);
+}
+.reg-latam {
+  color: #f472b6;
+  border-color: rgba(244, 114, 182, 0.35);
+  background: rgba(244, 114, 182, 0.10);
+}
+
+/* ── Example rows ───────────────────────────── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(30, 51, 85, 0.8);
+}
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent-alpha); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+.speak-inline {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  font-size: 0.72rem;
+}
+
+/* ── Extra terms block (no-pin lists) ───────── */
+.extra-block {
+  margin-top: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.extra-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.extra-item {
+  padding: 10px 0;
+  border-top: 1px solid rgba(30, 51, 85, 0.7);
+}
+.extra-item:first-of-type { border-top: none; padding-top: 0; }
+
+/* ── NOTA ───────────────────────────────────── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 16px 20px;
+  margin: 20px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 10px 0 0 20px; }
+.nota li { margin-bottom: 6px; }
+.nota li em { color: var(--accent-alpha); }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Bracket ────────────────────────────────── */
+.bracket {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px 20px;
+  margin-top: 20px;
+}
+.bracket-row {
+  margin: 0 auto;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  text-align: center;
+  position: relative;
+}
+.bracket-row + .bracket-row { margin-top: 26px; }
+.bracket-row + .bracket-row::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 1px;
+  height: 14px;
+  background: linear-gradient(180deg, transparent, var(--accent-beta));
+}
+.bracket-row + .bracket-row::after {
+  content: '▾';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--accent-beta);
+  font-size: 0.7rem;
+  opacity: 0.75;
+}
+.br-term {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.06rem;
+  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+.br-gloss {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+.bw-100 { max-width: 100%; }
+.bw-88  { max-width: 88%; }
+.bw-76  { max-width: 76%; }
+.bw-64  { max-width: 64%; }
+.bw-52  { max-width: 52%; }
+.bw-40  { max-width: 40%; }
+.bracket-row.final {
+  border-color: rgba(251, 191, 36, 0.5);
+  background: rgba(251, 191, 36, 0.08);
+}
+.bracket-row.final .br-term { color: var(--accent-beta); }
+
+/* ── Timeline ───────────────────────────────── */
+.timeline {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px 20px;
+  margin-top: 20px;
+}
+.tl-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 3px;
+  margin-bottom: 18px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.tl-seg {
+  padding: 9px 4px;
+  text-align: center;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #0a1628;
+  line-height: 1.25;
+}
+.tl-seg.play  { background: rgba(52, 211, 153, 0.85); }
+.tl-seg.pause { background: rgba(90, 111, 142, 0.85); color: var(--text-primary); }
+.tl-seg.extra { background: rgba(251, 191, 36, 0.85); }
+.tl-seg.pens  { background: rgba(74, 144, 217, 0.85); color: #0a1628; }
+.tl-item {
+  padding: 11px 0;
+  border-top: 1px solid rgba(30, 51, 85, 0.7);
+}
+.tl-item:first-of-type { border-top: none; }
+.tl-term {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.04rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.tl-gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+.tl-note {
+  font-size: 0.87rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  line-height: 1.55;
+}
+.tl-note em { color: var(--accent-alpha); font-style: italic; }
+
+/* ── Verb grid ──────────────────────────────── */
+.verb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.verb-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-alpha);
+  border-radius: 10px;
+  padding: 14px 16px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.verb-card:hover { background: var(--bg-card-hover); }
+.verb-card.beta  { border-left-color: var(--accent-beta); }
+.verb-card.gamma { border-left-color: var(--accent-gamma); }
+.verb-head {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.14rem;
+  color: var(--text-primary);
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+}
+.verb-gloss {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+.verb-note {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  margin-top: 7px;
+  line-height: 1.55;
+}
+.verb-note em { color: var(--accent-alpha); font-style: italic; }
+
+/* ── Meme gallery stub ──────────────────────── */
+.meme-stub {
+  margin-top: 20px;
+  background: var(--bg-card);
+  border: 1px dashed var(--border-focus);
+  border-radius: 12px;
+  padding: 34px 24px;
+  text-align: center;
+}
+.meme-stub-icon {
+  font-size: 1.6rem;
+  opacity: 0.5;
+  margin-bottom: 10px;
+}
+.meme-stub-text {
+  font-size: 0.94rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.meme-stub-text em { color: var(--accent-alpha); font-style: italic; }
+.meme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+/* ── Footnote ───────────────────────────────── */
+.footnote {
+  margin-top: 44px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ── Mobile ─────────────────────────────────── */
+@media (max-width: 600px) {
+  body { padding: 20px 12px 60px; }
+  .title-card { padding: 32px 16px 34px; }
+  .pin {
+    width: 21px;
+    height: 21px;
+    margin: -10.5px 0 0 -10.5px;
+    font-size: 0.66rem;
+    border-width: 1.5px;
+  }
+  .legend-row { padding: 12px 12px; gap: 9px; }
+  .section-title { font-size: 1.45rem; }
+  .verb-grid { grid-template-columns: 1fr; }
+  .bw-88, .bw-76, .bw-64, .bw-52, .bw-40 { max-width: 100%; }
+  .tl-seg { font-size: 0.58rem; padding: 7px 2px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <header class="title-card">
+    <div class="overline">Vocabulario · El Mundial</div>
+    <h1>Fútbol: el idioma del mundo</h1>
+    <div class="ornament"><span>✦</span></div>
+    <p class="subtitle">El deporte que todo el planeta entiende, en las palabras de cada región.</p>
+  </header>
+
+  <p class="intro-prose">
+    Ningún tema del español cambia tanto de una frontera a otra como el fútbol. Cada país bautizó el
+    juego a su manera, y por eso esta página se lee en dos niveles: primero el <strong>término
+    neutro latinoamericano</strong>, el que se entiende en cualquier cancha del continente, y al lado
+    las <strong>variantes regionales</strong> con su etiqueta. Lo rioplatense aparece marcado y con
+    frecuencia — <em>gambeta</em>, <em>arquero</em>, <em>orsái</em>, <em>DT</em> — porque es el
+    dialecto que más vale reconocer de oído. El audio, en cambio, siempre suena en español neutro.
+  </p>
+
+  <!-- Rate bar -->
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ══════════ ESCENA 1 — EL CAMPO Y EL EQUIPAMIENTO ══════════ -->
+  <div class="section-head">
+    <div class="section-num">Escena 01</div>
+    <div class="section-title">El campo y el equipamiento</div>
+    <div class="section-sub">Lo que se ve antes de que ruede la pelota.</div>
+  </div>
+
+  <div class="scene-figure" id="fig1">
+    <img src="../assets/futbol-idioma-del-mundo/campo.png"
+         alt="Boca de arco en un estadio: un jugador, el árbitro, el arquero y la pelota."
+         onerror="this.closest('.scene-figure').classList.add('img-missing')">
+    <div class="img-fallback">La ilustración de esta escena todavía no está disponible. La leyenda numerada de abajo funciona igual.</div>
+    <button class="pin" data-scene="1" data-n="1"  style="left:39%; top:88%;" aria-label="Punto 1">1</button>
+    <button class="pin" data-scene="1" data-n="2"  style="left:11%; top:90%;" aria-label="Punto 2">2</button>
+    <button class="pin" data-scene="1" data-n="3"  style="left:14%; top:9%;"  aria-label="Punto 3">3</button>
+    <button class="pin" data-scene="1" data-n="4"  style="left:64%; top:40%;" aria-label="Punto 4">4</button>
+    <button class="pin" data-scene="1" data-n="5"  style="left:52%; top:52%;" aria-label="Punto 5">5</button>
+    <button class="pin" data-scene="1" data-n="6"  style="left:72%; top:20%;" aria-label="Punto 6">6</button>
+    <button class="pin" data-scene="1" data-n="7"  style="left:20%; top:93%;" aria-label="Punto 7">7</button>
+    <button class="pin" data-scene="1" data-n="8"  style="left:24%; top:41%;" aria-label="Punto 8">8</button>
+    <button class="pin" data-scene="1" data-n="9"  style="left:44%; top:45%;" aria-label="Punto 9">9</button>
+    <button class="pin" data-scene="1" data-n="10" style="left:80%; top:56%;" aria-label="Punto 10">10</button>
+    <button class="pin" data-scene="1" data-n="11" style="left:29%; top:76%;" aria-label="Punto 11">11</button>
+  </div>
+
+  <div class="legend" data-scene="1">
+
+    <div class="legend-row" data-n="1">
+      <div class="legend-num">1</div>
+      <div class="legend-body">
+        <div class="legend-term">la pelota <span class="alt">· el balón</span></div>
+        <div class="legend-gloss">the ball</div>
+        <div class="legend-note"><em>Pelota</em> es la palabra de todos los días en casi toda Latinoamérica; <em>balón</em> suena algo más formal o periodístico.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El árbitro colocó la <strong>pelota</strong> en el punto de penal.</div>
+            <div class="example-en">The referee placed the ball on the penalty spot.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="2">
+      <div class="legend-num">2</div>
+      <div class="legend-body">
+        <div class="legend-term">la cancha</div>
+        <div class="legend-gloss">the field, the pitch</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el campo (de juego)</span></div>
+        </div>
+        <div class="legend-note">En Latinoamérica se dice <em>cancha</em> sin excepción; <em>campo de juego</em> es neutro y aparece sobre todo en la escritura.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Los jugadores salieron a la <strong>cancha</strong> entre aplausos.</div>
+            <div class="example-en">The players came out onto the pitch to applause.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="3">
+      <div class="legend-num">3</div>
+      <div class="legend-body">
+        <div class="legend-term">el estadio</div>
+        <div class="legend-gloss">the stadium</div>
+        <div class="legend-note">El recinto entero, con tribunas y todo. La <em>cancha</em> es solamente la superficie de juego que está adentro.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="4">
+      <div class="legend-num">4</div>
+      <div class="legend-body">
+        <div class="legend-term">la portería <span class="alt">· el arco</span></div>
+        <div class="legend-gloss">the goal</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el arco</span></div>
+        </div>
+        <div class="legend-note"><em>El arco</em> es el término cotidiano en Latinoamérica y en el Río de la Plata; <em>la portería</em> domina en España y en el registro formal.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Mandó la pelota al fondo del <strong>arco</strong>.</div>
+            <div class="example-en">He sent the ball into the back of the net.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="5">
+      <div class="legend-num">5</div>
+      <div class="legend-body">
+        <div class="legend-term">el poste <span class="alt">· el palo</span></div>
+        <div class="legend-gloss">the goalpost</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-coloq">Coloq.</span><span class="v-term">el palo</span></div>
+        </div>
+        <div class="legend-note">Los dos verticales. <em>Palo</em> es lo coloquial y lo que se grita en la tribuna: <em>la pelota dio en el palo</em>.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="6">
+      <div class="legend-num">6</div>
+      <div class="legend-body">
+        <div class="legend-term">el travesaño</div>
+        <div class="legend-gloss">the crossbar</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el larguero</span></div>
+        </div>
+        <div class="legend-note">El horizontal, el que cierra el arco por arriba.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="7">
+      <div class="legend-num">7</div>
+      <div class="legend-body">
+        <div class="legend-term">los botines</div>
+        <div class="legend-gloss">the boots, the cleats</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">las botas</span></div>
+          <div class="variant-line"><span class="reg-badge reg-mex">México</span><span class="v-term">los tacos</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
+        </div>
+        <div class="legend-note">En el Río de la Plata siempre <em>botines</em>, nunca <em>botas</em>.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Se ató los <strong>botines</strong> antes de entrar al partido.</div>
+            <div class="example-en">He tied his boots before going into the match.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="8">
+      <div class="legend-num">8</div>
+      <div class="legend-body">
+        <div class="legend-term">la camiseta</div>
+        <div class="legend-gloss">the jersey, the shirt</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la casaca</span></div>
+          <div class="variant-line"><span class="reg-badge reg-mex">México</span><span class="v-term">la playera</span></div>
+        </div>
+        <div class="legend-note"><em>La casaca</em> vive casi solo en la crónica deportiva escrita, no en la charla común.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Lleva la <strong>camiseta</strong> número diez.</div>
+            <div class="example-en">He wears the number ten shirt.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="9">
+      <div class="legend-num">9</div>
+      <div class="legend-body">
+        <div class="legend-term">el silbato</div>
+        <div class="legend-gloss">the whistle</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-coloq">Coloq.</span><span class="v-term">el pito</span></div>
+        </div>
+        <div class="legend-note">El verbo es <em>pitar</em>: <em>el árbitro pitó falta</em>.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="10">
+      <div class="legend-num">10</div>
+      <div class="legend-body">
+        <div class="legend-term">los guantes</div>
+        <div class="legend-gloss">the (keeper's) gloves</div>
+        <div class="legend-note">La única pieza del equipamiento que pertenece a un solo puesto: <em>los guantes del arquero</em>.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="11">
+      <div class="legend-num">11</div>
+      <div class="legend-body">
+        <div class="legend-term">las espinilleras</div>
+        <div class="legend-gloss">the shin guards</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">las canilleras</span></div>
+        </div>
+        <div class="legend-note">De <em>canilla</em>, que en el Río de la Plata es la espinilla.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ ESCENA 2 — LAS PERSONAS ══════════ -->
+  <div class="section-head beta">
+    <div class="section-num">Escena 02</div>
+    <div class="section-title">Las personas</div>
+    <div class="section-sub">Los puestos, el banco, los jueces y la gente de la tribuna.</div>
+  </div>
+
+  <div class="scene-figure" id="fig2">
+    <img src="../assets/futbol-idioma-del-mundo/personas.png"
+         alt="Vista de un partido con jugadores, el técnico, los árbitros, la cabina del VAR y la hinchada."
+         onerror="this.closest('.scene-figure').classList.add('img-missing')">
+    <div class="img-fallback">La ilustración de esta escena todavía no está disponible. La leyenda numerada de abajo funciona igual.</div>
+    <button class="pin" data-scene="2" data-n="1"  style="left:37%; top:62%;" aria-label="Punto 1">1</button>
+    <button class="pin" data-scene="2" data-n="2"  style="left:44%; top:38%;" aria-label="Punto 2">2</button>
+    <button class="pin" data-scene="2" data-n="3"  style="left:50%; top:57%;" aria-label="Punto 3">3</button>
+    <button class="pin" data-scene="2" data-n="4"  style="left:58%; top:51%;" aria-label="Punto 4">4</button>
+    <button class="pin" data-scene="2" data-n="5"  style="left:81%; top:56%;" aria-label="Punto 5">5</button>
+    <button class="pin" data-scene="2" data-n="6"  style="left:8%;  top:70%;" aria-label="Punto 6">6</button>
+    <button class="pin" data-scene="2" data-n="7"  style="left:18%; top:62%;" aria-label="Punto 7">7</button>
+    <button class="pin" data-scene="2" data-n="8"  style="left:47%; top:70%;" aria-label="Punto 8">8</button>
+    <button class="pin" data-scene="2" data-n="9"  style="left:72%; top:66%;" aria-label="Punto 9">9</button>
+    <button class="pin" data-scene="2" data-n="10" style="left:13%; top:16%;" aria-label="Punto 10">10</button>
+    <button class="pin" data-scene="2" data-n="11" style="left:92%; top:76%;" aria-label="Punto 11">11</button>
+  </div>
+
+  <div class="legend" data-scene="2">
+
+    <div class="legend-row" data-n="1">
+      <div class="legend-num">1</div>
+      <div class="legend-body">
+        <div class="legend-term">el/la futbolista <span class="alt">· el jugador / la jugadora</span></div>
+        <div class="legend-gloss">the player</div>
+        <div class="legend-note"><em>Futbolista</em> nombra la profesión y no cambia de forma según el género; <em>jugador</em> sirve para cualquier deporte.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="2">
+      <div class="legend-num">2</div>
+      <div class="legend-body">
+        <div class="legend-term">el portero <span class="alt">· el arquero</span></div>
+        <div class="legend-gloss">the goalkeeper</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el guardameta</span></div>
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el golero</span></div>
+        </div>
+        <div class="legend-note"><em>Arquero</em> es lo normal en casi toda Latinoamérica; <em>golero</em> es marcadamente uruguayo.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El <strong>arquero</strong> atajó el penal en el último minuto.</div>
+            <div class="example-en">The keeper saved the penalty in the last minute.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="3">
+      <div class="legend-num">3</div>
+      <div class="legend-body">
+        <div class="legend-term">el defensa / la defensa</div>
+        <div class="legend-gloss">the defender</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el defensor</span></div>
+          <div class="variant-line"><span class="v-term">el zaguero</span> <span class="reg-badge reg-coloq">Periodístico</span></div>
+        </div>
+        <div class="legend-note">Cuidado con el artículo: <em>la defensa</em> también nombra a toda la línea defensiva como conjunto.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="4">
+      <div class="legend-num">4</div>
+      <div class="legend-body">
+        <div class="legend-term">el mediocampista</div>
+        <div class="legend-gloss">the midfielder</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el volante</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el centrocampista</span></div>
+        </div>
+        <div class="legend-note"><em>Volante</em> es la palabra argentina de uso diario; <em>mediocampista</em> se entiende en todas partes.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El <strong>mediocampista</strong> central maneja el ritmo del equipo.</div>
+            <div class="example-en">The central midfielder controls the team's tempo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="5">
+      <div class="legend-num">5</div>
+      <div class="legend-body">
+        <div class="legend-term">el delantero <span class="alt">· el atacante</span></div>
+        <div class="legend-gloss">the forward, the striker</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el punta</span></div>
+          <div class="variant-line"><span class="v-term">el goleador</span></div>
+        </div>
+        <div class="legend-note"><em>El goleador</em> no es un puesto sino una descripción: el que convierte los goles.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="6">
+      <div class="legend-num">6</div>
+      <div class="legend-body">
+        <div class="legend-term">el suplente</div>
+        <div class="legend-gloss">the substitute</div>
+        <div class="legend-note"><em>El banco (de suplentes)</em> es donde esperan. <em>Entrar</em> es salir a jugar desde ahí.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="7">
+      <div class="legend-num">7</div>
+      <div class="legend-body">
+        <div class="legend-term">el entrenador <span class="alt">· el técnico</span></div>
+        <div class="legend-gloss">the coach, the manager</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el director técnico (el DT)</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el míster</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
+        </div>
+        <div class="legend-note">En Argentina <em>el DT</em> se dice tal cual, letra por letra, hasta en la conversación más corriente.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El <strong>técnico</strong> hizo tres cambios en el segundo tiempo.</div>
+            <div class="example-en">The manager made three substitutions in the second half.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="8">
+      <div class="legend-num">8</div>
+      <div class="legend-body">
+        <div class="legend-term">el árbitro / la árbitra</div>
+        <div class="legend-gloss">the referee</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el referí</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
+          <div class="variant-line"><span class="v-term">el juez</span></div>
+        </div>
+        <div class="legend-note"><em>Referí</em> viene del inglés <em>referee</em> y suena informal; en la escritura seria se prefiere <em>árbitro</em>.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="9">
+      <div class="legend-num">9</div>
+      <div class="legend-body">
+        <div class="legend-term">el árbitro asistente</div>
+        <div class="legend-gloss">the assistant referee</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="v-term">el juez de línea</span> <span class="reg-badge reg-coloq">Tradicional</span></div>
+        </div>
+        <div class="legend-note"><em>Juez de línea</em> —y el más antiguo <em>abanderado</em>— son los nombres viejos. Hoy la designación oficial es <em>árbitro asistente</em>, aunque nadie en la tribuna la use.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="10">
+      <div class="legend-num">10</div>
+      <div class="legend-body">
+        <div class="legend-term">el hincha <span class="alt">· el aficionado</span></div>
+        <div class="legend-gloss">the fan, the supporter</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el hincha</span></div>
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="reg-badge reg-mex">México</span><span class="v-term">el aficionado</span></div>
+          <div class="variant-line"><span class="v-term">el seguidor · el fanático</span></div>
+        </div>
+        <div class="legend-note"><em>Hincha</em> no cambia de forma: <em>el hincha</em> y <em>la hincha</em>.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Los <strong>hinchas</strong> cantaron durante los noventa minutos.</div>
+            <div class="example-en">The fans sang for the full ninety minutes.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="11">
+      <div class="legend-num">11</div>
+      <div class="legend-body">
+        <div class="legend-term">el VAR <span class="alt">· el videoarbitraje</span></div>
+        <div class="legend-gloss">the video assistant referee</div>
+        <div class="legend-note">Se usa como sigla masculina y se pronuncia como palabra: <em>el VAR revisó la jugada</em>.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="extra-block">
+    <div class="extra-title">Sin punto en la imagen · el colectivo</div>
+
+    <div class="extra-item">
+      <div class="legend-term">el capitán / la capitana</div>
+      <div class="legend-gloss">the captain</div>
+      <div class="legend-note">Lleva la cinta en el brazo y es el único que habla con el árbitro en nombre del equipo.</div>
+    </div>
+
+    <div class="extra-item">
+      <div class="legend-term">el equipo</div>
+      <div class="legend-gloss">the team</div>
+      <div class="legend-note">El de club. Para el país entero se usa otra palabra.</div>
+    </div>
+
+    <div class="extra-item">
+      <div class="legend-term">la selección (nacional)</div>
+      <div class="legend-gloss">the national team</div>
+      <div class="legend-note">Cada selección tiene su apodo por los colores: <em>la albiceleste</em> es Argentina, <em>la verdeamarela</em>, Brasil.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <strong>selección</strong> se entrenó toda la semana a puertas cerradas.</div>
+          <div class="example-en">The national team trained all week behind closed doors.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="extra-item">
+      <div class="legend-term">la hinchada</div>
+      <div class="legend-gloss">the supporters (as a body)</div>
+      <div class="legend-variants">
+        <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="reg-badge reg-mex">México</span><span class="v-term">la afición</span></div>
+        <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la barra · la barra brava</span></div>
+      </div>
+      <div class="legend-note">Ojo con el registro: <em>la barra brava</em> no es la hinchada en general sino el grupo organizado, y la palabra arrastra connotaciones de violencia.</div>
+    </div>
+  </div>
+
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong>The Rioplatense football lexicon.</strong>
+    <p>Argentina and Uruguay didn't just borrow the sport's vocabulary — they rebuilt a good part of it. This page leads with neutral Latin American terms everywhere, but the Rioplatense set is worth learning as a coherent group, because it is what you will actually hear from a Buenos Aires teacher, a Buenos Aires broadcast, or a Buenos Aires bar:</p>
+    <ul>
+      <li><em>la gambeta</em> — the dribble, from <em>gamba</em> ("leg" in lunfardo)</li>
+      <li><em>el hincha</em> / <em>la hinchada</em> — the fan / the supporters (see the note below)</li>
+      <li><em>el DT</em> — the manager, said as two letters</li>
+      <li><em>el arquero</em> / <em>el golero</em> — the keeper (the second is more Uruguayan)</li>
+      <li><em>el volante</em> — the midfielder</li>
+      <li><em>el punta</em> — the striker</li>
+      <li><em>el penal</em> — the penalty (never Spain's <em>penalti</em>)</li>
+      <li><em>el orsái</em> — offside, spelled the way Buenos Aires pronounces the English</li>
+      <li><em>el alargue</em> — extra time</li>
+      <li><em>meterla</em> / <em>clavarla</em> — to score, colloquially</li>
+      <li><em>alentar</em> — to cheer a team on</li>
+    </ul>
+    <p>Note the split this page maintains: these appear in the text because recognizing them matters, but the 🔊 audio throughout stays in neutral Latin American Spanish. You should be able to <em>read</em> Rioplatense long before you decide to <em>speak</em> it.</p>
+  </div>
+
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong>Where <em>hincha</em> comes from.</strong>
+    <p>The word for "fan" across the Spanish-speaking world traces back to one man with a very ordinary job. In early-1900s Montevideo, Prudencio Miguel Reyes worked for Club Nacional, and part of his work was inflating the match balls — <em>hinchar</em>, "to inflate." He was also loud, and the crowd came to identify his shouting with him: <em>el que hincha</em>, the one who inflates, became <em>el hincha</em>.</p>
+    <p>From one Montevideo kit man the term crossed the Río de la Plata, spread through the Americas, and eventually reached Spain. The collective <em>la hinchada</em> followed. So the most Rioplatense word on this page is also the one the rest of the Spanish-speaking world adopted.</p>
+  </div>
+
+
+  <!-- ══════════ ESCENA 3 — EL BALÓN PARADO ══════════ -->
+  <div class="section-head gamma">
+    <div class="section-num">Escena 03</div>
+    <div class="section-title">El balón parado</div>
+    <div class="section-sub">Aquí el lugar es el significado: cada reanudación tiene su punto exacto en la cancha.</div>
+  </div>
+
+  <div class="scene-figure" id="fig3">
+    <img src="../assets/futbol-idioma-del-mundo/parado.png"
+         alt="Vista cenital de una cancha completa con el círculo central, las áreas, los arcos y las esquinas."
+         onerror="this.closest('.scene-figure').classList.add('img-missing')">
+    <div class="img-fallback">La ilustración de esta escena todavía no está disponible. La leyenda numerada de abajo funciona igual.</div>
+    <button class="pin" data-scene="3" data-n="1" style="left:50%; top:49%;" aria-label="Punto 1">1</button>
+    <button class="pin" data-scene="3" data-n="2" style="left:30%; top:22%;" aria-label="Punto 2">2</button>
+    <button class="pin" data-scene="3" data-n="3" style="left:7%;  top:76%;" aria-label="Punto 3">3</button>
+    <button class="pin" data-scene="3" data-n="4" style="left:12%; top:47%;" aria-label="Punto 4">4</button>
+    <button class="pin" data-scene="3" data-n="5" style="left:66%; top:58%;" aria-label="Punto 5">5</button>
+    <button class="pin" data-scene="3" data-n="6" style="left:84%; top:44%;" aria-label="Punto 6">6</button>
+  </div>
+
+  <div class="legend" data-scene="3">
+
+    <div class="legend-row" data-n="1">
+      <div class="legend-num">1</div>
+      <div class="legend-body">
+        <div class="legend-term">el saque de inicio</div>
+        <div class="legend-gloss">the kick-off</div>
+        <div class="legend-note">Desde el círculo central, al comienzo de cada tiempo y después de cada gol. También <em>el saque inicial</em>: son lo mismo.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="2">
+      <div class="legend-num">2</div>
+      <div class="legend-body">
+        <div class="legend-term">el saque de banda</div>
+        <div class="legend-gloss">the throw-in</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el lateral</span></div>
+        </div>
+        <div class="legend-note">El único saque que se hace con las manos, desde la línea de costado.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Cobraron <strong>saque de banda</strong> para el equipo visitante.</div>
+            <div class="example-en">They awarded a throw-in to the away team.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="3">
+      <div class="legend-num">3</div>
+      <div class="legend-body">
+        <div class="legend-term">el tiro de esquina <span class="alt">· el córner</span></div>
+        <div class="legend-gloss">the corner kick</div>
+        <div class="legend-note"><em>Córner</em> está totalmente asentado y convive con la forma española: se <em>tira un córner</em> o se <em>saca de esquina</em>.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El <strong>córner</strong> terminó en gol de cabeza.</div>
+            <div class="example-en">The corner ended in a headed goal.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="4">
+      <div class="legend-num">4</div>
+      <div class="legend-body">
+        <div class="legend-term">el saque de meta <span class="alt">· el saque de arco</span></div>
+        <div class="legend-gloss">the goal kick</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el saque de puerta</span></div>
+        </div>
+        <div class="legend-note">Cada versión acompaña a su palabra para el arco: <em>saque de arco</em> donde se dice <em>arco</em>, <em>saque de puerta</em> donde se dice <em>portería</em>.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="5">
+      <div class="legend-num">5</div>
+      <div class="legend-body">
+        <div class="legend-term">el tiro libre <span class="alt">· la barrera</span></div>
+        <div class="legend-gloss">the free kick · the wall</div>
+        <div class="legend-note"><em>Directo</em> si se puede convertir de una; <em>indirecto</em> si otro jugador tiene que tocarla antes. <em>La barrera</em> es la fila de defensores que se para a nueve metros y quince.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Armaron la <strong>barrera</strong> y el tiro libre pasó por encima.</div>
+            <div class="example-en">They set up the wall and the free kick went over the top of it.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="6">
+      <div class="legend-num">6</div>
+      <div class="legend-body">
+        <div class="legend-term">el penal <span class="alt">· el tiro penal</span></div>
+        <div class="legend-gloss">the penalty kick</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">el penalti</span></div>
+        </div>
+        <div class="legend-note">En Latinoamérica siempre <em>penal</em>, plural <em>penales</em>. La forma <em>penalti</em> (plural <em>penaltis</em>) no se usa de este lado del Atlántico.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El árbitro cobró <strong>penal</strong> y todo el estadio se calló.</div>
+            <div class="example-en">The referee gave a penalty and the whole stadium went quiet.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════ ESCENA 4 — JUGADAS Y MOMENTOS ══════════ -->
+  <div class="section-head">
+    <div class="section-num">Escena 04</div>
+    <div class="section-title">Jugadas y momentos</div>
+    <div class="section-sub">Lo que pasa cuando la pelota está en movimiento.</div>
+  </div>
+
+  <div class="scene-figure" id="fig4">
+    <img src="../assets/futbol-idioma-del-mundo/jugadas.png"
+         alt="Montaje de acciones: una chilena, una atajada, una gambeta, una tarjeta y una bandera de fuera de juego."
+         onerror="this.closest('.scene-figure').classList.add('img-missing')">
+    <div class="img-fallback">La ilustración de esta escena todavía no está disponible. La leyenda numerada de abajo funciona igual.</div>
+    <button class="pin" data-scene="4" data-n="1" style="left:80%; top:60%;" aria-label="Punto 1">1</button>
+    <button class="pin" data-scene="4" data-n="2" style="left:59%; top:26%;" aria-label="Punto 2">2</button>
+    <button class="pin" data-scene="4" data-n="3" style="left:82%; top:17%;" aria-label="Punto 3">3</button>
+    <button class="pin" data-scene="4" data-n="4" style="left:19%; top:70%;" aria-label="Punto 4">4</button>
+    <button class="pin" data-scene="4" data-n="5" style="left:42%; top:11%;" aria-label="Punto 5">5</button>
+    <button class="pin" data-scene="4" data-n="6" style="left:14%; top:9%;"  aria-label="Punto 6">6</button>
+    <button class="pin" data-scene="4" data-n="7" style="left:42%; top:67%;" aria-label="Punto 7">7</button>
+  </div>
+
+  <div class="legend" data-scene="4">
+
+    <div class="legend-row" data-n="1">
+      <div class="legend-num">1</div>
+      <div class="legend-body">
+        <div class="legend-term">el cabezazo</div>
+        <div class="legend-gloss">the header</div>
+        <div class="legend-note">El verbo es <em>cabecear</em>. Fuera del fútbol, <em>cabecear</em> también es dar cabezadas de sueño.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="2">
+      <div class="legend-num">2</div>
+      <div class="legend-body">
+        <div class="legend-term">la chilena</div>
+        <div class="legend-gloss">the bicycle kick</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="v-term">la tijera</span></div>
+        </div>
+        <div class="legend-note">La jugada más espectacular del repertorio, y una de las pocas que lleva gentilicio.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Marcó de <strong>chilena</strong> en el último minuto.</div>
+            <div class="example-en">He scored with a bicycle kick in the last minute.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="3">
+      <div class="legend-num">3</div>
+      <div class="legend-body">
+        <div class="legend-term">la atajada</div>
+        <div class="legend-gloss">the save</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-esp">España</span><span class="v-term">la parada</span></div>
+        </div>
+        <div class="legend-note">El verbo latinoamericano es <em>atajar</em>; en España, <em>parar</em>.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Hizo una <strong>atajada</strong> increíble con una sola mano.</div>
+            <div class="example-en">He made an incredible save with one hand.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="4">
+      <div class="legend-num">4</div>
+      <div class="legend-body">
+        <div class="legend-term">el regate <span class="alt">· la gambeta</span></div>
+        <div class="legend-gloss">the dribble</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">la gambeta</span></div>
+          <div class="variant-line"><span class="reg-badge reg-latam">LatAm</span><span class="v-term">el drible · driblear</span></div>
+        </div>
+        <div class="legend-note"><em>Gambeta</em> es la palabra argentina por excelencia, la que se asocia con Maradona y con Messi. Viene de <em>gamba</em>, pierna en lunfardo.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Se fue en <strong>gambeta</strong> de tres defensores.</div>
+            <div class="example-en">He dribbled past three defenders.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="5">
+      <div class="legend-num">5</div>
+      <div class="legend-body">
+        <div class="legend-term">la tarjeta amarilla / roja</div>
+        <div class="legend-gloss">the yellow / red card</div>
+        <div class="legend-note">Cada una tiene su verbo: <em>amonestar</em> es sacar la amarilla, <em>expulsar</em> es sacar la roja.</div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="6">
+      <div class="legend-num">6</div>
+      <div class="legend-body">
+        <div class="legend-term">el fuera de juego</div>
+        <div class="legend-gloss">offside</div>
+        <div class="legend-variants">
+          <div class="variant-line"><span class="reg-badge reg-rio">Rioplatense</span><span class="v-term">el orsái</span> <span class="reg-badge reg-coloq">Coloq.</span></div>
+          <div class="variant-line"><span class="v-term">la posición adelantada</span></div>
+        </div>
+        <div class="legend-note"><em>Orsái</em> es el inglés <em>offside</em> escrito tal como lo pronuncia Buenos Aires — uno de los préstamos más queridos del dialecto.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">El gol quedó anulado por <strong>fuera de juego</strong>.</div>
+            <div class="example-en">The goal was disallowed for offside.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend-row" data-n="7">
+      <div class="legend-num">7</div>
+      <div class="legend-body">
+        <div class="legend-term">el contragolpe <span class="alt">· el contraataque</span></div>
+        <div class="legend-gloss">the counter-attack</div>
+        <div class="legend-note">Recuperar la pelota y salir rápido mientras el rival todavía está adelantado.</div>
+        <div class="example-row">
+          <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+          <div class="example-body">
+            <div class="example-es">Ganaron con un <strong>contragolpe</strong> de veinte segundos.</div>
+            <div class="example-en">They won with a twenty-second counter-attack.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="extra-block">
+    <div class="extra-title">Sin punto en la imagen · acciones relacionadas</div>
+
+    <div class="extra-item">
+      <div class="legend-term">el gol</div>
+      <div class="legend-gloss">the goal</div>
+      <div class="legend-note"><em>El golazo</em> es el gol extraordinario — el sufijo <em>-azo</em> hace todo el trabajo. <em>El autogol</em> es en contra; <em>el triplete</em> (o <em>el hat-trick</em>) son tres en un partido.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ese no fue un gol cualquiera: fue un <strong>golazo</strong>.</div>
+          <div class="example-en">That wasn't just any goal — it was a stunner.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="extra-item">
+      <div class="legend-term">el pase <span class="alt">· la asistencia</span></div>
+      <div class="legend-gloss">the pass · the assist</div>
+      <div class="legend-note"><em>La asistencia</em> es el pase que termina en gol; el resto son <em>pases</em>.</div>
+    </div>
+
+    <div class="extra-item">
+      <div class="legend-term">el tiro <span class="alt">· el remate · el disparo</span></div>
+      <div class="legend-gloss">the shot</div>
+      <div class="legend-note"><em>El remate</em> sugiere el golpe que cierra una jugada; <em>el disparo</em>, la potencia.</div>
+    </div>
+
+    <div class="extra-item">
+      <div class="legend-term">la falta</div>
+      <div class="legend-gloss">the foul</div>
+      <div class="legend-note">La causa detrás de casi todo el balón parado: una falta se cobra con <em>tiro libre</em>, o con <em>penal</em> si fue dentro del área.</div>
+    </div>
+  </div>
+
+  <!-- ══════════ LA ESTRUCTURA DEL PARTIDO ══════════ -->
+  <div class="section-head beta">
+    <div class="section-num">Estructura</div>
+    <div class="section-title">La estructura del partido</div>
+    <div class="section-sub">Las palabras que no se pueden fotografiar: el torneo que se angosta y el reloj que se parte.</div>
+  </div>
+
+  <div class="bracket">
+    <div class="bracket-row bw-100">
+      <div class="br-term">el torneo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el torneo">🔊</button></div>
+      <div class="br-gloss">the tournament</div>
+    </div>
+    <div class="bracket-row bw-88">
+      <div class="br-term">el Mundial · la Copa del Mundo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el Mundial, la Copa del Mundo">🔊</button></div>
+      <div class="br-gloss">the World Cup</div>
+    </div>
+    <div class="bracket-row bw-76">
+      <div class="br-term">la fase de grupos <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la fase de grupos">🔊</button></div>
+      <div class="br-gloss">the group stage</div>
+    </div>
+    <div class="bracket-row bw-64">
+      <div class="br-term">los octavos de final <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="los octavos de final">🔊</button></div>
+      <div class="br-gloss">the round of 16</div>
+    </div>
+    <div class="bracket-row bw-52">
+      <div class="br-term">los cuartos de final <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="los cuartos de final">🔊</button></div>
+      <div class="br-gloss">the quarter-finals</div>
+    </div>
+    <div class="bracket-row bw-40">
+      <div class="br-term">la semifinal <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la semifinal">🔊</button></div>
+      <div class="br-gloss">the semi-final</div>
+    </div>
+    <div class="bracket-row bw-40 final">
+      <div class="br-term">la final <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la final">🔊</button></div>
+      <div class="br-gloss">the final</div>
+    </div>
+  </div>
+
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong>Counting backwards from the end.</strong> Spanish names the knockout rounds by the fraction of the field still playing, not by the number of teams. <em>Los octavos de final</em> is the round of <em>eighths</em> — sixteen teams, eight ties — and <em>los cuartos</em>, the quarters. English switches systems halfway ("round of 16," then "quarter-finals"); Spanish stays consistent all the way down. One match is <em>el partido</em>, or more formally <em>el encuentro</em>.
+  </div>
+
+  <div class="timeline">
+    <div class="tl-strip">
+      <div class="tl-seg play"  style="flex: 45">1.º tiempo</div>
+      <div class="tl-seg pause" style="flex: 15">descanso</div>
+      <div class="tl-seg play"  style="flex: 45">2.º tiempo</div>
+      <div class="tl-seg extra" style="flex: 12">descuento</div>
+      <div class="tl-seg extra" style="flex: 20">prórroga</div>
+      <div class="tl-seg pens"  style="flex: 16">penales</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-term">el primer tiempo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el primer tiempo">🔊</button></div>
+      <div class="tl-gloss">the first half</div>
+      <div class="tl-note">Cuarenta y cinco minutos. Se escribe <em>1.º tiempo</em> o <em>primer tiempo</em>, nunca <em>primera mitad</em>.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-term">el medio tiempo <span class="alt">· el descanso</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el medio tiempo, el descanso">🔊</button></div>
+      <div class="tl-gloss">half-time</div>
+      <div class="tl-note">El intervalo. <em>El entretiempo</em> es la forma rioplatense y también se oye mucho.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-term">el segundo tiempo <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el segundo tiempo">🔊</button></div>
+      <div class="tl-gloss">the second half</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-term">el tiempo de descuento <span class="alt">· el tiempo adicionado</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="el tiempo de descuento">🔊</button></div>
+      <div class="tl-gloss">stoppage time, injury time</div>
+      <div class="tl-note">Los minutos que el árbitro devuelve al final de cada tiempo por las interrupciones. El nombre engaña: se llama <em>descuento</em> pero se suma.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Empataron en el <strong>tiempo de descuento</strong>.</div>
+          <div class="example-en">They equalised in stoppage time.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-term">la prórroga <span class="alt">· el tiempo extra</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la prórroga, el tiempo extra">🔊</button></div>
+      <div class="tl-gloss">extra time</div>
+      <div class="tl-note">Treinta minutos más cuando el partido no puede terminar empatado. <span class="reg-badge reg-rio">Rioplatense</span> <em>el alargue</em>.</div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-term">la tanda de penales <span class="alt">· los penales</span> <button class="speak-btn speak-inline" onclick="speakTerm(this)" data-tts="la tanda de penales">🔊</button></div>
+      <div class="tl-gloss">the penalty shoot-out</div>
+      <div class="tl-note">El último recurso. En la conversación basta con <em>los penales</em>: <em>fueron a los penales</em>.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La final se definió por <strong>penales</strong>.</div>
+          <div class="example-en">The final was decided on penalties.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════ VERBOS COMUNES ══════════ -->
+  <div class="section-head">
+    <div class="section-num">Verbos</div>
+    <div class="section-title">Verbos comunes</div>
+    <div class="section-sub">Todo lo anterior se pone en movimiento con estos.</div>
+  </div>
+
+  <div class="verb-grid">
+
+    <div class="verb-card">
+      <div class="verb-head">jugar</div>
+      <div class="verb-gloss">to play</div>
+      <div class="verb-note">Con deportes pide <em>a</em>: <em>jugar al fútbol</em>.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Argentina <strong>juega</strong> el domingo a las tres.</div>
+          <div class="example-en">Argentina play on Sunday at three.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card beta">
+      <div class="verb-head">marcar · anotar · hacer</div>
+      <div class="verb-gloss">to score</div>
+      <div class="verb-note"><span class="reg-badge reg-esp">España</span> <em>marcar</em> · <span class="reg-badge reg-latam">LatAm</span> <em>anotar, hacer</em> · <span class="reg-badge reg-rio">Rioplatense</span> <em>meterla, clavarla</em>. Ver la nota de abajo.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Anotó</strong> dos goles en el segundo tiempo.</div>
+          <div class="example-en">He scored twice in the second half.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card">
+      <div class="verb-head">pasar</div>
+      <div class="verb-gloss">to pass</div>
+      <div class="verb-note">También <em>dar un pase</em> y <em>habilitar</em> (dejar a un compañero en posición de convertir).</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le <strong>pasó</strong> la pelota al delantero.</div>
+          <div class="example-en">He passed the ball to the striker.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card gamma">
+      <div class="verb-head">patear · tirar · rematar</div>
+      <div class="verb-gloss">to kick, to shoot</div>
+      <div class="verb-note"><span class="reg-badge reg-esp">España</span> <em>chutar</em>. <em>Rematar</em> es el remate a portería; <em>patear</em>, el golpe sin más.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Pateó</strong> desde afuera del área.</div>
+          <div class="example-en">He shot from outside the box.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card">
+      <div class="verb-head">cabecear</div>
+      <div class="verb-gloss">to head (the ball)</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Cabeceó</strong> el centro y la mandó adentro.</div>
+          <div class="example-en">He headed the cross and put it in.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card beta">
+      <div class="verb-head">gambetear · regatear · driblear</div>
+      <div class="verb-gloss">to dribble past</div>
+      <div class="verb-note"><em>Gambetear</em> es la forma rioplatense; <em>regatear</em>, la peninsular. Ojo: fuera del fútbol, <em>regatear</em> es negociar el precio.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Gambeteó</strong> a dos y quedó solo frente al arquero.</div>
+          <div class="example-en">He dribbled past two and was left one-on-one with the keeper.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card">
+      <div class="verb-head">atajar · parar</div>
+      <div class="verb-gloss">to save</div>
+      <div class="verb-note"><em>Atajar</em> en Latinoamérica, <em>parar</em> en España.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Atajó</strong> tres pelotas imposibles.</div>
+          <div class="example-en">He saved three impossible shots.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card gamma">
+      <div class="verb-head">cometer una falta</div>
+      <div class="verb-gloss">to commit a foul</div>
+      <div class="verb-note">También <em>faltar</em> no sirve aquí: la falta se <em>comete</em> o se <em>hace</em>.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Cometió</strong> una falta dentro del área.</div>
+          <div class="example-en">He committed a foul inside the box.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card">
+      <div class="verb-head">expulsar</div>
+      <div class="verb-gloss">to send off</div>
+      <div class="verb-note">El par: <em>amonestar</em> (amarilla) y <em>expulsar</em> (roja).</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo <strong>expulsaron</strong> a los veinte minutos.</div>
+          <div class="example-en">He was sent off after twenty minutes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card beta">
+      <div class="verb-head">empatar · ganar · perder</div>
+      <div class="verb-gloss">to draw · to win · to lose</div>
+      <div class="verb-note">El sustantivo es <em>el empate</em>; <em>ir empatados</em> es estar igualados en ese momento.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Empataron</strong> uno a uno y el punto les alcanzó.</div>
+          <div class="example-en">They drew one-all and the point was enough for them.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card gamma">
+      <div class="verb-head">clasificar(se)</div>
+      <div class="verb-gloss">to qualify</div>
+      <div class="verb-note">La forma pronominal es la que se usa de verdad: <em>Argentina se clasificó</em>, no <em>Argentina clasificó</em> (aunque esta última se oye cada vez más).</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Se <strong>clasificaron</strong> para los cuartos de final.</div>
+          <div class="example-en">They qualified for the quarter-finals.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card">
+      <div class="verb-head">eliminar</div>
+      <div class="verb-gloss">to knock out</div>
+      <div class="verb-note">Casi siempre en pasiva refleja o con complemento: <em>quedaron eliminados</em>.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quedaron <strong>eliminados</strong> en la fase de grupos.</div>
+          <div class="example-en">They were knocked out in the group stage.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card beta">
+      <div class="verb-head">convocar</div>
+      <div class="verb-gloss">to call up (to the squad)</div>
+      <div class="verb-note">El sustantivo <em>la convocatoria</em> es la lista de convocados.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo <strong>convocaron</strong> a la selección por primera vez.</div>
+          <div class="example-en">He was called up to the national team for the first time.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card">
+      <div class="verb-head">debutar</div>
+      <div class="verb-gloss">to make one's debut</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Debutó</strong> a los diecisiete años.</div>
+          <div class="example-en">He made his debut at seventeen.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card gamma">
+      <div class="verb-head">dirigir</div>
+      <div class="verb-gloss">to manage, to coach</div>
+      <div class="verb-note">Lo que hace el DT. También lo que hace el árbitro con el partido: <em>dirigió la final</em>.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Dirigió</strong> al equipo durante seis temporadas.</div>
+          <div class="example-en">He managed the team for six seasons.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card">
+      <div class="verb-head">festejar · celebrar</div>
+      <div class="verb-gloss">to celebrate</div>
+      <div class="verb-note"><em>Festejar</em> es lo más común en Latinoamérica; <em>el festejo</em> es la celebración del gol.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Festejaron</strong> el gol frente a la hinchada.</div>
+          <div class="example-en">They celebrated the goal in front of their supporters.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="verb-card beta">
+      <div class="verb-head">alentar · animar</div>
+      <div class="verb-gloss">to cheer on, to support</div>
+      <div class="verb-note"><span class="reg-badge reg-rio">Rioplatense</span> <em>alentar</em> es lo que hace la hinchada los noventa minutos. Diptonga: <em>aliento, alienta</em>.</div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La hinchada <strong>alentó</strong> hasta el final.</div>
+          <div class="example-en">The supporters cheered them on until the very end.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nota">
+    <span class="nota-label">NOTA*</span>
+    <strong><em>Marcar</em> vs. <em>anotar</em> vs. <em>meter un gol</em>.</strong>
+    <p>Spanish has no single neutral verb for "to score" — the choice tells a listener where you learned the language.</p>
+    <ul>
+      <li><em>marcar (un gol)</em> — the Peninsular default. Understood everywhere, but sounds European in Latin America.</li>
+      <li><em>anotar</em> / <em>hacer (un gol)</em> — the Latin American standard, and the safest neutral choice for this site. <em>Hacer</em> is the plainest of all.</li>
+      <li><em>convertir</em> — a notch more formal; common in written match reports across the region.</li>
+      <li><em>meterla</em> / <em>clavarla</em> — Rioplatense and colloquial. Note the feminine <em>-la</em>: the pronoun stands in for <em>la pelota</em>, not for <em>el gol</em>. <em>Clavarla</em> is the more emphatic of the two — roughly "to bury it."</li>
+    </ul>
+    <p>The safe default for a learner writing or speaking neutrally: <em>anotar</em> or <em>hacer</em>. Save <em>meterla</em> for the bar.</p>
+  </div>
+
+  <!-- ══════════ GALERÍA DE MEMES ══════════ -->
+  <div class="section-head gamma">
+    <div class="section-num">Galería</div>
+    <div class="section-title">Galería de memes</div>
+    <div class="section-sub">El fútbol también se habla en imágenes.</div>
+  </div>
+
+  <div class="meme-stub">
+    <div class="meme-stub-icon">⚽</div>
+    <div class="meme-stub-text">
+      Esta sección está esperando su contenido. Cada meme llevará su imagen, un comentario breve
+      en español que explique de dónde sale el chiste, y —solo cuando haya algo de gramática o
+      un juego de palabras que valga la pena desarmar— una <em>NOTA</em> en inglés.
+    </div>
+    <div class="meme-grid"></div>
+  </div>
+
+  <div class="footnote">
+    Términos neutros primero; las variantes regionales van etiquetadas. El audio 🔊 de toda la
+    página suena en español neutro latinoamericano, incluso donde el texto muestra una forma
+    rioplatense.
+  </div>
+
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only
+//  Site-wide rule: neutral voice everywhere, including
+//  where Rioplatense text is displayed on the page.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakText(rawText, btn) {
+  if (!window.speechSynthesis) return;
+  const text = cleanForTTS(rawText);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+function speakExample(btn) {
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+  speakText(esEl.cloneNode(true).textContent, btn);
+}
+
+function speakTerm(btn) {
+  speakText(btn.getAttribute('data-tts') || '', btn);
+}
+
+// ═══════════════════════════════════════════════
+//  Pin ↔ legend linking
+//  Tapping a pin lights and scrolls to its legend row;
+//  tapping a legend number lights and scrolls to its pin.
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+
+  const clearLit = () => {
+    document.querySelectorAll('.pin.lit, .legend-row.lit')
+      .forEach(el => el.classList.remove('lit'));
+  };
+
+  const findRow = (scene, n) =>
+    document.querySelector('.legend[data-scene="' + scene + '"] .legend-row[data-n="' + n + '"]');
+
+  const findPin = (scene, n) =>
+    document.querySelector('.pin[data-scene="' + scene + '"][data-n="' + n + '"]');
+
+  // Pin → legend row
+  document.querySelectorAll('.pin').forEach(pin => {
+    const scene = pin.getAttribute('data-scene');
+    const n     = pin.getAttribute('data-n');
+
+    pin.addEventListener('mouseenter', () => {
+      const row = findRow(scene, n);
+      if (row) row.classList.add('lit');
+    });
+    pin.addEventListener('mouseleave', () => {
+      const row = findRow(scene, n);
+      if (row) row.classList.remove('lit');
+    });
+    pin.addEventListener('click', e => {
+      e.stopPropagation();
+      const row = findRow(scene, n);
+      if (!row) return;
+      clearLit();
+      pin.classList.add('lit');
+      row.classList.add('lit');
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  // Legend number → pin
+  document.querySelectorAll('.legend').forEach(legend => {
+    const scene = legend.getAttribute('data-scene');
+
+    legend.querySelectorAll('.legend-row').forEach(row => {
+      const n   = row.getAttribute('data-n');
+      const num = row.querySelector('.legend-num');
+      if (!num) return;
+
+      row.addEventListener('mouseenter', () => {
+        const pin = findPin(scene, n);
+        if (pin) pin.classList.add('lit');
+      });
+      row.addEventListener('mouseleave', () => {
+        const pin = findPin(scene, n);
+        if (pin) pin.classList.remove('lit');
+      });
+      num.addEventListener('click', e => {
+        e.stopPropagation();
+        const pin = findPin(scene, n);
+        if (!pin) return;
+        clearLit();
+        pin.classList.add('lit');
+        row.classList.add('lit');
+        pin.closest('.scene-figure').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    });
+  });
+
+  document.addEventListener('click', clearLit);
+});
+</script>
+
+</body>
+</html>

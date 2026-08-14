@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase del 12 de agosto de 2026 — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accents — violet and teal deliberately unused here so the
+     región chips (teal = Rioplatense, violet = España) stay unambiguous. */
+  --accent-alpha:   #4a90d9;  /* ① blue   */
+  --accent-gamma:   #fbbf24;  /* ② gold   */
+  --accent-epsilon: #f472b6;  /* ③ rose   */
+  --accent-zeta:    #34d399;  /* ④ green  */
+  --accent-eta:     #fb923c;  /* ⑤ orange */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/toledo-pic.webp') center/cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Contents strip ── */
+.contents {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 22px 0 18px;
+}
+.contents-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.contents-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.contents-list a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.84rem;
+  transition: all 0.2s;
+}
+.contents-list a:hover {
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.45);
+  background: rgba(74, 144, 217, 0.08);
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 8px 0 0 18px; }
+.nota li { margin-bottom: 5px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  scroll-margin-top: 16px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Sub-heading inside a card ── */
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 20px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.6);
+}
+
+/* ── Formula ── */
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+
+/* ── Example rows ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Región chips (textual only — audio is always neutral) ── */
+.rio-tag, .esp-tag, .neu-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.rio-tag { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.esp-tag { background: rgba(192, 132, 252, 0.14); color: #d0a8ff; }
+.neu-tag { background: rgba(138, 155, 184, 0.14); color: #a8b8d0; }
+
+/* ── Evitar / usar rows ── */
+.contrast {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.contrast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.contrast-item .mark {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  width: 16px;
+  text-align: center;
+}
+.contrast-item.bad  { border-left: 3px solid var(--red); }
+.contrast-item.good { border-left: 3px solid var(--green); }
+.contrast-item.bad  .mark { color: var(--red); }
+.contrast-item.good .mark { color: var(--green); }
+.contrast-item .txt { flex: 1; }
+.contrast-item .es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+}
+.contrast-item .gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Image triad (degrades gracefully if files are absent) ── */
+.triad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 16px 0 6px;
+}
+.triad figure {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.triad img {
+  width: 100%;
+  height: 132px;
+  object-fit: cover;
+  display: block;
+}
+.triad figcaption {
+  padding: 9px 10px 11px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+.triad figcaption strong {
+  display: block;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.08rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+/* ── Cross-link out to a full topic page ── */
+.topic-link {
+  display: block;
+  margin: 16px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-primary); }
+.topic-link strong { color: var(--text-primary); font-weight: 600; }
+.topic-link .arrow { color: var(--accent); font-weight: 600; }
+.topic-link.pending { border-left-color: var(--text-muted); background: rgba(138, 155, 184, 0.05); }
+.topic-link.pending .arrow { color: var(--text-muted); }
+
+/* ── Preguntas para la profe ── */
+.preguntas {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--yellow);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+}
+.preguntas h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.preguntas .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.preguntas ol { margin: 0 0 0 20px; }
+.preguntas li {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 0.93rem;
+  padding-left: 4px;
+}
+.preguntas li:last-child { margin-bottom: 0; }
+.preguntas li em { color: var(--accent); font-style: italic; }
+.preguntas li strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .grammar-card { padding: 20px 18px 18px; }
+  .preguntas { padding: 20px 18px; }
+  .card-header { gap: 10px; }
+  .card-number { font-size: 1.8rem; }
+  .triad { grid-template-columns: 1fr; gap: 10px; }
+  .triad img { height: 160px; }
+  .contents-list a { font-size: 0.8rem; padding: 5px 10px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Notas de Clase</div>
+    <h1>Clase del <em>12 de agosto</em> de 2026</h1>
+    <p class="subtitle">Entradas y pasajes · cómo hablar de mi nivel de español · la economía del lenguaje · preguntar en el parque · <em>llegar a ser</em>.</p>
+  </header>
+
+  <nav class="contents">
+    <div class="contents-label">Lo que vimos</div>
+    <div class="contents-list">
+      <a href="#s1">① Entradas, pasajes y billetes</a>
+      <a href="#s2">② Hablar de mi nivel</a>
+      <a href="#s3">③ La economía del lenguaje</a>
+      <a href="#s4">④ Preguntar en el parque</a>
+      <a href="#s5">⑤ Llegar a ser</a>
+      <a href="#preguntas">✎ Preguntas para la profe</a>
+    </div>
+  </nav>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ─────────────────────────── ① ─────────────────────────── -->
+  <article class="grammar-card card-alpha" id="s1">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Entradas, pasajes y <em>billetes</em></div>
+        <div class="card-title-en">Tickets, fares and banknotes</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Tres palabras para tres cosas distintas. <em>La entrada</em> sirve en todas partes: es el papel que me deja pasar a un espectáculo o a un lugar. <em>El pasaje</em> y <em>el boleto</em> son de transporte, y ahí sí cambia la región. Y <em>el billete</em> es la trampa: en España también significa <em>pasaje</em>, pero en la Argentina es solo dinero en papel.
+    </p>
+
+    <div class="triad">
+      <figure>
+        <img src="../../assets/clase-de-espanol/entrada.webp" alt="Una entrada de cine junto a la boletería de un teatro." onerror="this.closest('figure').style.display='none'">
+        <figcaption><strong>la entrada</strong>cine, teatro, museo, Ecoparque</figcaption>
+      </figure>
+      <figure>
+        <img src="../../assets/clase-de-espanol/pasaje-boleto.webp" alt="Un pasaje de micro y un boleto de colectivo sobre una mesa." onerror="this.closest('figure').style.display='none'">
+        <figcaption><strong>el pasaje · el boleto</strong>avión, micro, colectivo, subte</figcaption>
+      </figure>
+      <figure>
+        <img src="../../assets/clase-de-espanol/billete.webp" alt="Billetes y monedas de peso argentino." onerror="this.closest('figure').style.display='none'">
+        <figcaption><strong>el billete</strong>dinero en papel (y la moneda, en metal)</figcaption>
+      </figure>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Para…</th><th>España</th><th>Argentina</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>un espectáculo (cine, teatro, museo)</td><td><em>la entrada</em></td><td><em>la entrada</em></td></tr>
+          <tr><td>avión o larga distancia</td><td><em>el billete</em></td><td><em>el pasaje</em></td></tr>
+          <tr><td>colectivo, subte, tren urbano</td><td><em>el billete</em></td><td><em>el boleto</em></td></tr>
+          <tr><td>dinero en papel</td><td><em>el billete</em></td><td><em>el billete</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p>The split is <strong>transport-only</strong>. <em>Entrada</em> is not a regional variant — Spain says <em>entrada</em> for the cinema exactly like Argentina does, so there's nothing to unlearn there.</p>
+      <p>The word that actually collides is <strong><em>billete</em></strong>. In Spain it covers both the travel ticket and the banknote; in Argentina it only ever means the banknote. Asking for <em>un billete a Córdoba</em> in Buenos Aires is the single clearest tell that you learned your Spanish in Spain.</p>
+    </div>
+
+    <div class="sub-head">Dónde se compran</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Dónde está la <strong>boletería</strong>?</div>
+          <div class="example-en"><span class="neu-tag">Lat. Am.</span> Where's the ticket office?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Dónde está la <strong>taquilla</strong>?</div>
+          <div class="example-en"><span class="esp-tag">España</span> Same question, Spanish word.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ya <strong>saqué</strong> las entradas por internet.</div>
+          <div class="example-en">I already got the tickets online. <em>— sacar is the everyday verb here, not comprar.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo que <strong>sacar</strong> un pasaje a Bariloche.</div>
+          <div class="example-en">I need to book a ticket to Bariloche.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Lo que pago: factura, recibo, boleta, cuenta</div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Palabra</th><th>Qué es</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><em>la factura</em></td><td>El documento que me <strong>cobran</strong>, con el detalle de lo comprado.</td></tr>
+          <tr><td><em>el recibo</em></td><td>El comprobante de que <strong>ya pagué</strong>. Va después, no antes.</td></tr>
+          <tr><td><em>la boleta</em></td><td>En la Argentina, la de un servicio: <em>la boleta de luz, de gas, de agua</em>.</td></tr>
+          <tr><td><em>la cuenta</em></td><td>La del restaurante: <em>La cuenta, por favor.</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Todavía no llegó la <strong>boleta</strong> de la luz.</div>
+          <div class="example-en">The electricity bill hasn't come yet.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Compramos una docena de <strong>facturas</strong> para el desayuno.</div>
+          <div class="example-en">We bought a dozen pastries for breakfast.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>The <em>factura</em> pun.</strong> In Argentina <em>las facturas</em> are also the pastries from the panadería — <em>medialunas</em> (de manteca or de grasa), <em>vigilantes</em>, <em>bolas de fraile</em>, <em>cañoncitos</em>, <em>libritos</em>. You buy them by the <em>docena</em> or <em>media docena</em>. Churros are a familiar reference point from Spain but they're generally their own category, sold at a churrería rather than counted among the <em>facturas</em>. So <em>pagar una factura</em> and <em>comer una factura</em> are two completely different afternoons.
+    </div>
+
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> «Entradas, pasajes y facturas» en Vocabulario → Sustantivos — con la variación regional completa, los verbos y los dobles sentidos. <em>(Por construir.)</em>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ② ─────────────────────────── -->
+  <article class="grammar-card card-gamma" id="s2">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Hablar de mi <em>nivel</em> de español</div>
+        <div class="card-title-en">Telling a native you're still learning</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      El objetivo real de estas frases no es disculparse: es <strong>conseguir que el otro siga hablándome en español</strong>. Por eso conviene decir poco, decirlo bien y terminar con un pedido concreto.
+    </p>
+
+    <div class="contrast">
+      <div class="contrast-item bad">
+        <div class="mark">✕</div>
+        <div class="txt">
+          <div class="es">Mi español es malo. / Mi español no es bueno.</div>
+          <div class="gloss">Traducción literal de «my Spanish is bad». Se entiende, pero nadie lo dice.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">Hablo poco español. / No hablo muy bien español.</div>
+          <div class="gloss">El español describe la actividad, no la cosa.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>English nominalizes; Spanish verbalizes.</strong> "My Spanish is bad" turns the language into an object you possess and then rates that object. Spanish goes at the same idea through the <em>verb</em>: you don't have bad Spanish, you <em>speak</em> a little, or you don't <em>speak</em> it well. The fix is almost mechanical — find the noun-plus-adjective and rewrite it as a verb plus an adverb.</p>
+      <p>This generalizes well beyond this sentence. <em>Mi memoria es mala</em> → <em>me olvido de todo</em>. <em>Mi cocina es terrible</em> → <em>cocino muy mal</em>. When a sentence feels like it came out of English intact, the noun is usually where it went wrong.</p>
+    </div>
+
+    <div class="sub-head">La escalera, de menos a más</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hablo <strong>un poco de</strong> español.</div>
+          <div class="example-en">I speak a little Spanish. <em>— positive framing: I have some.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hablo <strong>poco</strong> español.</div>
+          <div class="example-en">I don't speak much Spanish. <em>— modest framing: I don't have much. Drop the de and the meaning tilts.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No hablo <strong>muy bien</strong> español.</div>
+          <div class="example-en">I don't speak Spanish very well. <em>— the safest all-purpose line.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hablo <strong>muy mal</strong> español.</div>
+          <div class="example-en">I speak Spanish very badly. <em>— blunt, self-deprecating; fine among friends.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Estoy estudiando</strong> español.</div>
+          <div class="example-en">I'm studying Spanish. <em>— reframes it as work in progress instead of a deficit.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La frase completa — la que sirve en el momento</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Puede</strong> hablarme en español, por favor? Estoy estudiando hace un año y medio.</div>
+          <div class="example-en"><span class="neu-tag">Neutro</span> Could you speak to me in Spanish, please? I've been studying for a year and a half.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Podés</strong> hablarme en español, por favor? Estoy estudiando hace un año y medio.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Her actual words. <em>Voseo: podés, not puedes.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong><em>Estudiar</em>, not <em>aprender</em>.</strong> Both are grammatical, but they frame you differently. Her example: her seven-year-old niece would say <em>estoy aprendiendo español</em> — because a child absorbs the language she's living in. An adult who has deliberately taken a language up as a subject says <em>estudio español</em>, the same verb as <em>estudio medicina</em>.</p>
+      <p><em>Aprender</em> presents you as acquiring; <em>estudiar</em> presents you as doing the work. Since the whole point of the sentence is to be taken seriously enough that the other person keeps speaking Spanish to you, <em>estudiar</em> is the one that earns it.</p>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>Estoy estudiando <strong>hace</strong> un año y medio</em> — in Río de la Plata usage, bare <em>hace</em> covers duration up to now with no <em>desde</em>: <em>vivo acá hace tres años</em>. The fuller neutral form is <em>desde hace un año y medio</em>. Both are correct; hers is what you'll hear in Buenos Aires.
+    </div>
+
+    <a class="topic-link" href="../desde-hace-y-construcciones-de-tiempo.html">
+      <span class="arrow">→</span> <strong>Desde, hace y construcciones de tiempo</strong> — el sistema completo.
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ③ ─────────────────────────── -->
+  <article class="grammar-card card-epsilon" id="s3">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">La <em>economía</em> del lenguaje</div>
+        <div class="card-title-en">Say it in one word</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      En español conviene decir lo mínimo. Si quiero saber si los carpinchos muerden, la pregunta entera es <em>¿muerden?</em>. Agregarle <em>poder</em> no la hace más cortés: la convierte en otra pregunta.
+    </p>
+
+    <div class="contrast">
+      <div class="contrast-item bad">
+        <div class="mark">✕</div>
+        <div class="txt">
+          <div class="es">¿Pueden morder los carpinchos?</div>
+          <div class="gloss">«Are they capable of biting?» — una pregunta de zoología.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">¿Muerden?</div>
+          <div class="gloss">Lo que realmente quiero saber.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      <em>Poder</em> tiene su lugar, y es un lugar preciso: <strong>permiso</strong> y <strong>capacidad</strong>. Cuando pregunto si algo está permitido, <em>poder</em> es exactamente el verbo correcto.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Se puede</strong> sacar fotos?</div>
+          <div class="example-en">Are photos allowed? <em>— permiso: correct use of poder.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Se puede</strong> darles de comer?</div>
+          <div class="example-en">Can we feed them? <em>— also permiso.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La salida de emergencia: colgar el infinitivo</div>
+    <p class="explanation">
+      Cuando la conjugación no sale en el momento, hay un truco: usar un verbo que sí tengo automático y colgarle el infinitivo que sí conozco. <em>Soler</em> es el que ella ofreció, pero la familia es más grande.
+    </p>
+
+    <code class="formula">soler · poder · ir a · tener que · querer · acabar de  +  INFINITIVO</code>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Suelen</strong> morder?</div>
+          <div class="example-en">Do they usually bite? <em>— correct, understood, and slightly off-target: it asks about habit.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Suelo</strong> venir los domingos.</div>
+          <div class="example-en">I usually come on Sundays. <em>— soler on its own merits, not as a workaround.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>The escape hatch works — but know what it costs.</strong> Each auxiliary drags its own meaning along. <em>¿Suelen morder?</em> asks about habit, <em>¿Pueden morder?</em> about capacity. Both land, neither is the question. It beats freezing, and it beats blurting a bare infinitive — but it's a bridge, not a destination.</p>
+      <p><strong>And the deeper fix:</strong> the verbs you reached for are built the same way as the verb you couldn't retrieve. <em>Poder</em>, <em>soler</em> and <em>morder</em> are all <code>o → ue</code> stem-changers, and they move in lockstep:</p>
+      <ul>
+        <li><em>puedo · suelo · <strong>muerdo</strong></em></li>
+        <li><em>pueden · suelen · <strong>muerden</strong></em></li>
+      </ul>
+      <p>You already conjugate that pattern without thinking — <em>morder</em> just wasn't filed under it. Store <em>muerden</em> next to <em>pueden</em> and the whole family gets cheaper: <em>doler, volver, contar, costar, recordar, dormir, encontrar</em>. Same machinery, one storage slot.</p>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      In Argentina the animal is <strong><em>un carpincho</em></strong>, not <em>un capibara</em>. <em>Capibara</em> is the technical/pan-Hispanic term; nobody at the Ecoparque will use it.
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ④ ─────────────────────────── -->
+  <article class="grammar-card card-zeta" id="s4">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Preguntar en el <em>parque</em></div>
+        <div class="card-title-en">Role-play — the Ecoparque</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Las preguntas que realmente sirven en la entrada de un parque. Cortas, directas, sin armar la oración entera antes de abrir la boca.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿A qué hora <strong>abren</strong>? ¿Y a qué hora <strong>cierran</strong>?</div>
+          <div class="example-en">What time do you open? And close?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Cuánto</strong> cuesta la entrada?</div>
+          <div class="example-en">How much is admission?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Dónde</strong> están los carpinchos?</div>
+          <div class="example-en">Where are the capybaras?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Cuál</strong> es la mejor hora para verlos?</div>
+          <div class="example-en">What's the best time to see them?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Cuánto</strong> tarda el recorrido?</div>
+          <div class="example-en">How long does the circuit take?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Hay <strong>descuento</strong> para jubilados?</div>
+          <div class="example-en">Is there a discount for seniors?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Por <strong>dónde</strong> se entra?</div>
+          <div class="example-en">Which way is the entrance?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Resumen de los interrogativos</div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Palabra</th><th>¿Flexiona?</th><th>Nota</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><em>qué</em></td><td>No</td><td>Va directo con sustantivo: <em>¿qué hora?, ¿qué animal?</em></td></tr>
+          <tr><td><em>cuál / cuáles</em></td><td>Número</td><td>Elige dentro de un conjunto. Normalmente <strong>sin</strong> sustantivo detrás.</td></tr>
+          <tr><td><em>quién / quiénes</em></td><td>Número</td><td>Solo personas.</td></tr>
+          <tr><td><em>cuánto / cuánta / cuántos / cuántas</em></td><td>Género y número</td><td>Concuerda: <em>¿cuántas entradas?, ¿cuánto tiempo?</em></td></tr>
+          <tr><td><em>cómo · cuándo · dónde · por qué</em></td><td>No</td><td>Invariables. <em>Adónde</em> agrega movimiento.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong><em>Cuál</em> vs <em>qué</em> with <em>ser</em>.</strong> This is the one that trips English speakers, because English uses "what" for both. The split isn't about the noun — it's about what you're asking for:</p>
+      <ul>
+        <li><em>¿<strong>Cuál</strong> es tu nombre?</em> — pick one out of the set of possible names. <strong>Not</strong> <em>¿qué es tu nombre?</em></li>
+        <li><em>¿<strong>Cuál</strong> es el problema?</em> · <em>¿<strong>Cuál</strong> es la mejor hora?</em> — same: select from a range.</li>
+        <li><em>¿<strong>Qué</strong> es un carpincho?</em> — asking for a <strong>definition</strong>. Here <em>qué</em> is right and <em>cuál</em> would be wrong.</li>
+      </ul>
+      <p>Rule of thumb: <em>qué + ser</em> asks <strong>what kind of thing is this</strong>; <em>cuál + ser</em> asks <strong>which one</strong>. Note this reverses in front of a noun, where <em>qué</em> takes over: <em>¿qué hora es?</em>, never <em>¿cuál hora es?</em></p>
+    </div>
+
+    <a class="topic-link" href="../formacion-de-preguntas.html">
+      <span class="arrow">→</span> <strong>Formación de Preguntas</strong> — el tratamiento completo: inversión, entonación, preguntas indirectas.
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ⑤ ─────────────────────────── -->
+  <article class="grammar-card card-eta" id="s5">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title"><em>Llegar a ser</em></div>
+        <div class="card-title-en">The change verb I forget I have</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Uno de los <strong>verbos de cambio</strong>, y el que menos me sale. <em>Llegar a ser</em> marca una <strong>culminación</strong>: el punto final de un trayecto que llevó tiempo y esfuerzo. No es simplemente «volverse» algo; es <em>llegar</em> a serlo.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Llegó a ser</strong> director del hospital.</div>
+          <div class="example-en">He rose to become hospital director. <em>— endpoint of a long climb.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Con el tiempo <strong>llegamos a ser</strong> muy amigos.</div>
+          <div class="example-en">Over time we became close friends.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Nunca <strong>llegó a ser</strong> famoso fuera del país.</div>
+          <div class="example-en">He never made it to famous outside the country. <em>— the negative is very common: a trajectory that fell short.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Where it sits among the change verbs.</strong> Spanish splits "become" across half a dozen verbs, and each one encodes <em>how</em> the change happened:</p>
+      <ul>
+        <li><em>ponerse</em> — a passing state, usually physical or emotional: <em>se puso rojo</em>.</li>
+        <li><em>volverse</em> — a lasting change that happened <em>to</em> you: <em>se volvió desconfiado</em>.</li>
+        <li><em>hacerse</em> — gradual, and usually chosen: <em>se hizo médico</em>.</li>
+        <li><em>quedarse</em> — the state you're left in after something: <em>se quedó sordo</em>.</li>
+        <li><em>convertirse en</em> — a full transformation into another category: <em>se convirtió en un símbolo</em>.</li>
+        <li><em>llegar a ser</em> — the summit of a climb: <em>llegó a ser jefe de servicio</em>.</li>
+      </ul>
+      <p>The pair worth holding onto is <em>hacerse</em> vs <em>llegar a ser</em>. <em>Se hizo médico</em> reports the change — he trained, now he's a doctor. <em>Llegó a ser jefe de servicio</em> reports the <strong>arrival</strong> — there was a distance to cover, and he covered it.</p>
+    </div>
+
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> «Verbos de cambio» en Gramática → Estructuras y patrones. <em>(Por construir.)</em>
+    </div>
+  </article>
+
+  <!-- ───────────────────── Preguntas para la profe ───────────────────── -->
+  <section class="preguntas" id="preguntas">
+    <h2>Preguntas para la profe</h2>
+    <div class="sub">Lo que quedó sin resolver — para la próxima clase</div>
+    <ol>
+      <li>¿<em>Pasaje</em> se usa también para el <strong>tren</strong> de larga distancia, o ahí también se dice <em>boleto</em>? ¿Dónde está exactamente la frontera entre los dos?</li>
+      <li>En Buenos Aires, ¿se dice más <em>la boleta de luz</em> o <em>la factura de luz</em>? ¿Son intercambiables o hay una diferencia de registro?</li>
+      <li>Con la <strong>SUBE</strong>, ¿todavía se dice <em>sacar un boleto</em>, o ya se usa otra expresión para pagar el colectivo?</li>
+    </ol>
+  </section>
+
+  <div class="page-footer">Clase del 12 de agosto de 2026 · Mi Proyecto Español</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only.
+//  data-region="rioplatense" rows are textual
+//  flags only; audio stays neutral site-wide.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Image triad — hide the whole block if none of
+//  the three files are present yet.
+// ═══════════════════════════════════════════════
+window.addEventListener('load', () => {
+  document.querySelectorAll('.triad').forEach(triad => {
+    const visible = Array.from(triad.querySelectorAll('figure'))
+      .filter(f => f.style.display !== 'none');
+    if (visible.length === 0) triad.style.display = 'none';
+  });
+});
+</script>
+</body>
+</html>

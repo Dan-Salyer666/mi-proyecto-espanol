@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entradas, Pasajes y Facturas — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  --accent-alpha:   #4a90d9;  /* ① blue   */
+  --accent-beta:    #c084fc;  /* ② violet */
+  --accent-gamma:   #fbbf24;  /* ③ gold   */
+  --accent-delta:   #4ecdc4;  /* ④ teal   */
+  --accent-epsilon: #f472b6;  /* ⑤ rose   */
+  --accent-zeta:    #34d399;  /* ⑥ green  */
+  --accent-eta:     #fb923c;  /* ⑦ orange */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../assets/los fondos/cadaquez.webp') center/cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.cheat-badge {
+  position: absolute;
+  top: 18px;
+  right: 0;
+  padding: 6px 14px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  color: #fcd34d;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cheat-badge:hover { background: rgba(251, 191, 36, 0.2); border-color: rgba(251, 191, 36, 0.6); }
+
+.intro {
+  max-width: 700px;
+  margin: 2px auto 6px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  text-align: center;
+  font-size: 0.98rem;
+}
+.intro em { color: var(--accent); font-style: italic; }
+.intro strong { color: var(--text-primary); font-weight: 600; }
+
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 20px 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 8px 0 0 18px; }
+.nota li { margin-bottom: 5px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha    { border-left-color: var(--accent-alpha); }
+.card-beta     { border-left-color: var(--accent-beta); }
+.card-gamma    { border-left-color: var(--accent-gamma); }
+.card-delta    { border-left-color: var(--accent-delta); }
+.card-epsilon  { border-left-color: var(--accent-epsilon); }
+.card-zeta     { border-left-color: var(--accent-zeta); }
+.card-eta      { border-left-color: var(--accent-eta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Card image (click to magnify) ── */
+.card-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 78px;
+}
+.card-icon img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transform-origin: right center;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.card-icon img.magnified {
+  transform: scale(3.2);
+  z-index: 60;
+  cursor: zoom-out;
+  box-shadow: -10px 10px 30px rgba(0,0,0,0.6);
+  border-color: var(--accent);
+}
+
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 20px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.6);
+}
+
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+
+/* ── Examples ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Región chips ── */
+.rio-tag, .esp-tag, .mx-tag, .neu-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.rio-tag { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.esp-tag { background: rgba(192, 132, 252, 0.14); color: #d0a8ff; }
+.mx-tag  { background: rgba(251, 146, 60, 0.14);  color: #fdba74; }
+.neu-tag { background: rgba(138, 155, 184, 0.14); color: #a8b8d0; }
+
+/* ── Word list ── */
+.wordlist { display: grid; gap: 10px; margin: 12px 0 4px; }
+.word-item {
+  padding: 12px 15px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+}
+.word-item .w {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--text-primary);
+}
+.word-item .d {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 3px;
+  line-height: 1.55;
+}
+.word-item .d strong { color: var(--text-primary); font-weight: 600; }
+.word-item .d em { color: var(--accent); font-style: italic; }
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td strong { color: var(--text-primary); font-weight: 600; }
+.table-wrapper td .hi { color: var(--yellow); font-weight: 600; }
+
+/* ── Cross-link ── */
+.topic-link {
+  display: block;
+  margin: 16px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-primary); }
+.topic-link strong { color: var(--text-primary); font-weight: 600; }
+.topic-link .arrow { color: var(--accent); font-weight: 600; }
+
+/* ── Guía Rápida modal ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 10, 20, 0.82);
+  z-index: 200;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+.modal-overlay.active { display: flex; align-items: flex-start; justify-content: center; }
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  max-width: 720px;
+  width: 100%;
+  margin: auto;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 26px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-style: italic;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  transition: color 0.2s;
+}
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 22px 26px 26px; overflow-y: auto; flex-grow: 1; }
+.modal-body > p { color: var(--text-secondary); margin-bottom: 14px; line-height: 1.6; font-size: 0.92rem; }
+.modal-body > p em { color: var(--accent); font-style: italic; }
+
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .grammar-card { padding: 20px 18px 18px; }
+  .cheat-badge { position: static; display: inline-block; margin-top: 14px; }
+  .card-header { flex-direction: column-reverse; align-items: stretch; }
+  .card-icon {
+    justify-content: center;
+    height: auto;
+    max-height: 160px;
+    margin-bottom: 10px;
+  }
+  .card-icon img {
+    height: auto;
+    max-height: 160px;
+    width: 100%;
+    object-fit: cover;
+    transform-origin: center center;
+  }
+  .card-icon img.magnified { transform: scale(1.4); }
+  .card-number { font-size: 1.8rem; }
+  .modal-header { padding: 16px 18px 12px; }
+  .modal-body { padding: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Vocabulario</div>
+    <h1>Entradas, <em>Pasajes</em> y Facturas</h1>
+    <p class="subtitle">El papelito que prueba una transacción — y las muchas maneras en que el español lo divide, según la región y según el tipo de operación.</p>
+    <button class="cheat-badge" onclick="openCheat()">⚡ Guía Rápida</button>
+  </header>
+
+  <p class="intro">
+    Casi todas las palabras de esta página nombran <strong>lo mismo</strong>: un papel que certifica que pagué algo. Lo interesante es dónde traza cada variedad del español sus fronteras. Una divide por <em>tipo de transacción</em> — entrar a un lugar no es lo mismo que viajar. Otra divide por <em>región</em>: lo que en Madrid es un <em>billete</em>, en Buenos Aires es un <em>pasaje</em>, y el mismo <em>billete</em> allá es dinero. Y algunas palabras se estiran tanto que terminan nombrando cosas sin relación: <em>facturas</em> que se pagan y <em>facturas</em> que se comen.
+  </p>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ① -->
+  <article class="grammar-card card-alpha">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">La <em>entrada</em></div>
+        <div class="card-title-en">Admission — the word that doesn't vary</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/clase-de-espanol/entrada.webp" alt="La boletería iluminada de un teatro, con entradas sobre el mostrador." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+
+    <p class="explanation">
+      Para entrar a un espectáculo o a un lugar que cobra acceso, la palabra es <em>la entrada</em>, y lo es en todo el mundo hispanohablante. Aquí no hay variación que aprender: Madrid, Buenos Aires, Ciudad de México y Bogotá dicen lo mismo. Toda la variación regional de esta página vive en el <strong>transporte</strong>, no en los espectáculos.
+    </p>
+
+    <code class="formula">la entrada <strong>a</strong> + lugar   ·   la entrada <strong>para</strong> + evento</code>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <strong>entrada</strong> al Ecoparque es gratuita.</div>
+          <div class="example-en">Admission to the Ecoparque is free.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Compramos dos <strong>entradas para</strong> el concierto del sábado.</div>
+          <div class="example-en">We bought two tickets for Saturday's concert.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Las <strong>entradas</strong> para el partido están <strong>agotadas</strong>.</div>
+          <div class="example-en">Tickets for the match are sold out.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El vocabulario que la rodea</div>
+    <div class="wordlist">
+      <div class="word-item">
+        <div class="w">la entrada anticipada</div>
+        <div class="d">La que se compra antes, casi siempre más barata. Lo contrario: <em>en puerta</em> o <em>en boletería</em>.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">la media entrada</div>
+        <div class="d"><span class="rio-tag">Rioplatense</span> Precio reducido para estudiantes y jubilados. En otros países se dice simplemente <em>entrada con descuento</em>.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">entrada libre · entrada gratuita</div>
+        <div class="d">Sin cobro. <em>Libre</em> puede significar además que no hace falta reservar.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">la platea · el palco · la butaca · la fila</div>
+        <div class="d">Dónde me siento: la <strong>platea</strong> es el nivel bajo, el <strong>palco</strong> es el balcón privado, la <strong>butaca</strong> es el asiento y la <strong>fila</strong> es la hilera.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">la entrada general</div>
+        <div class="d">Sin asiento asignado — de pie o por orden de llegada.</div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ② -->
+  <article class="grammar-card card-beta">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">El <em>pasaje</em> y el <em>boleto</em></div>
+        <div class="card-title-en">Travel — where the map splits</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/clase-de-espanol/pasaje-boleto.webp" alt="Un pasaje de micro y una tarjeta SUBE sobre el asiento de un colectivo." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+
+    <p class="explanation">
+      En la Argentina las dos palabras se reparten el trabajo según la <strong>distancia</strong>. <em>El pasaje</em> es para viajes largos — avión, micro de larga distancia, barco. <em>El boleto</em> es para el transporte urbano — colectivo, subte, tren de cercanías. México usa <em>boleto</em> para todo, incluido el avión. Colombia y buena parte de Centroamérica prefieren <em>tiquete</em>.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Viaje</th><th>Argentina</th><th>España</th><th>México</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>avión</td><td><em>el pasaje</em></td><td><em>el billete</em></td><td><em>el boleto</em></td></tr>
+          <tr><td>micro / autobús de larga distancia</td><td><em>el pasaje</em></td><td><em>el billete</em></td><td><em>el boleto</em></td></tr>
+          <tr><td>colectivo / autobús urbano</td><td><em>el boleto</em></td><td><em>el billete</em></td><td><em>el boleto</em></td></tr>
+          <tr><td>subte / metro</td><td><em>el boleto</em></td><td><em>el billete</em></td><td><em>el boleto</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Saqué un <strong>pasaje</strong> de ida y vuelta a Mendoza.</div>
+          <div class="example-en">I booked a round-trip ticket to Mendoza. <em>— de ida y vuelta; one-way is de ida or solo ida.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <strong>boleto</strong> de colectivo subió otra vez.</div>
+          <div class="example-en">The bus fare went up again.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Los <strong>pasajeros</strong> ya están subiendo al micro.</div>
+          <div class="example-en">The passengers are already boarding the coach. <em>— el pasaje travels, el pasajero is who travels.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>The vehicles have their own names too</strong>, and mixing these up is as noticeable as mixing up the ticket words. In Buenos Aires:</p>
+      <ul>
+        <li><em>el colectivo</em> — the city bus. Also <em>el bondi</em>, informally.</li>
+        <li><em>el micro</em> (or <em>el ómnibus</em>) — the long-distance coach.</li>
+        <li><em>el subte</em> — the underground. Not <em>el metro</em>, which is Madrid and Mexico City.</li>
+      </ul>
+      <p>So the pairing is <em>boleto de colectivo</em> and <em>pasaje de micro</em> — the ticket word and the vehicle word travel together.</p>
+    </div>
+  </article>
+
+  <!-- ③ -->
+  <article class="grammar-card card-gamma">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">El <em>billete</em>: la trampa</div>
+        <div class="card-title-en">The false friend inside Spanish</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/clase-de-espanol/billete.webp" alt="Billetes y monedas argentinas sobre la mesa de un café." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+
+    <p class="explanation">
+      Esta es la palabra que hay que vigilar. En España, <em>el billete</em> es el pasaje: <em>un billete de tren, un billete de avión</em>. En Latinoamérica, <em>el billete</em> es <strong>solamente</strong> el dinero en papel. Pedir <em>un billete a Córdoba</em> en Buenos Aires no se malinterpreta — se entiende perfectamente de dónde viene quien lo dice.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Solo tengo un <strong>billete</strong> de mil pesos, ¿tenés cambio?</div>
+          <div class="example-en">I've only got a thousand-peso note — have you got change?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <strong>billete</strong> es de papel; la <strong>moneda</strong>, de metal.</div>
+          <div class="example-en">Notes are paper; coins are metal.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="esp-tag">España</span> Saqué un <strong>billete</strong> de ida y vuelta a Sevilla.</div>
+          <div class="example-en">Same sentence, Spanish word — in Argentina this would be <em>un pasaje</em>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>Why this one is worth extra care.</strong> Most regional variation is harmless — say <em>boleto</em> in Madrid and you'll be understood with a shrug. But <em>billete</em> is different because both meanings are <strong>live in both places</strong>: Spaniards also use <em>billete</em> for banknotes, so the word never sounds foreign, it just quietly means the other thing.</p>
+      <p>The clean way to hold it: <strong><em>billete</em> always means banknote everywhere. In Spain it means one additional thing.</strong> Learn the smaller, universal meaning as the default and you can't go wrong in either country.</p>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Two related money words worth having on the trip. Change you get back from a purchase is <em>el vuelto</em> in Latin America and <em>el cambio</em> or <em>las vueltas</em> in Spain — but <em>el cambio</em> also means small denominations and currency exchange in both. And <em>un billete chico</em> is a small-denomination note, which is what you'll actually be hunting for in Buenos Aires.
+    </div>
+  </article>
+
+  <!-- ④ -->
+  <article class="grammar-card card-delta">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Dónde se compran y con qué <em>verbo</em></div>
+        <div class="card-title-en">The window, and what you do at it</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      El lugar donde se venden tiene dos nombres regionales y uno neutro. <em>La boletería</em> es latinoamericana, <em>la taquilla</em> es española, y <em>la ventanilla</em> — la ventana misma del mostrador — funciona en todas partes y saca del apuro cuando no me acuerdo de cuál toca.
+    </p>
+
+    <div class="wordlist">
+      <div class="word-item">
+        <div class="w">la boletería</div>
+        <div class="d"><span class="neu-tag">Lat. Am.</span> La del cine, el teatro, la estación. Una sola <em>r</em>: bo-le-te-<strong>rí</strong>-a.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">la taquilla</div>
+        <div class="d"><span class="esp-tag">España</span> El mismo lugar. Además, la recaudación de una película (<em>un éxito de taquilla</em>) y el armario del gimnasio o del colegio.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">la ventanilla</div>
+        <div class="d">La ventana del mostrador, en cualquier país. <em>Comprar en ventanilla</em> se opone a comprar por internet.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">la tarjeta SUBE</div>
+        <div class="d"><span class="rio-tag">Rioplatense</span> La tarjeta recargable del transporte en Buenos Aires. Se <em>carga</em> y se <em>apoya</em> en el lector al subir.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">el abono</div>
+        <div class="d">El pase por varios viajes o varias funciones — de temporada, mensual, semanal.</div>
+      </div>
+    </div>
+
+    <div class="sub-head">Los verbos</div>
+    <code class="formula">sacar · comprar · reservar · retirar · canjear · cargar</code>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Dónde <strong>saco</strong> las entradas?</div>
+          <div class="example-en">Where do I get the tickets? <em>— sacar is the everyday verb; comprar is never wrong but sounds flatter.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Reservé</strong> por internet y las <strong>retiro</strong> en la boletería.</div>
+          <div class="example-en">I booked online and I pick them up at the box office.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Puedo <strong>canjear</strong> este código por una entrada?</div>
+          <div class="example-en">Can I redeem this code for a ticket?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo que <strong>cargar</strong> la SUBE antes de salir.</div>
+          <div class="example-en">I need to top up the SUBE before heading out.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿<strong>Quedan</strong> entradas para la función de las ocho?</div>
+          <div class="example-en">Are there tickets left for the eight o'clock show?</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ⑤ -->
+  <article class="grammar-card card-epsilon">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Lo que pago: <em>factura</em>, recibo, boleta, cuenta</div>
+        <div class="card-title-en">Bills, invoices and receipts</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/entradas-pasajes/factura-boleta.webp" alt="Una boleta de servicios y un ticket de compra sobre un escritorio." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+
+    <p class="explanation">
+      Estas cuatro no son sinónimos: marcan <strong>momentos distintos</strong> de una misma operación. Primero llega lo que me cobran, después queda la prueba de que pagué.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Palabra</th><th>Cuándo aparece</th><th>Qué es</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><em>la factura</em></td><td><span class="hi">antes</span> de pagar</td><td>El documento detallado de lo que se debe. En la Argentina es además un comprobante fiscal (<em>factura A, B, C</em>).</td></tr>
+          <tr><td><em>la boleta</em></td><td><span class="hi">antes</span> de pagar</td><td>La de un servicio: <em>la boleta de luz, de gas, de agua</em>. En Chile, en cambio, es el comprobante de una compra.</td></tr>
+          <tr><td><em>la cuenta</em></td><td><span class="hi">antes</span> de pagar</td><td>Lo que se pide en un restaurante o un bar.</td></tr>
+          <tr><td><em>el recibo</em></td><td><span class="hi">después</span> de pagar</td><td>La prueba de que ya pagué. En la Argentina, <em>el recibo de sueldo</em> es la liquidación mensual.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <strong>cuenta</strong>, por favor.</div>
+          <div class="example-en">The bill, please. <em>— the single most useful phrase on this page.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me da la <strong>factura</strong>, por favor?</div>
+          <div class="example-en">Could I have the invoice, please?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Guardá el <strong>recibo</strong> por si hay que reclamar.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span> Keep the receipt in case you need to complain. <em>Neutral: guarda el recibo.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Todavía no llegó la <strong>boleta</strong> del gas.</div>
+          <div class="example-en">The gas bill hasn't arrived yet.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Dos palabras más del mostrador</div>
+    <div class="wordlist">
+      <div class="word-item">
+        <div class="w">el ticket · el tique</div>
+        <div class="d">El papelito de la caja del supermercado. Anglicismo asentado; la RAE propone <em>tique</em>, y <em>tiquete</em> en Colombia y Centroamérica. En la Argentina se escribe casi siempre <em>ticket</em>.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">el comprobante</div>
+        <div class="d">La palabra paraguas: cualquier papel que <strong>comprueba</strong> algo — un pago, una reserva, una transferencia. Útil cuando no sé cuál de las otras corresponde.</div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>The figurative one.</strong> <em>Pasar factura</em> means to make someone pay for something — not money, consequences. <em>Los años le pasaron factura</em>: the years caught up with him. <em>Esa decisión le va a pasar factura</em>: that decision is going to cost him. Common in journalism and everyday speech alike.
+    </div>
+  </article>
+
+  <!-- ⑥ -->
+  <article class="grammar-card card-zeta">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Las otras <em>facturas</em>: las de la panadería</div>
+        <div class="card-title-en">The pastries</div>
+      </div>
+      <div class="card-icon">
+        <img src="../assets/entradas-pasajes/facturas-panaderia.webp" alt="Una bandeja de medialunas y otras facturas de panadería." onerror="this.closest('.card-icon').style.display='none'">
+      </div>
+    </div>
+
+    <p class="explanation">
+      En la Argentina y el Uruguay, <em>las facturas</em> son también los bollos dulces de la panadería. Se compran por <strong>docena</strong> o <strong>media docena</strong>, y son el acompañamiento clásico del mate o del café. La palabra no viaja: en España lo equivalente es <em>la bollería</em>, y en México, <em>el pan dulce</em>.
+    </p>
+
+    <div class="wordlist">
+      <div class="word-item">
+        <div class="w">la medialuna</div>
+        <div class="d">La más conocida. <strong>De manteca</strong>: dulce, brillante, más blanda. <strong>De grasa</strong>: más seca, salada, más chica.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">el vigilante</div>
+        <div class="d">Alargada, con una franja de dulce de membrillo o batata por encima.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">la bola de fraile</div>
+        <div class="d">Redonda y frita, rellena de dulce de leche o crema pastelera.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">el cañoncito</div>
+        <div class="d">Un tubo de hojaldre relleno de dulce de leche.</div>
+      </div>
+      <div class="word-item">
+        <div class="w">el librito · la tortita negra</div>
+        <div class="d">El <strong>librito</strong> es de hojaldre en capas; la <strong>tortita negra</strong> es chata y cubierta de azúcar quemada.</div>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me da media docena de <strong>facturas</strong>, por favor.</div>
+          <div class="example-en">Half a dozen pastries, please.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Dos <strong>medialunas</strong> de manteca y un café con leche.</div>
+          <div class="example-en">Two butter croissants and a latte.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>On churros.</strong> They're a useful reference point coming from Spain, but they aren't generally counted among <em>las facturas</em> — churros are their own thing, sold at a churrería or a café rather than by the dozen at the panadería counter. The <em>facturas</em> family is the baked, filled, tray-sold set above.
+    </div>
+  </article>
+
+  <!-- ⑦ -->
+  <article class="grammar-card card-eta">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title">Una palabra, <em>varios mundos</em></div>
+        <div class="card-title-en">Where these words go when they leave the counter</div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Casi todas estas palabras tienen una segunda vida fuera del mostrador. Reconocerlas en esos otros contextos evita muchos tropiezos de lectura.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Palabra</th><th>Otros sentidos</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><em>la entrada</em></td>
+            <td>La <strong>puerta</strong> o el vestíbulo de un edificio · el <strong>primer plato</strong> de una comida · <span class="esp-tag">España</span> el <strong>pago inicial</strong> de una casa · en plural y coloquial, las <strong>entradas</strong> del pelo que retrocede.</td>
+          </tr>
+          <tr>
+            <td><em>la factura</em></td>
+            <td>Los <strong>bollos</strong> de la panadería · <em>pasar factura</em>, hacer pagar las consecuencias · la <strong>hechura</strong> de un objeto: <em>un mueble de buena factura</em>.</td>
+          </tr>
+          <tr>
+            <td><em>la taquilla</em></td>
+            <td><span class="esp-tag">España</span> El <strong>armario</strong> del gimnasio o del colegio · la <strong>recaudación</strong> de una película: <em>un éxito de taquilla</em>.</td>
+          </tr>
+          <tr>
+            <td><em>el boleto</em></td>
+            <td><span class="rio-tag">Rioplatense</span> El <strong>boleto de compraventa</strong>, el contrato previo a la escritura de un inmueble.</td>
+          </tr>
+          <tr>
+            <td><em>el pasaje</em></td>
+            <td>Un <strong>fragmento</strong> de un texto o de una obra musical · un <strong>callejón</strong> o galería entre dos calles — frecuente en los nombres de calles porteñas.</td>
+          </tr>
+          <tr>
+            <td><em>el billete</em></td>
+            <td><span class="esp-tag">España</span> El <strong>pasaje</strong> de tren o de avión — el sentido que no cruza el Atlántico.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <p><strong>The pattern behind all of them.</strong> Each of these words started as a name for a <em>physical slip of paper</em> and then drifted along one of two paths: toward <strong>the place</strong> the slip gets you (<em>entrada</em> → doorway, <em>pasaje</em> → passageway), or toward <strong>the transaction</strong> the slip records (<em>factura</em> → the making of a thing, <em>taquilla</em> → the takings).</p>
+      <p>Once you see that, the second meanings stop looking like unrelated homonyms to memorise and start looking like the same word stretched in a predictable direction.</p>
+    </div>
+
+    <a class="topic-link" href="clase-de-espanol/clase-2026-08-12.html">
+      <span class="arrow">→</span> <strong>Clase del 12 de agosto de 2026</strong> — el resumen breve de donde salió este tema.
+    </a>
+  </article>
+
+  <div class="page-footer">Mi Proyecto Español · Vocabulario → Sustantivos</div>
+</div>
+
+<!-- ── Guía Rápida ── -->
+<div class="modal-overlay" id="modal-cheat" onclick="handleCheatOverlayClick(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>⚡ Guía Rápida</h2>
+      <button class="close-btn" onclick="closeCheat()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Si no recuerdo nada más de esta página, esto alcanza. La columna que importa para el viaje es la de <em>Argentina</em>.</p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Quiero…</th><th>Argentina</th><th>España</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>entrar a un espectáculo o a un parque</td><td><em>la entrada</em></td><td><em>la entrada</em></td></tr>
+            <tr><td>viajar en avión o larga distancia</td><td><span class="hi">el pasaje</span></td><td><span class="hi">el billete</span></td></tr>
+            <tr><td>viajar en colectivo o subte</td><td><span class="hi">el boleto</span></td><td><span class="hi">el billete</span></td></tr>
+            <tr><td>hablar del dinero en papel</td><td><em>el billete</em></td><td><em>el billete</em></td></tr>
+            <tr><td>encontrar dónde se venden</td><td><em>la boletería</em></td><td><em>la taquilla</em></td></tr>
+            <tr><td>pedir lo que me cobran</td><td><em>la factura</em> · <em>la boleta</em></td><td><em>la factura</em></td></tr>
+            <tr><td>guardar la prueba de que pagué</td><td><em>el recibo</em></td><td><em>el recibo</em></td></tr>
+            <tr><td>pagar en un restaurante</td><td><em>la cuenta</em></td><td><em>la cuenta</em></td></tr>
+            <tr><td>comer algo con el café</td><td><em>las facturas</em></td><td><em>la bollería</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Verbo por defecto para conseguir cualquiera de los tres primeros: <em>sacar</em>. <em>¿Dónde saco las entradas?</em></p>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  // Región chips are visual labels, not part of the sentence — strip before speaking.
+  const clone = esEl.cloneNode(true);
+  clone.querySelectorAll('.rio-tag, .esp-tag, .mx-tag, .neu-tag').forEach(t => t.remove());
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════════
+//  Image magnification
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.card-icon img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (!activeImage) return;
+    activeImage.classList.remove('magnified');
+    activeImage = null;
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) { resetZoom(); return; }
+      resetZoom();
+      img.classList.add('magnified');
+      activeImage = img;
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+});
+
+// ═══════════════════════════════════════════════
+//  Guía Rápida modal
+// ═══════════════════════════════════════════════
+function openCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.remove('active');
+  document.body.style.overflow = '';
+}
+function handleCheatOverlayClick(e) {
+  if (e.target.id === 'modal-cheat') closeCheat();
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeCheat();
+});
+</script>
+</body>
+</html>

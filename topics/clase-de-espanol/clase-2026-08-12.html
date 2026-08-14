@@ -452,12 +452,34 @@ body {
   border-radius: 10px;
   overflow: hidden;
 }
+/* While an image is magnified its figure must stop clipping it. */
+.triad figure.zoomed {
+  overflow: visible;
+  position: relative;
+  z-index: 60;
+}
 .triad img {
   width: 100%;
   height: 132px;
   object-fit: cover;
   display: block;
+  cursor: zoom-in;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-radius 0.25s ease;
 }
+.triad img.magnified {
+  object-fit: contain;          /* show the whole frame, not the 132px crop */
+  transform: scale(2.4);
+  cursor: zoom-out;
+  z-index: 60;
+  border-radius: 6px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+/* Scale outward from the nearest container edge so the zoom never leaves the column. */
+.triad figure:nth-child(1) img.magnified { transform-origin: left center; }
+.triad figure:nth-child(2) img.magnified { transform-origin: center center; }
+.triad figure:nth-child(3) img.magnified { transform-origin: right center; }
 .triad figcaption {
   padding: 9px 10px 11px;
   text-align: center;
@@ -546,6 +568,14 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
   .card-number { font-size: 1.8rem; }
   .triad { grid-template-columns: 1fr; gap: 10px; }
   .triad img { height: 160px; }
+  /* Single column already spans the viewport — a gentle scale is enough,
+     and object-fit:contain is doing most of the work by un-cropping. */
+  .triad figure:nth-child(1) img.magnified,
+  .triad figure:nth-child(2) img.magnified,
+  .triad figure:nth-child(3) img.magnified {
+    transform: scale(1.35);
+    transform-origin: center center;
+  }
   .contents-list a { font-size: 0.8rem; padding: 5px 10px; }
 }
 </style>
@@ -1179,6 +1209,40 @@ window.addEventListener('load', () => {
       .filter(f => f.style.display !== 'none');
     if (visible.length === 0) triad.style.display = 'none';
   });
+});
+
+// ═══════════════════════════════════════════════
+//  Image magnification (click to zoom, click again
+//  or anywhere else to release). Same behaviour as
+//  the .card-icon magnifier on the topic pages.
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.triad img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (!activeImage) return;
+    activeImage.classList.remove('magnified');
+    const fig = activeImage.closest('figure');
+    if (fig) fig.classList.remove('zoomed');
+    activeImage = null;
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) { resetZoom(); return; }
+      resetZoom();
+      img.classList.add('magnified');
+      const fig = img.closest('figure');
+      if (fig) fig.classList.add('zoomed');
+      activeImage = img;
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') resetZoom(); });
 });
 </script>
 </body>

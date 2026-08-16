@@ -1,0 +1,2991 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tener: un sistema, no una lista | Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  --accent-alpha:   #c084fc;  /* violet  */
+  --accent-beta:    #fbbf24;  /* amber   */
+  --accent-gamma:   #4ecdc4;  /* teal    */
+  --accent-delta:   #FF6B6B;  /* coral   */
+  --accent-epsilon: #f472b6;  /* rose    */
+  --accent-zeta:    #34d399;  /* green   */
+  --accent-eta:     #fb923c;  /* orange  */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (Guernica) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/Guernica.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.62);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+/* ── Header ── */
+.page-header {
+  text-align: center;
+  padding: 14px 0 22px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.ornament {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin: 18px auto 12px;
+  color: var(--accent); opacity: 0.65; max-width: 280px;
+}
+.ornament::before, .ornament::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.ornament-symbol { font-size: 1.1rem; }
+.page-header .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+.cheat-badge {
+  position: absolute; top: 10px; right: 0;
+  padding: 6px 14px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  color: #fcd34d;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cheat-badge:hover {
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.6);
+}
+
+/* ── Intro prose ── */
+.intro-prose {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin: 0 0 22px;
+  padding: 0 4px;
+}
+.intro-prose strong { color: var(--text-primary); font-weight: 600; }
+.intro-prose em     { color: var(--accent); font-style: italic; }
+
+/* ── Sticky TOC ── */
+.toc {
+  position: sticky; top: 0;
+  z-index: 20;
+  background: rgba(10, 22, 40, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin-bottom: 18px;
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.toc a {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.toc a:hover { color: var(--accent); border-color: var(--accent); }
+.toc .toc-sep {
+  width: 100%; height: 0;
+  margin: 2px 0 0;
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 0 0 18px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted);
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── Part divider ── */
+.part-divider {
+  display: flex; align-items: center; gap: 14px;
+  margin: 34px 0 18px;
+}
+.part-divider::before, .part-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.part-divider span {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem; font-weight: 600;
+  letter-spacing: 0.28em; text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+  overflow: hidden;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-beta    { border-left-color: var(--accent-beta); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-delta   { border-left-color: var(--accent-delta); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.8; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.8; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.8; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.8; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.8; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.8; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.8; }
+
+.card-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 24px 26px 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.1rem; line-height: 1;
+  color: var(--text-muted); flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 220px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.42rem; line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title .qualifier {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6em; font-weight: 400;
+  color: var(--text-muted); font-style: italic;
+  margin-left: 6px;
+}
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+.card-body { padding: 0 26px 20px; }
+
+/* ── Accordion (familias) ── */
+.acc-toggle {
+  width: 100%;
+  background: none; border: none;
+  text-align: left; cursor: pointer;
+  padding: 0; color: inherit; font: inherit;
+  display: block;
+}
+.acc-toggle .card-header { padding-bottom: 18px; }
+.acc-chevron {
+  margin-left: auto; align-self: center;
+  color: var(--text-muted);
+  font-size: 1.3rem; line-height: 1;
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.grammar-card.open .acc-chevron { transform: rotate(90deg); }
+.acc-panel { display: none; }
+.grammar-card.open .acc-panel { display: block; }
+.acc-count {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px 8px;
+  margin-left: 8px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* ── Prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 16px;
+  font-size: 0.95rem;
+}
+.explanation em     { color: var(--text-primary); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+.formula {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 16px;
+}
+
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 22px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Examples ── */
+.examples-block { margin: 12px 0 6px; }
+.example-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:last-child { border-bottom: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem; color: var(--text-primary); line-height: 1.5;
+}
+.example-es .hl { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-es .bad { color: var(--accent-delta); text-decoration: line-through; }
+.example-en {
+  font-size: 0.87rem; color: var(--text-muted);
+  font-style: italic; margin-top: 3px; line-height: 1.5;
+}
+.example-en em { color: var(--text-secondary); font-style: normal; }
+
+.speak-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text-muted);
+  cursor: pointer; font-size: 0.85rem;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing {
+  color: var(--accent); border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+/* ── Region / register badges ── */
+.reg-badge {
+  display: inline-block;
+  font-size: 0.64rem; font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 2px 8px; border-radius: 12px;
+  margin-left: 6px; vertical-align: middle;
+  text-transform: uppercase;
+}
+.reg-badge.reg-rio { background: rgba(255, 159, 28, 0.15); color: #ffb066; border: 1px solid rgba(255, 159, 28, 0.3); }
+.reg-badge.reg-esp { background: rgba(192, 132, 252, 0.15); color: #d0a8ff; border: 1px solid rgba(192, 132, 252, 0.3); }
+.reg-badge.reg-mx  { background: rgba(78, 205, 196, 0.15); color: #7be3db; border: 1px solid rgba(78, 205, 196, 0.3); }
+
+/* ── Frame chips ── */
+.chips {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-top: 8px;
+}
+.chip {
+  display: inline-flex; align-items: baseline; gap: 5px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 2px 9px;
+  border-radius: 12px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+.chip-ax {
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  opacity: 0.62;
+}
+/* PREP — violet */
+.chip-prep {
+  background: rgba(192, 132, 252, 0.14);
+  color: #d6b3ff;
+  border-color: rgba(192, 132, 252, 0.3);
+}
+.chip-prep.chip-none { opacity: 0.72; }
+/* IMP — traffic light */
+.chip-imp-si {
+  background: rgba(52, 211, 153, 0.14);
+  color: #6ee7b7;
+  border-color: rgba(52, 211, 153, 0.32);
+}
+.chip-imp-no {
+  background: rgba(255, 107, 107, 0.13);
+  color: #ff9c9c;
+  border-color: rgba(255, 107, 107, 0.3);
+}
+.chip-imp-mixed {
+  background: rgba(251, 191, 36, 0.13);
+  color: #fcd34d;
+  border-color: rgba(251, 191, 36, 0.3);
+}
+/* CUANT — neutral grey */
+.chip-cuant {
+  background: rgba(90, 111, 142, 0.16);
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+/* ASP — teal */
+.chip-asp {
+  background: rgba(78, 205, 196, 0.13);
+  color: #7be3db;
+  border-color: rgba(78, 205, 196, 0.3);
+}
+/* GRAM — blue */
+.chip-gram {
+  background: rgba(74, 144, 217, 0.14);
+  color: #8fc0f0;
+  border-color: rgba(74, 144, 217, 0.32);
+}
+/* REG — rose */
+.chip-reg {
+  background: rgba(244, 114, 182, 0.13);
+  color: #f9a8d4;
+  border-color: rgba(244, 114, 182, 0.32);
+}
+/* por confirmar — dashed outline, no fill */
+.chip-confirm {
+  background: transparent;
+  color: #fcd34d;
+  border: 1px dashed rgba(251, 191, 36, 0.65);
+}
+
+/* ── Legend ── */
+.legend {
+  background: rgba(74, 144, 217, 0.07);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 12px 12px 0;
+  padding: 18px 22px;
+  margin: 0 0 20px;
+}
+.legend-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.legend-intro {
+  font-size: 0.88rem; color: var(--text-secondary);
+  line-height: 1.6; margin-bottom: 14px;
+}
+.legend-row {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.5);
+  align-items: start;
+}
+.legend-row:last-child { border-bottom: none; }
+.legend-axis {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 3px 0;
+  text-align: center;
+  border-radius: 10px;
+}
+.legend-axis.ax-prep    { background: rgba(192, 132, 252, 0.16); color: #d6b3ff; }
+.legend-axis.ax-imp     { background: rgba(52, 211, 153, 0.16); color: #6ee7b7; }
+.legend-axis.ax-cuant   { background: rgba(90, 111, 142, 0.18); color: var(--text-secondary); }
+.legend-axis.ax-asp     { background: rgba(78, 205, 196, 0.16); color: #7be3db; }
+.legend-axis.ax-gram    { background: rgba(74, 144, 217, 0.16); color: #8fc0f0; }
+.legend-axis.ax-reg     { background: rgba(244, 114, 182, 0.16); color: #f9a8d4; }
+.legend-axis.ax-conf    { background: transparent; color: #fcd34d; border: 1px dashed rgba(251, 191, 36, 0.6); }
+.legend-def {
+  font-size: 0.87rem; color: var(--text-secondary); line-height: 1.65;
+}
+.legend-def b { color: var(--text-primary); font-weight: 600; }
+.legend-def code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input); color: var(--text-primary);
+  padding: 1px 5px; border-radius: 4px; font-size: 0.86em;
+}
+.legend-def em { color: var(--accent); font-style: italic; }
+@media (max-width: 600px) {
+  .legend { padding: 16px; }
+  .legend-row { grid-template-columns: 74px 1fr; gap: 10px; }
+}
+
+/* ── Entry rows (family inventories) ── */
+.entry {
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.45);
+}
+.entry:last-child { border-bottom: none; }
+.entry-head {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+}
+.entry-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.08rem;
+  color: var(--text-primary);
+}
+.entry-es .obj { color: var(--text-muted); font-style: italic; }
+.entry-en {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+.family-note {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  background: rgba(74, 144, 217, 0.07);
+  border-left: 3px solid var(--border-focus);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin: 4px 0 16px;
+  line-height: 1.6;
+}
+.family-note em { color: var(--text-primary); font-style: italic; }
+
+/* ── NOTA ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.nota .nota-label {
+  display: inline-block; font-weight: 600;
+  color: var(--accent); margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota.nota-expanded { padding: 18px 22px; }
+.nota.nota-expanded p { margin-bottom: 10px; }
+.nota.nota-expanded p:last-child { margin-bottom: 0; }
+.nota.nota-expanded h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.93rem; font-weight: 600;
+  color: var(--text-primary);
+  margin: 14px 0 6px;
+}
+.nota.nota-expanded ul { list-style: none; padding: 0; margin: 4px 0 10px; }
+.nota.nota-expanded ul li { padding: 4px 0 4px 18px; position: relative; }
+.nota.nota-expanded ul li::before {
+  content: '›'; position: absolute; left: 4px;
+  color: var(--accent); font-weight: 700;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em     { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input); color: var(--text-primary);
+  padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+}
+
+/* ── Data tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 14px 0 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.88rem; text-align: left;
+}
+.table-wrapper th {
+  background: rgba(0,0,0,0.35);
+  color: var(--text-primary);
+  padding: 10px 14px; font-weight: 600;
+  font-size: 0.8rem; letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.table-wrapper td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper em {
+  color: var(--text-primary); font-style: italic;
+  font-family: 'DM Serif Display', serif; font-size: 1.02em;
+}
+.table-wrapper .bad { color: #ff9c9c; }
+.table-wrapper .good { color: #6ee7b7; }
+.table-wrapper .prep-tag { color: #d6b3ff; font-weight: 600; }
+
+/* ── Tabla maestra ── */
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin: 4px 0 14px;
+}
+.filter-btn {
+  padding: 4px 12px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted);
+  font-family: 'Outfit', sans-serif; font-size: 0.76rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.filter-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.filter-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+.filter-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+#tabla-maestra td.tm-frase {
+  color: var(--text-primary);
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+#tabla-maestra td.tm-frase .obj { color: var(--text-muted); font-style: italic; font-size: 0.9em; }
+#tabla-maestra .tm-imp-si { color: #6ee7b7; font-weight: 600; }
+#tabla-maestra .tm-imp-no { color: #ff9c9c; font-weight: 600; }
+#tabla-maestra .tm-imp-mixed { color: #fcd34d; font-weight: 600; }
+#tabla-maestra .tm-prep { color: #d6b3ff; }
+#tabla-maestra .tm-note { font-size: 0.82rem; }
+.tm-cards { display: none; }
+.tm-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.tm-card .entry-es { font-size: 1.02rem; }
+.tm-card .entry-en { display: block; margin-top: 1px; }
+
+/* ── Subpage links ── */
+.subpage-links {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin-top: 30px;
+}
+.subpage-links-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem; color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.subpage-links-sub {
+  font-size: 0.84rem; color: var(--text-muted);
+  font-style: italic; margin-bottom: 12px;
+}
+.subpage-links ul { list-style: none; padding: 0; margin: 0; }
+.subpage-links li { padding: 9px 0; border-bottom: 1px solid rgba(30, 51, 85, 0.4); }
+.subpage-links li:last-child { border-bottom: none; }
+.subpage-links a {
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 0.96rem; transition: color 0.2s; gap: 12px;
+}
+.subpage-links a:hover { color: var(--accent); }
+.subpage-links .arrow { color: var(--text-muted); font-size: 1.1rem; }
+.subpage-links a:hover .arrow { color: var(--accent); }
+
+/* ── Confirm block ── */
+.confirm-list { list-style: none; padding: 0; margin: 8px 0 0; }
+.confirm-list li {
+  padding: 8px 0 8px 20px;
+  position: relative;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.confirm-list li:last-child { border-bottom: none; }
+.confirm-list li::before {
+  content: '?'; position: absolute; left: 2px;
+  color: #fcd34d; font-weight: 700;
+}
+.confirm-list strong { color: var(--text-primary); font-weight: 600; }
+.confirm-list em { color: var(--text-primary); font-style: italic; }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(5, 12, 25, 0.85);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 50; display: none;
+  align-items: center; justify-content: center;
+  padding: 20px; opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  width: 100%; max-width: 760px; max-height: 85vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  overflow: hidden;
+}
+.modal-header {
+  padding: 20px 26px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(15, 25, 45, 0.95);
+}
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem; color: var(--text-primary);
+}
+.close-btn {
+  background: none; border: none; color: var(--text-muted);
+  font-size: 1.4rem; cursor: pointer; transition: color 0.2s;
+  line-height: 1;
+}
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 24px 26px; overflow-y: auto; flex-grow: 1; }
+.modal-body > p { color: var(--text-secondary); margin-bottom: 14px; line-height: 1.65; }
+.modal-body h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem; font-weight: 600;
+  color: var(--text-primary);
+  margin: 18px 0 6px;
+}
+
+/* ── Footer note ── */
+.page-foot {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 30px;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .card-header { padding: 20px 18px 6px; gap: 12px; }
+  .card-body { padding: 0 18px 18px; }
+  .card-number { font-size: 1.7rem; }
+  .card-title { font-size: 1.24rem; }
+  .nota, .nota.nota-expanded { padding: 14px 16px; }
+  .subpage-links { padding: 20px; }
+  .cheat-badge { position: static; display: inline-block; margin-top: 14px; }
+  .toc { padding: 7px 8px; gap: 4px; }
+  .toc a { font-size: 0.7rem; padding: 3px 7px; }
+  .entry-head { gap: 6px; }
+  .tm-table-wrap { display: none; }
+  .tm-cards { display: block; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+<div class="page-wrap">
+
+<a href="verbos-en-profundidad.html" class="back-link">← Volver a Verbos en Profundidad</a>
+
+<header class="page-header">
+  <div class="overline">Verbos en Profundidad</div>
+  <h1><em>Tener</em>: un sistema, no una lista</h1>
+  <div class="ornament"><span class="ornament-symbol">❖</span></div>
+  <div class="subtitle">Frases, marcos y patrones de uso</div>
+  <button class="cheat-badge" onclick="openCheat()">⚡ Guía Rápida</button>
+</header>
+
+<p class="intro-prose">
+  El español construye con <em>tener</em> decenas de estados que el inglés expresa con <em>to be</em>.
+  No son excepciones sueltas: son un mismo patrón. El sustantivo que elijas decide si hay artículo,
+  qué cuantificador concuerda, qué preposición sigue, si el imperativo está disponible y si el
+  pretérito cambia el sentido. <strong>La lista es el contenido; la gramática es la página.</strong>
+</p>
+
+<nav class="toc">
+  <a href="#s1">① El motor</a>
+  <a href="#s2">② Preposiciones</a>
+  <a href="#s3">③ Imperativo</a>
+  <a href="#s4">④ Pretérito/imperfecto</a>
+  <a href="#s5">⑤ Complementos con <em>que</em></a>
+  <a href="#s5b">⑤b Queísmo</a>
+  <a href="#s6">⑥ Físicos</a>
+  <a href="#s7">⑦ Emocionales</a>
+  <a href="#s8">⑧ Carácter</a>
+  <a href="#s9">⑨ Juicio</a>
+  <a href="#s10">⑩ Modales</a>
+  <a href="#s11">⑪ Frases fijas</a>
+  <a href="#s12">⑫ Tabla maestra</a>
+</nav>
+
+<div class="rate-bar">
+  <span class="rate-label">Velocidad 🔊</span>
+  <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+  <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+  <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+</div>
+
+<div class="part-divider"><span>Parte I · El sistema</span></div>
+
+<!-- ═══ ① EL MOTOR ═══ -->
+<article class="grammar-card card-alpha" id="s1">
+  <div class="card-header">
+    <div class="card-number">①</div>
+    <div class="card-title-group">
+      <div class="card-title">El motor<span class="qualifier">tener + sustantivo escueto</span></div>
+      <div class="card-title-en">The engine</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <code class="formula">tener + sustantivo (sin artículo) = estado</code>
+
+    <p class="explanation">
+      Decenas de estados que el inglés expresa con <em>to be</em> se construyen en español con
+      <strong>tener más un sustantivo sin artículo</strong>. <em>Tener</em> también significa poseer
+      —<em>Tengo dos hermanos</em>— pero ese uso no da problemas. Esta página trata el otro.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">hambre</span>.</div>
+          <div class="example-en">I'm hungry.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Tienes <span class="hl">frío</span>?</div>
+          <div class="example-en">Are you cold?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo cuarenta y dos <span class="hl">años</span>.</div>
+          <div class="example-en">I'm forty-two.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tenemos <span class="hl">prisa</span>.</div>
+          <div class="example-en">We're in a hurry.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El cuantificador concuerda</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>No</th><th>Sí</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">Tengo muy hambre.</td><td><em>Tengo mucha hambre.</em></td></tr>
+          <tr><td class="bad">Tengo muy sueño.</td><td><em>Tengo mucho sueño.</em></td></tr>
+          <tr><td class="bad">Tiene muy miedo.</td><td><em>Tiene mucho miedo.</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">La escala de intensidad</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Grado</th><th>Español</th><th>English</th></tr></thead>
+        <tbody>
+          <tr><td>nada</td><td><em>No tengo nada de hambre.</em></td><td>I'm not hungry at all.</td></tr>
+          <tr><td>poco</td><td><em>Tengo algo de hambre.</em></td><td>I'm a little hungry.</td></tr>
+          <tr><td>neutro</td><td><em>Tengo hambre.</em></td><td>I'm hungry.</td></tr>
+          <tr><td>mucho</td><td><em>Tengo mucha hambre.</em></td><td>I'm very hungry.</td></tr>
+          <tr><td>máximo</td><td><em>Tengo muchísima hambre.</em></td><td>I'm starving.</td></tr>
+          <tr><td>elativo</td><td><em>Tengo un hambre de lobo.</em></td><td>I could eat a horse.</td></tr>
+          <tr><td>exclamativo</td><td><em>¡Qué hambre tengo!</em></td><td>I'm so hungry!</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Conjugación irregular</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Forma</th><th>Conjugación</th></tr></thead>
+        <tbody>
+          <tr><td>Presente</td><td><em>tengo</em> · tienes · tiene · tenemos · tienen</td></tr>
+          <tr><td>Pretérito <small>(fuerte, sin tilde)</small></td><td><em>tuve</em> · tuviste · <em>tuvo</em> · tuvimos · tuvieron</td></tr>
+          <tr><td>Imperfecto <small>(regular)</small></td><td>tenía · tenías · tenía · teníamos · tenían</td></tr>
+          <tr><td>Futuro / condicional</td><td>tendré · tendría <small>(raíz tendr-)</small></td></tr>
+          <tr><td>Subjuntivo presente</td><td>tenga · tengas · tenga · tengamos · tengan</td></tr>
+          <tr><td>Imperativo</td><td><em>ten</em> (tú) · tenga (usted) · tengan (ustedes) · <em>tené</em> <span class="reg-badge reg-rio">Rioplatense</span></td></tr>
+          <tr><td>Gerundio / participio</td><td>teniendo · tenido</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>English speakers hit two problems with this construction, and both come from translating <em>to be + adjective</em> instead of learning the pattern.</p>
+      <h4>There is no article</h4>
+      <p><em>Tengo hambre</em>, not <em>tengo una hambre</em> or <em>tengo la hambre</em>. The noun sits bare, and this is the default across the whole family — <em>sed, sueño, frío, calor, miedo, razón, prisa</em>. The exceptions are few enough to name outright:</p>
+      <ul>
+        <li><em>tener <strong>la</strong> culpa</em></li>
+        <li><em>tener <strong>la</strong> intención de</em></li>
+        <li><em>tener <strong>la</strong> costumbre de</em></li>
+      </ul>
+      <p>Learn those three as marked; assume bare everywhere else.</p>
+      <h4>The intensifier is <em>mucho</em>, not <em>muy</em></h4>
+      <p>This follows automatically once you accept that <em>hambre</em> is a noun, not an adjective — <em>muy</em> modifies adjectives and adverbs, <em>mucho</em> modifies nouns. So <em>mucha hambre</em>, <em>mucho miedo</em>, <em>mucha prisa</em>. The word agrees in gender and number with the noun, and that agreement has to become automatic rather than calculated.</p>
+      <h4>The <em>hambre</em> trap</h4>
+      <p><em>Hambre</em> is <strong>feminine</strong>, but it takes <em>el</em> in the singular — <em>el hambre</em> — because Spanish swaps <em>la</em> for <em>el</em> before a stressed <code>a-</code> sound to avoid the collision (the same reason for <em>el agua</em>, <em>el águila</em>). The gender itself never changes, so every agreeing word stays feminine: <em>much<strong>a</strong> hambre</em>, <em>tant<strong>a</strong> hambre</em>. Getting <em>el hambre</em> right and then saying <em>mucho hambre</em> is the classic overcorrection.</p>
+      <h4>On age</h4>
+      <p><em>Tengo cuarenta años</em>, never <em>soy cuarenta</em>. Spanish treats years as something you possess, and this is one of the highest-frequency instances of the whole construction.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ② LAS PREPOSICIONES ═══ -->
+<article class="grammar-card card-beta" id="s2">
+  <div class="card-header">
+    <div class="card-number">②</div>
+    <div class="card-title-group">
+      <div class="card-title">Las preposiciones<span class="qualifier">qué sigue a cada frase</span></div>
+      <div class="card-title-en">The frame map</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Cada frase con <em>tener</em> abre —o no abre— un hueco para un complemento, y la preposición
+      que lo introduce <strong>no se puede deducir del inglés</strong>. Agrupadas por preposición,
+      los patrones se ven; en orden alfabético, no.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Prep.</th><th>Frases</th></tr></thead>
+        <tbody>
+          <tr><td class="prep-tag">de</td><td>ganas · vergüenza · la culpa · la intención · la costumbre · la sensación · la esperanza · nostalgia · dolor (de cabeza)</td></tr>
+          <tr><td class="prep-tag">a</td><td>derecho · miedo · envidia · tendencia · acceso · alergia · cariño · pánico · respeto <small>(autoridad)</small> · manía <span class="reg-badge reg-esp">España</span></td></tr>
+          <tr><td class="prep-tag">con</td><td>cuidado · paciencia · problemas · relación · algo que ver</td></tr>
+          <tr><td class="prep-tag">en</td><td>confianza · fe · interés <small>(materias)</small></td></tr>
+          <tr><td class="prep-tag">por</td><td>interés <small>(personas)</small> · curiosidad · prisa · debilidad · ilusión · respeto <small>(admiración)</small></td></tr>
+          <tr><td class="prep-tag">para</td><td>facilidad · tiempo · dificultad · mano</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo ganas <span class="hl">de</span> verte.</div>
+          <div class="example-en">I want to see you.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No tienes derecho <span class="hl">a</span> hablarme así.</div>
+          <div class="example-en">You have no right to talk to me like that.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ten cuidado <span class="hl">con</span> el escalón.</div>
+          <div class="example-en">Watch out for the step.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo mucha confianza <span class="hl">en</span> ella.</div>
+          <div class="example-en">I have great confidence in her.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Siempre tuvo debilidad <span class="hl">por</span> los perros callejeros.</div>
+          <div class="example-en">He always had a soft spot for stray dogs.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tiene mucha facilidad <span class="hl">para</span> los idiomas.</div>
+          <div class="example-en">She has a real gift for languages.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo dificultad <span class="hl">para</span> respirar.</div>
+          <div class="example-en">I'm having difficulty breathing. <em>— no «dificultad en».</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El dativo obligatorio</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le</span> tengo miedo a las alturas.</div>
+          <div class="example-en">I'm afraid of heights.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le</span> tengo mucho cariño a tu madre.</div>
+          <div class="example-en">I'm very fond of your mother.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Les</span> tengo envidia a los que duermen bien.</div>
+          <div class="example-en">I envy people who sleep well.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le</span> tengo mucho respeto al mar.</div>
+          <div class="example-en">I have great respect for the sea.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>Two things live here, and the second is the more consequential.</p>
+      <h4>The <em>a / de</em> split with <em>miedo</em></h4>
+      <p>The usable generalization: <strong><em>a</em> points at the thing feared</strong>, <strong><em>de</em> points at an outcome or a clause</strong>. <em>Le tengo miedo a los perros</em> — dogs are the target. <em>Tengo miedo de caerme</em> — falling is the feared outcome. <em>Tengo miedo de que se entere</em> — a clause follows. Both prepositions are heard with a plain noun, and <em>tengo miedo de los perros</em> is not wrong, but the <em>a</em> version is the more natural default in Latin America when the fear has an object. Where a clause or an infinitive follows, <strong><em>de</em> is effectively obligatory</strong> — that is the part worth locking down.</p>
+      <h4>The dative you are leaving out</h4>
+      <p>A whole subgroup — <em>miedo, cariño, manía, envidia, celos, bronca, respeto, pánico</em> — takes a redundant indirect object pronoun when the complement is a person or a specific thing: <em><strong>Le</strong> tengo miedo a ese perro</em>, not just <em>Tengo miedo a ese perro</em>. English has no equivalent, so English speakers systematically omit it, and the result is grammatical but immediately audible as foreign. The pronoun agrees with the <strong>complement</strong>, not the subject: <em><strong>Les</strong> tengo cariño a tus hermanos</em>.</p>
+      <p>With <em>envidia</em> in particular, the dative construction <em>tenerle envidia a alguien</em> is the Latin American norm — reach for it before <em>tener envidia de</em>.</p>
+      <h4>A useful asymmetry</h4>
+      <p>The dative appears when the complement is <strong>specific</strong>. <em>Le tengo miedo a ese perro</em> (that dog) alongside <em>Tengo miedo de los perros</em> (dogs in general). Keep this in mind — it returns in section ③, where it turns out to govern the imperative too.</p>
+      <h4>Two splits worth memorizing</h4>
+      <ul>
+        <li><em>interés <strong>en</strong></em> for fields and subjects (<em>interés en la ciencia</em>) · <em>interés <strong>por</strong></em> for people and causes (<em>interés por los pacientes</em>) <span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></li>
+        <li><em>respeto <strong>a</strong></em> for authority or fear (<em>tenerle respeto al mar</em>) · <em>respeto <strong>por</strong></em> for admiration (<em>respeto por sus mayores</em>) <span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></li>
+      </ul>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ③ EL IMPERATIVO ═══ -->
+<article class="grammar-card card-gamma" id="s3">
+  <div class="card-header">
+    <div class="card-number">③</div>
+    <div class="card-title-group">
+      <div class="card-title">El imperativo y el deseo<span class="qualifier">qué se puede mandar</span></div>
+      <div class="card-title-en">What can be commanded</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      No todas las frases con <em>tener</em> admiten imperativo, y la diferencia no es arbitraria.
+      <strong>Se puede mandar aquello que la persona controla; no se puede mandar una sensación.</strong>
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Tipo de sustantivo</th><th>Imp.</th><th>Ejemplos</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Postura voluntaria · atención</td>
+            <td class="good">✓</td>
+            <td><em>ten cuidado · ten paciencia · ten fe · ten calma · ten valor · ten piedad · ten en cuenta</em></td>
+          </tr>
+          <tr>
+            <td>Sensación involuntaria</td>
+            <td class="bad">✕</td>
+            <td class="bad">ten hambre · ten sed · ten sueño · ten frío · ten fiebre</td>
+          </tr>
+          <tr>
+            <td>Condición de verdad</td>
+            <td class="bad">✕</td>
+            <td class="bad">ten razón · ten sentido · ten la culpa</td>
+          </tr>
+          <tr>
+            <td>Resultado fuera de control</td>
+            <td class="bad">✕</td>
+            <td>→ deseo: <em>que tengas éxito · que tengas suerte</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Sí — la postura se manda</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten cuidado</span> con ese perro.</div>
+          <div class="example-en">Be careful with that dog.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten paciencia</span>, ya casi llegamos.</div>
+          <div class="example-en">Be patient, we're almost there.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten en cuenta</span> que mañana es feriado.</div>
+          <div class="example-en">Bear in mind that tomorrow is a holiday.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten fe.</span></div>
+          <div class="example-en">Have faith.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten un poco de respeto.</span></div>
+          <div class="example-en">Show a little respect.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El deseo — la salida del bloqueo</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Que tengas</span> suerte.</div>
+          <div class="example-en">Good luck.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Que tengan</span> un buen viaje.</div>
+          <div class="example-en">Have a good trip.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ojalá tengas</span> éxito.</div>
+          <div class="example-en">I hope you succeed.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La asimetría: el negativo sí</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Afirmativo</th><th>Negativo</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">Ten miedo.</td><td class="good"><em>No tengas miedo.</em></td></tr>
+          <tr><td class="bad">Ten prisa.</td><td class="good"><em>No tengas prisa.</em></td></tr>
+          <tr><td class="bad">Ten hambre.</td><td class="bad">No tengas hambre.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>This is the rule a flat vocabulary list cannot give you, and getting it wrong produces sentences that are not merely odd but incoherent.</p>
+      <h4>The test: can the person comply?</h4>
+      <p><em>Ten cuidado</em> works because carefulness is a stance you adopt — hearing the command is enough to produce the state. <em>Ten hambre</em> fails because no amount of willingness makes you hungry. The imperative presupposes that the addressee can bring about what is ordered, so the construction is available exactly when the noun names something volitional.</p>
+      <h4>Three separate reasons for the block</h4>
+      <ul>
+        <li><strong>Involuntary sensations</strong> (<em>hambre, sed, sueño, frío, fiebre</em>) — physically not under control.</li>
+        <li><strong>Truth-conditions</strong> (<em>razón, sentido, la culpa</em>) — these are not states of a person at all. <em>Tener razón</em> describes whether what you said matches the facts; ordering someone to be right is a category error, not a rudeness.</li>
+        <li><strong>Outcomes</strong> (<em>éxito, suerte</em>) — under nobody's control, so they cannot be ordered. But they <em>can</em> be wished for, which is where they resurface.</li>
+      </ul>
+      <h4>Where the blocked ones go: <em>que</em> + subjunctive</h4>
+      <p>You cannot say <em>ten éxito</em>, but <em>que tengas éxito</em> is idiomatic and extremely frequent. The pattern generalizes — <em>que tengas un buen día</em>, <em>que tengan buen viaje</em>. The subjunctive is doing exactly what it does everywhere else: marking something as desired rather than asserted.</p>
+      <p><em>¡Suerte!</em> on its own and <em>que tengas suerte</em> are the standard forms here. <em>¡Ten suerte!</em> breaks the rule and is best avoided.</p>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>The affirmative/negative asymmetry looks like a quirk and is actually the rule confirming itself.</p>
+      <p><em>Ten miedo</em> is odd; <em>no tengas miedo</em> is one of the most common things anyone says in Spanish. The reason: <strong>you can be told to stop feeling something, but not to start.</strong> A negative imperative here is not ordering the absence of an emotion — it is asking the hearer to stand down. That much <em>is</em> within someone's control, so the construction is licensed. The same applies to <em>no tengas vergüenza</em>, <em>no tengas prisa</em>, <em>no tengas miedo de preguntar</em>.</p>
+      <h4>The limit is exactly where you would predict</h4>
+      <p><em>No tengas hambre</em> is as impossible as <em>ten hambre</em>, because de-escalating hunger is not something a person can do either. So the asymmetry appears only with <strong>emotions</strong> — states you can partly talk yourself out of — and not with <strong>sensations</strong>. That split is the sharpest evidence that controllability, not politeness or convention, governs this card.</p>
+      <h4>The affirmative survives when the fear has a target</h4>
+      <ul>
+        <li><em>Ten miedo.</em> — odd, close to meaningless. An order to generate an emotion from nothing.</li>
+        <li><em><strong>Tenle miedo a ese perro, que muerde.</strong></em> — perfectly natural.</li>
+      </ul>
+      <p>What changed is not who is being commanded. Both are imperatives aimed at the listener, and in the second the clitic <em>le</em> is a dative agreeing with <em>ese perro</em> — it marks <strong>what the fear is directed at</strong>, not who receives the order. What changed is that the fear now has a <strong>specific, identified object</strong>, and that converts the request from "summon an emotion" into "adopt a wary stance toward this known danger." A stance toward a named thing is something a person can actually decide to take, so the imperative is licensed again.</p>
+      <p>This is the same specificity effect that governs the dative in section ②: <em>le tengo miedo a ese perro</em> (specific) alongside <em>tengo miedo de los perros</em> (general). The abstract version resists both the dative and the imperative; the targeted version accepts both. <strong>Where the affirmative imperative of an emotion works at all, it works because a target is present.</strong></p>
+      <h4>A second route past the block: the moral demand</h4>
+      <p><em>¡Ten vergüenza!</em> is also said, and it is not asking for an emotion either. It demands <strong>decency</strong> in the face of a shameless act — closer to "have some shame" as a reproach than to "feel ashamed." Once again the imperative survives because what is being ordered is a stance, not a sensation. <span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ④ PRETÉRITO VS IMPERFECTO ═══ -->
+<article class="grammar-card card-delta" id="s4">
+  <div class="card-header">
+    <div class="card-number">④</div>
+    <div class="card-title-group">
+      <div class="card-title">Pretérito e imperfecto<span class="qualifier">el estado y su inicio</span></div>
+      <div class="card-title-en">Aspect</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Con <em>tener</em>, la elección entre pretérito e imperfecto no es estilística. El imperfecto
+      presenta el estado <strong>como fondo</strong>; el pretérito lo presenta <strong>como algo que
+      empezó</strong>, o que ocupó un tramo cerrado de tiempo.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Imperfecto — fondo</th><th>Pretérito — inicio o tramo cerrado</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><em>Tenía hambre, así que me preparé algo.</em><br><small>I was hungry, so I made myself something.</small></td>
+            <td><em>De repente tuve hambre.</em><br><small>I suddenly got hungry.</small></td>
+          </tr>
+          <tr>
+            <td><em>De niño tenía miedo a la oscuridad.</em><br><small>As a child I was afraid of the dark.</small></td>
+            <td><em>Cuando se apagó la luz, tuve miedo.</em><br><small>When the light went out, I got scared.</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head"><em>Tuve que</em> vs. <em>tenía que</em></div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuve que</span> salir temprano.</div>
+          <div class="example-en">I had to leave early — <em>and I did.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tenía que</span> salir temprano, pero al final me quedé.</div>
+          <div class="example-en">I was supposed to leave early, but in the end I stayed.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuvimos que</span> cancelar el viaje.</div>
+          <div class="example-en">We had to cancel the trip — <em>it happened.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El pretérito como <em>obtener</em></div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuve</span> una idea.</div>
+          <div class="example-en">I had an idea. / An idea came to me.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuvimos</span> noticias suyas la semana pasada.</div>
+          <div class="example-en">We heard from him last week.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuvo</span> una hija en marzo.</div>
+          <div class="example-en">She had a daughter in March.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>With most verbs, choosing preterite or imperfect changes the framing. With <em>tener</em>, it can change the meaning outright.</p>
+      <h4>Imperfect = the state · preterite = the onset</h4>
+      <p><em>Tenía miedo</em> describes a condition that was simply in place — background against which something else happened. <em>Tuve miedo</em> reads as <em>I got scared</em>: the emphasis lands on the moment the state began. English usually needs a different verb to make the distinction (<em>was afraid</em> vs. <em>got scared</em>), which is why the contrast is easy to miss when translating.</p>
+      <p>The preterite also covers a <strong>bounded stretch</strong>: <em>Tuve fiebre toda la semana</em> is perfectly good, and the adverbial <em>toda la semana</em> does not contradict the preterite — it defines the boundaries that license it. The imperfect is available too (<em>tenía fiebre toda la semana</em>), describing the condition as the persisting backdrop rather than a closed episode.</p>
+      <h4>The one that actually matters: <em>tuve que</em> vs. <em>tenía que</em></h4>
+      <p><em>Tuve que irme</em> carries a strong implication that the departure <strong>happened</strong> — the obligation was discharged. <em>Tenía que irme</em> reports only that the obligation existed, and leaves the outcome open, which is why it is the natural setup for <em>…pero no lo hice</em>. English "had to" is ambiguous between the two, so this is a distinction you must build rather than translate. It is the same split <em>poder</em> shows with <em>pude</em> / <em>podía</em>.</p>
+      <h4>The preterite's second job</h4>
+      <p>In the preterite, <em>tener</em> often stops meaning <em>possess</em> and starts meaning <strong>obtain, receive, or experience</strong>: <em>tuve una idea</em>, <em>tuvimos noticias</em>, <em>tuvo un accidente</em>, <em>tuvo un hijo</em>. This is not a separate verb — it is the same onset reading, applied to a thing rather than a state. You did not <em>possess</em> an idea over a bounded interval; you <em>came to have</em> one at a point.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ⑤ COMPLEMENTOS CON QUE ═══ -->
+<article class="grammar-card card-epsilon" id="s5">
+  <div class="card-header">
+    <div class="card-number">⑤</div>
+    <div class="card-title-group">
+      <div class="card-title">Complementos con <em>que</em><span class="qualifier">indicativo o subjuntivo</span></div>
+      <div class="card-title-en">Mood in the complement</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Varias frases con <em>tener</em> pueden abrir una cláusula con <strong>de que</strong>. El modo
+      de esa cláusula depende de lo que la frase exprese: <strong>emoción y deseo piden subjuntivo;
+      certeza pide indicativo</strong>.
+    </p>
+
+    <div class="sub-head">Subjuntivo — emoción, deseo, temor</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo miedo de que se <span class="hl">entere</span>.</div>
+          <div class="example-en">I'm afraid he'll find out.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo ganas de que <span class="hl">llegue</span> el verano.</div>
+          <div class="example-en">I can't wait for summer to arrive.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo la esperanza de que <span class="hl">vuelva</span>.</div>
+          <div class="example-en">I'm hopeful he'll come back.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Indicativo — certeza</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo la certeza de que <span class="hl">va</span> a venir.</div>
+          <div class="example-en">I'm certain he's going to come.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo la seguridad de que <span class="hl">dijo</span> eso.</div>
+          <div class="example-en">I'm sure he said that.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El giro: afirmativo vs. negativo</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Afirmativo — indicativo</th><th>Negativo — subjuntivo</th></tr></thead>
+        <tbody>
+          <tr><td><em>Tengo claro que no va a funcionar.</em></td><td><em>No tengo claro que sea buena idea.</em></td></tr>
+          <tr><td><em>Tengo claro que quiere irse.</em></td><td><em>No tengo claro que quiera irse.</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>Three things, in order of how often they will bite you.</p>
+      <h4>Emotion and desire take the subjunctive</h4>
+      <p><em>Tener miedo de que</em>, <em>tener ganas de que</em>, <em>tener la esperanza de que</em> all describe an attitude toward a situation rather than asserting that the situation holds — so the verb in the clause goes into the subjunctive. <em>Tengo miedo de que se entere</em>, never <em>se entera</em>. This is not a rule about <em>tener</em>; these phrases are simply members of the general subjunctive-of-emotion pattern.</p>
+      <h4>Certainty takes the indicative</h4>
+      <p><em>Tener la certeza de que</em>, <em>tener la seguridad de que</em> assert that something is the case, so the clause stays indicative. Same verb, opposite mood, and <strong>the noun is what decides</strong>.</p>
+      <h4>The negation flip</h4>
+      <p><em>Tengo claro que</em> asserts, so it takes the indicative. <strong>Negate it and the assertion disappears</strong>, and the subjunctive appears: <em>No tengo claro que sea buena idea</em>. This flip is worth practising because it is productive far beyond <em>tener</em> — the same thing happens with <em>creo que</em> / <em>no creo que</em>, <em>es evidente que</em> / <em>no es evidente que</em>.</p>
+      <h4>One frequency note</h4>
+      <p><em>Tener vergüenza de que</em> is grammatical but heavy. In practice <em>me da vergüenza que…</em> dominates overwhelmingly — see the <em>tener</em> vs. <em>dar</em> note in section ⑦.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ⑤b QUEÍSMO Y DEQUEÍSMO ═══ -->
+<article class="grammar-card card-zeta" id="s5b">
+  <div class="card-header">
+    <div class="card-number">⑤</div>
+    <div class="card-title-group">
+      <div class="card-title">Queísmo y dequeísmo<span class="qualifier">la preposición que sobra o falta</span></div>
+      <div class="card-title-en">The missing (or extra) <em>de</em></div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Dos errores opuestos, ambos muy frecuentes en el habla de todo el mundo hispano. El
+      <strong>queísmo</strong> quita una preposición necesaria; el <strong>dequeísmo</strong> añade
+      una que no corresponde. Ninguno de los dos se acepta en la lengua escrita.
+    </p>
+
+    <div class="sub-head">Queísmo — falta el <em>de</em></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Habla corriente</th><th>Forma correcta</th><th>English</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">Tengo miedo que venga.</td><td><em>Tengo miedo de que venga.</em></td><td>I'm afraid he's coming.</td></tr>
+          <tr><td class="bad">Me alegro que estés bien.</td><td><em>Me alegro de que estés bien.</em></td><td>I'm glad you're all right.</td></tr>
+          <tr><td class="bad">Estoy seguro que lo dijo.</td><td><em>Estoy seguro de que lo dijo.</em></td><td>I'm sure he said it.</td></tr>
+          <tr><td class="bad">Me di cuenta que faltaba.</td><td><em>Me di cuenta de que faltaba.</em></td><td>I realized it was missing.</td></tr>
+          <tr><td class="bad">Tengo ganas que termine.</td><td><em>Tengo ganas de que termine.</em></td><td>I can't wait for it to end.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">Dequeísmo — sobra el <em>de</em></div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Habla corriente</th><th>Forma correcta</th><th>English</th></tr></thead>
+        <tbody>
+          <tr><td class="bad">Pienso de que es mejor así.</td><td><em>Pienso que es mejor así.</em></td><td>I think it's better this way.</td></tr>
+          <tr><td class="bad">Creo de que no viene.</td><td><em>Creo que no viene.</em></td><td>I don't think he's coming.</td></tr>
+          <tr><td class="bad">Me dijo de que llegaba tarde.</td><td><em>Me dijo que llegaba tarde.</em></td><td>He told me he'd be late.</td></tr>
+          <tr><td class="bad">Resulta de que ya se había ido.</td><td><em>Resulta que ya se había ido.</em></td><td>It turns out he'd already left.</td></tr>
+          <tr><td class="bad">Tengo entendido de que renunció.</td><td><em>Tengo entendido que renunció.</em></td><td>I understand he resigned.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">La prueba</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Pregunta</th><th>Respuesta</th><th>Conclusión</th></tr></thead>
+        <tbody>
+          <tr><td><em>¿De qué</em> tengo miedo?</td><td><em>De que</em> venga.</td><td class="good">lleva <span class="prep-tag">de</span></td></tr>
+          <tr><td><em>¿Qué</em> pienso?</td><td><em>Que</em> es mejor así.</td><td>sin preposición</td></tr>
+          <tr><td><em>¿De qué</em> me di cuenta?</td><td><em>De que</em> faltaba.</td><td class="good">lleva <span class="prep-tag">de</span></td></tr>
+          <tr><td><em>¿Qué</em> tengo entendido?</td><td><em>Que</em> renunció.</td><td>sin preposición</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>These are worth learning together, because they are mirror images and because you will hear both constantly from native speakers — which makes them hard to un-learn once absorbed by ear.</p>
+      <h4>Queísmo drops a preposition the phrase requires</h4>
+      <p><em>Tengo miedo <strong>de</strong> los perros</em> takes <em>de</em> before a noun, so it keeps <em>de</em> before a clause: <em>tengo miedo <strong>de que</strong> venga</em>. Dropping it gives <em>tengo miedo que venga</em> — extremely common in speech, wrong in writing. The same applies to <em>me alegro de que</em>, <em>estoy seguro de que</em>, <em>me di cuenta de que</em>, <em>tengo ganas de que</em>.</p>
+      <h4>Dequeísmo inserts one the phrase does not license</h4>
+      <p><em>Pensar</em>, <em>creer</em>, <em>decir</em>, <em>resultar</em> and <em>tener entendido</em> take a bare <em>que</em> — nothing precedes it. <em>Pienso de que</em> is the hypercorrection of someone who has been told about queísmo and overshot.</p>
+      <h4>The test that resolves both</h4>
+      <p>Turn the sentence into a question and see which form the question takes. If you would ask <em>¿<strong>De qué</strong> tienes miedo?</em>, the clause needs <em>de que</em>. If you would ask <em>¿<strong>Qué</strong> piensas?</em>, it takes bare <em>que</em>. The question preserves the preposition the verb actually governs, which is exactly the information you need.</p>
+      <h4>One caution about register</h4>
+      <p>Queísmo in particular is so widespread in casual speech that avoiding it can sound careful. That is fine — careful is the right target, and it costs nothing in comprehension. Aim for the standard form and recognize the other when you hear it.</p>
+    </div>
+
+    <p class="explanation" style="margin-top:14px; font-size:0.88rem; font-style:italic;">
+      Este tema va más allá de <em>tener</em>; una página propia lo tratará en detalle.
+    </p>
+
+  </div>
+</article>
+
+<div class="part-divider"><span>Parte II · Las familias</span></div>
+
+    <div class="legend">
+      <div class="legend-title">Reading the frame chips</div>
+      <p class="legend-intro">
+        Every entry below carries its full grammatical frame as a strip of labelled chips.
+        The chips appear on <b>every</b> entry, including where a whole family shares the same
+        values &#8212; so a missing chip always means "not applicable", never "not checked".
+      </p>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-prep">PREP</span>
+        <span class="legend-def">
+          The <b>preposition that follows</b> the phrase: <code>de</code> <code>a</code>
+          <code>con</code> <code>en</code> <code>por</code> <code>para</code> <code>sobre</code>
+          <code>que</code>. <code>ninguna</code> means the phrase takes no preposition at all.
+          A slash (<code>a / de</code>) means both are used, usually with a difference in meaning.
+        </span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-imp">IMP</span>
+        <span class="legend-def">
+          Whether the phrase works as a <b>command</b>.
+          <code>&#10003;</code> yes &#8212; <em>ten cuidado</em>.
+          <code>&#10005;</code> no &#8212; the noun names something you cannot produce on request.
+          <code>&#10005; &#183; neg &#10003;</code> the affirmative is blocked but the negative is fine:
+          you can be told to <em>stop</em> feeling something (<em>no tengas miedo</em>), not to start.
+          <code>&#8594; que tengas</code> the command is impossible because the outcome is outside
+          anyone's control, so the phrase survives as a <b>wish</b> instead &#8212;
+          not <em>ten suerte</em> but <em>que tengas suerte</em>.
+        </span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-cuant">CUANT</span>
+        <span class="legend-def">
+          The <b>intensifier</b>, which agrees in gender and number because the word is a noun:
+          <code>mucho</code> <code>mucha</code> <code>muchos</code> <code>muchas</code>.
+          Never <em>muy</em>. <code>ninguna</code> means the phrase is not intensified this way.
+        </span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-asp">ASP</span>
+        <span class="legend-def">
+          <code>pret &#8800; imp</code> &#8212; preterite and imperfect carry <b>different meanings</b>
+          here, not just different framing. <em>Ten&#237;a miedo</em> is a background state;
+          <em>tuve miedo</em> is the moment it started. See section &#9315;.
+        </span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-gram">GRAM</span>
+        <span class="legend-def">
+          A syntactic requirement of the phrase.<br>
+          <code>le + a</code> &#8212; takes a redundant indirect-object pronoun alongside the person:
+          <em>__Le__ tengo miedo <b>a</b> ese perro</em>. English has no equivalent, so English
+          speakers drop it and sound foreign.<br>
+          <code>+ obj. directo</code> &#8212; needs a direct object <b>inside</b> the phrase:
+          <em>ten <b>el pasaporte</b> a mano</em>, not <em>ten a mano</em>.<br>
+          <code>+ infinitivo</code> &#8212; followed by an infinitive.<br>
+          <code>+ subj</code> &#8212; opens a clause in the subjunctive.<br>
+          <code>ind &#183; neg &#8594; subj</code> &#8212; indicative normally, subjunctive when negated.<br>
+          <code>sujeto inanimado</code> &#8212; the subject is a thing or an idea, not a person.<br>
+          <code>lleva art&#237;culo</code> &#8212; keeps its article, against the bare-noun default.<br>
+          <code>usa adjetivo</code> &#8212; intensified with an adjective, not a quantifier:
+          <em>una gripe fuerte</em>.<br>
+          <code>casi siempre negativo</code> &#183; <code>neg &#183; interrog</code> &#8212; restricted
+          to those contexts in practice.
+        </span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-reg">REG</span>
+        <span class="legend-def">
+          Register: <code>coloquial</code> <code>formal</code> <code>muy formal</code>.
+          Regional marking is shown separately, as a badge beside the phrase.
+        </span>
+      </div>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-conf">?</span>
+        <span class="legend-def">
+          <b>Por confirmar.</b> Usually a place where the controllability rule <em>predicts</em>
+          a form should work. Prediction is not attestation &#8212; treat these as provisional
+          until a native speaker confirms them. Listed in full near the bottom of the page.
+        </span>
+      </div>
+    </div>
+
+<article class="grammar-card card-alpha" id="s6">
+  <button class="acc-toggle" onclick="toggleCard(this)" aria-expanded="false">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Estados físicos<span class="qualifier">el cuerpo</span></div>
+        <div class="card-title-en">Physical states <span class="acc-count">15 frases</span></div>
+      </div>
+      <span class="acc-chevron">›</span>
+    </div>
+  </button>
+  <div class="acc-panel"><div class="card-body">
+    <div class="family-note">Ninguna de estas frases admite imperativo: son <em>sensaciones</em>, no posturas. El marco se repite —sin preposición, sin imperativo— y esa uniformidad es justamente el dato.</div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener hambre</span><span class="entry-en">to be hungry</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-asp"><span class="chip-ax">ASP</span>pret ≠ imp</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener sed</span><span class="entry-en">to be thirsty</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener sueño</span><span class="entry-en">to be sleepy</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener frío</span><span class="entry-en">to be cold</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener calor</span><span class="entry-en">to be hot</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener dolor de</span><span class="entry-en">to have a … ache</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener fiebre</span><span class="entry-en">to have a fever</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-asp"><span class="chip-ax">ASP</span>pret ≠ imp</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener resaca</span><span class="entry-en">to be hungover</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener náuseas</span><span class="entry-en">to feel nauseous</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchas</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener escalofríos</span><span class="entry-en">to have chills</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchos</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener mareos</span><span class="entry-en">to feel dizzy</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchos</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener tos</span><span class="entry-en">to have a cough</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener gripe / catarro</span><span class="entry-en">to have the flu / a cold</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>usa adjetivo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener alergia a</span><span class="entry-en">to be allergic to</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener … años</span><span class="entry-en">to be … years old</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="sub-head">Ejemplos</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">mucha hambre</span>, no almorcé.</div>
+          <div class="example-en">I'm very hungry, I didn't have lunch.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Tienes <span class="hl">frío</span>? Te presto una chaqueta.</div>
+          <div class="example-en">Are you cold? I'll lend you a jacket.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">dolor de espalda</span> desde el lunes.</div>
+          <div class="example-en">My back has hurt since Monday.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuvo fiebre</span> toda la noche.</div>
+          <div class="example-en">He had a fever all night.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le tengo alergia</span> a los mariscos.</div>
+          <div class="example-en">I'm allergic to shellfish.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Mi hija <span class="hl">tiene siete años</span>.</div>
+          <div class="example-en">My daughter is seven.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Agarré <span class="hl">una gripe</span> terrible.</div>
+          <div class="example-en">I caught a terrible flu. <em>— no «mucha gripe».</em></div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Spanish splits heat three ways where English uses one adjective, and picking the wrong verb changes the subject of the sentence. <strong>Person → <em>tener</em>:</strong> <em>Tengo calor</em> — I feel hot. <strong>Weather → <em>hacer</em>:</strong> <em>Hace calor</em> — it's hot out. <strong>Object → <em>estar</em>:</strong> <em>La sopa está caliente</em> — the soup is hot. The one to be deliberate about: <strong><em>estar caliente</em> applied to a person is sexual slang</strong> throughout the Spanish-speaking world. <em>Tengo calor</em> is the only way to say you feel hot. Cold works the same way — <em>tengo frío</em>, <em>hace frío</em>, <em>está frío</em> — but carries no such trap.
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>Gripe</em> and <em>catarro</em> break the quantifier pattern. You do not say <em>mucha gripe</em>; illnesses that come as a discrete episode take <strong>an article plus an adjective</strong> instead — <em>una gripe fuerte</em>, <em>un catarro terrible</em>. It is a different construction sitting inside the same family, so the <code>cuant</code> slot on those two entries is simply empty.
+    </div>
+  </div></div>
+</article>
+
+<article class="grammar-card card-beta" id="s7">
+  <button class="acc-toggle" onclick="toggleCard(this)" aria-expanded="false">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title">Estados emocionales<span class="qualifier">lo que se siente</span></div>
+        <div class="card-title-en">Emotional states <span class="acc-count">22 frases</span></div>
+      </div>
+      <span class="acc-chevron">›</span>
+    </div>
+  </button>
+  <div class="acc-panel"><div class="card-body">
+    <div class="family-note">El imperativo afirmativo se bloquea, pero <em>el negativo funciona</em>: se puede pedir que alguien deje de sentir algo, no que empiece.</div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener miedo</span><span class="entry-en">to be afraid</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a / de</span><span class="chip chip-imp-mixed"><span class="chip-ax">IMP</span>✕ · neg ✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-asp"><span class="chip-ax">ASP</span>pret ≠ imp</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener vergüenza</span><span class="entry-en">to be embarrassed / ashamed</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓ · neg ✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener celos</span><span class="entry-en">to be jealous</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchos</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener envidia</span><span class="entry-en">to envy</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener lástima</span><span class="entry-en">to feel pity</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de / por</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener pena</span><span class="entry-en">to feel sorry / sad</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>por</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener ilusión</span><span class="entry-en">to be excited</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>por</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener confianza</span><span class="entry-en">to trust</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>en</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener esperanza</span><span class="entry-en">to be hopeful</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ subj</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener curiosidad</span><span class="entry-en">to be curious</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>por</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener cariño</span><span class="entry-en">to be fond of</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener manía</span><span class="entry-en">to have it in for</span> <span class="reg-badge reg-esp">España</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tenerle idea <span class="obj">a alguien</span></span><span class="entry-en">to have it in for</span> <span class="reg-badge reg-rio">Rioplatense</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener bronca</span><span class="entry-en">to be angry at</span> <span class="reg-badge reg-rio">Rioplatense</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener rabia</span><span class="entry-en">to be angry at</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a / con</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener pánico</span><span class="entry-en">to be terrified</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener nostalgia</span><span class="entry-en">to be homesick / nostalgic</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener remordimientos</span><span class="entry-en">to feel remorse</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>por</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchos</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener dudas</span><span class="entry-en">to have doubts</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>sobre</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchas</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener interés</span><span class="entry-en">to be interested</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>en / por</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener ganas</span><span class="entry-en">to feel like</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchas</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ subj</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener prisa</span><span class="entry-en">to be in a hurry</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>por</span><span class="chip chip-imp-mixed"><span class="chip-ax">IMP</span>✕ · neg ✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="sub-head">Ejemplos</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le tengo miedo</span> a las alturas.</div>
+          <div class="example-en">I'm afraid of heights.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">No tengas vergüenza</span>, pregunta nomás.</div>
+          <div class="example-en">Don't be embarrassed, just ask.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le tiene muchos celos</span> a su hermano.</div>
+          <div class="example-en">He's very jealous of his brother.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">muchas ganas de</span> verte.</div>
+          <div class="example-en">I really want to see you.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten confianza en</span> ti mismo.</div>
+          <div class="example-en">Have confidence in yourself.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">No tengas prisa</span>, hay tiempo.</div>
+          <div class="example-en">Don't rush, there's time.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le tengo mucho cariño</span> a tu madre.</div>
+          <div class="example-en">I'm very fond of your mother.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">curiosidad por</span> saber cómo terminó.</div>
+          <div class="example-en">I'm curious to know how it ended.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Le tengo bronca</span> desde aquella reunión. <span class="reg-badge reg-rio">Rioplatense</span></div>
+          <div class="example-en">I've had a grudge against him since that meeting.</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>Several of these emotions can be built two ways, and the choice is not stylistic.</p>
+      <h4><em>Tener</em> = a state · <em>dar</em> = a trigger</h4>
+      <p><strong><em>Tener</em></strong> presents the emotion as <strong>a state the subject is in</strong>: <em>Tengo vergüenza</em> — I feel ashamed, as a condition. <strong><em>Dar</em></strong> presents it as <strong>something produced in you by a trigger</strong>, with the trigger as grammatical subject and you as the indirect object: <em>Me da vergüenza</em> — it embarrasses me. The trigger can be named — <em>Me da vergüenza hablar en público</em>, <em>Me da miedo la oscuridad</em> — which is exactly what <em>tener</em> cannot do as cleanly.</p>
+      <h4>Frequency matters here</h4>
+      <p>For several of these, the <em>dar</em> version is simply the more idiomatic default. <em>Me da vergüenza</em> is far more common than <em>tengo vergüenza</em>; <em>me da pena</em> likewise. With <em>miedo</em> the two are closer and both are frequent. With <em>ganas</em>, only <em>tener</em> works.</p>
+      <h4>The practical takeaway</h4>
+      <p>When there is a specific thing causing the feeling, reach for <em>dar</em>. When you are describing your own condition without naming a cause, <em>tener</em> is right. And note that <em>dar</em> puts the feeling in the third person — <em>me dan miedo los perros</em>, plural, agreeing with <em>los perros</em>, not with <em>me</em>.</p>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>Tener manía a alguien</em> is peninsular. In Latin America, and especially in the Río de la Plata, the equivalents are <em>tenerle bronca a alguien</em> and <em>tenerle idea a alguien</em> — both with the obligatory dative. All of these are textual regional notes; the audio on this page stays neutral throughout.
+    </div>
+  </div></div>
+</article>
+
+<article class="grammar-card card-gamma" id="s8">
+  <button class="acc-toggle" onclick="toggleCard(this)" aria-expanded="false">
+    <div class="card-header">
+      <div class="card-number">⑧</div>
+      <div class="card-title-group">
+        <div class="card-title">Carácter y disposición<span class="qualifier">lo que se elige</span></div>
+        <div class="card-title-en">Disposition <span class="acc-count">21 frases</span></div>
+      </div>
+      <span class="acc-chevron">›</span>
+    </div>
+  </button>
+  <div class="acc-panel"><div class="card-body">
+    <div class="family-note">Esta es la zona del imperativo. Casi todo lo que aparece aquí se puede mandar, porque describe <em>una postura</em>, no una sensación.</div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener cuidado</span><span class="entry-en">to be careful</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>con</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener paciencia</span><span class="entry-en">to be patient</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>con</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener calma</span><span class="entry-en">to stay calm</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener fe</span><span class="entry-en">to have faith</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>en</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener valor</span><span class="entry-en">to have courage</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener agallas</span><span class="entry-en">to have guts</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchas</span><span class="chip chip-reg"><span class="chip-ax">REG</span>coloquial</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener coraje</span><span class="entry-en">to have courage / nerve</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener sangre fría</span><span class="entry-en">to keep a cool head</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener piedad</span><span class="entry-en">to have mercy</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener compasión</span><span class="entry-en">to have compassion</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de / por</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener respeto</span><span class="entry-en">to have respect</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a / por</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>le + a</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener tacto</span><span class="entry-en">to be tactful</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener iniciativa</span><span class="entry-en">to show initiative</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener sentido común</span><span class="entry-en">to have common sense</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener don de gentes</span><span class="entry-en">to have a way with people</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener mano izquierda</span><span class="entry-en">to be deft with people</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener buen ojo</span><span class="entry-en">to have a good eye</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>para</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener labia</span><span class="entry-en">to have the gift of gab</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-reg"><span class="chip-ax">REG</span>coloquial</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener cara dura</span><span class="entry-en">to have some nerve</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-reg"><span class="chip-ax">REG</span>coloquial</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener morro</span><span class="entry-en">to have some nerve</span> <span class="reg-badge reg-esp">España</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-reg"><span class="chip-ax">REG</span>coloquial</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener buen / mal genio</span><span class="entry-en">to be even- / short-tempered</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="sub-head">Ejemplos</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten cuidado con</span> ese escalón.</div>
+          <div class="example-en">Watch out for that step.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten paciencia con</span> él, recién empieza.</div>
+          <div class="example-en">Be patient with him, he's just starting.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten fe en</span> el proceso.</div>
+          <div class="example-en">Have faith in the process.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuvo el valor de</span> decírselo en la cara.</div>
+          <div class="example-en">He had the courage to say it to her face.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No tiene ni una pizca de <span class="hl">tacto</span>.</div>
+          <div class="example-en">He hasn't got an ounce of tact.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tiene muy <span class="hl">buen ojo para</span> la ropa.</div>
+          <div class="example-en">She has a great eye for clothes.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¡Qué <span class="hl">cara</span> tienes!</div>
+          <div class="example-en">You've got some nerve!</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tiene <span class="hl">mal genio</span> por la mañana.</div>
+          <div class="example-en">He's short-tempered in the mornings.</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>Look at the imperative chips down this card and a split appears inside "character" that the controllability rule alone would not predict.</p>
+      <p>Nouns naming <strong>a posture you adopt</strong> — <em>cuidado, paciencia, calma, fe, valor, tacto, respeto</em> — accept the imperative. Nouns naming <strong>a trait you either have or do not</strong> — <em>sentido común, don de gentes, labia, buen ojo, genio</em> — refuse it, even though they describe character just as much. Ordering <em>ten labia</em> would be ordering a talent.</p>
+      <p>So controllability has a second dimension: not just "is this voluntary?" but "is this available on demand?" A stance can be summoned in the moment; an aptitude cannot.</p>
+    </div>
+  </div></div>
+</article>
+
+<article class="grammar-card card-delta" id="s9">
+  <button class="acc-toggle" onclick="toggleCard(this)" aria-expanded="false">
+    <div class="card-header">
+      <div class="card-number">⑨</div>
+      <div class="card-title-group">
+        <div class="card-title">Juicio, valor y resultado<span class="qualifier">lo que se evalúa</span></div>
+        <div class="card-title-en">Judgement and outcome <span class="acc-count">20 frases</span></div>
+      </div>
+      <span class="acc-chevron">›</span>
+    </div>
+  </button>
+  <div class="acc-panel"><div class="card-body">
+    <div class="family-note">Ninguna admite imperativo: no se manda ni una verdad ni un resultado. Además, varias de estas frases tienen <em>sujeto inanimado</em>.</div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener razón</span><span class="entry-en">to be right</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-asp"><span class="chip-ax">ASP</span>pret ≠ imp</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener sentido</span><span class="entry-en">to make sense</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>sujeto inanimado</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener lógica</span><span class="entry-en">to make sense</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>sujeto inanimado</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener fundamento</span><span class="entry-en">to be well-founded</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>sujeto inanimado</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener la culpa</span><span class="entry-en">to be at fault</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>lleva artículo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener derecho</span><span class="entry-en">to have the right</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>a</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener mérito</span><span class="entry-en">to be commendable</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener gracia</span><span class="entry-en">to be funny</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>sujeto inanimado</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener pinta de</span><span class="entry-en">to look like</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener cara de</span><span class="entry-en">to look like</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener aspecto de</span><span class="entry-en">to look like</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener buena / mala cara</span><span class="entry-en">to look well / unwell</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener valor</span><span class="entry-en">to be worth</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>sujeto inanimado</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener importancia</span><span class="entry-en">to matter</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>sujeto inanimado</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener éxito</span><span class="entry-en">to be successful</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>en</span><span class="chip chip-imp-mixed"><span class="chip-ax">IMP</span>→ que tengas</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener suerte</span><span class="entry-en">to be lucky</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-mixed"><span class="chip-ax">IMP</span>→ que tengas</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-asp"><span class="chip-ax">ASP</span>pret ≠ imp</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener mala suerte</span><span class="entry-en">to be unlucky</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener mala pata</span><span class="entry-en">to be unlucky</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucha</span><span class="chip chip-reg"><span class="chip-ax">REG</span>coloquial</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener remedio</span><span class="entry-en">to be fixable</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>casi siempre negativo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener arreglo</span><span class="entry-en">to be fixable</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>casi siempre negativo</span></div>
+    </div>
+    <div class="sub-head">Ejemplos</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tienes <span class="hl">toda la razón</span>.</div>
+          <div class="example-en">You're absolutely right.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Eso <span class="hl">no tiene ningún sentido</span>.</div>
+          <div class="example-en">That makes no sense at all.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Yo <span class="hl">tuve la culpa</span> del malentendido.</div>
+          <div class="example-en">The misunderstanding was my fault.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No tienes <span class="hl">derecho a</span> hablarme así.</div>
+          <div class="example-en">You have no right to talk to me like that.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tiene pinta de</span> estar cansado.</div>
+          <div class="example-en">He looks tired.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tienes <span class="hl">mala cara</span>, ¿dormiste?</div>
+          <div class="example-en">You look awful — did you sleep?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La obra <span class="hl">tuvo mucho éxito</span>.</div>
+          <div class="example-en">The play was very successful.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tuvimos suerte</span> de encontrar lugar.</div>
+          <div class="example-en">We were lucky to find a spot.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ese auto ya <span class="hl">no tiene arreglo</span>.</div>
+          <div class="example-en">That car is beyond fixing.</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>This card differs from the previous ones in a way worth naming: several of these phrases <strong>do not describe a person at all</strong>. The subject is a thing, an idea, or a fact — <em>eso no tiene sentido</em>, <em>la propuesta no tiene fundamento</em>, <em>no tiene gracia</em>, <em>no tiene importancia</em>.</p>
+      <p>That double-blocks the imperative. Not only can a truth not be ordered — there is nobody to order it to.</p>
+      <h4><em>Tener valor</em> is two different phrases</h4>
+      <ul>
+        <li><strong>With a person → courage:</strong> <em>Tuvo el valor de decírselo.</em> Imperative available (<em>ten valor</em>), so it lives in card ⑧.</li>
+        <li><strong>With a thing → worth:</strong> <em>El cuadro tiene mucho valor.</em> No imperative, inanimate subject, so it lives here.</li>
+      </ul>
+      <p>Same word, two frames — and the frames are what tell them apart.</p>
+    </div>
+  </div></div>
+</article>
+
+<article class="grammar-card card-epsilon" id="s10">
+  <button class="acc-toggle" onclick="toggleCard(this)" aria-expanded="false">
+    <div class="card-header">
+      <div class="card-number">⑩</div>
+      <div class="card-title-group">
+        <div class="card-title">Los modales<span class="qualifier">obligación, intención y razón</span></div>
+        <div class="card-title-en">Obligation and intent <span class="acc-count">9 frases</span></div>
+      </div>
+      <span class="acc-chevron">›</span>
+    </div>
+  </button>
+  <div class="acc-panel"><div class="card-body">
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener que <span class="obj">+ inf</span></span><span class="entry-en">to have to</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>que</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span><span class="chip chip-asp"><span class="chip-ax">ASP</span>pret ≠ imp</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener por qué <span class="obj">+ inf</span></span><span class="entry-en">to have reason to</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>neg · interrog</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener ganas de <span class="obj">+ inf</span></span><span class="entry-en">to feel like</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>muchas</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ subj</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener la intención de <span class="obj">+ inf</span></span><span class="entry-en">to intend to</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>lleva artículo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener pensado <span class="obj">+ inf</span></span><span class="entry-en">to be planning to</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener previsto <span class="obj">+ inf</span></span><span class="entry-en">to have scheduled</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span><span class="chip chip-reg"><span class="chip-ax">REG</span>formal</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener planeado <span class="obj">+ inf</span></span><span class="entry-en">to have planned</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener por costumbre <span class="obj">+ inf</span></span><span class="entry-en">to be in the habit of</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span><span class="chip chip-reg"><span class="chip-ax">REG</span>formal</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener a bien <span class="obj">+ inf</span></span><span class="entry-en">to see fit to</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ infinitivo</span><span class="chip chip-reg"><span class="chip-ax">REG</span>muy formal</span></div>
+    </div>
+    <div class="sub-head">El contraste central</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">No tienes que</span> ir a la reunión.</div>
+          <div class="example-en">You don't have to go to the meeting. <em>— no obligation.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">No tienes por qué</span> ir a la reunión.</div>
+          <div class="example-en">There's no reason for you to go to the meeting. <em>— no justification.</em></div>
+        </div>
+      </div>
+    </div>
+    <div class="sub-head">Más ejemplos</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo que</span> salir en diez minutos.</div>
+          <div class="example-en">I have to leave in ten minutes.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">No tengo por qué</span> aguantar esto.</div>
+          <div class="example-en">I shouldn't have to put up with this.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Y tú <span class="hl">por qué tienes que</span> meterte?</div>
+          <div class="example-en">And why do you have to get involved?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo la intención de</span> mudarme el año que viene.</div>
+          <div class="example-en">I intend to move next year.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tenemos pensado</span> ir en tren.</div>
+          <div class="example-en">We're planning to go by train.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El acto <span class="hl">está previsto</span> para las ocho.</div>
+          <div class="example-en">The event is scheduled for eight.</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <em>No tienes <strong>por qué</strong> ir</em> is three words: preposition plus interrogative <em>qué</em>, carrying its accent. It is not <em>porque</em> (because), not <em>porqué</em> (the noun, "the reason"), and not <em>por que</em>. The phrase literally asks after a reason, which is why the accent survives inside a statement — it is an embedded question.
+    </div>
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>English collapses two different denials into "don't have to," and Spanish keeps them apart.</p>
+      <h4>Obligation vs. justification</h4>
+      <p><strong><em>No tener que</em></strong> denies an <strong>obligation</strong>. <em>No tienes que ir</em> — nobody is requiring it; go if you like. <strong><em>No tener por qué</em></strong> denies a <strong>justification</strong>. <em>No tienes por qué ir</em> — there is no reason that would make going appropriate. The second is stronger and more argumentative: it does not merely release you from a duty, it rejects the premise that one existed.</p>
+      <h4>The use pattern is as important as the meaning</h4>
+      <p><em>Tener por qué</em> appears almost exclusively in <strong>negative and interrogative</strong> contexts. You will hear <em>no tengo por qué</em>, <em>¿por qué tengo que…?</em>, <em>no tienes por qué disculparte</em> constantly; the bare affirmative <em>tengo por qué ir</em> is not idiomatic. Treat the negation as part of the expression rather than as something you apply to it.</p>
+      <h4>Register</h4>
+      <p><em>No tengo por qué</em> frequently carries indignation — it is the phrase for refusing an imposition. Useful, but not neutral, and worth deploying on purpose.</p>
+      <p>For <em>tener que</em> in the past — <em>tuve que</em> vs. <em>tenía que</em> — see section ④.</p>
+    </div>
+  </div></div>
+</article>
+
+<article class="grammar-card card-zeta" id="s11">
+  <button class="acc-toggle" onclick="toggleCard(this)" aria-expanded="false">
+    <div class="card-header">
+      <div class="card-number">⑪</div>
+      <div class="card-title-group">
+        <div class="card-title">Frases fijas y modismos<span class="qualifier">lo que ya viene armado</span></div>
+        <div class="card-title-en">Set phrases and idioms <span class="acc-count">24 frases</span></div>
+      </div>
+      <span class="acc-chevron">›</span>
+    </div>
+  </button>
+  <div class="acc-panel"><div class="card-body">
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener que ver con</span><span class="entry-en">to have to do with</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>con</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>nada / algo / mucho</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener en cuenta <span class="obj">algo</span></span><span class="entry-en">to bear in mind</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener presente <span class="obj">algo</span></span><span class="entry-en">to keep in mind</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener claro <span class="obj">algo</span></span><span class="entry-en">to be clear about</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>ind · neg → subj</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener en mente <span class="obj">algo</span></span><span class="entry-en">to have in mind</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener a mano <span class="obj">algo</span></span><span class="entry-en">to have handy</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener al día <span class="obj">algo</span></span><span class="entry-en">to keep up to date</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener bajo control <span class="obj">algo</span></span><span class="entry-en">to have under control</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener a raya <span class="obj">a alguien</span></span><span class="entry-en">to keep in check</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-si"><span class="chip-ax">IMP</span>✓</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span><span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener en común <span class="obj">algo</span></span><span class="entry-en">to have in common</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>con</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>mucho / poco / nada</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener lugar</span><span class="entry-en">to take place</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>sujeto inanimado</span><span class="chip chip-reg"><span class="chip-ax">REG</span>formal</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener madera de</span><span class="entry-en">to have the makings of</span></div>
+      <div class="chips"><span class="chip chip-prep"><span class="chip-ax">PREP</span>de</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-reg"><span class="chip-ax">REG</span>coloquial</span></div>
+    </div>
+    <div class="entry">
+      <div class="entry-head"><span class="entry-es">tener entre manos <span class="obj">algo</span></span><span class="entry-en">to have in the works</span></div>
+      <div class="chips"><span class="chip chip-prep chip-none"><span class="chip-ax">PREP</span>ninguna</span><span class="chip chip-imp-no"><span class="chip-ax">IMP</span>✕</span><span class="chip chip-cuant"><span class="chip-ax">CUANT</span>ninguna</span><span class="chip chip-gram"><span class="chip-ax">GRAM</span>+ obj. directo</span></div>
+    </div>
+    <div class="sub-head">Ejemplos</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Eso <span class="hl">no tiene nada que ver con</span> lo que dije.</div>
+          <div class="example-en">That has nothing to do with what I said.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Y esto qué <span class="hl">tiene que ver</span>?</div>
+          <div class="example-en">And what's this got to do with anything?</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten en cuenta</span> que mañana es feriado.</div>
+          <div class="example-en">Bear in mind tomorrow is a holiday.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo claro que</span> no va a funcionar.</div>
+          <div class="example-en">I'm clear that it isn't going to work.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">No tengo claro que</span> sea buena idea.</div>
+          <div class="example-en">I'm not clear that it's a good idea. <em>— negative → subjunctive.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tenemos <span class="hl">mucho en común</span>.</div>
+          <div class="example-en">We have a lot in common.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La reunión <span class="hl">tendrá lugar</span> el martes.</div>
+          <div class="example-en">The meeting will take place on Tuesday.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ese chico <span class="hl">tiene madera de</span> músico.</div>
+          <div class="example-en">That kid has the makings of a musician.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Ten a mano</span> el pasaporte.</div>
+          <div class="example-en">Keep your passport handy.</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      Notice the entries written as <em>tener algo a mano</em>, <em>tener algo bajo control</em>, <em>tener a alguien a raya</em>. These are <strong>transitive</strong>: they need a direct object sitting between <em>tener</em> and the rest of the phrase, and the bare imperative is ungrammatical without one. <em>Ten a mano</em> on its own is incomplete; <em>ten <strong>el pasaporte</strong> a mano</em> is the real form. The same applies to <em>tener algo en cuenta</em> and <em>tener algo claro</em>, which can also take a whole clause instead of a noun.
+    </div>
+    <div class="sub-head">Modismos</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Modismo</th><th>English</th><th>Registro</th></tr></thead>
+        <tbody>
+          <tr><td><em>no tener pelos en la lengua</em></td><td>to not mince words</td><td>coloquial</td></tr>
+          <tr><td><em>tener la sartén por el mango</em></td><td>to have the upper hand</td><td>coloquial</td></tr>
+          <tr><td><em>tener los pies en la tierra</em></td><td>to be level-headed</td><td>coloquial</td></tr>
+          <tr><td><em>tener la cabeza en las nubes</em></td><td>to have one's head in the clouds</td><td>coloquial</td></tr>
+          <tr><td><em>no tener precio</em></td><td>to be priceless</td><td>coloquial</td></tr>
+          <tr><td><em>tener enchufe</em> <span class="reg-badge reg-esp">España</span></td><td>to have connections</td><td>coloquial</td></tr>
+          <tr><td><em>tener mala leche</em> <span class="reg-badge reg-esp">España</span></td><td>to be nasty / bad-tempered</td><td>coloquial</td></tr>
+          <tr><td><em>tener pasta</em> <span class="reg-badge reg-esp">España</span></td><td>to be loaded</td><td>coloquial</td></tr>
+          <tr><td><em>tener buena onda</em> <span class="reg-badge reg-rio">Rioplatense</span></td><td>to be a good sort</td><td>coloquial</td></tr>
+          <tr><td><em>tener fiaca</em> <span class="reg-badge reg-rio">Rioplatense</span></td><td>to feel lazy</td><td>coloquial</td></tr>
+          <tr><td><em>tener un quilombo</em> <span class="reg-badge reg-rio">Rioplatense</span></td><td>to have a mess on one's hands</td><td>coloquial</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">No tiene pelos en la lengua</span>: te lo dice en la cara.</div>
+          <div class="example-en">She doesn't mince words — she says it to your face.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ahora ellos <span class="hl">tienen la sartén por el mango</span>.</div>
+          <div class="example-en">They've got the upper hand now.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tiene <span class="hl">la cabeza en las nubes</span> últimamente.</div>
+          <div class="example-en">His head's been in the clouds lately.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hoy tengo <span class="hl">una fiaca</span> tremenda. <span class="reg-badge reg-rio">Rioplatense</span></div>
+          <div class="example-en">I really can't be bothered today.</div>
+        </div>
+      </div>
+    </div>
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Register warning.</strong> <em>Tener mala leche</em> and <em>tener un quilombo</em> are frequent but low-register and sit close to vulgar. They are here for recognition, not as production models. The same goes for <em>tener pasta</em> and <em>tener morro</em>, which are strongly peninsular and will sound out of place in Latin America.
+    </div>
+  </div></div>
+</article>
+
+
+<div class="part-divider"><span>Parte III · Referencia</span></div>
+
+<!-- ═══ ⑫ TABLA MAESTRA ═══ -->
+<article class="grammar-card card-eta" id="s12">
+  <div class="card-header">
+    <div class="card-number">⑫</div>
+    <div class="card-title-group">
+      <div class="card-title">Tabla maestra<span class="qualifier">todas las frases de la p&#225;gina</span></div>
+      <div class="card-title-en">Master reference</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Las mismas frases de la Parte II, con su marco completo en una sola lista. Us&#225; los filtros
+      para agrupar por preposici&#243;n, aislar las que admiten imperativo o recorrer una familia entera.
+    </p>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="tmFilter('todas', this)">Todas</button>
+      <button class="filter-btn" onclick="tmFilter('prep', this)">Por preposici&#243;n</button>
+      <button class="filter-btn" onclick="tmFilter('imp', this)">Imperativo &#10003;</button>
+      <button class="filter-btn" onclick="tmFilter('fam', this)">Por familia</button>
+      <button class="filter-btn" onclick="tmFilter('conf', this)">Por confirmar</button>
+      <button class="filter-btn" onclick="tmSortToggle(this)" id="tm-sort">A&#8594;Z</button>
+    </div>
+
+    <p class="filter-meta" id="tm-meta"></p>
+
+    <div class="table-wrapper tm-table-wrap">
+      <table id="tabla-maestra">
+        <thead>
+          <tr><th>Frase</th><th>English</th><th>PREP</th><th>IMP</th><th>CUANT</th><th>ASP / GRAM / REG</th></tr>
+        </thead>
+        <tbody id="tm-body"></tbody>
+      </table>
+    </div>
+
+    <div class="tm-cards" id="tm-cards"></div>
+
+  </div>
+</article>
+
+<!-- ═══ PUNTOS POR CONFIRMAR ═══ -->
+<article class="grammar-card card-beta">
+  <div class="card-header">
+    <div class="card-number">?</div>
+    <div class="card-title-group">
+      <div class="card-title">Puntos por confirmar<span class="qualifier">pendientes de revisi&#243;n</span></div>
+      <div class="card-title-en">Open questions</div>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      The items below are marked <em>por confirmar</em> on their entries. Most are places where the
+      controllability rule <strong>predicts</strong> that a form should work, and prediction is not
+      the same as attestation — a native speaker has to settle whether these are actually said, and
+      how often. Everything else on this page can be relied on; these six should be treated as
+      provisional until checked.
+    </div>
+    <ul class="confirm-list">
+      <li><strong>&#161;Ten verg&#252;enza!</strong> &#8212; genuine productive imperative, or a frozen reproach? Highest consequence: it decides whether the asymmetry table in &#9312;&#9313;&#9314; needs rewriting.</li>
+      <li><strong><em>Ten tacto</em> &#183; <em>ten iniciativa</em> &#183; <em>ten sangre fr&#237;a</em> &#183; <em>ten coraje</em></strong> &#8212; all marked &#10003; because the rule predicts it. Are they actually used as commands?</li>
+      <li><strong><em>Tener mala pata</em></strong> &#8212; panhispanic, or regionally narrower than it looks?</li>
+      <li><strong><em>Tenerle idea a alguien</em></strong> &#8212; current usage and register in the R&#237;o de la Plata.</li>
+      <li><strong><em>Inter&#233;s en</em> vs. <em>inter&#233;s por</em></strong> &#8212; is the fields/people split real, or too neat?</li>
+      <li><strong><em>Respeto a</em> vs. <em>respeto por</em></strong> &#8212; is the authority/admiration split real?</li>
+    </ul>
+  </div>
+</article>
+
+<section class="subpage-links">
+  <h2 class="subpage-links-title">M&#225;s sobre este tema</h2>
+  <div class="subpage-links-sub">Otra cara del mismo verbo</div>
+  <ul>
+    <li><a href="tener-estructural.html">Tener estructural: <em>tengo escritas tres cartas</em> <span class="arrow">&#8250;</span></a></li>
+  </ul>
+</section>
+
+<p class="page-foot">Mi Proyecto Espa&#241;ol &#183; Verbos en Profundidad</p>
+
+</div><!-- /.page-wrap -->
+
+<!-- ═══ GUÍA RÁPIDA ═══ -->
+<div class="modal-overlay" id="modal-cheat" onclick="handleCheatOverlayClick(event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Gu&#237;a R&#225;pida</div>
+      <button class="close-btn" onclick="closeCheat()" aria-label="Cerrar">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <p>Four tests. Run a new <em>tener</em> phrase through these and you have its whole frame.</p>
+
+      <h4>1. Article &#8212; is there one?</h4>
+      <p>Default is <strong>bare</strong>: <em>tengo hambre</em>, <em>tengo miedo</em>, <em>tengo raz&#243;n</em>. Only three common phrases carry an article: <em>la culpa</em>, <em>la intenci&#243;n de</em>, <em>la costumbre de</em>.</p>
+
+      <h4>2. Quantifier &#8212; <em>mucho</em>, never <em>muy</em></h4>
+      <p>It is a noun, so it takes <em>mucho</em> and agrees in gender and number: <em>mucha hambre</em>, <em>mucho miedo</em>, <em>muchas ganas</em>. Watch <em>el hambre</em> &#8212; masculine article, feminine agreement.</p>
+
+      <h4>3. Imperative &#8212; can the person comply?</h4>
+      <p>If the noun names a <strong>posture</strong> you adopt, yes: <em>ten cuidado</em>, <em>ten paciencia</em>. If it names a <strong>sensation</strong>, a <strong>truth</strong> or an <strong>outcome</strong>, no. Blocked outcomes reappear as wishes: <em>que tengas suerte</em>. Emotions block the affirmative but allow the negative: <em>no tengas miedo</em>.</p>
+
+      <h4>4. Aspect &#8212; state or onset?</h4>
+      <p>Imperfect gives the <strong>state as background</strong> (<em>ten&#237;a miedo</em>); preterite gives the <strong>onset or a closed span</strong> (<em>tuve miedo</em> = I got scared). With obligation: <em>tuve que</em> implies it happened, <em>ten&#237;a que</em> leaves it open.</p>
+
+      <h4 style="margin-top:24px;">The frame chips</h4>
+      <p>Every entry in Parte II carries these. Same vocabulary as the columns of the tabla maestra.</p>
+
+      <div class="legend-row">
+        <span class="legend-axis ax-prep">PREP</span>
+        <span class="legend-def">Preposition that follows. <code>ninguna</code> = takes none. A slash = both occur.</span>
+      </div>
+      <div class="legend-row">
+        <span class="legend-axis ax-imp">IMP</span>
+        <span class="legend-def">Works as a command? <code>&#10003;</code> yes &#183; <code>&#10005;</code> no &#183; <code>&#10005; &#183; neg &#10003;</code> negative only (<em>no tengas miedo</em>) &#183; <code>&#8594; que tengas</code> blocked, survives as a wish (<em>que tengas suerte</em>).</span>
+      </div>
+      <div class="legend-row">
+        <span class="legend-axis ax-cuant">CUANT</span>
+        <span class="legend-def">Agreeing intensifier &#8212; <code>mucho/a/os/as</code>, never <em>muy</em>. <code>ninguna</code> = not intensified this way.</span>
+      </div>
+      <div class="legend-row">
+        <span class="legend-axis ax-asp">ASP</span>
+        <span class="legend-def"><code>pret &#8800; imp</code> &#8212; the two past tenses carry different meanings, not just different framing.</span>
+      </div>
+      <div class="legend-row">
+        <span class="legend-axis ax-gram">GRAM</span>
+        <span class="legend-def">Syntactic requirement: <code>le + a</code> redundant indirect-object pronoun &#183; <code>+ obj. directo</code> needs an object inside the phrase &#183; <code>+ infinitivo</code> &#183; <code>+ subj</code> &#183; <code>ind &#183; neg &#8594; subj</code> &#183; <code>sujeto inanimado</code> &#183; <code>lleva art&#237;culo</code> &#183; <code>usa adjetivo</code>.</span>
+      </div>
+      <div class="legend-row">
+        <span class="legend-axis ax-reg">REG</span>
+        <span class="legend-def">Register: <code>coloquial</code> <code>formal</code> <code>muy formal</code>.</span>
+      </div>
+      <div class="legend-row">
+        <span class="legend-axis ax-conf">?</span>
+        <span class="legend-def">Provisional &#8212; predicted by the rule but not yet confirmed by a native speaker.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — Neutral Latin American Spanish only
+//  Voice fallback chain:
+//    es-419 → es-MX → es-US → es-CO → any es-* except AR/UY/ES → any es
+//  data-region="rioplatense" rows still play neutral.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row') || btn.closest('.vocab-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es') || row.querySelector('.vocab-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  clone.querySelectorAll('.reg-badge').forEach(el => el.remove());
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+</script>
+
+<script>
+// ── Accordion (Parte II) ──
+function toggleCard(btn) {
+  const card = btn.closest('.grammar-card');
+  const open = card.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+// Open a collapsed family card when linked to from the TOC
+function openFromHash() {
+  const id = location.hash.replace('#', '');
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (el && el.classList.contains('grammar-card')) {
+    const t = el.querySelector('.acc-toggle');
+    if (t && !el.classList.contains('open')) toggleCard(t);
+  }
+}
+window.addEventListener('hashchange', openFromHash);
+document.addEventListener('DOMContentLoaded', openFromHash);
+</script>
+
+<script>
+// ── Tabla maestra ──
+const TM_DATA = [{"f":"tener hambre","o":"","g":"to be hungry","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucha","asp":"pret ≠ imp","gram":"","reg":"","region":"","conf":false},{"f":"tener sed","o":"","g":"to be thirsty","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener sueño","o":"","g":"to be sleepy","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener frío","o":"","g":"to be cold","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener calor","o":"","g":"to be hot","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener dolor de","o":"","g":"to have a … ache","fam":"fisicos","prep":"de","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener fiebre","o":"","g":"to have a fever","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucha","asp":"pret ≠ imp","gram":"","reg":"","region":"","conf":false},{"f":"tener resaca","o":"","g":"to be hungover","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener náuseas","o":"","g":"to feel nauseous","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"muchas","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener escalofríos","o":"","g":"to have chills","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"muchos","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener mareos","o":"","g":"to feel dizzy","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"muchos","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener tos","o":"","g":"to have a cough","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener gripe / catarro","o":"","g":"to have the flu / a cold","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"usa adjetivo","reg":"","region":"","conf":false},{"f":"tener alergia a","o":"","g":"to be allergic to","fam":"fisicos","prep":"a","imp":"no","cuant":"mucha","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener … años","o":"","g":"to be … years old","fam":"fisicos","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener miedo","o":"","g":"to be afraid","fam":"emocionales","prep":"a / de","imp":"mixto","cuant":"mucho","asp":"pret ≠ imp","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener vergüenza","o":"","g":"to be embarrassed / ashamed","fam":"emocionales","prep":"de","imp":"si2","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":true},{"f":"tener celos","o":"","g":"to be jealous","fam":"emocionales","prep":"de","imp":"no","cuant":"muchos","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener envidia","o":"","g":"to envy","fam":"emocionales","prep":"a","imp":"no","cuant":"mucha","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener lástima","o":"","g":"to feel pity","fam":"emocionales","prep":"de / por","imp":"no","cuant":"mucha","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener pena","o":"","g":"to feel sorry / sad","fam":"emocionales","prep":"por","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener ilusión","o":"","g":"to be excited","fam":"emocionales","prep":"por","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener confianza","o":"","g":"to trust","fam":"emocionales","prep":"en","imp":"si","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener esperanza","o":"","g":"to be hopeful","fam":"emocionales","prep":"de","imp":"no","cuant":"mucha","asp":"","gram":"+ subj","reg":"","region":"","conf":false},{"f":"tener curiosidad","o":"","g":"to be curious","fam":"emocionales","prep":"por","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener cariño","o":"","g":"to be fond of","fam":"emocionales","prep":"a","imp":"no","cuant":"mucho","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener manía","o":"","g":"to have it in for","fam":"emocionales","prep":"a","imp":"no","cuant":"mucha","asp":"","gram":"le + a","reg":"","region":"España","conf":false},{"f":"tenerle idea","o":"a alguien","g":"to have it in for","fam":"emocionales","prep":"a","imp":"no","cuant":"ninguna","asp":"","gram":"+ obj. directo · le + a","reg":"","region":"Rioplatense","conf":true},{"f":"tener bronca","o":"","g":"to be angry at","fam":"emocionales","prep":"a","imp":"no","cuant":"mucha","asp":"","gram":"le + a","reg":"","region":"Rioplatense","conf":false},{"f":"tener rabia","o":"","g":"to be angry at","fam":"emocionales","prep":"a / con","imp":"no","cuant":"mucha","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener pánico","o":"","g":"to be terrified","fam":"emocionales","prep":"a","imp":"no","cuant":"mucho","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener nostalgia","o":"","g":"to be homesick / nostalgic","fam":"emocionales","prep":"de","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener remordimientos","o":"","g":"to feel remorse","fam":"emocionales","prep":"por","imp":"no","cuant":"muchos","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener dudas","o":"","g":"to have doubts","fam":"emocionales","prep":"sobre","imp":"no","cuant":"muchas","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener interés","o":"","g":"to be interested","fam":"emocionales","prep":"en / por","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener ganas","o":"","g":"to feel like","fam":"emocionales","prep":"de","imp":"no","cuant":"muchas","asp":"","gram":"+ subj","reg":"","region":"","conf":false},{"f":"tener prisa","o":"","g":"to be in a hurry","fam":"emocionales","prep":"por","imp":"mixto","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener cuidado","o":"","g":"to be careful","fam":"caracter","prep":"con","imp":"si","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener paciencia","o":"","g":"to be patient","fam":"caracter","prep":"con","imp":"si","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener calma","o":"","g":"to stay calm","fam":"caracter","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener fe","o":"","g":"to have faith","fam":"caracter","prep":"en","imp":"si","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener valor","o":"","g":"to have courage","fam":"caracter","prep":"ninguna","imp":"si","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener agallas","o":"","g":"to have guts","fam":"caracter","prep":"ninguna","imp":"si","cuant":"muchas","asp":"","gram":"","reg":"coloquial","region":"","conf":false},{"f":"tener coraje","o":"","g":"to have courage / nerve","fam":"caracter","prep":"ninguna","imp":"si","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":true},{"f":"tener sangre fría","o":"","g":"to keep a cool head","fam":"caracter","prep":"ninguna","imp":"si","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":true},{"f":"tener piedad","o":"","g":"to have mercy","fam":"caracter","prep":"de","imp":"si","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener compasión","o":"","g":"to have compassion","fam":"caracter","prep":"de / por","imp":"si","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener respeto","o":"","g":"to have respect","fam":"caracter","prep":"a / por","imp":"si","cuant":"mucho","asp":"","gram":"le + a","reg":"","region":"","conf":false},{"f":"tener tacto","o":"","g":"to be tactful","fam":"caracter","prep":"ninguna","imp":"si","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":true},{"f":"tener iniciativa","o":"","g":"to show initiative","fam":"caracter","prep":"ninguna","imp":"si","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":true},{"f":"tener sentido común","o":"","g":"to have common sense","fam":"caracter","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener don de gentes","o":"","g":"to have a way with people","fam":"caracter","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener mano izquierda","o":"","g":"to be deft with people","fam":"caracter","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener buen ojo","o":"","g":"to have a good eye","fam":"caracter","prep":"para","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener labia","o":"","g":"to have the gift of gab","fam":"caracter","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"coloquial","region":"","conf":false},{"f":"tener cara dura","o":"","g":"to have some nerve","fam":"caracter","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"coloquial","region":"","conf":false},{"f":"tener morro","o":"","g":"to have some nerve","fam":"caracter","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"coloquial","region":"España","conf":false},{"f":"tener buen / mal genio","o":"","g":"to be even- / short-tempered","fam":"caracter","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener razón","o":"","g":"to be right","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucha","asp":"pret ≠ imp","gram":"","reg":"","region":"","conf":false},{"f":"tener sentido","o":"","g":"to make sense","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"sujeto inanimado","reg":"","region":"","conf":false},{"f":"tener lógica","o":"","g":"to make sense","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"sujeto inanimado","reg":"","region":"","conf":false},{"f":"tener fundamento","o":"","g":"to be well-founded","fam":"juicio","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"sujeto inanimado","reg":"","region":"","conf":false},{"f":"tener la culpa","o":"","g":"to be at fault","fam":"juicio","prep":"de","imp":"no","cuant":"ninguna","asp":"","gram":"lleva artículo","reg":"","region":"","conf":false},{"f":"tener derecho","o":"","g":"to have the right","fam":"juicio","prep":"a","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener mérito","o":"","g":"to be commendable","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener gracia","o":"","g":"to be funny","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"sujeto inanimado","reg":"","region":"","conf":false},{"f":"tener pinta de","o":"","g":"to look like","fam":"juicio","prep":"de","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener cara de","o":"","g":"to look like","fam":"juicio","prep":"de","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener aspecto de","o":"","g":"to look like","fam":"juicio","prep":"de","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener buena / mala cara","o":"","g":"to look well / unwell","fam":"juicio","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener valor","o":"","g":"to be worth","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucho","asp":"","gram":"sujeto inanimado","reg":"","region":"","conf":false},{"f":"tener importancia","o":"","g":"to matter","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"sujeto inanimado","reg":"","region":"","conf":false},{"f":"tener éxito","o":"","g":"to be successful","fam":"juicio","prep":"en","imp":"deseo","cuant":"mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener suerte","o":"","g":"to be lucky","fam":"juicio","prep":"ninguna","imp":"deseo","cuant":"mucha","asp":"pret ≠ imp","gram":"","reg":"","region":"","conf":false},{"f":"tener mala suerte","o":"","g":"to be unlucky","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener mala pata","o":"","g":"to be unlucky","fam":"juicio","prep":"ninguna","imp":"no","cuant":"mucha","asp":"","gram":"","reg":"coloquial","region":"","conf":true},{"f":"tener remedio","o":"","g":"to be fixable","fam":"juicio","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"casi siempre negativo","reg":"","region":"","conf":false},{"f":"tener arreglo","o":"","g":"to be fixable","fam":"juicio","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"casi siempre negativo","reg":"","region":"","conf":false},{"f":"tener que","o":"+ inf","g":"to have to","fam":"modales","prep":"que","imp":"no","cuant":"ninguna","asp":"pret ≠ imp","gram":"+ infinitivo","reg":"","region":"","conf":false},{"f":"tener por qué","o":"+ inf","g":"to have reason to","fam":"modales","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"+ infinitivo · neg · interrog","reg":"","region":"","conf":false},{"f":"tener ganas de","o":"+ inf","g":"to feel like","fam":"modales","prep":"de","imp":"no","cuant":"muchas","asp":"","gram":"+ infinitivo · + subj","reg":"","region":"","conf":false},{"f":"tener la intención de","o":"+ inf","g":"to intend to","fam":"modales","prep":"de","imp":"no","cuant":"ninguna","asp":"","gram":"+ infinitivo · lleva artículo","reg":"","region":"","conf":false},{"f":"tener pensado","o":"+ inf","g":"to be planning to","fam":"modales","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"+ infinitivo","reg":"","region":"","conf":false},{"f":"tener previsto","o":"+ inf","g":"to have scheduled","fam":"modales","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"+ infinitivo","reg":"formal","region":"","conf":false},{"f":"tener planeado","o":"+ inf","g":"to have planned","fam":"modales","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"+ infinitivo","reg":"","region":"","conf":false},{"f":"tener por costumbre","o":"+ inf","g":"to be in the habit of","fam":"modales","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"+ infinitivo","reg":"formal","region":"","conf":false},{"f":"tener a bien","o":"+ inf","g":"to see fit to","fam":"modales","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"+ infinitivo","reg":"muy formal","region":"","conf":false},{"f":"tener que ver con","o":"","g":"to have to do with","fam":"fijas","prep":"con","imp":"no","cuant":"nada / algo / mucho","asp":"","gram":"","reg":"","region":"","conf":false},{"f":"tener en cuenta","o":"algo","g":"to bear in mind","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":false},{"f":"tener presente","o":"algo","g":"to keep in mind","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":false},{"f":"tener claro","o":"algo","g":"to be clear about","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo · ind · neg → subj","reg":"","region":"","conf":false},{"f":"tener en mente","o":"algo","g":"to have in mind","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":true},{"f":"tener a mano","o":"algo","g":"to have handy","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":true},{"f":"tener al día","o":"algo","g":"to keep up to date","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":false},{"f":"tener bajo control","o":"algo","g":"to have under control","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":true},{"f":"tener a raya","o":"a alguien","g":"to keep in check","fam":"fijas","prep":"ninguna","imp":"si","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":true},{"f":"tener en común","o":"algo","g":"to have in common","fam":"fijas","prep":"con","imp":"no","cuant":"mucho / poco / nada","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":false},{"f":"tener lugar","o":"","g":"to take place","fam":"fijas","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"sujeto inanimado","reg":"formal","region":"","conf":false},{"f":"tener madera de","o":"","g":"to have the makings of","fam":"fijas","prep":"de","imp":"no","cuant":"ninguna","asp":"","gram":"","reg":"coloquial","region":"","conf":false},{"f":"tener entre manos","o":"algo","g":"to have in the works","fam":"fijas","prep":"ninguna","imp":"no","cuant":"ninguna","asp":"","gram":"+ obj. directo","reg":"","region":"","conf":false}];
+
+const FAM_LABEL = {
+  fisicos: 'Estados f\u00edsicos',
+  emocionales: 'Estados emocionales',
+  caracter: 'Car\u00e1cter',
+  juicio: 'Juicio y resultado',
+  modales: 'Modales',
+  fijas: 'Frases fijas'
+};
+const FAM_ORDER = ['fisicos','emocionales','caracter','juicio','modales','fijas'];
+const PREP_ORDER = ['de','a','con','en','por','para','que','a / de','a / con','a / por','de / por','en / por','sobre','ninguna'];
+
+const IMP_TBL = {
+  si:    ['\u2713', 'tm-imp-si'],
+  no:    ['\u2715', 'tm-imp-no'],
+  mixto: ['\u2715 / no \u2713', 'tm-imp-mixed'],
+  si2:   ['\u2713 / no \u2713', 'tm-imp-si'],
+  deseo: ['\u2192 que tengas', 'tm-imp-mixed']
+};
+
+let tmMode = 'todas';
+let tmAlpha = false;
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+function ax(cls, axis, value) {
+  return '<span class="chip ' + cls + '"><span class="chip-ax">' + axis + '</span>' + value + '</span>';
+}
+
+function fraseHtml(r) {
+  let s = escapeHtml(r.f);
+  if (r.o) s += ' <span class="obj">' + escapeHtml(r.o) + '</span>';
+  return s;
+}
+
+function tmRows() {
+  let rows = TM_DATA.slice();
+  if (tmMode === 'imp')  rows = rows.filter(r => r.imp === 'si' || r.imp === 'si2');
+  if (tmMode === 'conf') rows = rows.filter(r => r.conf);
+
+  if (tmAlpha) {
+    rows.sort((a, b) => a.f.localeCompare(b.f, 'es'));
+  } else if (tmMode === 'prep') {
+    rows.sort((a, b) => {
+      const ia = PREP_ORDER.indexOf(a.prep), ib = PREP_ORDER.indexOf(b.prep);
+      if (ia !== ib) return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      return a.f.localeCompare(b.f, 'es');
+    });
+  } else {
+    rows.sort((a, b) => {
+      const d = FAM_ORDER.indexOf(a.fam) - FAM_ORDER.indexOf(b.fam);
+      return d !== 0 ? d : 0;
+    });
+  }
+  return rows;
+}
+
+function tmRender() {
+  const rows = tmRows();
+  const body  = document.getElementById('tm-body');
+  const cards = document.getElementById('tm-cards');
+  const meta  = document.getElementById('tm-meta');
+  if (!body || !cards) return;
+
+  let html = '', chtml = '', lastGroup = null;
+
+  rows.forEach(r => {
+    let group = null;
+    if (tmMode === 'fam')  group = FAM_LABEL[r.fam] || r.fam;
+    if (tmMode === 'prep') group = r.prep === 'ninguna' ? 'sin preposici\u00f3n' : r.prep;
+    if (group && group !== lastGroup) {
+      html += '<tr><td colspan="6" style="background:rgba(0,0,0,0.28);color:#8a9bb8;'
+            + 'font-size:0.76rem;letter-spacing:0.12em;text-transform:uppercase;">'
+            + escapeHtml(group) + '</td></tr>';
+      chtml += '<div style="color:#5a6f8e;font-size:0.74rem;letter-spacing:0.12em;'
+            + 'text-transform:uppercase;margin:14px 0 6px;">' + escapeHtml(group) + '</div>';
+      lastGroup = group;
+    }
+
+    const imp = IMP_TBL[r.imp] || ['', ''];
+    const noteBits = [];
+    if (r.asp)    noteBits.push(escapeHtml(r.asp));
+    if (r.gram)   noteBits.push(escapeHtml(r.gram));
+    if (r.reg)    noteBits.push(escapeHtml(r.reg));
+    if (r.region) noteBits.push(escapeHtml(r.region));
+    const note = noteBits.join(' · ');
+    const conf = r.conf ? ' <span class="chip chip-confirm"><span class="chip-ax">?</span>por confirmar</span>' : '';
+
+    html += '<tr>'
+         +  '<td class="tm-frase">' + fraseHtml(r) + '</td>'
+         +  '<td>' + escapeHtml(r.g) + '</td>'
+         +  '<td class="tm-prep">' + escapeHtml(r.prep) + '</td>'
+         +  '<td class="' + imp[1] + '">' + imp[0] + '</td>'
+         +  '<td>' + escapeHtml(r.cuant) + '</td>'
+         +  '<td class="tm-note">' + note + conf + '</td>'
+         +  '</tr>';
+
+    const impCls = imp[1] === 'tm-imp-si' ? 'chip-imp-si'
+                 : imp[1] === 'tm-imp-no' ? 'chip-imp-no' : 'chip-imp-mixed';
+    chtml += '<div class="tm-card">'
+          +  '<span class="entry-es">' + fraseHtml(r) + '</span>'
+          +  '<span class="entry-en">' + escapeHtml(r.g) + '</span>'
+          +  '<div class="chips">'
+          +    ax('chip-prep' + (r.prep === 'ninguna' ? ' chip-none' : ''), 'PREP', escapeHtml(r.prep))
+          +    ax(impCls, 'IMP', imp[0])
+          +    ax('chip-cuant', 'CUANT', escapeHtml(r.cuant))
+          +    (r.asp  ? ax('chip-asp',  'ASP',  escapeHtml(r.asp))  : '')
+          +    (r.gram ? ax('chip-gram', 'GRAM', escapeHtml(r.gram)) : '')
+          +    (r.reg  ? ax('chip-reg',  'REG',  escapeHtml(r.reg))  : '')
+          +    (r.conf ? ax('chip-confirm', '?', 'por confirmar') : '')
+          +  '</div></div>';
+  });
+
+  body.innerHTML = html;
+  cards.innerHTML = chtml;
+  if (meta) meta.textContent = rows.length + ' de ' + TM_DATA.length + ' frases';
+}
+
+function tmFilter(mode, btn) {
+  tmMode = mode;
+  document.querySelectorAll('.filter-bar .filter-btn').forEach(b => {
+    if (b.id !== 'tm-sort') b.classList.remove('active');
+  });
+  btn.classList.add('active');
+  tmRender();
+}
+
+function tmSortToggle(btn) {
+  tmAlpha = !tmAlpha;
+  btn.classList.toggle('active', tmAlpha);
+  btn.textContent = tmAlpha ? 'Orden A\u2192Z' : 'A\u2192Z';
+  tmRender();
+}
+
+document.addEventListener('DOMContentLoaded', tmRender);
+</script>
+
+<script>
+// ── Guía Rápida modal ──
+function openCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeCheat() {
+  const m = document.getElementById('modal-cheat');
+  if (!m) return;
+  m.classList.remove('active');
+  document.body.style.overflow = '';
+}
+function handleCheatOverlayClick(e) {
+  if (e.target.id === 'modal-cheat') closeCheat();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCheat(); });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verbos en Profundidad | Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  --accent-alpha:   #c084fc;
+  --accent-beta:    #fbbf24;
+  --accent-gamma:   #4ecdc4;
+  --accent-delta:   #FF6B6B;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background (Guernica) ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/Guernica.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.62);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 22px;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.ornament {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin: 18px auto 12px;
+  color: var(--accent); opacity: 0.65; max-width: 280px;
+}
+.ornament::before, .ornament::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.ornament-symbol { font-size: 1.1rem; }
+.page-header .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+.intro-prose {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin: 0 0 28px;
+  padding: 0 4px;
+}
+.intro-prose strong { color: var(--text-primary); font-weight: 600; }
+.intro-prose em     { color: var(--accent); font-style: italic; }
+
+/* ── Verb cards ── */
+.verb-grid { display: grid; gap: 14px; }
+
+.verb-card {
+  display: block;
+  text-decoration: none;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-alpha);
+  border-radius: 14px;
+  padding: 24px 26px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.verb-card:hover {
+  background: var(--bg-card-hover);
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.verb-card-top {
+  display: flex; align-items: baseline; gap: 14px;
+  flex-wrap: wrap;
+}
+.verb-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+.verb-thesis {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--accent-alpha);
+}
+.verb-card:hover .verb-thesis { color: #d6b3ff; }
+.verb-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 10px;
+}
+.verb-meta {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.verb-tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 2px 9px;
+  border-radius: 12px;
+  background: rgba(74, 144, 217, 0.12);
+  color: #8fc0f0;
+  border: 1px solid rgba(74, 144, 217, 0.28);
+}
+.verb-arrow {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-size: 1.3rem;
+  line-height: 1;
+}
+.verb-card:hover .verb-arrow { color: var(--accent); }
+
+/* ── Placeholder / roadmap note ── */
+.roadmap {
+  background: rgba(74, 144, 217, 0.06);
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin-top: 22px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.roadmap b { color: var(--text-secondary); font-weight: 600; }
+.roadmap em { color: var(--text-secondary); font-style: italic; }
+
+.page-foot {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 30px;
+  font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .verb-card { padding: 20px 18px; }
+  .verb-name { font-size: 1.7rem; }
+  .verb-thesis { font-size: 0.95rem; }
+  .roadmap { padding: 16px 18px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+<div class="page-wrap">
+
+<a href="../../index.html" class="back-link">← Volver al menú</a>
+
+<header class="page-header">
+  <div class="overline">Régimen Verbal</div>
+  <h1>Verbos en Profundidad</h1>
+  <div class="ornament"><span class="ornament-symbol">❖</span></div>
+  <div class="subtitle">Un verbo por página, hasta el fondo</div>
+</header>
+
+<p class="intro-prose">
+  Algunos verbos no se aprenden con una definición. <em>Tener</em>, <em>quedar</em>, <em>poder</em>,
+  <em>echar</em> y otros aparecen en decenas de construcciones donde el significado depende del marco:
+  qué preposición sigue, si admite imperativo, qué cambia entre pretérito e imperfecto.
+  Estas páginas toman <strong>un solo verbo</strong> y lo recorren entero — no como lista de frases,
+  sino como <strong>sistema</strong>.
+</p>
+
+<div class="verb-grid">
+
+  <a class="verb-card" href="tener.html">
+    <div class="verb-card-top">
+      <span class="verb-name">Tener</span>
+      <span class="verb-thesis">un sistema, no una lista</span>
+      <span class="verb-arrow">›</span>
+    </div>
+    <div class="verb-desc">
+      Cien frases con <em>tener</em>, cada una con su marco gramatical completo. El motor
+      <em>tener + sustantivo</em>, el mapa de preposiciones, la regla de controlabilidad que decide
+      qué se puede mandar, el contraste <em>tuve que / tenía que</em>, el queísmo y el dequeísmo,
+      y una tabla maestra filtrable.
+    </div>
+    <div class="verb-meta">
+      <span class="verb-tag">100 frases</span>
+      <span class="verb-tag">13 secciones</span>
+      <span class="verb-tag">tabla filtrable</span>
+      <span class="verb-tag">guía rápida</span>
+    </div>
+  </a>
+
+</div>
+
+<div class="roadmap">
+  <b>En preparación.</b> <em>Quedar</em> — el verbo de los estados resultantes y del
+  <em>quedarse</em> pronominal. <em>Poder</em> — una sola potencia, varios blancos.
+  <em>Rendir</em>, <em>echar</em> y otros seguirán. Cada verbo se publica cuando su página está
+  completa; esta sección no lista páginas que todavía no existen.
+</div>
+
+<p class="page-foot">Mi Proyecto Español · Verbos en Profundidad</p>
+
+</div><!-- /.page-wrap -->
+</body>
+</html>

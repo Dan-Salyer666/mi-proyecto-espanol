@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tener estructural | Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+
+  --accent-alpha:   #c084fc;
+  --accent-beta:    #fbbf24;
+  --accent-gamma:   #4ecdc4;
+  --accent-delta:   #FF6B6B;
+  --accent-epsilon: #f472b6;
+  --accent-zeta:    #34d399;
+  --accent-eta:     #fb923c;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/Guernica.webp') center/cover no-repeat;
+  filter: brightness(0.55);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.62);
+  z-index: 0;
+}
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px; margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header { text-align: center; padding: 14px 0 22px; }
+.page-header .overline {
+  font-size: 0.72rem; font-weight: 500;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  font-weight: 400; color: var(--text-primary);
+  line-height: 1.15; margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.ornament {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin: 18px auto 12px;
+  color: var(--accent); opacity: 0.65; max-width: 280px;
+}
+.ornament::before, .ornament::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+.ornament-symbol { font-size: 1.1rem; }
+.page-header .subtitle {
+  font-size: 0.95rem; color: var(--text-secondary);
+  font-style: italic; letter-spacing: 0.05em;
+}
+
+.intro-prose {
+  font-size: 1rem; color: var(--text-secondary);
+  line-height: 1.75; margin: 0 0 22px; padding: 0 4px;
+}
+.intro-prose strong { color: var(--text-primary); font-weight: 600; }
+.intro-prose em     { color: var(--accent); font-style: italic; }
+
+.toc {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(10, 22, 40, 0.94);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 8px 10px; margin-bottom: 18px;
+  display: flex; flex-wrap: wrap; gap: 5px;
+}
+.toc a {
+  font-size: 0.74rem; color: var(--text-muted);
+  text-decoration: none; padding: 4px 9px;
+  border: 1px solid var(--border); border-radius: 6px;
+  transition: all 0.2s; white-space: nowrap;
+}
+.toc a:hover { color: var(--accent); border-color: var(--accent); }
+
+.rate-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  margin: 0 0 18px; padding: 10px 14px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px; border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted);
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem;
+  cursor: pointer; transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent); border-color: rgba(74, 144, 217, 0.3);
+}
+
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px; margin-bottom: 16px;
+  overflow: hidden;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-beta    { border-left-color: var(--accent-beta); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-delta   { border-left-color: var(--accent-delta); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.8; }
+.card-beta    .card-number { color: var(--accent-beta);    opacity: 0.8; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.8; }
+.card-delta   .card-number { color: var(--accent-delta);   opacity: 0.8; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.8; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.8; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.8; }
+
+.card-header {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 24px 26px 6px; flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.1rem; line-height: 1;
+  color: var(--text-muted); flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 220px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.42rem; line-height: 1.2; color: var(--text-primary);
+}
+.card-title .qualifier {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6em; font-weight: 400;
+  color: var(--text-muted); font-style: italic; margin-left: 6px;
+}
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.12em; margin-top: 4px;
+}
+.card-body { padding: 0 26px 20px; }
+
+.explanation {
+  color: var(--text-secondary); line-height: 1.75;
+  margin-bottom: 16px; font-size: 0.95rem;
+}
+.explanation em     { color: var(--text-primary); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+
+.formula {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  font-size: 0.88rem; color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border); border-radius: 6px;
+  padding: 8px 14px; margin: 4px 0 16px;
+}
+
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--text-muted); margin: 22px 0 10px;
+  padding-bottom: 6px; border-bottom: 1px solid var(--border);
+}
+
+.examples-block { margin: 12px 0 6px; }
+.example-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 0; border-bottom: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:last-child { border-bottom: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem; color: var(--text-primary); line-height: 1.5;
+}
+.example-es .hl { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-es .bad { color: var(--accent-delta); text-decoration: line-through; }
+.example-en {
+  font-size: 0.87rem; color: var(--text-muted);
+  font-style: italic; margin-top: 3px; line-height: 1.5;
+}
+.example-en em { color: var(--text-secondary); font-style: normal; }
+
+.speak-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px;
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; color: var(--text-muted);
+  cursor: pointer; font-size: 0.85rem;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing {
+  color: var(--accent); border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.table-wrapper {
+  overflow-x: auto; margin: 14px 0 4px;
+  border-radius: 8px; border: 1px solid var(--border);
+}
+.table-wrapper table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.88rem; text-align: left;
+}
+.table-wrapper th {
+  background: rgba(0,0,0,0.35); color: var(--text-primary);
+  padding: 10px 14px; font-weight: 600;
+  font-size: 0.8rem; letter-spacing: 0.04em; white-space: nowrap;
+}
+.table-wrapper td {
+  padding: 10px 14px; border-bottom: 1px solid var(--border);
+  color: var(--text-secondary); vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tbody tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper em {
+  color: var(--text-primary); font-style: italic;
+  font-family: 'DM Serif Display', serif; font-size: 1.02em;
+}
+.table-wrapper .bad  { color: #ff9c9c; }
+.table-wrapper .good { color: #6ee7b7; }
+.table-wrapper small { color: var(--text-muted); font-style: italic; }
+
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px; margin: 18px 0;
+  font-size: 0.93rem; color: var(--text-secondary); line-height: 1.7;
+}
+.nota .nota-label {
+  display: inline-block; font-weight: 600;
+  color: var(--accent); margin-right: 6px; letter-spacing: 0.02em;
+}
+.nota.nota-expanded { padding: 18px 22px; }
+.nota.nota-expanded p { margin-bottom: 10px; }
+.nota.nota-expanded p:last-child { margin-bottom: 0; }
+.nota.nota-expanded h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.93rem; font-weight: 600;
+  color: var(--text-primary); margin: 14px 0 6px;
+}
+.nota.nota-expanded ul { list-style: none; padding: 0; margin: 4px 0 10px; }
+.nota.nota-expanded ul li { padding: 4px 0 4px 18px; position: relative; }
+.nota.nota-expanded ul li::before {
+  content: '›'; position: absolute; left: 4px;
+  color: var(--accent); font-weight: 700;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em     { color: var(--accent); font-style: italic; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input); color: var(--text-primary);
+  padding: 1px 5px; border-radius: 4px; font-size: 0.9em;
+}
+
+.reg-badge {
+  display: inline-block; font-size: 0.64rem; font-weight: 600;
+  letter-spacing: 0.05em; padding: 2px 8px; border-radius: 12px;
+  margin-left: 6px; vertical-align: middle; text-transform: uppercase;
+}
+.reg-badge.reg-lit {
+  background: rgba(192, 132, 252, 0.15); color: #d0a8ff;
+  border: 1px solid rgba(192, 132, 252, 0.3);
+}
+
+.subpage-links {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 24px 28px; margin-top: 30px;
+}
+.subpage-links-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.25rem; color: var(--text-primary); margin-bottom: 6px;
+}
+.subpage-links-sub {
+  font-size: 0.84rem; color: var(--text-muted);
+  font-style: italic; margin-bottom: 12px;
+}
+.subpage-links ul { list-style: none; padding: 0; margin: 0; }
+.subpage-links li { padding: 9px 0; border-bottom: 1px solid rgba(30, 51, 85, 0.4); }
+.subpage-links li:last-child { border-bottom: none; }
+.subpage-links a {
+  display: flex; justify-content: space-between; align-items: center;
+  color: var(--text-secondary); text-decoration: none;
+  font-size: 0.96rem; transition: color 0.2s; gap: 12px;
+}
+.subpage-links a:hover { color: var(--accent); }
+.subpage-links .arrow { color: var(--text-muted); font-size: 1.1rem; }
+.subpage-links a:hover .arrow { color: var(--accent); }
+.subpage-links .pending {
+  color: var(--text-muted); font-style: italic;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.96rem; gap: 12px;
+}
+
+.page-foot {
+  text-align: center; font-size: 0.78rem;
+  color: var(--text-muted); margin-top: 30px; font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .card-header { padding: 20px 18px 6px; gap: 12px; }
+  .card-body { padding: 0 18px 18px; }
+  .card-number { font-size: 1.7rem; }
+  .card-title { font-size: 1.24rem; }
+  .nota, .nota.nota-expanded { padding: 14px 16px; }
+  .subpage-links { padding: 20px; }
+  .toc { padding: 7px 8px; gap: 4px; }
+  .toc a { font-size: 0.7rem; padding: 3px 7px; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+<div class="page-wrap">
+
+<a href="tener.html" class="back-link">← Volver a Tener</a>
+
+<header class="page-header">
+  <div class="overline">Verbos en Profundidad · Tener</div>
+  <h1><em>Tener</em> estructural</h1>
+  <div class="ornament"><span class="ornament-symbol">❖</span></div>
+  <div class="subtitle">El verbo que sostiene un resultado</div>
+</header>
+
+<p class="intro-prose">
+  La página principal trata <em>tener + sustantivo</em>: un verbo y un nombre que forman un estado
+  del sujeto. Esta trata el otro uso estructural — <strong>tener + objeto + predicado</strong>,
+  donde lo que se describe no es el sujeto sino <strong>la condición en que se mantiene una cosa</strong>.
+  El predicado puede ser un participio (<em>tengo escritas las cartas</em>), un adjetivo
+  (<em>me tienes harto</em>) o una frase preposicional (<em>lo tengo por buen médico</em>).
+</p>
+
+<nav class="toc">
+  <a href="#s1">① El marco</a>
+  <a href="#s2">② El resultativo</a>
+  <a href="#s3">③ Haber · tener · llevar</a>
+  <a href="#s4">④ Formas fijas</a>
+  <a href="#s5">⑤ El reproche</a>
+  <a href="#s6">⑥ Tener sin + inf.</a>
+  <a href="#s7">⑦ Tener por</a>
+</nav>
+
+<div class="rate-bar">
+  <span class="rate-label">Velocidad 🔊</span>
+  <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+  <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+  <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+</div>
+
+<!-- ═══ ① EL MARCO ═══ -->
+<article class="grammar-card card-alpha" id="s1">
+  <div class="card-header">
+    <div class="card-number">①</div>
+    <div class="card-title-group">
+      <div class="card-title">El marco<span class="qualifier">tener + objeto + predicado</span></div>
+      <div class="card-title-en">The frame</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <code class="formula">tener + objeto directo + participio / adjetivo</code>
+
+    <p class="explanation">
+      A diferencia de <em>tener + sustantivo</em>, aquí <em>tener</em> no forma un estado del sujeto
+      sino que <strong>atribuye una condición a un objeto</strong>. El objeto va primero; el
+      predicado lo describe.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">la cena preparada</span>.</div>
+          <div class="example-en">I have dinner ready.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tenemos <span class="hl">el auto arreglado</span>.</div>
+          <div class="example-en">We've got the car fixed.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me tienes <span class="hl">harto</span>.</div>
+          <div class="example-en">You've got me fed up.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Nos tiene <span class="hl">preocupados</span>.</div>
+          <div class="example-en">He has us worried.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tiene <span class="hl">a los chicos contentos</span>.</div>
+          <div class="example-en">She's got the kids happy.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>English has one "have + participle" and Spanish has two, doing completely different jobs.</p>
+      <h4><em>Haber</em> + participle is the perfect tense</h4>
+      <p><em>He escrito tres cartas.</em> Here <em>haber</em> is a pure auxiliary — no meaning of its own is left, the participle never changes form, and nothing can be inserted between the two words.</p>
+      <h4><em>Tener</em> + object + participle is not a tense at all</h4>
+      <p><em>Tengo escritas tres cartas.</em> Here <em>tener</em> keeps its lexical meaning — you genuinely hold or possess something — and the participle behaves like <strong>an adjective describing the object</strong>. Which is why it agrees in gender and number, and why the word order is flexible.</p>
+      <h4>The test</h4>
+      <p>Can you swap the participle for an adjective and keep the structure? <em>Tengo la cena preparada</em> / <em>tengo la cena lista</em> — both work, same shape. Try that with <em>he preparado la cena</em> and it collapses. That is the clearest evidence that <em>tener</em> here is a main verb with a predicate, not an auxiliary.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ② EL RESULTATIVO ═══ -->
+<article class="grammar-card card-beta" id="s2">
+  <div class="card-header">
+    <div class="card-number">②</div>
+    <div class="card-title-group">
+      <div class="card-title">El resultativo<span class="qualifier">tener + participio</span></div>
+      <div class="card-title-en">The resultative</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      El participio <strong>concuerda con el objeto</strong> en género y número. Esta es la
+      diferencia visible más inmediata frente a <em>haber</em>, donde el participio no cambia nunca.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Con <em>haber</em> — invariable</th><th>Con <em>tener</em> — concuerda</th></tr></thead>
+        <tbody>
+          <tr><td>He <em>escrito</em> las cartas.</td><td>Tengo <em>escritas</em> las cartas.</td></tr>
+          <tr><td>He <em>lavado</em> los platos.</td><td>Tengo <em>lavados</em> los platos.</td></tr>
+          <tr><td>He <em>leído</em> tres páginas.</td><td>Tengo <em>leídas</em> tres páginas.</td></tr>
+          <tr><td>He <em>preparado</em> la cena.</td><td>Tengo <em>preparada</em> la cena.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">El orden es flexible</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">preparada la cena</span>.</div>
+          <div class="example-en">Dinner's ready.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">la cena preparada</span>.</div>
+          <div class="example-en"><em>Same meaning — both orders are natural here.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Qué verbos admiten la construcción</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Sí — transitivos con resultado</th><th>No</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><em>escribir · lavar · leer · preparar · terminar · guardar · ordenar · revisar · resolver</em></td>
+            <td class="bad">tengo ido · tengo sido · tengo tenido · tengo sabido</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="explanation" style="margin-top:10px;">
+      Solo funciona con verbos <strong>transitivos</strong> que dejan un resultado visible en el
+      objeto. Un verbo de movimiento o de estado no deja nada que sostener.
+    </p>
+
+    <div class="sub-head">El matiz de acumulación</div>
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo leídos</span> tres capítulos.</div>
+          <div class="example-en">I've got three chapters read. <em>— progress toward a total.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo revisada</span> la mitad de las pruebas.</div>
+          <div class="example-en">I've got half the tests marked.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo vistos</span> casi todos sus cuadros.</div>
+          <div class="example-en">I've seen nearly all his paintings.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><em>He escrito las cartas</em> and <em>tengo escritas las cartas</em> describe the same event. The difference is where the sentence puts its weight.</p>
+      <h4><em>Haber</em> reports the action · <em>tener</em> reports the state</h4>
+      <p>With <em>haber</em>, the letters got written and the sentence is about the writing. With <em>tener</em>, the letters are now in a written condition and <strong>the subject is the one holding them that way</strong>. That is why the construction feels like taking stock — it is the natural verb for inventories, progress checks, and "where do things stand" contexts.</p>
+      <h4>Two consequences</h4>
+      <ul>
+        <li>It implies the result <strong>persists</strong>. <em>Tengo escritas las cartas</em> means they are still written and available. If they were destroyed the sentence stops being true — which is not the case for <em>he escrito las cartas</em>.</li>
+        <li>It wants a <strong>determined or quantified object</strong>: <em>tengo escritas tres cartas</em>, <em>tengo escrita la correspondencia</em>. A bare mass noun clashes with the sense of a bounded, completed task — <em>tengo escrita correspondencia</em> is rejected as unnatural.</li>
+      </ul>
+      <p>There is often an <strong>accumulative reading</strong> too: <em>tengo leídos tres capítulos</em> suggests three so far, with more to come. That flavour is stronger still with <em>llevar</em> — see the next section.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ③ HABER · TENER · LLEVAR ═══ -->
+<article class="grammar-card card-gamma" id="s3">
+  <div class="card-header">
+    <div class="card-number">③</div>
+    <div class="card-title-group">
+      <div class="card-title"><em>Haber</em> · <em>tener</em> · <em>llevar</em><span class="qualifier">tres verbos, un participio</span></div>
+      <div class="card-title-en">Three auxiliaries compared</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Tres verbos, el mismo participio, tres significados distintos. Este contraste es la manera
+      más rápida de fijar qué aporta cada uno.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Verbo</th><th>Ejemplo</th><th>Qué aporta</th></tr></thead>
+        <tbody>
+          <tr><td><em>haber</em></td><td>He <em>leído</em> tres capítulos.</td><td>La acción, sin más. <small>Participio invariable.</small></td></tr>
+          <tr><td><em>tener</em></td><td>Tengo <em>leídos</em> tres capítulos.</td><td>El resultado, en mi poder. <small>Concuerda.</small></td></tr>
+          <tr><td><em>llevar</em></td><td>Llevo <em>leídos</em> tres capítulos.</td><td>El avance dentro de un total. <small>Concuerda.</small></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">He escrito</span> cincuenta páginas.</div>
+          <div class="example-en">I've written fifty pages.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo escritas</span> cincuenta páginas.</div>
+          <div class="example-en">I've got fifty pages written.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Llevo escritas</span> cincuenta páginas.</div>
+          <div class="example-en">I'm fifty pages in.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Cuántas <span class="hl">llevas revisadas</span>?</div>
+          <div class="example-en">How many have you got through?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p><em>Tener</em> and <em>llevar</em> are close enough that the difference is worth naming precisely.</p>
+      <h4><em>Tener</em> takes stock</h4>
+      <p>It describes current holdings, with no necessary implication about what comes next. <em>Tengo revisadas veinte pruebas</em> — twenty are done. Whether there are more is not part of the sentence.</p>
+      <h4><em>Llevar</em> measures progress</h4>
+      <p>It presupposes a <strong>total</strong> and locates you inside it. <em>Llevo revisadas veinte pruebas</em> strongly implies a stack still to go. Ask <em>¿cuántas llevas?</em> and you are asking how far through something someone is.</p>
+      <p>So <em>llevar</em> is the verb of the marathon and <em>tener</em> the verb of the inventory. They overlap constantly, and in many sentences either is fine — but where a total is in view, <em>llevar</em> is the more idiomatic choice.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ④ FORMAS FIJAS ═══ -->
+<article class="grammar-card card-delta" id="s4">
+  <div class="card-header">
+    <div class="card-number">④</div>
+    <div class="card-title-group">
+      <div class="card-title">Las formas fijas<span class="qualifier">sin concordancia</span></div>
+      <div class="card-title-en">Frozen forms</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Algunas combinaciones de <em>tener</em> + participio se han <strong>lexicalizado</strong>.
+      Ya no llevan objeto nominal sino una cláusula o un infinitivo, y por eso el participio queda
+      <strong>invariable</strong>.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo entendido que</span> renunció.</div>
+          <div class="example-en">I understand he resigned.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo oído que</span> van a cerrar.</div>
+          <div class="example-en">I hear they're going to close.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo comprobado que</span> así no funciona.</div>
+          <div class="example-en">I know for a fact it doesn't work that way.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo pensado</span> mudarme.</div>
+          <div class="example-en">I'm planning to move.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Tengo previsto</span> llegar el jueves.</div>
+          <div class="example-en">I'm scheduled to arrive Thursday.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El contraste</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Con objeto — concuerda</th><th>Con cláusula — invariable</th></tr></thead>
+        <tbody>
+          <tr><td>Tengo <em>entendidas</em> las instrucciones.</td><td>Tengo <em>entendido</em> que renunció.</td></tr>
+          <tr><td>Tengo <em>pensadas</em> dos opciones.</td><td>Tengo <em>pensado</em> mudarme.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>The rule has not changed here; there is simply nothing for the participle to agree <strong>with</strong>.</p>
+      <p>Agreement in section ② happens because the participle describes a <strong>noun</strong>: <em>las cartas</em> is feminine plural, so <em>escritas</em> is feminine plural. In <em>tengo entendido que renunció</em>, what follows is a <strong>clause</strong>, not a noun. Clauses have no gender or number, so the participle falls back to the default masculine singular and stays there.</p>
+      <p>The same explanation covers <em>tengo pensado mudarme</em> — an infinitive, not a noun. And it predicts the contrast correctly: give the same phrase a real nominal object and agreement comes straight back. <em>Tengo pensadas dos opciones.</em></p>
+      <h4>What <em>tengo comprobado que</em> adds</h4>
+      <p>This one is worth having actively. It is not a neutral "I checked" — it asserts a <strong>firm conclusion reached through repeated experience or rigorous verification</strong>, closer to <em>I know for a fact</em> or <em>experience has taught me</em>. Current and frequent on both sides of the Atlantic.</p>
+      <h4>A warning that belongs here</h4>
+      <p><em>Tengo entendido</em> takes a bare <em>que</em>. <em>Tengo entendido <strong>de</strong> que</em> is dequeísmo — see section ⑤b of the parent page.</p>
+      <p>Note also that <em>tener pensado</em> and <em>tener previsto</em> appear on the parent page among the modals. That is the same construction seen from the other side: there as expressions of intent, here as frozen participles.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ⑤ EL REPROCHE ═══ -->
+<article class="grammar-card card-epsilon" id="s5">
+  <div class="card-header">
+    <div class="card-number">⑤</div>
+    <div class="card-title-group">
+      <div class="card-title">El reproche<span class="qualifier">te lo tengo dicho</span></div>
+      <div class="card-title-en">The standing reproach</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Con verbos de habla, <em>tener</em> + participio adquiere un valor de <strong>insistencia</strong>:
+      no es que lo haya dicho una vez, es que lo vengo diciendo.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Te lo tengo dicho</span>: no toques eso.</div>
+          <div class="example-en">I've told you: don't touch that.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Te tengo dicho</span> que llames antes de venir.</div>
+          <div class="example-en">I've told you to call before coming.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ya <span class="hl">te lo tengo advertido</span>.</div>
+          <div class="example-en">I've warned you about this already.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><span class="hl">Nos lo tienen prohibido</span>.</div>
+          <div class="example-en">We're not allowed to.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>A small, high-frequency corner of the construction, where the difference from the plain perfect is entirely pragmatic.</p>
+      <p><em>Te he dicho que no</em> reports that the telling happened. <strong><em>Te lo tengo dicho</em> reports that the telling is a standing fact</strong> — said before, said more than once, and still in force. English gets close with "I've told you" said with emphasis, or "I keep telling you."</p>
+      <h4>A warning about tone</h4>
+      <p><strong>It is almost always reproachful.</strong> This is what a parent says to a child, or one adult says to another when patience is running out. It is not neutral, and using it at work or with someone you do not know well will land as scolding. Recognize it freely; deploy it deliberately.</p>
+      <p>The agreement rule from section ② still applies underneath: in <em>te lo tengo dicho</em> the object is the neuter <em>lo</em>, so the participle is masculine singular. Give it a plural nominal object and it agrees normally — <em>te tengo dichas muchas cosas</em>.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ⑥ TENER SIN ═══ -->
+<article class="grammar-card card-zeta" id="s6">
+  <div class="card-header">
+    <div class="card-number">⑥</div>
+    <div class="card-title-group">
+      <div class="card-title">La negativa<span class="qualifier">tener + objeto + sin + infinitivo</span></div>
+      <div class="card-title-en">The unfinished mirror</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      El resultativo tiene un contrario exacto. Para decir que algo <strong>sigue pendiente</strong>,
+      se usa <em>sin</em> más infinitivo — y aquí no hay participio, así que no hay concordancia.
+    </p>
+
+    <code class="formula">tener + objeto directo + sin + infinitivo</code>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">los platos sin lavar</span>.</div>
+          <div class="example-en">I've still got the dishes unwashed.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">tres libros sin leer</span>.</div>
+          <div class="example-en">I've got three books still unread.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Todavía tenemos <span class="hl">ese problema sin resolver</span>.</div>
+          <div class="example-en">We've still got that problem unresolved.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <span class="hl">la mitad del informe sin escribir</span>.</div>
+          <div class="example-en">I've got half the report still unwritten.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El par</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Hecho</th><th>Pendiente</th></tr></thead>
+        <tbody>
+          <tr><td>Tengo <em>lavados</em> los platos.</td><td>Tengo los platos <em>sin lavar</em>.</td></tr>
+          <tr><td>Tengo <em>leídos</em> tres libros.</td><td>Tengo tres libros <em>sin leer</em>.</td></tr>
+          <tr><td>Tengo <em>resuelto</em> el problema.</td><td>Tengo el problema <em>sin resolver</em>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>This construction is much less taught than the affirmative resultative and just as common in speech.</p>
+      <p>The logic is transparent once you see the pair: <em>tengo lavados los platos</em> holds the dishes in a washed condition; <em>tengo los platos sin lavar</em> holds them in an <strong>unwashed</strong> one. Both are statements about the current state of your responsibilities. The second is the natural way to describe a backlog.</p>
+      <h4>The form is simpler than the affirmative</h4>
+      <p><em>Sin</em> plus a bare infinitive, invariable, no agreement to worry about. Note the asymmetry — the affirmative uses a participle, the negative uses an infinitive. There is no <em>tengo no lavados los platos</em>.</p>
+      <h4>Word order, and this one does matter</h4>
+      <p>Unlike the affirmative resultative, the order here is <strong>not</strong> freely reversible. <em>Tengo tres libros sin leer</em> — object immediately after <em>tener</em> — is the standard order and dominates everywhere. The inversion <em>tengo sin leer tres libros</em> is grammatical but marked: it fronts the pending state for emphasis and reads as deliberately stylized. Default to object-first.</p>
+    </div>
+
+  </div>
+</article>
+
+<!-- ═══ ⑦ TENER POR ═══ -->
+<article class="grammar-card card-eta" id="s7">
+  <div class="card-header">
+    <div class="card-number">⑦</div>
+    <div class="card-title-group">
+      <div class="card-title">La valoración<span class="qualifier">tener a alguien por algo</span></div>
+      <div class="card-title-en">To regard as</div>
+    </div>
+  </div>
+  <div class="card-body">
+
+    <p class="explanation">
+      Con la preposición <em>por</em>, la construcción deja de describir un estado físico y pasa a
+      expresar <strong>un juicio</strong>: cómo considero a alguien o algo.
+    </p>
+
+    <code class="formula">tener + a alguien + por + sustantivo / adjetivo</code>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo <span class="hl">tengo por</span> un buen médico.</div>
+          <div class="example-en">I consider him a good doctor.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <span class="hl">tengo por</span> muy capaz.</div>
+          <div class="example-en">I regard her as very capable.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Siempre lo <span class="hl">tuve por</span> honesto.</div>
+          <div class="example-en">I always took him to be honest.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="neutral">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Se <span class="hl">tiene por</span> experto en la materia.</div>
+          <div class="example-en">He considers himself an expert on the subject.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota nota-expanded">
+      <span class="nota-label">NOTA*</span>
+      <p>This is the most formal item on the page, and it is worth knowing where it sits.</p>
+      <p><em>Tener a alguien por algo</em> means <strong>to consider, to regard as</strong> — it reports the subject's assessment, not a fact. It belongs to careful speech and writing: a report, a character reference, a considered opinion. In casual conversation <em>creo que es un buen médico</em> or <em>me parece muy capaz</em> will be far more common.</p>
+      <h4>The reflexive is where it turns up most</h4>
+      <p><em>Se tiene por experto</em> — he considers himself an expert — and this reading is frequently <strong>ironic</strong>, implying the self-assessment is generous. That flavour is worth hearing.</p>
+      <h4>Two neighbours, recognition only</h4>
+      <p><em>Tener en mucho</em> and <em>tener en poco</em> <span class="reg-badge reg-lit">literario</span> — to hold someone in high or low regard. You will meet these in literature, essays and formal journalism, but modern speakers reach for <em>tener en mucha estima</em> or simply <em>valorar mucho / poco</em>. Passive vocabulary.</p>
+    </div>
+
+  </div>
+</article>
+
+<section class="subpage-links">
+  <h2 class="subpage-links-title">Más sobre este tema</h2>
+  <div class="subpage-links-sub">Páginas relacionadas</div>
+  <ul>
+    <li><a href="tener.html">Tener: un sistema, no una lista <span class="arrow">›</span></a></li>
+    <li><a href="verbos-en-profundidad.html">Verbos en Profundidad <span class="arrow">›</span></a></li>
+    <li><span class="pending">Los participios — en preparación <span class="arrow">·</span></span></li>
+  </ul>
+</section>
+
+<p class="page-foot">Mi Proyecto Español · Verbos en Profundidad</p>
+
+</div><!-- /.page-wrap -->
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — Neutral Latin American Spanish only
+//  es-419 → es-MX → es-US → es-CO → any es-* except AR/UY/ES → any es
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  clone.querySelectorAll('.reg-badge').forEach(el => el.remove());
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+</script>
+
+</body>
+</html>

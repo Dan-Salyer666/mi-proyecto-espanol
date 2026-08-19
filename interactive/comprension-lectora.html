@@ -2541,7 +2541,30 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       if (idx !== -1) q.correct = idx;
     });
 
-    // Shuffle options so correct answer isn't always in the same position
+    // ── Answer-key validation gate. Runs AFTER reconciliation (so a question
+    //    rescued by its `answer` text counts as valid) and BEFORE the shuffle.
+    //    A model can omit `correct`/`answer`/`explanation` entirely — observed
+    //    once on a final episode via the Claude path, where the request carries
+    //    no structural enforcement (response_schema is forwarded for Gemini
+    //    only, so constrained decoding makes this impossible there). Without
+    //    this gate the shuffle below turned the missing index into -1, which
+    //    matches no click: the quiz rendered normally, graded 0/6, and printed
+    //    "undefined" for every explanation. Fail loudly instead — throwing here
+    //    lands in the catch block, which restores the episode counters and
+    //    offers Reintentar, exactly like the empty-questions guard above.
+    const badKeys = [];
+    quiz.questions.forEach((q, i) => {
+      const n = Array.isArray(q.options) ? q.options.length : 0;
+      if (!Number.isInteger(q.correct) || q.correct < 0 || q.correct >= n) badKeys.push(i + 1);
+    });
+    if (badKeys.length) {
+      console.error('[quiz] questions without a usable answer key:', badKeys, quiz.questions);
+      throw new Error(`El modelo devolvió ${badKeys.length} pregunta(s) sin respuesta correcta (${badKeys.join(', ')}). Inténtalo de nuevo.`);
+    }
+
+    // Shuffle options so correct answer isn't always in the same position.
+    // `correct` is guaranteed to be a valid in-range index by the gate above,
+    // so indexOf can no longer manufacture a -1 out of a missing value.
     quiz.questions.forEach(q => {
       const indices = q.options.map((_, i) => i);
       for (let i = indices.length - 1; i > 0; i--) {
@@ -2705,7 +2728,7 @@ function gradeQuiz() {
       <div class="q-num">Pregunta ${qi + 1} — ${verdict}</div>
       <div class="q-text">${q.question} <button class="speak-inline" onclick="speakInline(this,event)" title="Escuchar">🔊</button></div>
       <div class="options-list">${opts}</div>
-      <div class="explanation">${q.explanation} <button class="speak-inline" onclick="speakInline(this,event)" title="Escuchar">🔊</button></div>`;
+      <div class="explanation">${q.explanation || ''} <button class="speak-inline" onclick="speakInline(this,event)" title="Escuchar">🔊</button></div>`;
     reviewList.appendChild(div);
   });
 

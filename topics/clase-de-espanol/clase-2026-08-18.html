@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase del 18 de agosto de 2026 — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accents — violet and teal deliberately unused here so the
+     región chips (teal = Rioplatense, violet = España) stay unambiguous. */
+  --accent-alpha:   #4a90d9;  /* ① blue   */
+  --accent-gamma:   #fbbf24;  /* ② gold   */
+  --accent-epsilon: #f472b6;  /* ③ rose   */
+  --accent-zeta:    #34d399;  /* ④ green  */
+  --accent-eta:     #fb923c;  /* ⑤ orange */
+  --accent-theta:   #94a3b8;  /* ⑥ slate  */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/cadaquez iglesia.webp') center/cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Contents strip ── */
+.contents {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 22px 0 18px;
+}
+.contents-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.contents-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.contents-list a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.84rem;
+  transition: all 0.2s;
+}
+.contents-list a:hover {
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.45);
+  background: rgba(74, 144, 217, 0.08);
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 8px 0 0 18px; }
+.nota li { margin-bottom: 5px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* ── Provenance legend (sits under the contents strip) ── */
+.leyenda {
+  background: rgba(138, 155, 184, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  margin: 0 0 18px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.leyenda .leyenda-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.leyenda-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.leyenda-row:last-child { margin-bottom: 0; }
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  scroll-margin-top: 16px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-theta   { border-left-color: var(--accent-theta); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+.card-theta   .card-number { color: var(--accent-theta);   opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Provenance chips ── */
+.prov-chips {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.prov {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.prov-clase    { background: rgba(74, 222, 128, 0.10); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.28); }
+.prov-material { background: rgba(250, 204, 21, 0.10); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.28); }
+.prov-ampl     { background: rgba(148, 163, 184, 0.10); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.28); }
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+.explanation + .explanation { margin-top: -6px; }
+
+/* ── Epigraph (her words, verbatim) ── */
+.epigrafe {
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 16px;
+  margin: 4px 0 16px;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.epigrafe .fuente {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 7px;
+}
+
+/* ── Sub-heading inside a card ── */
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 20px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.6);
+}
+
+/* ── Formula ── */
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+.formula strong { color: var(--text-primary); }
+
+/* ── Example rows ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+/* Spine example — the one sentence a card turns on */
+.example-row.spine {
+  background: rgba(74, 144, 217, 0.07);
+  border: 1px solid rgba(74, 144, 217, 0.22);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 10px;
+}
+.example-row.spine .example-es { font-size: 1.14rem; }
+.anotacion {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+.anotacion b { color: var(--text-secondary); font-weight: 600; }
+.anotacion em { color: var(--accent); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Región chips (textual only — audio is always neutral) ── */
+.rio-tag, .esp-tag, .neu-tag, .var-tag, .vulg-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.rio-tag  { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.esp-tag  { background: rgba(192, 132, 252, 0.14); color: #d0a8ff; }
+.neu-tag  { background: rgba(138, 155, 184, 0.14); color: #a8b8d0; }
+.var-tag  { background: rgba(251, 191, 36, 0.14); color: #fbbf24; }
+.vulg-tag { background: rgba(248, 113, 113, 0.14); color: #f87171; }
+
+/* ── Chip row (flat word lists) ── */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+.chip {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 11px;
+}
+
+/* ── Evitar / usar rows ── */
+.contrast {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.contrast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.contrast-item .mark {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  width: 16px;
+  text-align: center;
+}
+.contrast-item.bad  { border-left: 3px solid var(--red); }
+.contrast-item.good { border-left: 3px solid var(--green); }
+.contrast-item.bad  .mark { color: var(--red); }
+.contrast-item.good .mark { color: var(--green); }
+.contrast-item .txt { flex: 1; }
+.contrast-item .es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+}
+.contrast-item .gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Aviso box — register warning ── */
+.aviso {
+  background: rgba(248, 113, 113, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-left: 4px solid var(--red);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0 4px;
+}
+.aviso .aviso-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 9px;
+}
+.aviso .frase {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+.aviso .frase:last-of-type { margin-bottom: 0; }
+.aviso .aviso-nota {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(248, 113, 113, 0.18);
+}
+.aviso .aviso-nota em { color: var(--text-primary); font-style: italic; }
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  vertical-align: bottom;
+}
+.table-wrapper th .var-tag { display: inline-block; margin: 4px 0 0; }
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td strong { color: var(--text-primary); font-weight: 600; }
+.table-note {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: -2px 0 10px;
+  padding-left: 2px;
+}
+.table-note em { color: var(--text-secondary); font-style: italic; }
+.table-note strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ── Cross-link out to a full topic page ── */
+.topic-link {
+  display: block;
+  margin: 16px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-primary); }
+.topic-link strong { color: var(--text-primary); font-weight: 600; }
+.topic-link em { color: var(--text-muted); font-style: italic; }
+.topic-link .arrow { color: var(--accent); font-weight: 600; }
+.topic-link.pending { border-left-color: var(--text-muted); background: rgba(138, 155, 184, 0.05); }
+.topic-link.pending .arrow { color: var(--text-muted); }
+
+/* ── Materiales de la clase ── */
+.materiales {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.materiales h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.materiales .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.material-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  margin-bottom: 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.material-item:last-child { margin-bottom: 0; }
+.material-item:hover { border-color: #2a4a75; background: var(--bg-card-hover); }
+.material-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+.material-tipo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tipo-tabla     { background: rgba(74, 144, 217, 0.12); color: #4a90d9; border: 1px solid rgba(74, 144, 217, 0.3); }
+.tipo-expl      { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.tipo-ejercicio { background: rgba(251, 146, 60, 0.12); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+.material-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+.material-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: 3px;
+}
+.material-destino {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 5px;
+}
+.material-dl {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+/* ── Preguntas para la profe ── */
+.preguntas {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--yellow);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 18px;
+  scroll-margin-top: 16px;
+}
+.preguntas h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.preguntas .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.preguntas ol { margin: 0 0 0 20px; }
+.preguntas li {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 0.93rem;
+  padding-left: 4px;
+}
+.preguntas li:last-child { margin-bottom: 0; }
+.preguntas li em { color: var(--accent); font-style: italic; }
+.preguntas li strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .grammar-card { padding: 20px 18px 18px; }
+  .preguntas, .materiales { padding: 20px 18px; }
+  .card-header { gap: 10px; }
+  .card-number { font-size: 1.8rem; }
+  .contents-list a { font-size: 0.8rem; padding: 5px 10px; }
+  .prov-chips { padding-top: 0; }
+  .material-item { flex-direction: column; gap: 8px; }
+  .material-dl { padding-top: 0; align-self: flex-end; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Notas de Clase</div>
+    <h1>Clase del <em>18 de agosto</em> de 2026</h1>
+    <p class="subtitle">Las emociones y sus preposiciones · <em>preocuparse por</em> y <em>de</em> · <em>dar por</em> + participio · el «dar» escondido · la órbita de <em>gustar</em>.</p>
+  </header>
+
+  <nav class="contents">
+    <div class="contents-label">Lo que vimos</div>
+    <div class="contents-list">
+      <a href="#s1">① Las emociones y sus preposiciones</a>
+      <a href="#s2">② Preocuparse por · de</a>
+      <a href="#s3">③ Dar por + participio</a>
+      <a href="#s4">④ El «dar» escondido</a>
+      <a href="#s5">⑤ La órbita de gustar</a>
+      <a href="#s6">⑥ Verbalización vs. nominalización</a>
+      <a href="#materiales">📂 Materiales de la clase</a>
+      <a href="#preguntas">✎ Preguntas para la profe</a>
+    </div>
+  </nav>
+
+  <div class="leyenda">
+    <span class="leyenda-label">Cómo leer las etiquetas</span>
+    <div class="leyenda-row"><span class="prov prov-clase">En clase</span> <span>She taught this. Teacher-attested.</span></div>
+    <div class="leyenda-row"><span class="prov prov-material">Material</span> <span>She sent it, but we never worked through it.</span></div>
+    <div class="leyenda-row"><span class="prov prov-ampl">Ampliación</span> <span>Added after class from reference material — not hers.</span></div>
+  </div>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ─────────────────────────── ① ─────────────────────────── -->
+  <article class="grammar-card card-alpha" id="s1">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Las emociones y sus preposiciones</div>
+        <div class="card-title-en">Cause vs. régimen — two slots, not one rule</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <blockquote class="epigrafe">
+      Las emociones, en la vida y en la gramática, tienen una causa.
+      <span class="fuente">— la profe</span>
+    </blockquote>
+
+    <p class="explanation">
+      Toda emoción responde a un <em>¿por qué?</em>, y esa causa se expresa siempre con <strong>por</strong>. Esa ranura está disponible para cualquier predicado emotivo: no depende del verbo que elijas.
+    </p>
+    <p class="explanation">
+      Pero muchos verbos de emoción exigen <strong>además</strong> su propia preposición — <em>de</em>, <em>con</em>, <em>por</em> — que el diccionario registra y que no se deduce del significado. Son dos ranuras distintas que pueden convivir en la misma oración.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me alegro <strong>por</strong> la buena noticia.</div>
+          <div class="example-en">I'm happy about the good news.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me pongo triste <strong>por</strong> la mala noticia.</div>
+          <div class="example-en">The bad news makes me sad. <em>— también: me entristezco por…</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me pongo feliz <strong>por</strong> vos.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>I'm happy for you. <em>— neutro: por ti.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Las dos ranuras en una sola oración</div>
+
+    <div class="example-row spine">
+      <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+      <div class="example-body">
+        <div class="example-es">Me enojé <strong>con</strong> mi hermano <strong>por</strong> lo que dijo.</div>
+        <div class="example-en">I got angry at my brother over what he said.</div>
+        <div class="anotacion">
+          <b>con</b> = el régimen que pide <em>enojarse</em> · <b>por</b> = la causa, disponible siempre.
+          Dos preposiciones, una sola oración, ningún conflicto.
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Telling the two slots apart.</strong> Turn the sentence into a question. If the preposition comes back stuck to the question word, it belongs to the verb — <em>¿De qué te arrepentís?</em> · <em>¿Con quién te enojaste?</em> If the question is simply <em>¿por qué?</em>, you're in the cause slot, and <em>por</em> is always available there.
+      <p>This test isn't mine — it's on page 1 of <strong>Los verbos y sus preposiciones</strong>, in the materials below. She handed over the tool that resolves the ambiguity her own rule creates.</p>
+    </div>
+
+    <div class="sub-head">El régimen, verbo por verbo</div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Solo <em>de</em></th>
+            <th>Solo <em>por</em></th>
+            <th>Solo <em>con</em> (+ persona)</th>
+            <th>de ~ por<br><span class="var-tag">Uso variable</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><em>arrepentirse · avergonzarse · cansarse · hartarse · quejarse · enamorarse · burlarse · jactarse · apiadarse · compadecerse</em></td>
+            <td><em>preocuparse · angustiarse · inquietarse · desvivirse · protestar · brindar</em></td>
+            <td><em>enojarse · enfadarse · entusiasmarse · ilusionarse · conformarse · incomodarse</em></td>
+            <td><em>alegrarse · asustarse · sorprenderse</em></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="table-note">
+      En la cuarta columna, <strong>de</strong> presenta la cosa misma como objeto de la emoción y <strong>por</strong> la presenta como razón. En la mayoría de las oraciones son casi intercambiables: <em>Me alegro de tu ascenso</em> / <em>Me alegro por tu ascenso</em>.
+    </p>
+    <p class="table-note">
+      Aparte: <em>sufrir por</em> es padecer a causa de algo; <em>sufrir de</em> es tener una enfermedad (<em>sufre de asma</em>). Sentidos distintos, no variantes.
+    </p>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>The <em>que</em>-clause rule — this is the one to memorize.</strong> With a <em>que</em>-clause the verb keeps its régimen preposition, and <em>por</em> is barred: <em>Me alegro <strong>de</strong> que hayas venido.</em> Never <em>por que</em>.
+      <p>This is the exact spot where an unqualified "emotions take <em>por</em>" instinct produces a real error. Dropping the <em>de</em> here is <strong>queísmo</strong> — see the queísmo/dequeísmo section on the <em>tener</em> page.</p>
+    </div>
+
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> «Verbos de régimen preposicional» en Gramática → Preposiciones. <em>(Por construir — los tres PDF de abajo son el material de base.)</em>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ② ─────────────────────────── -->
+  <article class="grammar-card card-gamma" id="s2">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Preocuparse <em>por</em> · preocuparse <em>de</em></div>
+        <div class="card-title-en">Two verbs sharing one spelling</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Dos verbos que comparten la escritura.
+      <strong>preocuparse por</strong> — sentir inquietud, tener a alguien o algo en la cabeza.
+      <strong>preocuparse de</strong> — ocuparse de que algo se haga. Es un sinónimo de <em>encargarse de</em>.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me preocupo <strong>por</strong> mi hermana; hace días que no contesta.</div>
+          <div class="example-en">I'm worried about my sister — she hasn't answered in days.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Esta noche recibo invitados. Tengo que preocuparme <strong>de</strong> tener todo listo.</div>
+          <div class="example-en">I have guests tonight. I have to see to it that everything's ready. <em>— su ejemplo.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Los políticos no se preocupan <strong>por</strong> el cambio climático.</div>
+          <div class="example-en">Politicians don't care about climate change. <em>— del material de la clase.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="formula">
+      Tengo que preocuparme <strong>de</strong> tener todo listo. &nbsp;≈&nbsp; Tengo que <strong>encargarme de</strong> tener todo listo.
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Her advice, kept as advice.</strong> As a learner, reach for <em>por</em> almost every time. The <em>de</em> sense is real but narrow — it's <em>encargarse de</em> wearing another coat, and it shows up mostly with a following infinitive.
+      <p>Worth recording how this came up: I raised <em>de</em> because the dictionary lists it and I already knew the use. She pushed back that it isn't common in everyday speech, then produced the <em>invitados</em> sentence as the context where it does work. Her point was about <strong>frequency</strong>, not correctness.</p>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ③ ─────────────────────────── -->
+  <article class="grammar-card card-epsilon" id="s3">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title"><em>Dar por</em> + participio</div>
+        <div class="card-title-en">To consider something already done</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      <em>Dar por</em>, así suelto, no significa nada. Va seguido de un participio, y entonces significa que se <strong>considera realizada</strong> la acción de ese participio — sin verificarla.
+    </p>
+
+    <div class="formula">dar por + participio &nbsp;·&nbsp; el participio <strong>concuerda</strong> con el objeto</div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Doy por terminada</strong> la reunión.</div>
+          <div class="example-en">I declare the meeting over. <em>— terminada, femenino, como «reunión».</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Damos por visitada</strong> la ciudad.</div>
+          <div class="example-en">We'll call the city seen.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo <strong>daban por muerto</strong>, pero apareció tres días después.</div>
+          <div class="example-en">They'd given him up for dead, but he turned up three days later.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Doy por sentado</strong> que vas a venir.</div>
+          <div class="example-en">I'm taking it as given that you're coming.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La forma reflexiva — <em>darse por</em></div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me <strong>doy por vencido</strong>.</div>
+          <div class="example-en">I give up.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No te <strong>des por aludido</strong>.</div>
+          <div class="example-en">Don't take it personally — don't assume I meant you.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Ya me <strong>doy por cenado</strong>.</div>
+          <div class="example-en">I'll count myself as having had dinner.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Participios habituales</div>
+    <div class="chip-row">
+      <span class="chip">terminado</span><span class="chip">concluido</span><span class="chip">cerrado</span>
+      <span class="chip">hecho</span><span class="chip">sentado</span><span class="chip">sabido</span>
+      <span class="chip">válido</span><span class="chip">bueno</span><span class="chip">vencido</span>
+      <span class="chip">muerto</span><span class="chip">imposible</span><span class="chip">visto</span>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>You already own half of this.</strong> <em>Dar por</em> and <em>tener a alguien por</em> are the same construction with different verbs: <em>Lo doy por muerto</em> / <em>Lo tengo por buen médico</em>. The <em>tener</em> half is §⑦ of the structural page, and §② there explains why the participle agrees. Read them together.
+    </div>
+
+    <div class="sub-head"><em>Darle por</em> + infinitivo <span class="var-tag">Uso variable</span></div>
+    <p class="explanation">
+      Con pronombre de objeto indirecto, la construcción cambia de sentido: significa que a alguien <strong>le viene de golpe</strong> la costumbre o el capricho de hacer algo.
+    </p>
+    <div class="example-row">
+      <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+      <div class="example-body">
+        <div class="example-es">Le <strong>dio por cantar</strong> a las tres de la mañana.</div>
+        <div class="example-en">He suddenly took to singing at three in the morning.</div>
+        <div class="anotacion">Las obras de referencia lo dan como frecuente; en clase no se retomó, así que su vigencia en Buenos Aires queda abierta.</div>
+      </div>
+    </div>
+
+    <div class="aviso">
+      <span class="aviso-label">⚠ Registro vulgar — reconocer, no usar</span>
+      <div class="frase"><span class="rio-tag">Rioplatense</span><span class="vulg-tag">Vulgar</span>Me da por las <em>pelotas</em> / las <em>bolas</em> que siempre me digas lo mismo.</div>
+      <div class="frase"><span class="esp-tag">España</span><span class="vulg-tag">Vulgar</span>Me da por los <em>cojones</em>.</div>
+      <div class="aviso-nota">
+        Ella la mencionó como modismo, no como parte del patrón <em>dar por</em> + participio — es otra cosa que comparte la forma. <em>Cojones</em> es peninsular. Lo que uno esperaría oír a diario en Buenos Aires es <em>me rompe</em> / <em>me hincha las pelotas</em>; la relación entre las tres queda por preguntar.
+      </div>
+    </div>
+
+    <a class="topic-link" href="../verbos-en-profundidad/tener-estructural.html">
+      <span class="arrow">→</span> <strong>Ya en el sitio:</strong> <em>Tener: la estructura</em> — §② el resultativo y la concordancia, §⑦ <em>tener a alguien por</em>.
+    </a>
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> <em>dar</em> en Verbos en Profundidad. <em>(Por construir — este patrón vive ahí, no en una página propia.)</em>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ④ ─────────────────────────── -->
+  <article class="grammar-card card-zeta" id="s4">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">El «dar» escondido</div>
+        <div class="card-title-en">Why communication verbs take an indirect object</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Muchos verbos de comunicación llevan su objeto directo <strong>adentro</strong>: <em>informar</em> es <em>dar una información</em>, <em>explicar</em> es <em>dar una explicación</em>, <em>responder</em> es <em>dar una respuesta</em>. Como la ranura del objeto directo ya está ocupada, la persona queda como <strong>objeto indirecto</strong>: <em>le</em>.
+    </p>
+    <p class="explanation">
+      Y los hablantes nativos muchas veces sacan ese verbo a la superficie: en vez de <em>le expliqué</em>, dicen <strong>le di una explicación</strong>.
+    </p>
+
+    <div class="formula">La prueba: si se puede reformular como <strong>dar un/una ___ a alguien</strong>, la persona es objeto indirecto.</div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Verbo</th><th>El objeto directo escondido</th><th>Ejemplo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><em>contarle</em></td><td>un cuento, algo</td><td>Le conté lo que pasó.</td></tr>
+          <tr><td><em>comentarle</em></td><td>un comentario</td><td>Le comenté tu idea.</td></tr>
+          <tr><td><em>informarle</em></td><td>una información</td><td>Le informaron del resultado.</td></tr>
+          <tr><td><em>expresarle</em></td><td>una expresión</td><td>Le expresé mi agradecimiento.</td></tr>
+          <tr><td><em>explicarle</em></td><td>una explicación</td><td>Le expliqué el problema.</td></tr>
+          <tr><td><em>responderle</em></td><td>una respuesta</td><td>Le respondí enseguida.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">La excepción que ella marcó — <em>invitar</em></div>
+
+    <div class="contrast">
+      <div class="contrast-item bad">
+        <div class="mark">✗</div>
+        <div class="txt">
+          <div class="es">Le invité a cenar.</div>
+          <div class="gloss">La persona no es objeto indirecto aquí.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">Lo invité a cenar. · La invité a cenar.</div>
+          <div class="gloss">I invited him / her to dinner.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="explanation" style="margin-top:14px">
+      <em>Invitar</em> no encierra ningún sustantivo. Se invita <strong>a alguien</strong>: la persona es el objeto directo, y por eso se usa <em>lo / la</em>. Caen en la misma trampa <em>llamar</em>, <em>visitar</em>, <em>saludar</em>, <em>abrazar</em> y <em>besar</em> — en inglés la persona parece receptora, en español es objeto directo.
+    </p>
+
+    <a class="topic-link" href="../IOP%20usage.html">
+      <span class="arrow">→</span> <strong>Ya en el sitio:</strong> <em>El Pronombre Objetivo</em> — los tres grupos de verbos. <em>(Falta incorporarle este marco del «dar»: la página tiene los verbos, todavía no la razón.)</em>
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ⑤ ─────────────────────────── -->
+  <article class="grammar-card card-eta" id="s5">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">La órbita de <em>gustar</em></div>
+        <div class="card-title-en">The other route to the same indirect object</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-material">Material</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Otro camino hacia el mismo objeto indirecto. En los verbos de ④ la persona es indirecta porque el objeto directo ya vive dentro del verbo. En los verbos tipo <em>gustar</em> la persona es indirecta porque <strong>el sujeto es la cosa que provoca la emoción</strong>. Dos rutas distintas, el mismo resultado: la persona nunca es objeto directo.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le gusta la música.</div>
+          <div class="example-en">He / she likes music. <em>— sujeto: la música.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le encanta viajar.</div>
+          <div class="example-en">He / she loves travelling.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le duele la cabeza.</div>
+          <div class="example-en">He / she has a headache.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le interesa el arte.</div>
+          <div class="example-en">He / she is interested in art.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">No le importa.</div>
+          <div class="example-en">He / she doesn't care.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>What's in the handout and not yet worked.</strong> <em>Verbo gustar y similares</em> (in the materials below) runs well past these five: <em>apetecer, aburrir, fastidiar, fascinar, molestar, preocupar, entristecer</em>, plus three construction families — <em>dar + miedo / pena / rabia / asco / risa / vergüenza</em>, <em>parecer + bien / mal / raro</em>, and <em>caer bien / mal</em>.
+      <p>None of it was discussed in class — she uploaded it and we ran out of time. It's on the roadmap. The intensity ladder (<em>me gusta → me encanta</em>) belongs to the planned <strong>Gradación e Intensidad</strong> page rather than being duplicated here.</p>
+    </div>
+
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> «Verbos tipo <em>gustar</em>» en Gramática → Verbos. <em>(Por construir.)</em>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ⑥ ─────────────────────────── -->
+  <article class="grammar-card card-theta" id="s6">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Verbalización vs. nominalización</div>
+        <div class="card-title-en">Where each language puts the weight</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      El español apoya el peso de la oración en el <strong>verbo</strong>; el inglés lo apoya en el <strong>sustantivo</strong>. Su explicación: el español tiene una morfología verbal muy rica — tiempos, modos, aspectos — y por eso el verbo puede cargar con información que el inglés tiene que repartir en sustantivos y perífrasis.
+    </p>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>A theme, not a one-off.</strong> This came up when I connected the emotion discussion back to the previous week's class. It's the same instinct as <em>La economía del lenguaje</em> on the 12 August sheet approached from the other side — there, one Spanish word replacing an English phrase; here, the verb carrying what English puts in a noun.
+      <p>Second appearance in two weeks. If it surfaces a third time it has earned a page of its own.</p>
+    </div>
+
+    <a class="topic-link" href="clase-2026-08-12.html#s3">
+      <span class="arrow">→</span> <strong>La otra cara:</strong> «La economía del lenguaje» — clase del 12 de agosto, §③.
+    </a>
+  </article>
+
+  <!-- ───────────────────── Materiales de la clase ───────────────────── -->
+  <section class="materiales" id="materiales">
+    <h2>Materiales de la clase</h2>
+    <div class="sub">Lo que subió la profe — archivados acá en el sitio, no en Drive</div>
+
+    <a class="material-item" href="../../recursos/clase-2026-08-18/por-y-para-anotado.pdf">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Tabla + ejercicio</span>
+        <div>
+          <div class="material-title"><em>Por</em> y <em>para</em> — cuadro anotado</div>
+          <div class="material-desc">La grilla completa con sus anotaciones de clase, más 10 ejercicios de elección. 2 p.</div>
+          <div class="material-destino">→ Alimenta: la futura página «Por y para»</div>
+        </div>
+      </div>
+      <span class="material-dl">PDF ↓</span>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-08-18/lista-verbos-con-preposiciones.pdf">
+      <div class="material-left">
+        <span class="material-tipo tipo-tabla">Tabla</span>
+        <div>
+          <div class="material-title">Lista de verbos con preposiciones</div>
+          <div class="material-desc">Tabla verbo · preposición · ejemplo. Unas 150 entradas. 3 p.</div>
+          <div class="material-destino">→ Alimenta: «Verbos de régimen preposicional» · datos del Entrenador</div>
+        </div>
+      </div>
+      <span class="material-dl">PDF ↓</span>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-08-18/regimen-preposicional.pdf">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Explicación</span>
+        <div>
+          <div class="material-title">Los verbos de régimen preposicional</div>
+          <div class="material-desc">Qué es un verbo preposicional y la prueba de la pregunta. Incluye los transitivos sin preposición obligatoria y los de <strong>varias</strong> preposiciones (<em>advertir de/sobre</em>, <em>dudar de/en/entre/sobre</em>). 5 p.</div>
+          <div class="material-destino">→ Alimenta: «Verbos de régimen preposicional» · la prueba está en la NOTA de ①</div>
+        </div>
+      </div>
+      <span class="material-dl">PDF ↓</span>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-08-18/verbos-con-y-sin-preposicion.pdf">
+      <div class="material-left">
+        <span class="material-tipo tipo-tabla">Lista</span>
+        <div>
+          <div class="material-title">Verbos con y sin preposición</div>
+          <div class="material-desc">Unos 80 verbos agrupados por <em>a · con · de · en · por</em>, más los cuatro que no llevan ninguna (<em>buscar, escuchar, esperar, mirar</em>). 1 p.</div>
+          <div class="material-destino">→ Alimenta: «Verbos de régimen preposicional»</div>
+        </div>
+      </div>
+      <span class="material-dl">PDF ↓</span>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-08-18/verbos-tipo-gustar.pdf">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Explicación</span>
+        <div>
+          <div class="material-title">Verbo <em>gustar</em> y similares</div>
+          <div class="material-desc">Cómo se forma la construcción, por qué el sujeto es la cosa, lista ampliada y las familias <em>dar + emoción</em>, <em>parecer + adjetivo</em>, <em>caer bien/mal</em>. 3 p.</div>
+          <div class="material-destino">→ Alimenta: «Verbos tipo gustar» — sin trabajar todavía</div>
+        </div>
+      </div>
+      <span class="material-dl">PDF ↓</span>
+    </a>
+  </section>
+
+  <!-- ───────────────────── Preguntas para la profe ───────────────────── -->
+  <section class="preguntas" id="preguntas">
+    <h2>Preguntas para la profe</h2>
+    <div class="sub">Lo que quedó sin resolver — para cuando surja</div>
+    <ol>
+      <li><strong>La ranura <em>de</em> / <em>por</em> con emociones.</strong> Su regla fue <em>las emociones tienen causa → por</em>, pero en su propio material aparece <em>alegrarse <strong>de</strong> que te vaya bien</em> y <em>asustarse <strong>de</strong> todo</em>. ¿La diferencia es que <em>por</em> introduce la causa y <em>de</em> el contenido de la emoción, o es simplemente cuestión de verbo por verbo? ¿<em>Me alegro de tu ascenso</em> y <em>Me alegro por tu ascenso</em> dicen lo mismo?</li>
+      <li><strong>Preocuparse de.</strong> ¿Es exactamente un sinónimo de <em>encargarse de</em>, o hay un matiz? ¿Suena natural <em>me preocupo de que no falte nada</em> en Buenos Aires, o ahí ya se prefiere <em>me encargo</em>?</li>
+      <li><strong>Me da por las pelotas.</strong> ¿Se dice así en Buenos Aires, o lo más común es <em>me rompe</em> / <em>me hincha las pelotas</em>? ¿<em>Me da por los cojones</em> es solamente de España?</li>
+      <li><strong>Darle por + infinitivo.</strong> <em>Le dio por cantar a las tres de la mañana</em> — ¿se usa realmente en el Río de la Plata, o es más de otros países?</li>
+      <li><strong>Invitarle.</strong> ¿Se escucha alguna vez <em>le invité</em> en Buenos Aires, o siempre <em>lo / la invité</em>?</li>
+      <li><strong>Dar por / tener por.</strong> <em>Lo doy por muerto</em> y <em>Lo tengo por buen médico</em> — ¿son la misma construcción con dos verbos, o funcionan distinto?</li>
+    </ol>
+  </section>
+
+  <div class="page-footer">Clase del 18 de agosto de 2026 · Mi Proyecto Español</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only.
+//  data-region="rioplatense" rows are textual
+//  flags only; audio stays neutral site-wide.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+</script>
+</body>
+</html>

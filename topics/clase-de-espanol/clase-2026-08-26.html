@@ -1,0 +1,1851 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase del 26 de agosto de 2026 — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accents — violet and teal deliberately unused here so the
+     región chips (teal = Rioplatense, violet = España) stay unambiguous. */
+  --accent-alpha:   #4a90d9;  /* ① blue        */
+  --accent-gamma:   #fbbf24;  /* ② gold        */
+  --accent-epsilon: #f472b6;  /* ③ rose        */
+  --accent-zeta:    #34d399;  /* ④ green       */
+  --accent-eta:     #fb923c;  /* ⑤ orange      */
+  --accent-theta:   #94a3b8;  /* ⑥ slate       */
+  --accent-iota:    #38bdf8;  /* ⑦ sky         */
+  --accent-kappa:   #a3e635;  /* ⑧ lime        */
+  --accent-lambda:  #d4a373;  /* ⑨ tan         */
+  --accent-mu:      #cbd5e1;  /* ⑩ light slate */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/cadaquez iglesia.webp') center/cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Contents strip ── */
+.contents {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 22px 0 18px;
+}
+.contents-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.contents-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.contents-list a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.84rem;
+  transition: all 0.2s;
+}
+.contents-list a:hover {
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.45);
+  background: rgba(74, 144, 217, 0.08);
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 8px 0 0 18px; }
+.nota li { margin-bottom: 5px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.nota h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 14px 0 5px;
+}
+.nota h4:first-of-type { margin-top: 8px; }
+
+/* ── Provenance legend (sits under the contents strip) ── */
+.leyenda {
+  background: rgba(138, 155, 184, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  margin: 0 0 18px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.leyenda .leyenda-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.leyenda-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.leyenda-row:last-child { margin-bottom: 0; }
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  scroll-margin-top: 16px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-theta   { border-left-color: var(--accent-theta); }
+.card-iota    { border-left-color: var(--accent-iota); }
+.card-kappa   { border-left-color: var(--accent-kappa); }
+.card-lambda  { border-left-color: var(--accent-lambda); }
+.card-mu      { border-left-color: var(--accent-mu); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+.card-theta   .card-number { color: var(--accent-theta);   opacity: 0.75; }
+.card-iota    .card-number { color: var(--accent-iota);    opacity: 0.75; }
+.card-kappa   .card-number { color: var(--accent-kappa);   opacity: 0.75; }
+.card-lambda  .card-number { color: var(--accent-lambda);  opacity: 0.75; }
+.card-mu      .card-number { color: var(--accent-mu);      opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Provenance chips ── */
+.prov-chips {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.prov {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.prov-clase    { background: rgba(74, 222, 128, 0.10); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.28); }
+.prov-material { background: rgba(250, 204, 21, 0.10); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.28); }
+.prov-ampl     { background: rgba(148, 163, 184, 0.10); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.28); }
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+.explanation + .explanation { margin-top: -6px; }
+
+/* ── Epigraph (her words, verbatim) ── */
+.epigrafe {
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 16px;
+  margin: 4px 0 16px;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.epigrafe .fuente {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 7px;
+}
+
+/* ── Sub-heading inside a card ── */
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 20px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.6);
+}
+
+/* ── Formula ── */
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+.formula strong { color: var(--text-primary); }
+
+/* ── Example rows ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+/* Spine example — the one sentence a card turns on */
+.example-row.spine {
+  background: rgba(74, 144, 217, 0.07);
+  border: 1px solid rgba(74, 144, 217, 0.22);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 10px;
+}
+.example-row.spine .example-es { font-size: 1.14rem; }
+.anotacion {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+.anotacion b { color: var(--text-secondary); font-weight: 600; }
+.anotacion em { color: var(--accent); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Región chips (textual only — audio is always neutral) ── */
+.rio-tag, .esp-tag, .neu-tag, .var-tag, .vulg-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.rio-tag  { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.esp-tag  { background: rgba(192, 132, 252, 0.14); color: #d0a8ff; }
+.neu-tag  { background: rgba(138, 155, 184, 0.14); color: #a8b8d0; }
+.var-tag  { background: rgba(251, 191, 36, 0.14); color: #fbbf24; }
+.vulg-tag { background: rgba(248, 113, 113, 0.14); color: #f87171; }
+
+/* ── Chip row (flat word lists) ── */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+.chip {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 11px;
+}
+
+/* ── Evitar / usar rows ── */
+.contrast {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.contrast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.contrast-item .mark {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  width: 16px;
+  text-align: center;
+}
+.contrast-item.bad  { border-left: 3px solid var(--red); }
+.contrast-item.good { border-left: 3px solid var(--green); }
+.contrast-item.bad  .mark { color: var(--red); }
+.contrast-item.good .mark { color: var(--green); }
+.contrast-item .txt { flex: 1; }
+.contrast-item .es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+}
+.contrast-item .gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Aviso box — register warning ── */
+.aviso {
+  background: rgba(248, 113, 113, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-left: 4px solid var(--red);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0 4px;
+}
+.aviso .aviso-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 9px;
+}
+.aviso .frase {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+.aviso .frase:last-of-type { margin-bottom: 0; }
+.aviso .aviso-nota {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(248, 113, 113, 0.18);
+}
+.aviso .aviso-nota em { color: var(--text-primary); font-style: italic; }
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  vertical-align: bottom;
+}
+.table-wrapper th .var-tag { display: inline-block; margin: 4px 0 0; }
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td strong { color: var(--text-primary); font-weight: 600; }
+.table-note {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: -2px 0 10px;
+  padding-left: 2px;
+}
+.table-note em { color: var(--text-secondary); font-style: italic; }
+.table-note strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ── Cross-link out to a full topic page ── */
+.topic-link {
+  display: block;
+  margin: 16px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-primary); }
+.topic-link strong { color: var(--text-primary); font-weight: 600; }
+.topic-link em { color: var(--text-muted); font-style: italic; }
+.topic-link .arrow { color: var(--accent); font-weight: 600; }
+.topic-link.pending { border-left-color: var(--text-muted); background: rgba(138, 155, 184, 0.05); }
+.topic-link.pending .arrow { color: var(--text-muted); }
+
+/* ── Materiales de la clase ── */
+.materiales {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.materiales h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.materiales .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.material-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  margin-bottom: 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.material-item:last-child { margin-bottom: 0; }
+.material-item:hover { border-color: #2a4a75; background: var(--bg-card-hover); }
+.material-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+.material-tipo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tipo-tabla     { background: rgba(74, 144, 217, 0.12); color: #4a90d9; border: 1px solid rgba(74, 144, 217, 0.3); }
+.tipo-expl      { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.tipo-ejercicio { background: rgba(251, 146, 60, 0.12); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+.material-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+.material-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: 3px;
+}
+.material-destino {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 5px;
+}
+.material-dl {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+/* ── Preguntas para la profe ── */
+.preguntas {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--yellow);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 18px;
+  scroll-margin-top: 16px;
+}
+.preguntas h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.preguntas .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.preguntas ol { margin: 0 0 0 20px; }
+.preguntas li {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 0.93rem;
+  padding-left: 4px;
+}
+.preguntas li:last-child { margin-bottom: 0; }
+.preguntas li em { color: var(--accent); font-style: italic; }
+.preguntas li strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .grammar-card { padding: 20px 18px 18px; }
+  .preguntas, .materiales { padding: 20px 18px; }
+  .card-header { gap: 10px; }
+  .card-number { font-size: 1.8rem; }
+  .contents-list a { font-size: 0.8rem; padding: 5px 10px; }
+  .prov-chips { padding-top: 0; }
+  .material-item { flex-direction: column; gap: 8px; }
+  .material-dl { padding-top: 0; align-self: flex-end; }
+}
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Notas de Clase</div>
+    <h1>Clase del <em>26 de agosto</em> de 2026</h1>
+    <p class="subtitle">Vocabulario regional · la pragmática de <em>claro</em> · los adverbios de duda y el modo · el orden de los pronombres · <em>abajo</em> y <em>debajo</em>.</p>
+  </header>
+
+  <nav class="contents">
+    <div class="contents-label">Lo que vimos</div>
+    <div class="contents-list">
+      <a href="#s1">① Turno o cita</a>
+      <a href="#s2">② Criminal o delincuente</a>
+      <a href="#s3">③ Cómo se llama el almacén</a>
+      <a href="#s4">④ Lleno hasta el tope</a>
+      <a href="#s5">⑤ ¿Se entiende?</a>
+      <a href="#s6">⑥ Nada de «ten que»</a>
+      <a href="#s7">⑦ Llamar lleva «a»</a>
+      <a href="#s8">⑧ Adverbios de duda</a>
+      <a href="#s9">⑨ Orden de los pronombres</a>
+      <a href="#s10">⑩ Abajo o debajo</a>
+      <a href="#materiales">📂 Materiales de la clase</a>
+      <a href="#preguntas">✎ Preguntas para la profe</a>
+    </div>
+  </nav>
+
+  <div class="leyenda">
+    <span class="leyenda-label">Cómo leer las etiquetas</span>
+    <div class="leyenda-row"><span class="prov prov-clase">En clase</span> <span>She taught this. Teacher-attested.</span></div>
+    <div class="leyenda-row"><span class="prov prov-material">Material</span> <span>She sent it, but we never worked through it.</span></div>
+    <div class="leyenda-row"><span class="prov prov-ampl">Ampliación</span> <span>Added after class from reference material — not hers.</span></div>
+  </div>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ─────────────────────────── ① ─────────────────────────── -->
+  <article class="grammar-card card-alpha" id="s1">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Turno o cita</div>
+        <div class="card-title-en">Two Spanish words for one English idea</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      En el Río de la Plata, un <strong>turno</strong> es una hora reservada con un profesional o un servicio. Una <strong>cita</strong> es un encuentro acordado entre dos personas — romántico o formal. El inglés usa <em>appointment</em> para las dos cosas; el español no.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo <strong>turno</strong> con el cardiólogo el martes a las diez.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>I have an appointment with the cardiologist Tuesday at ten.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Necesito <strong>sacar un turno</strong> para el dentista.</div>
+          <div class="example-en">I need to get a dentist appointment. <em>— la colocación es sacar o pedir, nunca hacer.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo una <strong>cita</strong> en el juzgado el lunes por la mañana.</div>
+          <div class="example-en">I have a court date Monday morning.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tengo una <strong>cita</strong> este viernes con un chico que me van a presentar.</div>
+          <div class="example-en">I have a date Friday with a guy they're setting me up with.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La segunda vida de «turno» — el trabajo y el estudio</div>
+
+    <p class="explanation">
+      La misma palabra organiza el día laboral, sin ninguna relación con las citas médicas. Este sentido sí es panhispánico.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Trabajo en el <strong>turno noche</strong>.</div>
+          <div class="example-en">I work the night shift. <em>— también: turno mañana, turno tarde.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hago <strong>doble turno</strong> los sábados.</div>
+          <div class="example-en">I do a double shift on Saturdays.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Mi hija estudia <strong>medio turno</strong>.</div>
+          <div class="example-en">My daughter goes to school half-days.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="table-note" style="margin-top:14px">
+      <span class="rio-tag">Región</span> <em>Turno</em> para una hora con un profesional es rioplatense. En México y Colombia se pide una <em>cita con el médico</em>, y allá <em>turno</em> es el lugar en una fila. El sentido laboral no cambia de país.
+    </p>
+  </article>
+
+  <!-- ─────────────────────────── ② ─────────────────────────── -->
+  <article class="grammar-card card-gamma" id="s2">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Criminal o delincuente</div>
+        <div class="card-title-en">Where the line falls — and it isn't where English puts it</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      En la Argentina, <strong>criminal</strong> se reserva para quien mata. Todo lo demás — robo, estafa, contrabando, vandalismo — cae bajo <strong>delincuencia</strong>.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La policía detuvo a tres <strong>delincuentes</strong> que robaron el kiosco.</div>
+          <div class="example-en">Police arrested three criminals who robbed the shop. <em>— el inglés dice «criminals»; el español, acá, no.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El <strong>crimen</strong> del empresario sigue sin resolverse.</div>
+          <div class="example-en">The businessman's murder remains unsolved. <em>— crimen se inclina hacia el mismo lado que criminal.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Cometió un <strong>delito</strong> menor y pagó una multa.</div>
+          <div class="example-en">He committed a minor offense and paid a fine. <em>— delito es el acto, sin medir gravedad.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">La <strong>delincuencia</strong> aumentó en el barrio.</div>
+          <div class="example-en">Crime rose in the neighborhood. <em>— el fenómeno, incontable.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tiene <strong>antecedentes penales</strong>.</div>
+          <div class="example-en">He has a criminal record.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>English uses <em>criminal</em> as an umbrella; Spanish divides the ground.</strong> In English anyone who breaks a law is a criminal, from a shoplifter to a murderer. <em>Delincuente</em> is the everyday general term in Spanish and covers the overwhelming majority of offenders. <em>Criminal</em> sits at the top of the scale, and in Argentine usage it means killing — calling a pickpocket a <em>criminal</em> sounds either melodramatic or like a translation error.
+      <p>Two further pieces stop this from misfiring. <em>Delito</em> is the offense itself, neutral as to gravity, so <em>cometer un delito</em> is the safe general phrase at any severity. And the legal adjective is <strong>penal</strong>, never <em>criminal</em> — <em>derecho penal</em>, <em>causa penal</em>, <em>antecedentes penales</em>. That last one matters for reading: an <em>abogado penalista</em> is a criminal lawyer in the ordinary English sense, not a lawyer who handles homicides.</p>
+    </div>
+
+    <p class="table-note">
+      <span class="rio-tag">Región</span> La lectura estrecha de <em>criminal</em> es suya, para la Argentina. En otras normas la palabra corre algo más ancha.
+    </p>
+  </article>
+
+  <!-- ─────────────────────────── ③ ─────────────────────────── -->
+  <article class="grammar-card card-epsilon" id="s3">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Cómo se llama el almacén</div>
+        <div class="card-title-en">The most regional word in the language</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Pocos objetos cotidianos cambian tanto de nombre. El mismo negocio de barrio — el que vende fideos, yerba, lavandina y algo para la cena — tiene en cada país una palabra distinta, y ninguna se parece a las otras.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Bajo al <strong>almacén</strong> a comprar algo para la cena.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>I'm going down to the corner store for something for dinner. <em>— también: despensa.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Voy a la tienda de <strong>abarrotes</strong>.</div>
+          <div class="example-en">Mexicanismo — allá es la palabra normal para la tiendita de barrio; en la Argentina no se usa.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">En el campo todavía se dice <strong>pulpería</strong>.</div>
+          <div class="example-en">In the countryside they still say pulpería.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="explanation" style="margin-top:16px">
+      Su ejemplo extremo fue justamente <em>pulpería</em>: una palabra que a un ojo de afuera parece nombrar un negocio de pulpos y en realidad nombra un almacén general — rural e histórico en la Argentina, corriente todavía en Centroamérica. Esa distancia entre lo que una palabra <strong>parece</strong> y lo que <strong>hace</strong> es la lección; la tabla es apenas la evidencia.
+    </p>
+
+    <p class="table-note">
+      El parecido con <em>pulpo</em> es casual. El origen de <em>pulpería</em> está discutido y no conviene afirmar ninguna etimología.
+    </p>
+
+    <div class="sub-head">Y en el resto de América <span class="prov prov-ampl" style="margin-left:6px">Ampliación</span></div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>País</th>
+            <th>Palabra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Argentina · Uruguay · Paraguay</td><td><em>almacén</em> · <em>despensa</em></td></tr>
+          <tr><td>México</td><td><em>tienda de abarrotes</em></td></tr>
+          <tr><td>Colombia</td><td><em>tienda de barrio</em></td></tr>
+          <tr><td>Cuba · Venezuela · Perú</td><td><em>bodega</em> · <em>abasto</em></td></tr>
+          <tr><td>Costa Rica · Honduras · Nicaragua</td><td><em>pulpería</em></td></tr>
+          <tr><td>República Dominicana</td><td><em>colmado</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="table-note">
+      Esta tabla no salió de la clase: se armó después con material de referencia. Lo que sí es suyo es <em>almacén</em>, el rechazo de <em>abarrotes</em> y el ejemplo de <em>pulpería</em>.
+    </p>
+
+    <div class="sub-head">La mercadería — lo que se vende adentro</div>
+
+    <div class="chip-row">
+      <span class="chip">comestibles</span>
+      <span class="chip">víveres</span>
+      <span class="chip">provisiones</span>
+      <span class="chip">mercadería</span>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ④ ─────────────────────────── -->
+  <article class="grammar-card card-zeta" id="s4">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Lleno hasta el tope</div>
+        <div class="card-title-en">Six words, and they are not the same word</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-material">Material</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      El centro comercial está <strong>lleno, abarrotado, colmado, concurrido, ajetreado, saturado</strong>. Todas se traducen «busy» o «crowded», pero cada una mide algo distinto.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El centro comercial está <strong>lleno</strong>.</div>
+          <div class="example-en">The mall is full. <em>— la base neutra.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El subte venía <strong>abarrotado</strong>.</div>
+          <div class="example-en">The subway was packed. <em>— sin lugar para moverse.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El teatro estaba <strong>colmado</strong>.</div>
+          <div class="example-en">The theater was packed. <em>— más formal, casi literario.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Es un bar muy <strong>concurrido</strong>.</div>
+          <div class="example-en">It's a very popular bar. <em>— mucha gente va; suena bien.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Tuve un día <strong>ajetreado</strong>.</div>
+          <div class="example-en">I had a hectic day. <em>— no describe gente: describe actividad.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El sistema de salud está <strong>saturado</strong>.</div>
+          <div class="example-en">The health system is overwhelmed. <em>— pasó su capacidad; suena mal.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>A list of six synonyms invites you to pick one at random.</strong> These are not interchangeable — three axes separate them.
+
+      <h4>Density</h4>
+      <p><em>Lleno</em> is the neutral baseline. <em>Abarrotado</em> and <em>colmado</em> both mean packed to the walls, with <em>colmado</em> the more formal of the pair — it turns up in writing far more than in speech.</p>
+
+      <h4>Attendance versus density</h4>
+      <p><em>Concurrido</em> is not about being uncomfortable. It says a place draws people, and it carries mild approval: <em>un restaurante concurrido</em> is a recommendation, <em>un restaurante abarrotado</em> is a complaint.</p>
+
+      <h4>Activity versus crowding</h4>
+      <p><em>Ajetreado</em> is the odd one out. It describes bustle, not headcount, so it takes subjects with no people in them at all — <em>una semana ajetreada</em>, <em>una mañana ajetreada</em>. <em>Saturado</em> is the negative pole and reaches past places to systems and networks: <em>las líneas están saturadas</em>.</p>
+
+      <p>Note the family resemblance to card ③. <em>Abarrotado</em> and <em>abarrotes</em> share a root meaning to pack or stow — the Mexican corner store is, literally, the packed-full shop.</p>
+    </div>
+
+    <p class="table-note">
+      <span class="rio-tag">Región</span> <em>El shopping</em> por centro comercial es rioplatense. Los ejemplos usan el término neutro.
+    </p>
+  </article>
+
+  <!-- ─────────────────────────── ⑤ ─────────────────────────── -->
+  <article class="grammar-card card-eta" id="s5">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">¿Se entiende?</div>
+        <div class="card-title-en">How to check that you were followed</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Al terminar una explicación, en español no se pregunta «¿claro?». Se pregunta si la explicación <strong>se entendió</strong> — y casi siempre de forma impersonal.
+    </p>
+
+    <div class="contrast">
+      <div class="contrast-item bad">
+        <div class="mark">✗</div>
+        <div class="txt">
+          <div class="es">Primero giras a la derecha y después sigues derecho. ¿<em>Claro</em>?</div>
+          <div class="gloss">Suena a «¿en serio?» o «¿de acuerdo?». No funciona como pregunta de comprensión.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">¿Se entiende?</div>
+          <div class="gloss">Does that make sense? — la forma más común y la más neutra.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">¿Está claro? · ¿Queda claro?</div>
+          <div class="gloss">Is that clear? — perfectamente correctas: <em>claro</em> dentro de una estructura.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">¿Alguna duda? · ¿Me explico?</div>
+          <div class="gloss">Any questions? · Am I making myself clear? — la última pone el peso en quien habla.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-block" style="margin-top:16px">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Y <strong>claro</strong>, por eso llegó tarde.</div>
+          <div class="example-en">And of course, that's why he was late. <em>— acá sí: partícula de respuesta.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Y la respuesta corta: «creo que sí»</div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">— ¿Va a venir Marcos? — <strong>Creo que sí</strong>.</div>
+          <div class="example-en">I think so.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">— ¿Terminaste? — <strong>Creo que no</strong>, todavía me falta una parte.</div>
+          <div class="example-en">I don't think so, I still have a part left.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Pienso que</strong> deberíamos esperar hasta el lunes.</div>
+          <div class="example-en">I think we should wait until Monday. <em>— opinión razonada, cláusula completa.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Two separate habits, both carried over intact from English.</strong>
+
+      <h4>Why bare ¿claro? fails</h4>
+      <p><em>Claro</em> on its own is a response particle — it's what you say when you agree, the equivalent of «sure» or «of course». Turning it into a question turns it into a question about agreement, which is why it reads as <em>right?</em> or, with the wrong intonation, as sarcasm. The word isn't the problem; the bare use is. Give it a frame — <em>¿está claro?</em>, <em>¿queda claro?</em> — and it's ordinary and correct.</p>
+
+      <h4>Why the impersonal is the default</h4>
+      <p><em>¿Se entiende?</em> asks whether the explanation came out clearly. <em>¿Entiendes?</em> asks whether the listener is capable of following. English blurs this because «do you understand?» is neutral in most contexts; Spanish doesn't, and the second person can land as an accusation. The impersonal puts the burden on the explanation rather than on the person receiving it — which is exactly why a teacher, a doctor, or anyone giving instructions reaches for it by default. <em>¿Me explico?</em> goes further in the same direction and openly assigns the fault to the speaker.</p>
+
+      <h4>Creo versus pienso</h4>
+      <p>For short answers <em>creo que sí / creo que no</em> is fixed. <em>Pienso que sí</em> is grammatical but stilted, like reporting the conclusion of a deliberation. <em>Creer</em> covers belief and impression, which is what a quick «I think so» actually conveys; <em>pensar</em> is for a worked-out position and wants a full clause after it.</p>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ⑥ ─────────────────────────── -->
+  <article class="grammar-card card-theta" id="s6">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Nada de «ten que»</div>
+        <div class="card-title-en">Obligation cannot be commanded</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      La perífrasis <strong>tener que + infinitivo</strong> no tiene imperativo. El imperativo de <em>tener</em> existe — pero no con <em>que</em>.
+    </p>
+
+    <div class="contrast">
+      <div class="contrast-item bad">
+        <div class="mark">✗</div>
+        <div class="txt">
+          <div class="es">Ten que estudiar más.</div>
+          <div class="gloss">No existe.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">Tienes que estudiar más.</div>
+          <div class="gloss">You have to study more — indicativo, y ya suena a orden.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">Debes estudiar más. · Hay que estudiar más.</div>
+          <div class="gloss">You must study more · One has to study more — la segunda no señala a nadie.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">Estudia más.</div>
+          <div class="gloss">Study more — el imperativo directo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El imperativo de «tener» sí funciona — con sustantivo</div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Ten</strong> paciencia. · <strong>Ten</strong> cuidado.</div>
+          <div class="example-en">Be patient. Be careful.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Tengan</strong> calma, ya viene el médico.</div>
+          <div class="example-en">Stay calm, the doctor is on the way.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong><em>Tener que</em> is an obligation periphrasis: it states that an obligation exists.</strong> An imperative issues one. Stacking them means commanding someone to be under a requirement, which is a step removed from just telling them to do the thing — and Spanish has no use for that step, so the form never developed.
+      <p>The English «you have to» hides this, because it works both as a report («you have to be 18 to vote») and as a command («you have to see this movie»). Spanish keeps the two apart, and the indicative <em>tienes que</em> already carries plenty of force when you want to press someone, so nothing is lost.</p>
+      <p>Keep the two facts separate in your head: the imperative of <em>tener</em> is alive and common — <em>ten cuidado</em>, <em>ten paciencia</em>, <em>ten fe</em>, <em>tengan calma</em>. What's blocked is specifically <em>ten</em> + <em>que</em> + infinitive.</p>
+    </div>
+
+    <a class="topic-link" href="../verbos-en-profundidad/tener.html">
+      <span class="arrow">→</span> <strong>Ya en el sitio:</strong> <em>Tener: idiomático</em> — los usos fijos del verbo.
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ⑦ ─────────────────────────── -->
+  <article class="grammar-card card-iota" id="s7">
+    <div class="card-header">
+      <div class="card-number">⑦</div>
+      <div class="card-title-group">
+        <div class="card-title">Llamar lleva «a»</div>
+        <div class="card-title-en">And it is not the personal a</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Cuando <strong>llamar</strong> significa hacer una llamada o convocar, la preposición <strong>a</strong> aparece siempre — sin importar si lo que sigue es una persona, una empresa, un número o una puerta.
+    </p>
+
+    <div class="example-row spine">
+      <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+      <div class="example-body">
+        <div class="example-es">Hay que llamar <strong>al</strong> 911.</div>
+        <div class="example-en">We need to call 911.</div>
+        <div class="anotacion">
+          Un número no es una persona, y la <b>a</b> está igual. Ahí se ve que la preposición viene con el verbo, no con lo que sigue.
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llamé <strong>al</strong> hotel para confirmar la reserva.</div>
+          <div class="example-en">I called the hotel to confirm the booking.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llama <strong>a</strong> la empresa y pregunta por facturación.</div>
+          <div class="example-en">Call the company and ask for billing.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llamaron <strong>a</strong> la puerta a las siete.</div>
+          <div class="example-en">Someone knocked at seven.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vamos a llamar <strong>a</strong> un taxi.</div>
+          <div class="example-en">Let's call a taxi.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llamé <strong>a</strong> mi hermana.</div>
+          <div class="example-en">I called my sister. <em>— persona, misma a.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Pero no en todos los sentidos del verbo</div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo <strong>llaman</strong> «el Flaco».</div>
+          <div class="example-en">They call him "Skinny." <em>— sentido de nombrar: sin a.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me <strong>llamó la atención</strong> el silencio.</div>
+          <div class="example-en">The silence struck me. <em>— locución fija, sin a.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Why this needs saying.</strong> Spanish has a separate rule, the personal <em>a</em>, which marks a direct object that is a person: <em>vi a mi hermano</em> but <em>vi la casa</em>. Learners meet that rule early and then read every <em>a</em> through it — so <em>llamé a mi hermana</em> looks like personal <em>a</em>, and <em>llamé al hotel</em> looks like a mistake.
+      <p>It isn't. The <em>a</em> travels with the verb in this sense, not with the animacy of the object. <em>El 911</em> is a number and <em>la puerta</em> is a door, and both take it. Once you see the <em>a</em> as belonging to <em>llamar</em>, the whole set becomes one rule instead of a rule plus exceptions.</p>
+      <p><strong>One honest caveat, on the label rather than the usage.</strong> Whether this is best described as true régimen preposicional or as personal <em>a</em> extended to institutions and services is a question grammarians disagree about. It makes no difference to anything you will ever write — the <em>a</em> is there in every calling-sense example either way. What does vary is the other senses: naming (<em>lo llaman el Flaco</em>) and the fixed <em>llamar la atención</em>, where the <em>a</em> is simply absent.</p>
+    </div>
+
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> «Régimen preposicional — los verbos que fijan su preposición» en Gramática → Preposiciones. <em>(Por construir.)</em>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ⑧ ─────────────────────────── -->
+  <article class="grammar-card card-kappa" id="s8">
+    <div class="card-header">
+      <div class="card-number">⑧</div>
+      <div class="card-title-group">
+        <div class="card-title">Adverbios de duda</div>
+        <div class="card-title-en">The ladder, and the mood dial</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-material">Material</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Todos significan «quizá», pero no son intercambiables. Cambian de <strong>registro</strong>, y cambian el <strong>modo</strong> del verbo que los sigue según cuánta duda haya.
+    </p>
+
+    <div class="sub-head">La escala de registro</div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Quizás</strong> vengan mañana.</div>
+          <div class="example-en">Maybe they'll come tomorrow. <em>— informal, muy corriente. Quizá y quizás conviven.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Tal vez</strong> tengas razón.</div>
+          <div class="example-en">Maybe you're right. <em>— sirve igual en conversación y por escrito.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>A lo mejor</strong> llueve más tarde.</div>
+          <div class="example-en">Maybe it'll rain later. <em>— enteramente coloquial.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Probablemente</strong> el vuelo se retrase.</div>
+          <div class="example-en">The flight will probably be delayed. <em>— más formal, más certeza.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Posiblemente</strong> haya cambios en el equipo.</div>
+          <div class="example-en">There may be changes to the team. <em>— formal, menos certeza que probablemente.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Seguramente</strong> ya salió de la oficina.</div>
+          <div class="example-en">He's surely left the office by now. <em>— casi certeza, no duda.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Acaso</strong> no lo sabías.</div>
+          <div class="example-en">Perhaps you didn't know. <em>— literario o arcaico; en el habla suena a otra época.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El modo como termómetro</div>
+
+    <div class="example-row spine">
+      <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+      <div class="example-body">
+        <div class="example-es">Tal vez <strong>llueva</strong> mañana. · Tal vez <strong>llueve</strong> mañana.</div>
+        <div class="example-en">Maybe it'll rain tomorrow. — las dos, con distinta apuesta.</div>
+        <div class="anotacion">
+          <b>llueva</b> = duda real, no tengo idea · <b>llueve</b> = me inclino a que sí, el cielo ya viene cargado.
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quizás <strong>venga</strong> Marcos.</div>
+          <div class="example-en">Marcos might come; who knows.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quizás <strong>viene</strong> Marcos.</div>
+          <div class="example-en">Marcos is probably coming.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Seguramente ya <strong>llegaron</strong>.</div>
+          <div class="example-en">They've surely arrived by now. <em>— con seguramente casi no hay alternancia.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Llueve, tal vez.</div>
+          <div class="example-en">It might rain. <em>— pospuesto, solo indicativo: la alternancia desaparece.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>Three things are going on here, and they are worth separating.</strong>
+
+      <h4>The list is a ladder, not a set of synonyms</h4>
+      <p>All seven can be glossed «maybe» in English, and that gloss hides everything useful. <em>Quizá</em> and <em>quizás</em> are the same word — the <em>-s</em> is optional and neither is more correct. <em>A lo mejor</em> is one rung more casual and belongs in conversation only. Moving up, <em>probablemente</em> and <em>posiblemente</em> look like a pair but aren't: the first claims more likelihood than the second. And <em>seguramente</em> has drifted almost out of the doubt category — it means something close to «I'm confident», not «perhaps», which is a live trap for an English speaker who reads it as «surely, but maybe». <em>Acaso</em> survives mainly in writing and in rhetorical questions.</p>
+
+      <h4>The mood is a dial, not a rule</h4>
+      <p>With most of these adverbs both moods are available, and the choice reports how much you are committing to. Subjunctive backs away from the claim; indicative leans into it. This is the same non-assertion logic that runs through the whole subjunctive system — the mood marks whether you are asserting the proposition or holding it at arm's length — which is why this card is a doorway rather than a self-contained topic.</p>
+      <p>Two structural constraints override the dial. The adverb has to <strong>precede</strong> the verb for the alternation to exist at all: postposed, as in <em>llueve, tal vez</em>, only the indicative works. And <em>a lo mejor</em> is the standard exception — reference grammars describe it as indicative-only.</p>
+
+      <h4>Which brings up the one contested point</h4>
+      <p>She is clear that speakers do put <em>a lo mejor</em> with the subjunctive, on the same doubt-scale logic as <em>quizás</em>, notwithstanding what the grammar says. That is a real observation about real speech, and it is flagged rather than resolved, because it may well be regional or colloquial rather than general. Note that this is the one item on the whole list that grammars single out as indicative-only — so what she is reporting is not a general pattern but a specific exception leaking.</p>
+      <p><strong>The practical line: recognize it, don't produce it.</strong> If you hear <em>a lo mejor venga</em>, nothing is wrong. When you write or say it yourself, use the indicative — correct everywhere, including here.</p>
+
+      <h4>A footnote worth keeping</h4>
+      <p>Her own recollection is that when she was small all of these took the subjunctive, and that the indicative use has spread within living memory. That is an unverified personal observation rather than a documented fact, but it is the kind of thing you won't find in a textbook, and it explains why the usage feels unsettled.</p>
+    </div>
+
+    <p class="table-note">
+      <span class="var-tag">Uso variable</span><span class="rio-tag">Región</span> El punto en disputa es únicamente <em>a lo mejor</em> + subjuntivo. El resto de la escala no está en discusión.
+    </p>
+
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> «El subjuntivo» — el hub grande, con los disparadores adverbiales como una de sus secciones. <em>(Por construir — es el proyecto más grande de la lista.)</em>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ⑨ ─────────────────────────── -->
+  <article class="grammar-card card-lambda" id="s9">
+    <div class="card-header">
+      <div class="card-number">⑨</div>
+      <div class="card-title-group">
+        <div class="card-title">Orden de los pronombres</div>
+        <div class="card-title-en">Proclisis and enclisis with a periphrasis</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Con una perífrasis — verbo conjugado + infinitivo — el pronombre puede ir adelante de todo o pegado al infinitivo. Las dos son correctas y significan lo mismo.
+    </p>
+
+    <div class="example-row spine">
+      <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+      <div class="example-body">
+        <div class="example-es"><strong>Nos</strong> van a matar. · Van a matar<strong>nos</strong>.</div>
+        <div class="example-en">They're going to kill us. — mismo significado, distinta sensación.</div>
+        <div class="anotacion">
+          <b>proclisis</b> = el pronombre se adelanta; más coloquial y mucho más frecuente en el habla · <b>enclisis</b> = pegado al infinitivo; algo más formal, más de la escritura.
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Te</strong> quiero decir algo. · Quiero decir<strong>te</strong> algo.</div>
+          <div class="example-en">I want to tell you something.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es"><strong>Lo</strong> estoy leyendo. · Estoy leyéndo<strong>lo</strong>.</div>
+          <div class="example-en">I'm reading it. <em>— con gerundio funciona igual.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quiero decírte<strong>lo</strong>. · <strong>Te lo</strong> quiero decir.</div>
+          <div class="example-en">I want to tell you it. <em>— dos pronombres, siempre juntos, nunca separados.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contrast">
+      <div class="contrast-item bad">
+        <div class="mark">✗</div>
+        <div class="txt">
+          <div class="es">Vannos a matar.</div>
+          <div class="gloss">El pronombre no puede pegarse al verbo conjugado.</div>
+        </div>
+      </div>
+      <div class="contrast-item bad">
+        <div class="mark">✗</div>
+        <div class="txt">
+          <div class="es">Te quiero decirlo.</div>
+          <div class="gloss">Los dos pronombres se mueven juntos: <em>te lo quiero decir</em> o <em>quiero decírtelo</em>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>The two positions are genuinely interchangeable in meaning.</strong> What differs is feel: fronting the pronoun (<em>nos van a matar</em>) is the more colloquial choice and by far the more frequent in speech, while attaching it to the infinitive is slightly more formal and more common in writing.
+      <p>The rule underneath is that the pronoun attaches only to non-finite forms — infinitive and gerund — or moves in front of the whole verbal complex. It can never sit on the conjugated verb, which is why <em>vannos a matar</em> is impossible.</p>
+      <p><strong>One observation from class worth recording, because it explains an error pattern.</strong> Enclisis feels more natural to an English speaker: «kill us» keeps the object after the verb, so <em>matarnos</em> maps onto English word order directly, while <em>nos van a matar</em> requires moving the object somewhere English never puts it. That instinct isn't wrong — enclisis is fully correct — but leaning on it exclusively produces speech that sounds a shade formal and bookish. The fix is to practise the fronted version until it stops feeling like an inversion, since that is the one you will hear most.</p>
+      <p>Note the written accent when enclisis pushes the word past the stress rule: <em>decírtelo</em>, <em>leyéndolo</em>.</p>
+    </div>
+
+    <a class="topic-link" href="../IOP%20usage.html">
+      <span class="arrow">→</span> <strong>Ya en el sitio:</strong> <em>El Pronombre Objetivo</em> — los grupos de verbos y el uso de <em>le / lo / la</em>. <em>(Falta incorporarle la posición del clítico: la página tiene los pronombres, todavía no dónde se paran.)</em>
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ⑩ ─────────────────────────── -->
+  <article class="grammar-card card-mu" id="s10">
+    <div class="card-header">
+      <div class="card-number">⑩</div>
+      <div class="card-title-group">
+        <div class="card-title">Abajo o debajo</div>
+        <div class="card-title-en">And the whole a- / de- family</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      No son dos palabras que signifiquen lo mismo. La forma con <strong>de-</strong> está hecha para llevar complemento; la forma con <strong>a-</strong> históricamente se usa sola.
+    </p>
+
+    <div class="example-row spine">
+      <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+      <div class="example-body">
+        <div class="example-es">El gato está <strong>debajo de</strong> la mesa.</div>
+        <div class="example-en">The cat is under the table.</div>
+        <div class="anotacion">
+          La forma segura en toda América, la Argentina incluida. <em>Abajo de la mesa</em> dice lo mismo y es corriente en Buenos Aires, pero se acepta menos en otras normas.
+        </div>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Los vecinos viven <strong>abajo</strong>.</div>
+          <div class="example-en">The neighbors live downstairs. <em>— sin complemento solo funciona la forma con a-.</em></div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Te espero <strong>adelante</strong>. · Está <strong>delante de</strong> la puerta.</div>
+          <div class="example-en">I'll wait for you up front. · It's in front of the door.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Deja el bolso <strong>adentro</strong>. · Está <strong>dentro del</strong> cajón.</div>
+          <div class="example-en">Leave the bag inside. · It's inside the drawer.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Salgamos <strong>afuera</strong>. · <strong>Fuera de</strong> horario.</div>
+          <div class="example-en">Let's go outside. · Outside business hours.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Se quedó <strong>atrás</strong>. · Está <strong>detrás del</strong> mostrador.</div>
+          <div class="example-en">He stayed behind. · It's behind the counter.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <span class="nota-label">NOTA*</span>
+      <strong>The pattern runs across a small closed set:</strong> <em>abajo/debajo</em>, <em>adelante/delante</em>, <em>atrás/detrás</em>, <em>adentro/dentro</em>, <em>afuera/fuera</em>.
+      <p>The original division is clean. The <em>de-</em> forms are the ones built to take a complement — <em>debajo de la mesa</em>, <em>delante de la puerta</em>, <em>dentro del cajón</em>. The <em>a-</em> forms stand alone and point at a location or a direction with nothing following — <em>está abajo</em>, <em>ven adelante</em>, <em>salgamos afuera</em>.</p>
+      <p>What is happening in the River Plate isn't the two drifting together at random. It is the <em>a-</em> forms acquiring a complement slot they never originally had, so <em>abajo de la mesa</em> and <em>adentro del cajón</em> become ordinary. Her account is that speakers simply reach for the <em>a-</em> forms, that it feels easier to say, and that the same preference carries into writing. Peninsular Spanish holds the older division more firmly, and other Latin American norms sit somewhere in between.</p>
+      <p><strong>The practical upshot is unusually clear.</strong> The <em>de-</em> forms with a complement are correct in <em>every</em> region, Argentina included — they cost you nothing and they travel. So <em>debajo de la mesa</em> is your production default, and <em>abajo de la mesa</em> is a recognition item: expect to hear it constantly in Buenos Aires, and don't hear it as an error.</p>
+      <p>The reverse does not hold. With no complement only the <em>a-</em> form works: <em>viven abajo</em>, never <em>viven debajo</em>.</p>
+    </div>
+
+    <p class="table-note">
+      <span class="rio-tag">Región</span> Ella lo marcó como un rasgo muy regional. La preferencia por las formas con <em>a-</em> es rioplatense; la distinción original sigue viva en España.
+    </p>
+
+    <div class="topic-link pending">
+      <span class="arrow">→</span> <strong>Página completa:</strong> «Adverbios de lugar: la familia a- / de-» — historia del par y estado actual por región. <em>(Por construir — puede terminar siendo una sección de la página de adverbios que ya existe.)</em>
+    </div>
+  </article>
+
+  <!-- ───────────────────── Materiales de la clase ───────────────────── -->
+  <section class="materiales" id="materiales">
+    <h2>Materiales de la clase</h2>
+    <div class="sub">Nada archivado esta semana</div>
+
+    <div class="material-item">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicio</span>
+        <div>
+          <div class="material-title">Diálogo de dos personajes — PDF de la clase</div>
+          <div class="material-desc">El PDF de ejercicios que trabajamos en clase no se pudo recuperar y no quedó archivado. Las correcciones que salieron de él están igual en esta hoja: <em>¿se entiende?</em> (⑤), <em>ten que</em> (⑥) y el orden de los pronombres (⑨).</div>
+          <div class="material-destino">No disponible — reconstruido desde las notas.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────── Preguntas para la profe ───────────────────── -->
+  <section class="preguntas" id="preguntas">
+    <h2>Preguntas para la profe</h2>
+    <div class="sub">Lo que quedó sin resolver — para cuando surja</div>
+    <ol>
+      <li><strong>El límite de <em>criminal</em>.</strong> ¿La palabra sigue el homicidio específicamente, o la gravedad extrema en general? A un violador o a un secuestrador, ¿los llamarías <em>criminales</em> o <em>delincuentes</em>? Eso decide entre «el que mata» y «el que comete el peor delito».</li>
+      <li><strong><em>A lo mejor</em> + subjuntivo, por escrito.</strong> Lo dijiste para el habla — ¿también lo escribirías? Si en un texto formal aparece <em>a lo mejor venga</em>, ¿lo corregirías o lo dejarías pasar?</li>
+    </ol>
+  </section>
+
+  <div class="page-footer">Clase del 26 de agosto de 2026 · Mi Proyecto Español</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish only.
+//  data-region="rioplatense" rows are textual
+//  flags only; audio stays neutral site-wide.
+// ═══════════════════════════════════════════════
+let neutralVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function speakExample(btn) {
+  if (!window.speechSynthesis) return;
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+
+  const clone = esEl.cloneNode(true);
+  const text = cleanForTTS(clone.textContent);
+  if (!text) return;
+
+  if (btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  if (neutralVoice) { u.voice = neutralVoice; u.lang = neutralVoice.lang; }
+  else { u.lang = 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  u.onstart = () => btn.classList.add('playing');
+  u.onend   = () => btn.classList.remove('playing');
+  u.onerror = () => btn.classList.remove('playing');
+  speechSynthesis.speak(u);
+}
+</script>
+</body>
+</html>

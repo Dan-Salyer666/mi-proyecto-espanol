@@ -30,8 +30,14 @@
 //
 // `weight` (default 1) and `noneWeight` (default 1, optional fields only) let fire-rates
 // and preferences be tuned with no code change.
+// v5 CHANGE (spine widening): +12 personaje, +10 lugar, +8 eje — all SPINE fields, which
+// always fire, so pool width grows with NO effect on constraint density and no rescale of
+// any optional `noneWeight`. All 18 new lugar/eje options are ungated, which was the point:
+// the genre-agnostic eje pool was the vat's thinnest spot (15 of 41), so comedia/romance/
+// cotidiana rolls kept drawing from the same handful. `sin_eje` moved to weight 3 (~10%).
+// Old seeds do NOT reproduce their v4 worlds — accepted, no back-compat is maintained.
 const SEMILLAS = {
-  version: 4,
+  version: 5,
   rollOrder: ['genero', 'lugar', 'tiempo', 'personaje', 'eje', 'motor', 'nucleo', 'tono', 'final'],
   fields: {
 
@@ -93,6 +99,17 @@ const SEMILLAS = {
         { id: 'oficina',    label: 'en un edificio de oficinas' },
         { id: 'mercadillo', label: 'en un mercado de pulgas' },
         { id: 'rio',        label: 'a la orilla de un río' },
+        // v5 additions (genre-agnostic)
+        { id: 'terminal',   label: 'en una terminal de autobuses' },
+        { id: 'cine',       label: 'en un cine viejo' },
+        { id: 'peluqueria', label: 'en una peluquería de barrio' },
+        { id: 'gasolinera', label: 'en una gasolinera de carretera' },
+        { id: 'azotea',     label: 'en la azotea de un edificio' },
+        { id: 'sotano',     label: 'en un sótano' },
+        { id: 'parque',     label: 'en un parque de diversiones cerrado' },
+        { id: 'lavanderia', label: 'en una lavandería de autoservicio' },
+        { id: 'funeraria',  label: 'en una funeraria' },
+        { id: 'invernadero', label: 'en un invernadero' },
         // genre-gated specials
         { id: 'estacion',   label: 'en una estación espacial',          requires: ['scifi', 'distopia'] },
         { id: 'nave',       label: 'en una nave espacial',              requires: ['scifi', 'distopia'] },
@@ -157,7 +174,20 @@ const SEMILLAS = {
         { id: 'mecanico',     label: 'un mecánico taciturno' },
         { id: 'vendedora',    label: 'una vendedora ambulante' },
         { id: 'juez',         label: 'un juez jubilado' },
-        { id: 'boxeador',     label: 'un boxeador en decadencia' }
+        { id: 'boxeador',     label: 'un boxeador en decadencia' },
+        // v5 additions
+        { id: 'barbero',      label: 'un barbero conversador' },
+        { id: 'veterinaria',  label: 'una veterinaria rural' },
+        { id: 'traductor',    label: 'un traductor sin trabajo' },
+        { id: 'chofer',       label: 'un chofer de autobús' },
+        { id: 'fotografa',    label: 'una fotógrafa de bodas' },
+        { id: 'sepulturero',  label: 'un sepulturero callado' },
+        { id: 'locutor',      label: 'un locutor de radio nocturna' },
+        { id: 'panadera',     label: 'una panadera madrugadora' },
+        { id: 'socios',       label: 'dos socios que ya no se hablan' },
+        { id: 'divorciada',   label: 'una mujer recién divorciada' },
+        { id: 'arbitro',      label: 'un árbitro de pueblo' },
+        { id: 'jubilado',     label: 'un jubilado que no sabe en qué ocupar el día' }
       ]
     },
 
@@ -226,8 +256,22 @@ const SEMILLAS = {
         // WESTERN / AVENTURA / COTIDIANA flavor
         { id: 'caballo',   label: 'en torno a un caballo que vuelve sin su jinete',          requires: ['western', 'aventura', 'drama'] },
         { id: 'carta_banco', label: 'en torno a una carta del banco que nadie quiere abrir', requires: ['cotidiana', 'drama', 'satira', 'comedia'] },
+        // v5 additions — genre-agnostic, deliberately non-mystery so they can carry
+        // comedia / romance / cotidiana without forcing a thriller shape. The
+        // genre-agnostic eje pool was the thinnest part of the vat (15 of 41).
+        { id: 'favor',     label: 'en torno a un favor que no se puede negar' },
+        { id: 'visita',    label: 'en torno a una visita que se prolonga demasiado' },
+        { id: 'error_nombre', label: 'en torno a un error en un nombre que nadie corrige' },
+        { id: 'silla',     label: 'en torno a una silla que sigue vacía en cada comida' },
+        { id: 'numero',    label: 'en torno a un número de teléfono que alguien sigue marcando' },
+        { id: 'puerta',    label: 'en torno a una puerta que lleva años cerrada' },
+        { id: 'disculpa',  label: 'en torno a una disculpa que nunca llega' },
+        { id: 'receta',    label: 'en torno a una receta que se perdió con alguien' },
         // NINGUNO (explicit — never a silent none)
-        { id: 'sin_eje',   label: 'sin un objeto o figura central, sostenida por los personajes y la situación' }
+        // weight 3: the eje is one of only four always-firing constraints and sin_eje
+        // removes it, so this is held near ~10% of rolls. At weight 1 it fired ~3–5%
+        // (effectively absent); much higher and the prose drifts to house default.
+        { id: 'sin_eje',   label: 'sin un objeto o figura central, sostenida por los personajes y la situación', weight: 3 }
       ]
     },
 

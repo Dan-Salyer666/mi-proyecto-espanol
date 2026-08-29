@@ -1731,7 +1731,7 @@ When in doubt, leave it unmarked. Only mark when you are confident it is pronomi
   const themeStr   = p.theme   ? `Tema: ${p.theme}` : 'Tema: elige algo interesante, sorpréndeme';
 
   const bibleSection = p.bible
-    ? `\n\nCONTINUIDAD (episodio ${p.epNum}):\n${p.bible}\n\nEscribe el siguiente episodio. Mantén continuidad de personajes, lugar y tono. Avanza la trama.`
+    ? `\n\nCONTINUIDAD (episodio ${p.epNum}):\n${p.bible}\n\nEscribe el siguiente episodio. Mantén continuidad de personajes, lugar y tono. Avanza la trama.\n\nPROHIBIDO RETROCEDER: todo lo que aparece en el documento de continuidad YA está escrito y el lector ya lo leyó. Empieza el pasaje DESPUÉS del momento final que describe el documento. No vuelvas a narrar, escenificar ni "mostrar por fin" ninguna escena que el documento ya registre como ocurrida — ni siquiera con otras palabras, otro ángulo o más detalle. Si la función narrativa de este episodio parece exigir una escena que el documento ya da por ocurrida, esa escena pasó fuera de cámara: arranca de sus consecuencias.`
     : '';
 
   // HECHOS FIJOS — immutable canon captured on ep 1, injected verbatim into every
@@ -1934,7 +1934,9 @@ RECORDATORIO DE REGISTRO: este plan es estructural. Escribe el pasaje en el regi
 
   // HECHOS FIJOS extraction — ep 1 of a fija story only. Has the prose model list the
   // immutable facts it just established, captured once into storyCanon.
-  const canonInstructionBlock = needsCanon ? `\n\nHECHOS FIJOS (OBLIGATORIO): En el campo "hechos_fijos" del JSON enumera los datos que quedan fijados para siempre por este primer episodio y que ningún episodio posterior puede cambiar: nombres propios de los personajes, cómo y dónde ocurrió cualquier hecho pasado importante (por ejemplo, la causa y el lugar de una muerte), las relaciones entre personajes, y los lugares y objetos clave. Escribe cada dato como una frase corta y concreta. No incluyas cosas que todavía pueden desarrollarse o revelarse más adelante; solo lo que ya es un hecho establecido.` : '';
+  const canonInstructionBlock = needsCanon ? `\n\nHECHOS FIJOS (OBLIGATORIO): En el campo "hechos_fijos" del JSON enumera los datos que quedan fijados para siempre por este primer episodio y que ningún episodio posterior puede cambiar: nombres propios de los personajes, cómo y dónde ocurrió cualquier hecho pasado importante (por ejemplo, la causa y el lugar de una muerte), las relaciones entre personajes, y los lugares y objetos clave. Escribe cada dato como una frase corta y concreta. No incluyas cosas que todavía pueden desarrollarse o revelarse más adelante; solo lo que ya es un hecho establecido.
+
+SOLO DATOS PERMANENTES: un hecho fijo tiene que seguir siendo verdad en el último episodio. Por eso quedan FUERA los estados pasajeros: heridas y su estado (sangra, duele, está vendada), dónde está alguien ahora mismo, qué lleva puesto o en la mano, la hora, el clima, y cómo se siente un personaje hoy. Todo eso cambia y va en el documento de continuidad, no aquí. Un objeto clave puede entrar como objeto ("existe un reloj de plata robado"), nunca como situación ("el reloj está sobre la almohada").` : '';
 
   // JSON schema: conditionally includes planned_ending on episodes that need to commit.
   // JSON schema: passage-level fields planned_ending (ending commitment) and
@@ -3033,16 +3035,30 @@ async function deleteStoryFromDrive(sid) {
 //  BIBLE GENERATION
 // ═══════════════════════════════════════════════
 async function generateBible(passage, cfg) {
+  // Canon + prior bible are injected so the document ACCUMULATES instead of being
+  // rewritten from one passage each episode. Without them, any fact the current
+  // passage doesn't happen to restate decays into a hedge ("aparentemente médico",
+  // "posiblemente amistad") and the hedge is then carried forward as the record.
+  const bibleCanon = (Array.isArray(storyCanon) && storyCanon.length)
+    ? `\n\nHECHOS FIJOS DE LA HISTORIA (canon inmutable, ya establecido — dalos por ciertos y enúncialos como certezas, nunca con dudas ni con "aparentemente", "posiblemente" o "según X"):\n${storyCanon.map(f => `- ${f}`).join('\n')}`
+    : '';
+  const biblePrev = prevBible
+    ? `\n\nDOCUMENTO DE CONTINUIDAD ANTERIOR (episodios previos — arrastra todo lo que siga vigente; el documento nuevo debe SUSTITUIRLO sin perder información):\n${prevBible}`
+    : '';
+
   const biblePrompt = `Lee este pasaje y escribe un documento de continuidad compacto (~300 palabras):
 - Personajes: nombres, relaciones, rasgos, situación actual
 - Lugar y atmósfera
 - Eventos clave ocurridos
 - Hilos narrativos sin resolver
+- MOMENTO FINAL EXACTO: en una o dos frases, la última situación concreta del pasaje. El próximo episodio empieza DESPUÉS de este momento.
 - Notas de registro (variedad: ${cfg.region}, registro: ${cfg.register})
 
 IMPORTANTE: Este documento captura QUÉ HA PASADO, no hacia dónde va la historia. No sugieras dirección narrativa ni giros futuros — el desenlace ya está planeado por separado. Limítate a describir el estado actual del mundo del relato.
 
-PASAJE:
+ACUMULA, NO REINICIES: los nombres, las relaciones y las profesiones ya establecidas no se renegocian en cada episodio. Si un dato ya está fijado, enúncialo con seguridad aunque este pasaje no lo repita. Nunca degrades un hecho establecido a una suposición.${bibleCanon}${biblePrev}
+
+PASAJE NUEVO (el más reciente):
 ${passage.replace(/\[SE:\w+\]([\s\S]*?)\[\/SE\]/g, '$1')}
 
 Responde SOLO con el documento en texto plano.`;

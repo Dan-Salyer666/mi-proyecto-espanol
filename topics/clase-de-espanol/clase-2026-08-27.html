@@ -853,6 +853,149 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
   .eje-fila { flex-wrap: wrap; gap: 8px; }
 }
 
+/* ── Figura centrada y chica (un cartel, no una ilustración) ── */
+.figura-cartel {
+  margin: 18px auto 4px;
+  max-width: 260px;
+  text-align: center;
+}
+.figura-cartel img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+}
+.figura-cartel figcaption {
+  margin-top: 10px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+
+/* ── Ampliación en el lugar — estándar para las imágenes dentro de
+      las tarjetas de contenido (mismo gesto que el resto del sitio) ── */
+.duo figure.zoomed,
+.figura-cartel.zoomed { overflow: visible; position: relative; z-index: 60; }
+.duo img,
+.figura-cartel img {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-radius 0.25s ease;
+}
+.duo img.magnified {
+  object-fit: contain;
+  transform: scale(2);
+  cursor: zoom-out;
+  z-index: 60;
+  border-radius: 6px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+.duo figure:nth-child(1) img.magnified { transform-origin: left center; }
+.duo figure:nth-child(2) img.magnified { transform-origin: right center; }
+.figura-cartel img.magnified {
+  transform: scale(2.2);
+  transform-origin: center center;
+  cursor: zoom-out;
+  z-index: 60;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+@media (max-width: 640px) {
+  .duo img.magnified { transform: scale(1.6); transform-origin: center center; }
+}
+
+/* ── Visor de imágenes (materiales y figuras) ── */
+.visor {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  background: rgba(8, 14, 26, 0.93);
+  backdrop-filter: blur(3px);
+}
+.visor.abierto { display: flex; flex-direction: column; }
+.visor-barra {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.visor-titulo {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+  min-width: 0;
+}
+.visor-acciones { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.visor-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.visor-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.12); }
+.visor-cerrar {
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 5px 13px 8px;
+  letter-spacing: 0;
+}
+.visor-cuerpo {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  padding: 22px;
+}
+.visor-cuerpo img {
+  /* margin auto centra cuando entra y NO recorta cuando no entra —
+     justify-content/align-items harían inalcanzable el borde izquierdo. */
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  cursor: zoom-in;
+}
+/* Estado ampliado: el ancho lo fija el JS por archivo; el cuerpo hace scroll
+   y margin:auto mantiene la imagen centrada mientras entre en pantalla. */
+.visor-cuerpo.ampliado img {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+}
+.visor-pie {
+  flex-shrink: 0;
+  padding: 12px 22px 18px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+@media (max-width: 640px) {
+  .visor-barra { padding: 11px 14px; }
+  .visor-titulo { font-size: 0.95rem; }
+  .visor-cuerpo { padding: 12px; }
+}
+
 /* ── Vocabulario de la clase ── */
 .vocabulario {
   background: var(--bg-card);
@@ -1074,6 +1217,11 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
     <a class="topic-link pending">
       <strong>Llevar y traer, ir y venir</strong> — <em>la deixis del movimiento, con las combinaciones con pronombres y los casos de frontera. Página por construir.</em> <span class="arrow">›</span>
     </a>
+
+    <figure class="figura-cartel">
+      <img src="../../recursos/clase-2026-08-27/para-llevar.png" alt="Cartel de «para llevar»: una bandeja tapada con líneas de movimiento sobre fondo amarillo." onerror="this.closest('figure').style.display='none'">
+      <figcaption>El cartel que trajo la profe: se ve en la vidriera de restaurantes, cafés y rotiserías para avisar que la comida se puede pedir y sacar del local. La comida se va con el cliente — nunca <em>para traer</em>.</figcaption>
+    </figure>
   </article>
 
   <!-- ─────────────────────────── ② ─────────────────────────── -->
@@ -1105,17 +1253,18 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Escrito</th>
             <th>Significado</th>
             <th>Aproximación porteña <span class="var-tag">aprox.</span></th>
           </tr>
         </thead>
         <tbody>
-          <tr><td><strong>llevar</strong></td><td>to take (there)</td><td><em>shevár</em></td></tr>
-          <tr><td><strong>llegar</strong></td><td>to arrive</td><td><em>shegár</em></td></tr>
-          <tr><td><strong>llamar</strong></td><td>to call</td><td><em>shamár</em></td></tr>
-          <tr><td><strong>llorar</strong></td><td>to cry</td><td><em>shorár</em></td></tr>
-          <tr><td><strong>llover</strong></td><td>to rain</td><td><em>shovér</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakVerbo(this)" title="Escuchar">🔊</button></td><td><strong>llevar</strong></td><td>to take (there)</td><td><em>shevár</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakVerbo(this)" title="Escuchar">🔊</button></td><td><strong>llegar</strong></td><td>to arrive</td><td><em>shegár</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakVerbo(this)" title="Escuchar">🔊</button></td><td><strong>llamar</strong></td><td>to call</td><td><em>shamár</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakVerbo(this)" title="Escuchar">🔊</button></td><td><strong>llorar</strong></td><td>to cry</td><td><em>shorár</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakVerbo(this)" title="Escuchar">🔊</button></td><td><strong>llover</strong></td><td>to rain</td><td><em>shovér</em></td></tr>
         </tbody>
       </table>
     </div>
@@ -1146,10 +1295,6 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
           <div class="example-en"><span class="rio-tag">Rioplatense</span>Can you take me to the corner? It's pouring.</div>
         </div>
       </div>
-    </div>
-
-    <div class="aviso">
-      <strong>Sobre el audio de esta tarjeta.</strong> These three buttons ask the browser for an <strong>Argentine</strong> voice first — the one exception on this page, because a neutral voice demonstrates the exact sound the card is telling you not to make. Most machines have no <em>es-AR</em> voice installed, in which case it falls back to the neutral /ʝ/ and you hear the wrong thing. The written column above is the reliable part; for real audio, the Rioplatense page below has a full listening section.
     </div>
 
     <div class="nota">
@@ -1420,7 +1565,7 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
     </div>
 
     <p class="explanation">
-      La primera frase salió del video; las otras tres las escribió la profe para mostrar la escala. Dicen todas lo mismo — <em>no me importa</em> — y se diferencian solo en el registro.
+      La primera frase salió del video; las otras tres las escribió la profe para mostrar la escala. Dicen todas lo mismo — <em>no me importa</em> — y se diferencian solo en el registro. El orden en que están escritas no es el orden en que nacieron: la original es la última, <strong>me importa tres pepinos</strong>, y las vulgares son un chiste hecho sobre ella.
     </p>
 
     <div class="examples-block">
@@ -1449,13 +1594,13 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
         <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
         <div class="example-body">
           <div class="example-es">Me importa tres pepinos si a los vecinos les molestan los carpinchos.</div>
-          <div class="example-en"><span class="var-tag">Uso variable</span>The clean version. — lo más frecuente es el singular: <em>me importa un pepino</em>. También <em>un bledo</em>, <em>un comino</em>.</div>
+          <div class="example-en">The clean one, and the original. — en la Argentina <em>tres pepinos</em> es la forma corriente; es la frase de la que salen las otras.</div>
         </div>
       </div>
     </div>
 
     <div class="nota">
-      <strong>NOTA — the grammar underneath, and a register warning.</strong> <em>Tener sin cuidado</em> is built like <em>gustar</em>: the thing you don't care about is the <em>subject</em>, and you are the object — <em>me tiene sin cuidado</em>, literally "it keeps me without worry." So it agrees with the thing, not with you: <em>me tienen sin cuidado los vecinos</em>. The <em>tres</em> in <em>tres carajos</em> is pure expressive absurdity — counting something that can't be counted is the intensifier, and no other number works. As for register: <em>carajo</em> is genuinely coarse. Fine among friends at a table, wrong in a consulting room or with someone you've just met. <em>Un pepino</em> does the same job and costs nothing.
+      <strong>NOTA — the grammar underneath, and where the joke comes from.</strong> <em>Tener sin cuidado</em> is built like <em>gustar</em>: the thing you don't care about is the <em>subject</em> and you are the object — <em>me tiene sin cuidado</em>, literally "it keeps me without worry." So it agrees with the thing, not with you: <em>me tienen sin cuidado los vecinos</em>. The set phrase underneath all of this is <em>me importa tres pepinos</em>, which in Argentina is the ordinary, perfectly polite way to say you don't care — and the <em>tres</em> belongs to it, which is why the count sounds odd translated but is simply how the phrase runs. <em>Me importa tres carajos</em> is that phrase with the cucumbers swapped for a swear word, and it works as a joke precisely because everyone recognises the original underneath it. As for register: <em>carajo</em> is genuinely coarse — fine among friends at a table, wrong in a consulting room or with someone you've just met. <em>Tres pepinos</em> does the same job and costs nothing.
     </div>
   </article>
 
@@ -1724,9 +1869,9 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
   <!-- ───────────────────── Materiales de la clase ───────────────────── -->
   <section class="materiales" id="materiales">
     <h2>Materiales de la clase</h2>
-    <div class="sub">Cinco láminas y un gráfico — archivados en <em>recursos/clase-2026-08-27/</em></div>
+    <div class="sub">Las láminas que mandó la profe — archivadas en <em>recursos/clase-2026-08-27/</em>. Tocá <em>ver</em> para abrirlas acá mismo.</div>
 
-    <a class="material-item" href="../../recursos/clase-2026-08-27/medidas-de-cafe.jpeg" target="_blank" rel="noopener">
+    <a class="material-item" href="../../recursos/clase-2026-08-27/medidas-de-cafe.jpeg" data-zoom="300" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
       <div class="material-left">
         <span class="material-tipo tipo-tabla">Lámina</span>
         <div>
@@ -1738,7 +1883,7 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
       <div class="material-dl">VER ›</div>
     </a>
 
-    <a class="material-item" href="../../recursos/clase-2026-08-27/cafe-tipos.jpg" target="_blank" rel="noopener">
+    <a class="material-item" href="../../recursos/clase-2026-08-27/cafe-tipos.jpg" data-zoom="200" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
       <div class="material-left">
         <span class="material-tipo tipo-tabla">Lámina</span>
         <div>
@@ -1750,7 +1895,7 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
       <div class="material-dl">VER ›</div>
     </a>
 
-    <a class="material-item" href="../../recursos/clase-2026-08-27/cafe-composicion.jpg" target="_blank" rel="noopener">
+    <a class="material-item" href="../../recursos/clase-2026-08-27/cafe-composicion.jpg" data-zoom="170" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
       <div class="material-left">
         <span class="material-tipo tipo-tabla">Lámina</span>
         <div>
@@ -1762,7 +1907,7 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
       <div class="material-dl">VER ›</div>
     </a>
 
-    <a class="material-item" href="../../recursos/clase-2026-08-27/empanadas-argentinas.jpg" target="_blank" rel="noopener">
+    <a class="material-item" href="../../recursos/clase-2026-08-27/empanadas-argentinas.jpg" data-zoom="150" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
       <div class="material-left">
         <span class="material-tipo tipo-tabla">Lámina</span>
         <div>
@@ -1774,17 +1919,7 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
       <div class="material-dl">VER ›</div>
     </a>
 
-    <a class="material-item" href="../../recursos/clase-2026-08-27/para-llevar.png" target="_blank" rel="noopener">
-      <div class="material-left">
-        <span class="material-tipo tipo-expl">Gráfico</span>
-        <div>
-          <div class="material-title">Para llevar</div>
-          <div class="material-desc">El cartel de vidriera que trajo para cerrar la clase. La comida se va con el cliente — el mismo <em>llevar</em> de la tarjeta ①.</div>
-          <div class="material-destino">Ilustra la tarjeta ①.</div>
-        </div>
-      </div>
-      <div class="material-dl">VER ›</div>
-    </a>
+
   </section>
 
   <!-- ───────────────────── Preguntas para la profe ───────────────────── -->
@@ -1794,12 +1929,26 @@ a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-pri
     <ol>
       <li><strong><em>Los resguardos</em>, en la frase sobre la ley de fauna.</strong> ¿Eran las salvaguardas legales —las condiciones que la ley impone— o los espacios protegidos donde vive el animal? Las dos lecturas entran en la frase y cambian bastante el sentido.</li>
       <li><strong><em>Es una mala junta</em>, dicho de animales.</strong> De personas se entiende: malas compañías. En el video iba sobre un grupo de carpinchos amontonados. ¿Era una broma —«están todos tramando algo»— o quería decir que el grupo mismo es un problema?</li>
-      <li><strong><em>Me importa tres pepinos</em>.</strong> ¿Se dice así, con el plural, o lo normal es <em>un pepino</em> y el <em>tres</em> viene solo del calco de <em>tres carajos</em>?</li>
       <li><strong>El imperativo de la primera frase.</strong> «Si vas a ver a mamá, <em>lleva</em> esto» quedó anotado con la forma de <em>tú</em>. ¿Fue así, o era <em>llevá</em> y se perdió la tilde en mis notas?</li>
     </ol>
   </section>
 
   <div class="page-footer">Clase del 27 de agosto de 2026 · Mi Proyecto Español</div>
+</div>
+
+<!-- ───────────────────── Visor de imágenes ───────────────────── -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+  <div class="visor-barra">
+    <div class="visor-titulo" id="visor-titulo"></div>
+    <div class="visor-acciones">
+      <button class="visor-btn" id="visor-zoom" onclick="alternarZoom()">Ampliar</button>
+      <button class="visor-btn visor-cerrar" onclick="cerrarVisor()" title="Cerrar (Esc)">✕</button>
+    </div>
+  </div>
+  <div class="visor-cuerpo" id="visor-cuerpo" onclick="alternarZoom(event)">
+    <img id="visor-img" src="" alt="">
+  </div>
+  <div class="visor-pie" id="visor-pie"></div>
 </div>
 
 <script>
@@ -1924,6 +2073,127 @@ async function speakTerm(btn) {
   const text = cleanForTTS(esEl.cloneNode(true).textContent);
   await say(text, btn, false);
 }
+
+// Card ② only — the five LL verbs, Argentine voice first.
+async function speakVerbo(btn) {
+  const row = btn.closest('tr');
+  if (!row) return;
+  const esEl = row.querySelector('strong');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.textContent);
+  await say(text, btn, true);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Visor de imágenes — materiales y figuras se abren acá en vez
+//  de saltar a otra pestaña. Cierra con ✕, con clic en el fondo
+//  o con Esc. "Ampliar" pasa a tamaño natural con scroll, que es
+//  lo que necesitan las láminas densas.
+// ═══════════════════════════════════════════════════════════════
+const visor       = document.getElementById('visor');
+const visorImg    = document.getElementById('visor-img');
+const visorTitulo = document.getElementById('visor-titulo');
+const visorPie    = document.getElementById('visor-pie');
+const visorCuerpo = document.getElementById('visor-cuerpo');
+const visorZoom   = document.getElementById('visor-zoom');
+
+// Cuánto agranda "Ampliar", en % del tamaño nativo del archivo. Se fija por
+// imagen con data-zoom, porque las láminas llegan en tamaños muy distintos:
+// una de 204 px y una de 1080 px no pueden compartir un solo factor.
+const ZOOM_POR_DEFECTO = 220;
+let zoomActual = ZOOM_POR_DEFECTO;
+
+function abrirVisor(src, titulo, pie, zoom) {
+  if (!visor) return;
+  zoomActual = Number(zoom) > 0 ? Number(zoom) : ZOOM_POR_DEFECTO;
+  visorImg.style.width = '';
+  visorImg.src = src;
+  visorImg.alt = titulo || '';
+  visorTitulo.textContent = titulo || '';
+  visorPie.textContent = pie || '';
+  visorPie.style.display = pie ? '' : 'none';
+  visorCuerpo.classList.remove('ampliado');
+  visorZoom.textContent = 'Ampliar';
+  visor.classList.add('abierto');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarVisor() {
+  if (!visor) return;
+  visor.classList.remove('abierto');
+  visorCuerpo.classList.remove('ampliado');
+  visorImg.style.width = '';
+  visorImg.src = '';
+  document.body.style.overflow = '';
+}
+
+function alternarZoom(e) {
+  // Clic en el fondo del cuerpo (no en la imagen) cierra el visor.
+  if (e && e.target === visorCuerpo) { cerrarVisor(); return; }
+  const ampliado = visorCuerpo.classList.toggle('ampliado');
+  visorZoom.textContent = ampliado ? 'Ajustar' : 'Ampliar';
+  if (ampliado) {
+    const nativo = visorImg.naturalWidth || visorImg.width;
+    visorImg.style.width = Math.round(nativo * zoomActual / 100) + 'px';
+    // Centra el recorte visible en vez de dejarlo pegado al borde.
+    requestAnimationFrame(() => {
+      visorCuerpo.scrollLeft = (visorCuerpo.scrollWidth  - visorCuerpo.clientWidth)  / 2;
+      visorCuerpo.scrollTop  = (visorCuerpo.scrollHeight - visorCuerpo.clientHeight) / 2;
+    });
+  } else {
+    visorImg.style.width = '';
+    visorCuerpo.scrollTo({ top: 0, left: 0 });
+  }
+}
+
+// Materiales: intercepta el enlace. Si el JS falla, el href abre la pestaña.
+function abrirMaterial(a) {
+  const titulo = a.querySelector('.material-title');
+  const desc   = a.querySelector('.material-desc');
+  abrirVisor(a.getAttribute('href'),
+             titulo ? titulo.textContent.trim() : '',
+             desc ? desc.textContent.trim() : '',
+             a.dataset.zoom);
+  return false;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && visor && visor.classList.contains('abierto')) cerrarVisor();
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  Ampliación en el lugar — para las imágenes de las tarjetas.
+//  Mismo gesto que en el resto del sitio: clic para agrandar,
+//  clic de nuevo (o afuera, o scroll, o Esc) para soltar.
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.duo img, .figura-cartel img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (!activeImage) return;
+    activeImage.classList.remove('magnified');
+    const cont = activeImage.closest('figure');
+    if (cont) cont.classList.remove('zoomed');
+    activeImage = null;
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) { resetZoom(); return; }
+      resetZoom();
+      img.classList.add('magnified');
+      const cont = img.closest('figure');
+      if (cont) cont.classList.add('zoomed');
+      activeImage = img;
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') resetZoom(); });
+});
 </script>
 
 </body>

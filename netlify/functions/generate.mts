@@ -59,6 +59,25 @@ const GEMINI_RETRY_STATUSES = new Set([429, 500, 502, 503, 504]);
 const GEMINI_RETRY_MAX_ATTEMPTS = 3;
 const GEMINI_RETRY_BASE_MS = 800;
 
+// ── Keepalive policy (streaming path only) ───────────────────────────────
+// Netlify's gateway enforces a ~30s deadline on TIME TO FIRST BYTE, not on
+// total request duration. Measured 2026-08-29: a call that sent nothing for
+// 30.4s was killed with a 504 + HTML error page, while a call whose first
+// byte landed at ~28s was allowed to run the full 37s to completion.
+//
+// Gemini emits no output tokens during its thinking phase, so a heavy episode
+// can sit silent well past 30s and die with the generation perfectly healthy.
+// (This is what `thinking_level: 'low'` was really buying — a faster first
+// byte, not a faster generation.) We therefore commit the response early and
+// emit a keepalive until real content arrives.
+//
+// The keepalive is a `thinking_delta` event rather than an SSE comment: the
+// front-end already handles that shape by parking the progress bar at
+// "Pensando en la historia…", so the bytes double as honest UI feedback.
+const GEMINI_PING_MS = 10_000;      // idle-gap guard; also covers headers→first-chunk
+const GEMINI_FAST_PATH_MS = 5_000;  // wait this long for a real status before committing
+const GEMINI_HARD_ABORT_MS = 120_000; // keepalive removes the 30s ceiling, so impose our own
+
 async function fetchGeminiWithRetry(url: string, init: RequestInit): Promise<Response> {
   for (let attempt = 0; ; attempt++) {
     const res = await fetch(url, init);
@@ -218,47 +237,128 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
     ? `${GEMINI_BASE}/${model}:streamGenerateContent?alt=sse`
     : `${GEMINI_BASE}/${model}:generateContent`;
 
-  const upstream = await fetchGeminiWithRetry(endpoint, {
+  // Hard ceiling of our own. The keepalive below defeats the gateway's 30s
+  // first-byte deadline, which also means a genuinely wedged upstream would
+  // otherwise hang the page forever.
+  const ac = new AbortController();
+  const hardAbort = setTimeout(() => ac.abort(), GEMINI_HARD_ABORT_MS);
+
+  const init: RequestInit = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "x-goog-api-key": apiKey,
     },
     body: JSON.stringify(geminiReq),
-  });
-
-  if (!upstream.ok) {
-    const data = await upstream.json().catch(() => ({}));
-    const errorMessage =
-      data?.error?.message ||
-      (typeof data?.error === "string" ? data.error : "Unknown Gemini API error");
-    return json({ error: errorMessage }, upstream.status);
-  }
+    signal: ac.signal,
+  };
 
   // ── Non-streaming (prep call): normalize to Anthropic content-block shape ──
   // Front-end parser expects data.content = [{ type:'text', text:'...' }].
+  // Prep calls are small and fast, so they keep the plain blocking shape.
   if (!stream) {
-    const data  = await upstream.json();
-    const parts = data?.candidates?.[0]?.content?.parts ?? [];
-    const text  = parts
-      .filter((p: any) => p && !p.thought && typeof p.text === "string")
-      .map((p: any) => p.text)
-      .join("");
-    return json({ content: [{ type: "text", text }] }, 200);
+    try {
+      const upstream = await fetchGeminiWithRetry(endpoint, init);
+      if (!upstream.ok) {
+        const data = await upstream.json().catch(() => ({}));
+        const errorMessage =
+          data?.error?.message ||
+          (typeof data?.error === "string" ? data.error : "Unknown Gemini API error");
+        return json({ error: errorMessage }, upstream.status);
+      }
+      const data  = await upstream.json();
+      const parts = data?.candidates?.[0]?.content?.parts ?? [];
+      const text  = parts
+        .filter((p: any) => p && !p.thought && typeof p.text === "string")
+        .map((p: any) => p.text)
+        .join("");
+      return json({ content: [{ type: "text", text }] }, 200);
+    } finally {
+      clearTimeout(hardAbort);
+    }
+  }
+
+  // Single guarded promise, awaited in two places without risking an
+  // unhandled rejection if the race below settles on the timer instead.
+  type Guarded =
+    | { ok: true;  res: Response }
+    | { ok: false; err: unknown };
+
+  const guarded: Promise<Guarded> = fetchGeminiWithRetry(endpoint, init).then(
+    (r) => ({ ok: true as const, res: r }),
+    (e) => ({ ok: false as const, err: e }),
+  );
+
+  // Fast path: give the upstream a brief moment to produce a real HTTP status.
+  // Config and auth failures (400/401/403) come back in well under a second,
+  // so the common error cases keep today's exact status-code semantics — the
+  // front-end's `!res.ok` handling and its 502/503/504 retry stay intact.
+  // Only genuinely slow calls fall through to the committed-stream path, where
+  // a late failure has to be reported inside the stream instead.
+  const TIMER = Symbol("fastpath");
+  const settled = await Promise.race([
+    guarded,
+    new Promise<typeof TIMER>((r) => setTimeout(() => r(TIMER), GEMINI_FAST_PATH_MS)),
+  ]);
+
+  if (settled !== TIMER) {
+    if (!settled.ok) {
+      clearTimeout(hardAbort);
+      return json({ error: "Failed to reach the generation provider. Please try again." }, 502);
+    }
+    if (!settled.res.ok) {
+      const data = await settled.res.json().catch(() => ({}));
+      const errorMessage =
+        data?.error?.message ||
+        (typeof data?.error === "string" ? data.error : "Unknown Gemini API error");
+      clearTimeout(hardAbort);
+      return json({ error: errorMessage }, settled.res.status);
+    }
   }
 
   // ── Streaming (prose call): translate Gemini SSE → Anthropic SSE ──
   // The front-end stream reader only reacts to events of the exact shape
   //   { type:'content_block_delta', delta:{ type:'text_delta', text:'...' } }
-  // and ignores everything else, so we emit only those.
-  const reader  = upstream.body!.getReader();
+  // and ignores everything else (it skips any line not starting with
+  // `data: `), so we emit only those plus the thinking_delta keepalive.
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
   let buf = "";
+  let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
 
   const translated = new ReadableStream({
     async start(controller) {
+      // First byte goes out NOW, before we know anything about the upstream.
+      // This is the whole point: it commits the response and starts the
+      // gateway's clock over, buying Gemini unlimited thinking time.
+      const ping = () => {
+        try {
+          const evt = { type: "content_block_delta", delta: { type: "thinking_delta" } };
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(evt)}\n\n`));
+        } catch { /* stream already closed or cancelled */ }
+      };
+      ping();
+      const heartbeat = setInterval(ping, GEMINI_PING_MS);
+
       try {
+        const outcome = await guarded;
+        if (!outcome.ok) throw outcome.err;
+
+        const upstream = outcome.res;
+        if (!upstream.ok) {
+          // Late failure — the response is already committed as 200, so this
+          // cannot travel as an HTTP status. Close cleanly and let the
+          // front-end's empty-payload handling surface the problem.
+          const data = await upstream.json().catch(() => ({}));
+          const msg =
+            data?.error?.message ||
+            (typeof data?.error === "string" ? data.error : "Unknown Gemini API error");
+          console.error("Gemini late failure after stream commit:", upstream.status, msg);
+          controller.close();
+          return;
+        }
+
+        reader = upstream.body!.getReader();
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -293,10 +393,14 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
         controller.close();
       } catch (err) {
         controller.error(err);
+      } finally {
+        clearInterval(heartbeat);
+        clearTimeout(hardAbort);
       }
     },
     cancel() {
-      reader.cancel().catch(() => {});
+      clearTimeout(hardAbort);
+      reader?.cancel().catch(() => {});
     },
   });
 

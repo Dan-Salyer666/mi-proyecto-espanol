@@ -79,9 +79,11 @@ const GEMINI_PING_MS = 10_000;      // idle-gap guard; also covers headers→fir
 // overhead), or an upstream failure that exhausts its retries lands AFTER the
 // response is already committed as 200 — where it can no longer travel as an HTTP
 // status. Errors resolve in seconds; successes take ~25-30s (Gemini's thinking
-// phase), so a 12s window separates them cleanly while staying well inside the
-// gateway's ~30s first-byte deadline.
-const GEMINI_FAST_PATH_MS = 12_000;
+// phase), so a wide window separates them cleanly. Nothing is sent during this
+// wait, so it is bounded by the gateway's ~30s first-byte deadline: 20s keeps a
+// 10s margin to commit and land the first keepalive. Costs nothing on success —
+// it is a race, so a fast answer wins immediately and the timer never matters.
+const GEMINI_FAST_PATH_MS = 20_000;
 const GEMINI_HARD_ABORT_MS = 120_000; // keepalive removes the 30s ceiling, so impose our own
 
 async function fetchGeminiWithRetry(url: string, init: RequestInit): Promise<Response> {
@@ -278,6 +280,20 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
         .filter((p: any) => p && !p.thought && typeof p.text === "string")
         .map((p: any) => p.text)
         .join("");
+      // Same abnormal-stop guard as the streaming path: a 200 with no usable
+      // text should name its reason instead of returning an empty content block
+      // for the page to misdiagnose later.
+      if (!text) {
+        const fr = data?.candidates?.[0]?.finishReason;
+        const br = data?.promptFeedback?.blockReason;
+        console.error("Gemini empty non-streaming response:", { finishReason: fr, blockReason: br });
+        return json(
+          { error: br ? `El proveedor bloqueó la solicitud (${br}).`
+                      : fr ? `El modelo terminó de forma anómala (${fr}).`
+                           : "El proveedor no devolvió texto alguno." },
+          502,
+        );
+      }
       return json({ content: [{ type: "text", text }] }, 200);
     } finally {
       clearTimeout(hardAbort);
@@ -331,6 +347,9 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
   const encoder = new TextEncoder();
   let buf = "";
   let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+  let lastFinishReason: string | null = null;
+  let lastBlockReason: string | null = null;
+  let sawText = false;
 
   const translated = new ReadableStream({
     async start(controller) {
@@ -385,11 +404,22 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
             if (!payload || payload === "[DONE]") continue;
             try {
               const obj   = JSON.parse(payload);
+
+              // Gemini can stop early and still return 200: a safety filter, a
+              // recitation block, or hitting the output cap. The reason arrives
+              // in these fields, and discarding them is what turns an explained
+              // stop into the misleading "JSON inválido del modelo" downstream.
+              const fr = obj?.candidates?.[0]?.finishReason;
+              if (typeof fr === "string" && fr && fr !== "STOP") lastFinishReason = fr;
+              const br = obj?.promptFeedback?.blockReason;
+              if (typeof br === "string" && br) lastBlockReason = br;
+
               const parts = obj?.candidates?.[0]?.content?.parts ?? [];
               for (const part of parts) {
                 if (part?.thought) continue;            // skip any thought summary parts
                 const text = part?.text;
                 if (typeof text === "string" && text.length) {
+                  sawText = true;
                   const evt = { type: "content_block_delta", delta: { type: "text_delta", text } };
                   controller.enqueue(encoder.encode(`data: ${JSON.stringify(evt)}\n\n`));
                 }
@@ -398,6 +428,26 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
               /* partial/garbled line — buffering on the next read recovers it */
             }
           }
+        }
+
+        // An abnormal stop means the JSON we forwarded is incomplete (or absent).
+        // Say so explicitly rather than letting the page parse a fragment and
+        // blame the model's syntax.
+        if (lastBlockReason || lastFinishReason || !sawText) {
+          const reason = lastBlockReason
+            ? `El proveedor bloqueó la solicitud (${lastBlockReason}).`
+            : lastFinishReason === "MAX_TOKENS"
+              ? "El modelo alcanzó el límite de tokens antes de terminar el JSON."
+              : lastFinishReason === "SAFETY" || lastFinishReason === "PROHIBITED_CONTENT"
+                ? `El modelo detuvo la generación por filtros de contenido (${lastFinishReason}).`
+                : lastFinishReason === "RECITATION"
+                  ? "El modelo detuvo la generación por recitación (RECITATION)."
+                  : lastFinishReason
+                    ? `El modelo terminó de forma anómala (${lastFinishReason}).`
+                    : "El proveedor no devolvió texto alguno.";
+          console.error("Gemini abnormal stop:", { lastFinishReason, lastBlockReason, sawText });
+          const evt = { type: "error", error: { message: reason + " Intenta de nuevo." } };
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(evt)}\n\n`));
         }
         controller.close();
       } catch (err) {

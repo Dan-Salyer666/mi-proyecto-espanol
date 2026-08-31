@@ -2399,7 +2399,7 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
     const reader = res.body.getReader(), decoder = new TextDecoder();
-    let buffer = '', fullText = '', tokenCount = 0;
+    let buffer = '', fullText = '', tokenCount = 0, streamError = null;
     setProgress(8, epMsg, '');
 
     while (true) {
@@ -2420,13 +2420,20 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
             const phase = pct < 35 ? epMsg : pct < 65 ? 'Construyendo las preguntas…' : 'Finalizando…';
             setProgress(pct, phase, `≈ ${tokenCount} tokens`);
           } else if (evt.type === 'content_block_delta' && evt.delta?.type === 'thinking_delta') {
-            // Extended-thinking phase (Claude): no prose yet, so keep the bar
-            // parked and show that the model is reasoning rather than stalled.
+            // Extended-thinking phase (Claude), and the Gemini keepalive: no
+            // prose yet, so keep the bar parked and show that the model is
+            // reasoning rather than stalled.
             setProgress(8, 'Pensando en la historia…', '');
+          } else if (evt.type === 'error') {
+            // Upstream failed after the response was already committed as 200,
+            // so it arrives in-stream rather than as an HTTP status.
+            streamError = evt.error?.message || 'El proveedor falló durante la generación.';
           }
         } catch {}
       }
     }
+
+    if (streamError) throw new Error(streamError);
 
     setProgress(98, 'Procesando…', '');
     let clean = fullText.replace(/^```json\s*/i,'').replace(/^```\s*/i,'').replace(/```\s*$/,'').trim();

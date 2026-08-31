@@ -75,7 +75,13 @@ const GEMINI_RETRY_BASE_MS = 800;
 // front-end already handles that shape by parking the progress bar at
 // "Pensando en la historia…", so the bytes double as honest UI feedback.
 const GEMINI_PING_MS = 10_000;      // idle-gap guard; also covers headers→first-chunk
-const GEMINI_FAST_PATH_MS = 5_000;  // wait this long for a real status before committing
+// Must exceed the worst-case retry chain below (~0.8+1.6+3.2s ≈ 5.6s plus request
+// overhead), or an upstream failure that exhausts its retries lands AFTER the
+// response is already committed as 200 — where it can no longer travel as an HTTP
+// status. Errors resolve in seconds; successes take ~25-30s (Gemini's thinking
+// phase), so a 12s window separates them cleanly while staying well inside the
+// gateway's ~30s first-byte deadline.
+const GEMINI_FAST_PATH_MS = 12_000;
 const GEMINI_HARD_ABORT_MS = 120_000; // keepalive removes the 30s ceiling, so impose our own
 
 async function fetchGeminiWithRetry(url: string, init: RequestInit): Promise<Response> {
@@ -347,13 +353,16 @@ async function handleGemini(body: any, apiKey: string, stream: boolean): Promise
         const upstream = outcome.res;
         if (!upstream.ok) {
           // Late failure — the response is already committed as 200, so this
-          // cannot travel as an HTTP status. Close cleanly and let the
-          // front-end's empty-payload handling surface the problem.
+          // cannot travel as an HTTP status. Emit an error EVENT: closing
+          // silently would leave the client with an empty string, which it
+          // reports as the misleading "JSON inválido del modelo".
           const data = await upstream.json().catch(() => ({}));
           const msg =
             data?.error?.message ||
             (typeof data?.error === "string" ? data.error : "Unknown Gemini API error");
           console.error("Gemini late failure after stream commit:", upstream.status, msg);
+          const evt = { type: "error", error: { message: msg, status: upstream.status } };
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify(evt)}\n\n`));
           controller.close();
           return;
         }

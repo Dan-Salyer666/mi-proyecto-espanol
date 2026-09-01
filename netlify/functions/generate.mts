@@ -258,22 +258,39 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
   let sawText = false;
   let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
 
+  // ── TEMPORARY INSTRUMENTATION (2026-08-31) ────────────────────────────
+  // The stream dies at ~30s without reaching any of this function's own exit
+  // paths and without logging, so something outside kills it mid-flight. Each
+  // line below is written the moment it happens, so the log survives even if
+  // the invocation is terminated. Remove once the stall point is identified.
+  const t0 = Date.now();
+  const el = () => `+${((Date.now() - t0) / 1000).toFixed(2)}s`;
+  const stage = (msg: string, extra?: unknown) =>
+    console.log(`[anthropic-trace ${el()}] ${msg}`, extra === undefined ? "" : JSON.stringify(extra));
+  let chunks = 0, bytes = 0, pings = 0;
+  stage("stream body constructed", { model, effort, maxTokens });
+
   const teed = new ReadableStream({
     async start(controller) {
       const ping = () => {
         try {
           const evt = { type: "content_block_delta", delta: { type: "thinking_delta" } };
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(evt)}\n\n`));
-        } catch { /* closed or cancelled */ }
+          pings++;
+          stage(`ping #${pings} enqueued`);
+        } catch (e) { stage("ping FAILED (stream closed?)", String(e)); }
       };
       ping();
       const heartbeat = setInterval(ping, GEMINI_PING_MS);
 
       try {
+        stage("awaiting upstream fetch");
         const outcome = await guarded;
+        stage("upstream fetch settled", { ok: outcome.ok });
         if (!outcome.ok) throw outcome.err;
 
         const upstream = outcome.res;
+        stage("upstream status", { status: upstream.status, ct: upstream.headers.get("content-type") });
         if (!upstream.ok) {
           const data = await upstream.json().catch(() => ({}));
           const msg = (data as any)?.error?.message ||
@@ -286,9 +303,13 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
         }
 
         reader = upstream.body!.getReader();
+        stage("reader acquired, entering read loop");
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
+          if (done) { stage("read loop: upstream signalled done", { chunks, bytes }); break; }
+          chunks++; bytes += value.byteLength;
+          if (chunks === 1) stage("FIRST upstream chunk", { bytes: value.byteLength });
+          else if (chunks % 10 === 0) stage(`chunk #${chunks}`, { bytes, sawText });
           controller.enqueue(value);                        // forward untouched
           sniff += decoder.decode(value, { stream: true });
           const lines = sniff.split("\n");
@@ -315,19 +336,24 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
               : stopReason === "refusal"
                 ? "El modelo rechazó la solicitud por motivos de seguridad."
                 : `El proveedor no devolvió texto alguno (stop_reason: ${stopReason ?? "desconocido"}).`;
+          stage("ABNORMAL STOP", { stopReason, sawText, chunks, bytes });
           console.error("Anthropic abnormal stop:", { model, effort, stopReason, sawText, maxTokens });
           const evt = { type: "error", error: { message: msg + " Intenta de nuevo." } };
           controller.enqueue(encoder.encode(`data: ${JSON.stringify(evt)}\n\n`));
         }
+        stage("closing normally", { chunks, bytes, pings, sawText, stopReason });
         controller.close();
       } catch (err) {
+        stage("THREW", { err: String(err), chunks, bytes, pings });
         controller.error(err);
       } finally {
         clearInterval(heartbeat);
         clearTimeout(hardAbort);
+        stage("finally reached", { chunks, bytes, pings });
       }
     },
-    cancel() {
+    cancel(reason) {
+      stage("STREAM CANCELLED by consumer", { reason: String(reason), chunks, bytes, pings });
       clearTimeout(hardAbort);
       reader?.cancel().catch(() => {});
     },

@@ -55,6 +55,22 @@ const GEMINI_THINKING_HEADROOM: Record<string, number> = {
 // backoff (~0.8s, 1.6s, 3.2s + jitter) gives a worst case ~6s of added wait
 // — comfortably inside the 30s function budget even when the real generation
 // also runs. Only the listed statuses retry; 400/401/403 etc. fail fast.
+// ── Anthropic effort + token headroom ────────────────────────────────────
+// `effort` replaced `thinking: {type:"enabled", budget_tokens}` in the Opus/
+// Sonnet 5 generation. Only low and high are exposed; xhigh and max target
+// long-horizon agentic work and buy latency, not prose quality, here.
+//
+// Critically, Anthropic's max_tokens is ONE budget spanning thinking AND
+// output, unlike Gemini where thinking headroom is added separately. These
+// values are added on top of the requested prose budget for that reason.
+const ANTHROPIC_EFFORT_LEVELS  = new Set(["low", "high"]);
+const ANTHROPIC_EFFORT_DEFAULT = "low";
+const ANTHROPIC_THINKING_HEADROOM: Record<string, number> = {
+  low:   8_192,
+  high: 32_768,
+};
+const ANTHROPIC_OUTPUT_CEILING = 128_000; // Opus 5 / Sonnet 5 max_tokens
+
 const GEMINI_RETRY_STATUSES = new Set([429, 500, 502, 503, 504]);
 const GEMINI_RETRY_MAX_ATTEMPTS = 3;
 const GEMINI_RETRY_BASE_MS = 800;
@@ -145,6 +161,20 @@ export default async (req: Request, context: Context) => {
 //  ANTHROPIC PATH — verbatim behavior of claude.mts
 // ─────────────────────────────────────────────────────────────────────────
 async function handleAnthropic(body: any, apiKey: string, stream: boolean): Promise<Response> {
+  // Anthropic's `max_tokens` is a SINGLE budget covering thinking AND output.
+  // Opus 5 / Sonnet 5 run adaptive thinking by default, so a bare 8000 gets
+  // largely consumed reasoning and the JSON is cut off mid-object — surfacing
+  // as "Unexpected end of JSON input" rather than as any API error. Gemini
+  // never showed this because that path adds headroom on top of prose tokens;
+  // this one passed max_tokens straight through. Mirror the Gemini approach.
+  const reqEffort = String(body.effort ?? ANTHROPIC_EFFORT_DEFAULT).toLowerCase();
+  const effort = ANTHROPIC_EFFORT_LEVELS.has(reqEffort) ? reqEffort : ANTHROPIC_EFFORT_DEFAULT;
+  const proseTokens = Number(body.max_tokens) || 4000;
+  const maxTokens = Math.min(
+    proseTokens + (ANTHROPIC_THINKING_HEADROOM[effort] ?? 8192),
+    ANTHROPIC_OUTPUT_CEILING,
+  );
+
   const response = await fetch(ANTHROPIC_URL, {
     method: "POST",
     headers: {
@@ -154,10 +184,11 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
     },
     body: JSON.stringify({
       model:      body.model      || "claude-sonnet-5",
-      max_tokens: body.max_tokens || 4000,
+      max_tokens: maxTokens,
       stream:     stream,
       system:     body.system     || "",
       messages:   body.messages   || [],
+      effort,
     }),
   });
 
@@ -166,14 +197,60 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
     const errorMessage =
       data?.error?.message ||
       (typeof data?.error === "string" ? data.error : "Unknown API error");
+    console.error("Anthropic error:", response.status, body.model, effort, errorMessage);
     return json({ error: errorMessage }, response.status);
   }
 
   if (stream) {
-    return new Response(response.body, {
-      status: 200,
-      headers: sseHeaders(),
+    // Transparent tee: every upstream byte is forwarded verbatim so the client's
+    // parser is unaffected, while we sniff `message_delta` for an abnormal
+    // stop_reason and append a named error event. Without this a truncated or
+    // refused response reaches the page as silence and gets misreported as bad
+    // JSON — the same blindness the Gemini finishReason fix removed.
+    const decoder = new TextDecoder();
+    const encoder = new TextEncoder();
+    let sniff = "";
+    let stopReason: string | null = null;
+    let reader: ReadableStreamDefaultReader<Uint8Array> | null = null;
+
+    const teed = new ReadableStream({
+      async start(controller) {
+        try {
+          reader = response.body!.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+            controller.enqueue(value);                       // forward untouched
+            sniff += decoder.decode(value, { stream: true });
+            const lines = sniff.split("\n");
+            sniff = lines.pop() ?? "";
+            for (const line of lines) {
+              const t = line.trim();
+              if (!t.startsWith("data:")) continue;
+              try {
+                const obj = JSON.parse(t.slice(5).trim());
+                const sr = obj?.delta?.stop_reason ?? obj?.message?.stop_reason;
+                if (typeof sr === "string" && sr) stopReason = sr;
+              } catch { /* partial line */ }
+            }
+          }
+          if (stopReason === "max_tokens" || stopReason === "refusal") {
+            const msg = stopReason === "max_tokens"
+              ? "El modelo alcanzó el límite de tokens antes de terminar el JSON."
+              : "El modelo rechazó la solicitud por motivos de seguridad.";
+            console.error("Anthropic abnormal stop:", { model: body.model, effort, stopReason, maxTokens });
+            const evt = { type: "error", error: { message: msg + " Intenta de nuevo." } };
+            controller.enqueue(encoder.encode(`data: ${JSON.stringify(evt)}\n\n`));
+          }
+          controller.close();
+        } catch (err) {
+          controller.error(err);
+        }
+      },
+      cancel() { reader?.cancel().catch(() => {}); },
     });
+
+    return new Response(teed, { status: 200, headers: sseHeaders() });
   }
 
   const data = await response.json();

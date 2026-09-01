@@ -897,6 +897,14 @@
         <button class="btn-module selected" data-generator="claude" onclick="pickGenerator(this)">Claude</button>
         <button class="btn-module" data-generator="gemini" onclick="pickGenerator(this)">Gemini</button>
       </div>
+      <div id="claudeModelRow" style="margin-top:10px">
+        <div class="card-label" style="font-size:0.7rem;margin-bottom:4px">Modelo Claude</div>
+        <div class="btn-group">
+          <button class="btn-module selected" data-cmodel="claude-opus-5" onclick="pickClaudeModel(this)">Opus</button>
+          <button class="btn-module" data-cmodel="claude-sonnet-5" onclick="pickClaudeModel(this)">Sonnet</button>
+        </div>
+        <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Opus = mejor calidad · Sonnet = más rápido</div>
+      </div>
       <div id="geminiModelRow" style="display:none;margin-top:10px">
         <div class="card-label" style="font-size:0.7rem;margin-bottom:4px">Modelo Gemini</div>
         <div class="btn-group">
@@ -905,6 +913,14 @@
           <button class="btn-module" data-gmodel="gemini-2.5-flash" onclick="pickGeminiModel(this)">2.5 Flash</button>
         </div>
         <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Pro = mejor calidad · Flash = más rápido · 2.5 = más ligero</div>
+      </div>
+      <div id="effortRow" style="margin-top:10px">
+        <div class="card-label" style="font-size:0.7rem;margin-bottom:4px">Razonamiento</div>
+        <div class="btn-group">
+          <button class="btn-module selected" data-effort="low" onclick="pickEffort(this)">Bajo</button>
+          <button class="btn-module" data-effort="high" onclick="pickEffort(this)">Alto</button>
+        </div>
+        <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Alto = el modelo piensa más antes de escribir; tarda bastante más. Bájalo si la generación falla.</div>
       </div>
     </div>
 
@@ -1121,7 +1137,7 @@ let lastScore        = null;
 let currentStarRating= null;
 let isProcessing     = false;
 
-const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false, module:'sorprendeme', generator:'claude', geminiModel:'gemini-3.1-pro-preview', seedMode:false, seed:null, seedTheme:null, seedVersion:null };
+const cfg = { level:'B2', mode:'individual', register:'everyday', region:'neutral', voseo:false, module:'sorprendeme', generator:'claude', geminiModel:'gemini-3.1-pro-preview', claudeModel:'claude-opus-5', effort:'low', seedMode:false, seed:null, seedTheme:null, seedVersion:null };
 
 // ═══════════════════════════════════════════════
 //  TTS
@@ -1413,13 +1429,34 @@ function pickGenerator(btn) {
   document.querySelectorAll('[data-generator]').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   cfg.generator = newGenerator;
-  document.getElementById('geminiModelRow').style.display = newGenerator === 'gemini' ? '' : 'none';
+  syncGeneratorRows();
+}
+
+// Only the selected provider's model row is shown. The Razonamiento row stays
+// visible for both: it maps to Gemini's `thinking_level` and to Claude's
+// `effort`, which are different mechanisms but the same choice for the user.
+function syncGeneratorRows() {
+  const isGemini = cfg.generator === 'gemini';
+  document.getElementById('geminiModelRow').style.display = isGemini ? '' : 'none';
+  document.getElementById('claudeModelRow').style.display = isGemini ? 'none' : '';
 }
 
 function pickGeminiModel(btn) {
   document.querySelectorAll('[data-gmodel]').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
   cfg.geminiModel = btn.dataset.gmodel;
+}
+
+function pickClaudeModel(btn) {
+  document.querySelectorAll('[data-cmodel]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  cfg.claudeModel = btn.dataset.cmodel;
+}
+
+function pickEffort(btn) {
+  document.querySelectorAll('[data-effort]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  cfg.effort = btn.dataset.effort;
 }
 
 function pickRegion(btn) {
@@ -2353,10 +2390,15 @@ async function doGenerate() {
         password:   sessionPw,
         provider:   currentCfg.generator || 'claude',
         gemini_model: currentCfg.geminiModel || 'gemini-3.1-pro-preview',
-        model:      'claude-opus-4-8',
+        model:      currentCfg.claudeModel || 'claude-opus-5',
         max_tokens: 8000,
-        thinking:       { type: 'enabled', budget_tokens: 6000 }, // Claude path: richer reasoning before writing
-        thinking_level: 'low',                                     // Gemini path: low tier — fast time-to-first-token, avoids 30s function timeout (504). Revisit vs 'medium' once latency is understood.
+        // One user-facing control, two provider mechanisms. Claude's `effort`
+        // replaced `thinking: {type:'enabled', budget_tokens}`, which the
+        // Opus/Sonnet 5 generation dropped — the old shape was being discarded
+        // at the proxy, so it never did anything. Gemini's `thinking_level`
+        // takes the same label and maps to its own token headroom.
+        effort:         currentCfg.effort || 'low',
+        thinking_level: currentCfg.effort || 'low',
         stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.
 Return ONLY valid JSON matching the exact schema. No preamble, no explanation, no markdown fences.
@@ -2634,7 +2676,12 @@ function renderQuiz(quiz, seOn) {
   // Provider provenance badge — reads currentCfg.generator (correct on fresh gen and resume)
   const _gm = currentCfg.geminiModel || '';
   const _gemTier = _gm.includes('3.5') ? 'Flash' : _gm.includes('2.5') ? '2.5' : 'Pro';
-  const genLabel = currentCfg.generator === 'gemini' ? `Gemini ${_gemTier}` : 'Claude';
+  // Claude side gets a tier too, so the badge is as specific as the Gemini one.
+  // Legacy saves carry no claudeModel; they ran on the retired opus-4-8, so the
+  // honest label there is a bare "Claude" rather than a tier we didn't use.
+  const _cm = currentCfg.claudeModel || '';
+  const _clTier = _cm.includes('sonnet') ? ' Sonnet' : _cm.includes('opus') ? ' Opus' : '';
+  const genLabel = currentCfg.generator === 'gemini' ? `Gemini ${_gemTier}` : `Claude${_clTier}`;
   document.getElementById('qTags').insertAdjacentHTML('beforeend',
     `<span class="gen-badge gen-${currentCfg.generator === 'gemini' ? 'gemini' : 'claude'}">${genLabel}</span>`);
   // Seed pill — only when the story was generated from a seed.
@@ -3356,6 +3403,8 @@ async function saveQuizToDrive(extraFields = {}) {
     module: currentCfg.module || 'sorprendeme',
     generator: currentCfg.generator || 'claude',
     geminiModel: currentCfg.geminiModel || 'gemini-3.1-pro-preview',
+    claudeModel: currentCfg.claudeModel || 'claude-opus-5',
+    effort: currentCfg.effort || 'low',
     seed: currentCfg.seed || null,
     seedVersion: currentCfg.seedVersion || null,
     passage: currentQuiz.passage, se_highlighted: currentCfg.seOn,
@@ -3514,6 +3563,11 @@ async function resumeStory(s) {
   cfg.generator = s.generator || 'claude';
   // Restore Gemini model tier. Legacy saves predate the field — default to Pro.
   cfg.geminiModel = s.geminiModel || 'gemini-3.1-pro-preview';
+  // Restore Claude model and reasoning tier. Legacy saves predate both fields;
+  // note older saves ran on claude-opus-4-8, which is no longer offered, so
+  // they resume on Opus 5 rather than their original model.
+  cfg.claudeModel = s.claudeModel || 'claude-opus-5';
+  cfg.effort      = s.effort || 'low';
   // Seed: restore as metadata for the badge. For a seed story the resolved world
   // is reused for continuation via cfg.seedTheme — never exposed in the Tema box.
   cfg.seed        = s.seed || null;
@@ -3533,10 +3587,16 @@ async function resumeStory(s) {
   document.querySelectorAll('[data-generator]').forEach(b =>
     b.classList.toggle('selected', b.dataset.generator === cfg.generator)
   );
-  // Sync Gemini model row visibility and selection
-  document.getElementById('geminiModelRow').style.display = cfg.generator === 'gemini' ? '' : 'none';
+  // Sync model row visibility and selection for both providers
+  syncGeneratorRows();
   document.querySelectorAll('[data-gmodel]').forEach(b =>
     b.classList.toggle('selected', b.dataset.gmodel === cfg.geminiModel)
+  );
+  document.querySelectorAll('[data-cmodel]').forEach(b =>
+    b.classList.toggle('selected', b.dataset.cmodel === cfg.claudeModel)
+  );
+  document.querySelectorAll('[data-effort]').forEach(b =>
+    b.classList.toggle('selected', b.dataset.effort === cfg.effort)
   );
   // Populate theme from saved record
   if (s.theme && !s.seed) { document.getElementById('themeInput').value = s.theme; document.getElementById('surpriseMe').checked = false; document.getElementById('themeInput').disabled = false; }

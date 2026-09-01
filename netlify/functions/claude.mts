@@ -69,7 +69,9 @@ export default async (req: Request, context: Context) => {
       stream,
       system:   body.system   || "",
       messages: body.messages || [],
-      effort,
+      // Nested, not top-level: the Messages API takes output_config.effort.
+      // A bare `effort` is an unknown field and 400s instantly.
+      output_config: { effort },
     };
 
     const response = await fetch("https://api.anthropic.com/v1/messages", {

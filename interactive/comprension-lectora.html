@@ -2438,7 +2438,14 @@ Spanish must be natural and authentic. Never include medical, clinical, or docto
       }
     }
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) {
+      // The proxy returns {error: "..."} with the provider's actual complaint.
+      // Throwing a bare status discards it — which is how an `effort` field in
+      // the wrong place read as an opaque "HTTP 400" instead of naming itself.
+      let detail = '';
+      try { detail = (await res.json())?.error || ''; } catch { /* non-JSON body */ }
+      throw new Error(detail ? `HTTP ${res.status} — ${detail}` : `HTTP ${res.status}`);
+    }
 
     const reader = res.body.getReader(), decoder = new TextDecoder();
     let buffer = '', fullText = '', tokenCount = 0, streamError = null;

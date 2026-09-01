@@ -188,7 +188,9 @@ async function handleAnthropic(body: any, apiKey: string, stream: boolean): Prom
       stream:     stream,
       system:     body.system     || "",
       messages:   body.messages   || [],
-      effort,
+      // Nested, not top-level: the Messages API takes output_config.effort.
+      // A bare `effort` is an unknown field and 400s instantly.
+      output_config: { effort },
     }),
   });
 

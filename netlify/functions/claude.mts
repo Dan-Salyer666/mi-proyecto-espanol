@@ -18,9 +18,12 @@ const MODEL_DEFAULT = "claude-sonnet-5";
 // dropped it — a dead parameter rather than an erroring one, which is why
 // nothing ever failed and nothing ever took effect either.
 //
-// Only low and high are exposed. xhigh and max target long-horizon agentic
-// work; for a 450-word Spanish passage they buy latency, not quality.
-const ALLOWED_EFFORT = new Set(["low", "high"]);
+// LOCKED TO LOW (2026-08-31). Higher effort means longer silent thinking, and
+// Netlify kills a synchronous function at 60s of wall time regardless of what
+// the connection is doing. Measured on the story path: Opus 5 at high effort
+// died at exactly 60000 ms; the same request at low finished in 37.4s. These
+// plan and bible calls are smaller but share the same ceiling.
+const ALLOWED_EFFORT = new Set(["low"]);
 const EFFORT_DEFAULT = "low";
 
 const ANTHROPIC_OUTPUT_CEILING = 128_000; // Opus 5 / Sonnet 5 max_tokens

@@ -914,13 +914,13 @@
         </div>
         <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Pro = mejor calidad · Flash = más rápido · 2.5 = más ligero</div>
       </div>
-      <div id="effortRow" style="margin-top:10px">
-        <div class="card-label" style="font-size:0.7rem;margin-bottom:4px">Razonamiento</div>
+      <div id="effortRow" style="display:none;margin-top:10px">
+        <div class="card-label" style="font-size:0.7rem;margin-bottom:4px">Razonamiento (Gemini)</div>
         <div class="btn-group">
           <button class="btn-module selected" data-effort="low" onclick="pickEffort(this)">Bajo</button>
           <button class="btn-module" data-effort="high" onclick="pickEffort(this)">Alto</button>
         </div>
-        <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Alto = el modelo piensa más antes de escribir; tarda bastante más. Bájalo si la generación falla.</div>
+        <div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px">Alto = el modelo piensa más antes de escribir; tarda bastante más. Bájalo si la generación falla. Claude va siempre en bajo: con más razonamiento supera el límite de 60 s del servidor.</div>
       </div>
     </div>
 
@@ -1432,13 +1432,16 @@ function pickGenerator(btn) {
   syncGeneratorRows();
 }
 
-// Only the selected provider's model row is shown. The Razonamiento row stays
-// visible for both: it maps to Gemini's `thinking_level` and to Claude's
-// `effort`, which are different mechanisms but the same choice for the user.
+// Only the selected provider's model row is shown. The Razonamiento row is
+// Gemini-only: Claude is pinned to low effort because higher effort means a
+// longer silent thinking phase, and Netlify kills a function at 60s of wall
+// time no matter what the connection is doing. Measured 2026-08-31 — Opus 5 at
+// high died at exactly 60000 ms; the same request at low finished in 37.4s.
 function syncGeneratorRows() {
   const isGemini = cfg.generator === 'gemini';
   document.getElementById('geminiModelRow').style.display = isGemini ? '' : 'none';
   document.getElementById('claudeModelRow').style.display = isGemini ? 'none' : '';
+  document.getElementById('effortRow').style.display      = isGemini ? '' : 'none';
 }
 
 function pickGeminiModel(btn) {
@@ -2392,12 +2395,11 @@ async function doGenerate() {
         gemini_model: currentCfg.geminiModel || 'gemini-3.1-pro-preview',
         model:      currentCfg.claudeModel || 'claude-opus-5',
         max_tokens: 8000,
-        // One user-facing control, two provider mechanisms. Claude's `effort`
-        // replaced `thinking: {type:'enabled', budget_tokens}`, which the
-        // Opus/Sonnet 5 generation dropped — the old shape was being discarded
-        // at the proxy, so it never did anything. Gemini's `thinking_level`
-        // takes the same label and maps to its own token headroom.
-        effort:         currentCfg.effort || 'low',
+        // Claude is pinned to low effort — the server enforces this too. Higher
+        // effort thinks silently past Netlify's 60s execution limit and the
+        // invocation is killed mid-stream. Gemini's thinking_level stays under
+        // the user's control via the Razonamiento buttons.
+        effort:         'low',
         thinking_level: currentCfg.effort || 'low',
         stream:     true,
         system: `You are a Spanish language educator creating reading comprehension quizzes for adult learners.

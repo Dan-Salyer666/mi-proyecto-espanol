@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase del 3 de septiembre de 2026 — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accents — violet and teal deliberately unused here so the
+     región chips (teal = Rioplatense, violet = España) stay unambiguous. */
+  --accent-alpha:   #4a90d9;  /* ① blue        */
+  --accent-gamma:   #fbbf24;  /* ② gold        */
+  --accent-epsilon: #f472b6;  /* ③ rose        */
+  --accent-zeta:    #34d399;  /* ④ green       */
+  --accent-eta:     #fb923c;  /* ⑤ orange      */
+  --accent-theta:   #94a3b8;  /* ⑥ slate       */
+  --accent-iota:    #38bdf8;  /* ⑦ sky         */
+  --accent-kappa:   #a3e635;  /* ⑧ lime        */
+  --accent-lambda:  #d4a373;  /* ⑨ tan         */
+  --accent-mu:      #cbd5e1;  /* ⑩ light slate */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/cadaquez iglesia.webp') center/cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Contents strip ── */
+.contents {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 22px 0 18px;
+}
+.contents-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.contents-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.contents-list a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.84rem;
+  transition: all 0.2s;
+}
+.contents-list a:hover {
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.45);
+  background: rgba(74, 144, 217, 0.08);
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 8px 0 0 18px; }
+.nota li { margin-bottom: 5px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.nota h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 14px 0 5px;
+}
+.nota h4:first-of-type { margin-top: 8px; }
+
+/* ── Provenance legend (sits under the contents strip) ── */
+.leyenda {
+  background: rgba(138, 155, 184, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  margin: 0 0 18px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.leyenda .leyenda-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.leyenda-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.leyenda-row:last-child { margin-bottom: 0; }
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  scroll-margin-top: 16px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-theta   { border-left-color: var(--accent-theta); }
+.card-iota    { border-left-color: var(--accent-iota); }
+.card-kappa   { border-left-color: var(--accent-kappa); }
+.card-lambda  { border-left-color: var(--accent-lambda); }
+.card-mu      { border-left-color: var(--accent-mu); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+.card-theta   .card-number { color: var(--accent-theta);   opacity: 0.75; }
+.card-iota    .card-number { color: var(--accent-iota);    opacity: 0.75; }
+.card-kappa   .card-number { color: var(--accent-kappa);   opacity: 0.75; }
+.card-lambda  .card-number { color: var(--accent-lambda);  opacity: 0.75; }
+.card-mu      .card-number { color: var(--accent-mu);      opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Provenance chips ── */
+.prov-chips {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.prov {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.prov-clase    { background: rgba(74, 222, 128, 0.10); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.28); }
+.prov-material { background: rgba(250, 204, 21, 0.10); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.28); }
+.prov-ampl     { background: rgba(148, 163, 184, 0.10); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.28); }
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+.explanation + .explanation { margin-top: -6px; }
+
+/* ── Epigraph (her words, verbatim) ── */
+.epigrafe {
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 16px;
+  margin: 4px 0 16px;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.epigrafe .fuente {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 7px;
+}
+
+/* ── Sub-heading inside a card ── */
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 20px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.6);
+}
+
+/* ── Formula ── */
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+.formula strong { color: var(--text-primary); }
+
+/* ── Example rows ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+/* Spine example — the one sentence a card turns on */
+.example-row.spine {
+  background: rgba(74, 144, 217, 0.07);
+  border: 1px solid rgba(74, 144, 217, 0.22);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 10px;
+}
+.example-row.spine .example-es { font-size: 1.14rem; }
+.anotacion {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+.anotacion b { color: var(--text-secondary); font-weight: 600; }
+.anotacion em { color: var(--accent); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Región chips (textual only — audio is always neutral) ── */
+.rio-tag, .esp-tag, .neu-tag, .var-tag, .vulg-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.rio-tag  { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.esp-tag  { background: rgba(192, 132, 252, 0.14); color: #d0a8ff; }
+.neu-tag  { background: rgba(138, 155, 184, 0.14); color: #a8b8d0; }
+.var-tag  { background: rgba(251, 191, 36, 0.14); color: #fbbf24; }
+.vulg-tag { background: rgba(248, 113, 113, 0.14); color: #f87171; }
+
+/* ── Chip row (flat word lists) ── */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+.chip {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 11px;
+}
+
+/* ── Evitar / usar rows ── */
+.contrast {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.contrast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.contrast-item .mark {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  width: 16px;
+  text-align: center;
+}
+.contrast-item.bad  { border-left: 3px solid var(--red); }
+.contrast-item.good { border-left: 3px solid var(--green); }
+.contrast-item.bad  .mark { color: var(--red); }
+.contrast-item.good .mark { color: var(--green); }
+.contrast-item .txt { flex: 1; }
+.contrast-item .es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+}
+.contrast-item .gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Aviso box — register warning ── */
+.aviso {
+  background: rgba(248, 113, 113, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-left: 4px solid var(--red);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0 4px;
+}
+.aviso .aviso-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 9px;
+}
+.aviso .frase {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+.aviso .frase:last-of-type { margin-bottom: 0; }
+.aviso .aviso-nota {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(248, 113, 113, 0.18);
+}
+.aviso .aviso-nota em { color: var(--text-primary); font-style: italic; }
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  vertical-align: bottom;
+}
+.table-wrapper th .var-tag { display: inline-block; margin: 4px 0 0; }
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td strong { color: var(--text-primary); font-weight: 600; }
+.table-note {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: -2px 0 10px;
+  padding-left: 2px;
+}
+.table-note em { color: var(--text-secondary); font-style: italic; }
+.table-note strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ── Cross-link out to a full topic page ── */
+.topic-link {
+  display: block;
+  margin: 16px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-primary); }
+.topic-link strong { color: var(--text-primary); font-weight: 600; }
+.topic-link em { color: var(--text-muted); font-style: italic; }
+.topic-link .arrow { color: var(--accent); font-weight: 600; }
+.topic-link.pending { border-left-color: var(--text-muted); background: rgba(138, 155, 184, 0.05); }
+.topic-link.pending .arrow { color: var(--text-muted); }
+
+/* ── Materiales de la clase ── */
+.materiales {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.materiales h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.materiales .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.material-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  margin-bottom: 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.material-item:last-child { margin-bottom: 0; }
+.material-item:hover { border-color: #2a4a75; background: var(--bg-card-hover); }
+.material-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+.material-tipo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tipo-tabla     { background: rgba(74, 144, 217, 0.12); color: #4a90d9; border: 1px solid rgba(74, 144, 217, 0.3); }
+.tipo-expl      { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.tipo-ejercicio { background: rgba(251, 146, 60, 0.12); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+.tipo-sitio     { background: rgba(148, 163, 184, 0.12); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+.materiales .sub.sub-laminas { margin-top: 26px; }
+.material-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+.material-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: 3px;
+}
+.material-destino {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 5px;
+}
+.material-dl {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+/* ── Preguntas para la profe ── */
+.preguntas {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--yellow);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 18px;
+  scroll-margin-top: 16px;
+}
+.preguntas h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.preguntas .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.preguntas ol { margin: 0 0 0 20px; }
+.preguntas li {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 0.93rem;
+  padding-left: 4px;
+}
+.preguntas li:last-child { margin-bottom: 0; }
+.preguntas li em { color: var(--accent); font-style: italic; }
+.preguntas li strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .grammar-card { padding: 20px 18px 18px; }
+  .preguntas, .materiales { padding: 20px 18px; }
+  .card-header { gap: 10px; }
+  .card-number { font-size: 1.8rem; }
+  .contents-list a { font-size: 0.8rem; padding: 5px 10px; }
+  .prov-chips { padding-top: 0; }
+  .material-item { flex-direction: column; gap: 8px; }
+  .material-dl { padding-top: 0; align-self: flex-end; }
+}
+
+/* ── Par de imágenes (degrada sin romper si faltan los archivos) ── */
+.duo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 18px 0 6px;
+}
+.duo figure {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+.duo img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+.duo figcaption {
+  padding: 11px 14px 13px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
+}
+.duo figcaption strong {
+  display: block;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.06rem;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+@media (max-width: 640px) {
+  .duo { grid-template-columns: 1fr; }
+  .duo img { height: 190px; }
+}
+
+/* ── Eje de la deixis — diagrama en HTML, sin imagen ── */
+.eje {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 4px;
+}
+.eje-fila {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+}
+.eje-mov {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eje-verbos {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eje-glosa { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+@media (max-width: 640px) {
+  .eje-fila { flex-wrap: wrap; gap: 8px; }
+}
+
+/* ── Figura centrada y chica (un cartel, no una ilustración) ── */
+.figura-cartel {
+  margin: 18px auto 4px;
+  max-width: 260px;
+  text-align: center;
+}
+.figura-cartel img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+}
+.figura-cartel figcaption {
+  margin-top: 10px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+
+/* ── Ampliación en el lugar — estándar para las imágenes dentro de
+      las tarjetas de contenido (mismo gesto que el resto del sitio) ── */
+.duo figure.zoomed,
+.figura-cartel.zoomed { overflow: visible; position: relative; z-index: 60; }
+.duo img,
+.figura-cartel img {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-radius 0.25s ease;
+}
+.duo img.magnified {
+  object-fit: contain;
+  transform: scale(2);
+  cursor: zoom-out;
+  z-index: 60;
+  border-radius: 6px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+.duo figure:nth-child(1) img.magnified { transform-origin: left center; }
+.duo figure:nth-child(2) img.magnified { transform-origin: right center; }
+.figura-cartel img.magnified {
+  transform: scale(2.2);
+  transform-origin: center center;
+  cursor: zoom-out;
+  z-index: 60;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+@media (max-width: 640px) {
+  .duo img.magnified { transform: scale(1.6); transform-origin: center center; }
+}
+
+/* ── Visor de imágenes (materiales y figuras) ── */
+.visor {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  background: rgba(8, 14, 26, 0.93);
+  backdrop-filter: blur(3px);
+}
+.visor.abierto { display: flex; flex-direction: column; }
+.visor-barra {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.visor-titulo {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+  min-width: 0;
+}
+.visor-acciones { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.visor-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.visor-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.12); }
+.visor-cerrar {
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 5px 13px 8px;
+  letter-spacing: 0;
+}
+.visor-cuerpo {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  padding: 22px;
+}
+.visor-cuerpo img {
+  /* margin auto centra cuando entra y NO recorta cuando no entra —
+     justify-content/align-items harían inalcanzable el borde izquierdo. */
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  cursor: zoom-in;
+}
+/* Estado ampliado: el ancho lo fija el JS por archivo; el cuerpo hace scroll
+   y margin:auto mantiene la imagen centrada mientras entre en pantalla. */
+.visor-cuerpo.ampliado img {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+}
+.visor-pie {
+  flex-shrink: 0;
+  padding: 12px 22px 18px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+@media (max-width: 640px) {
+  .visor-barra { padding: 11px 14px; }
+  .visor-titulo { font-size: 0.95rem; }
+  .visor-cuerpo { padding: 12px; }
+}
+
+/* ── Vocabulario de la clase ── */
+.vocabulario {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent-kappa);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.vocabulario h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.vocabulario .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 18px;
+}
+.vocab-grupo { margin-top: 22px; }
+.vocab-grupo:first-of-type { margin-top: 0; }
+.vocab-grupo-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.vocab-grupo-sub {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 8px 0 10px;
+  line-height: 1.5;
+}
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.vocab-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.vocab-table tr:last-child td { border-bottom: none; }
+.vocab-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.vocab-table .vt-audio { width: 40px; padding-left: 0; }
+.vocab-table .vt-es {
+  width: 42%;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.04rem;
+  color: var(--text-primary);
+}
+.vocab-table .vt-en { color: var(--text-secondary); }
+.vocab-table .vt-en em { color: var(--text-muted); font-style: italic; }
+@media (max-width: 640px) {
+  .vocabulario { padding: 20px 16px; }
+  .vocab-table .vt-es { width: 46%; font-size: 0.98rem; }
+  .vocab-table td { padding: 8px 6px; font-size: 0.88rem; }
+}
+
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Notas de Clase</div>
+    <h1>Clase del <em>3 de septiembre</em> de 2026</h1>
+    <p class="subtitle"><em>Prestar</em>, un verbo con dos direcciones · el ítem de quiz que estaba mal, y por qué · las cuatro señales para elegir entre <em>llevar</em> y <em>traer</em> · la actitud activa y la pasiva · trampas de sonido · seis palabras para una pastilla.</p>
+  </header>
+
+  <nav class="contents">
+    <div class="contents-label">Lo que vimos</div>
+    <div class="contents-list">
+      <a href="#s1">① Prestar en las dos direcciones</a>
+      <a href="#s2">② El ítem que estaba mal</a>
+      <a href="#s3">③ Las cuatro señales</a>
+      <a href="#s4">④ Actitud activa, actitud pasiva</a>
+      <a href="#s5">⑤ Trampas de sonido</a>
+      <a href="#s6">⑥ Seis palabras para una pastilla</a>
+      <a href="#vocabulario">📖 Vocabulario de la clase</a>
+      <a href="#materiales">📂 Materiales de la clase</a>
+      <a href="#preguntas">✎ Preguntas para la profe</a>
+    </div>
+  </nav>
+
+  <div class="leyenda">
+    <span class="leyenda-label">Cómo leer las etiquetas</span>
+    <div class="leyenda-row"><span class="prov prov-clase">En clase</span> <span>She taught this. Teacher-attested.</span></div>
+    <div class="leyenda-row"><span class="prov prov-material">Material</span> <span>She sent it, but we never worked through it.</span></div>
+    <div class="leyenda-row"><span class="prov prov-ampl">Ampliación</span> <span>Added after class from reference material — not hers.</span></div>
+  </div>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ─────────────────────────── ① ─────────────────────────── -->
+  <article class="grammar-card card-alpha" id="s1">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">Prestar en las dos direcciones</div>
+        <div class="card-title-en">English changes the verb; Spanish changes who the subject is</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      El inglés tiene dos verbos —<em>lend</em> y <em>borrow</em>— y elige según de qué lado de la transacción está uno. El español tiene <strong>uno solo</strong>. Lo que cambia no es el verbo: es <strong>quién es el sujeto</strong>. En <em>prestar</em> el sujeto es siempre el que entrega la cosa, sin excepción. Pedir prestado no es otro verbo — es ser el que recibe.
+    </p>
+
+    <div class="formula">prestar · el sujeto es siempre el que entrega</div>
+
+    <div class="eje">
+      <div class="eje-fila">
+        <span class="eje-mov">yo ▶ vos</span>
+        <span class="eje-verbos">te presto</span>
+        <span class="eje-glosa">Yo entrego. En inglés: <em>I lend you</em>.</span>
+      </div>
+      <div class="eje-fila">
+        <span class="eje-mov">vos ▶ yo</span>
+        <span class="eje-verbos">me prestás</span>
+        <span class="eje-glosa">Vos entregás. En inglés cambia el verbo: <em>I borrow from you</em>.</span>
+      </div>
+    </div>
+
+    <p class="anotacion">
+      Es exactamente el mismo mecanismo que gobierna <em>llevar</em> y <em>traer</em> en las tarjetas ② a ④: en inglés se cambia de verbo, en español se cambia de perspectiva. Una sola clase, dos veces la misma idea.
+    </p>
+
+    <div class="sub-head">Lo que dijo la profe</div>
+
+    <p class="explanation">
+      Escribió el paradigma entero de <em>prestar</em> en la pantalla. No era un ejercicio de conjugación: era la demostración de que <strong>el verbo nunca se mueve</strong>. Todo el trabajo direccional lo hacen los pronombres.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row spine" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Te presto la campera.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>I'll lend you the jacket. — yo entrego.</div>
+        </div>
+      </div>
+      <div class="example-row spine" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Me prestás la campera?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>Can I borrow your jacket? — vos entregás. Literalmente <em>«do you lend me»</em>, y es así como se dice.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le presté el auto a mi hermano.</div>
+          <div class="example-en">I lent my brother the car. — tercera persona, misma lógica.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La corrección de registro</div>
+
+    <p class="explanation">
+      Miró la tabla de la página que ya está en este sitio y marcó que <strong>casi todo eso es demasiado formal</strong> para el uso porteño real. <em>Sacar prestado</em> y <em>tomar prestado</em> le sonaron de España o de lengua escrita; incluso <em>pedir prestado</em> le pareció formal. En la calle se usa la forma más simple que existe, y nada más.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Forma</th>
+            <th>Registro, según ella</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><em>me prestás algo</em> / <em>te presto algo</em></td><td>Lo que se dice de verdad. La forma por defecto.</td></tr>
+          <tr><td><em>pedir prestado</em></td><td>Correcto, pero formal. No es el reflejo cotidiano.</td></tr>
+          <tr><td><em>tomar prestado</em></td><td><span class="var-tag">Reg: no rioplatense</span>Lengua escrita o peninsular. No lo usa.</td></tr>
+          <tr><td><em>sacar prestado</em></td><td><span class="var-tag">Reg: no rioplatense</span>Ídem. Suena a trámite de biblioteca.</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">La página <em>Prestar y Pedir Prestado</em> de este sitio todavía presenta <em>pedir prestado</em> como «the most common way to say to borrow». Según ella, no lo es — al menos no acá. Corrección pendiente en esa página, no en esta.</p>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — <em>pedir</em> beyond borrowing.</strong> The same verb runs a whole family of everyday requests: <em>pedir un favor</em>, <em>pedir un vaso de agua</em>, <em>pedir perdón</em>. And when what you're asking for is an <em>action</em> rather than an object, <em>pedir</em> takes a subordinate clause in the subjunctive — <em>te pido que hagas algo</em>. She glossed that construction as <em>órdenes educadas</em>: polite orders. It is how you tell someone to do something without telling them to do something.
+    </div>
+
+    <a class="topic-link" href="../../prestar-pedir.html">
+      <strong>Prestar y Pedir Prestado</strong> — <em>la página completa: los verbos, la concordancia de</em> prestado<em>, y los pronombres de objeto indirecto.</em> <span class="arrow">›</span>
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ② ─────────────────────────── -->
+  <article class="grammar-card card-gamma" id="s2">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">El ítem que estaba mal</div>
+        <div class="card-title-en">A broken quiz question, and the two different things wrong with it</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <p class="epigrafe">Mi hermana está en el supermercado y me pregunta: «¿___ algo de comer?»</p>
+
+    <p class="explanation">
+      Este ítem salió de una de las páginas de ejercicios del final. La clave que daba la página era <em>traigo</em>. A mí no me cerraba: la hermana está en el supermercado, la comida sale de ahí y va hacia mi casa — desde donde ella habla, eso es <strong>llevar</strong>. La profe estuvo de acuerdo, y le puso nombre al problema.
+    </p>
+
+    <div class="sub-head">El diagnóstico de la profe: estilo indirecto</div>
+
+    <p class="explanation">
+      El ítem mezcla dos cosas que no se pueden mezclar. Si hay <strong>comillas</strong>, el que habla es la hermana, parada en el supermercado. Si es <strong>estilo indirecto</strong> —yo contando después lo que ella dijo— el que habla soy yo, parado en mi casa. El verbo cambia porque cambió el hablante, no porque cambió la situación.
+    </p>
+
+    <div class="contrast">
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">Mi hermana está en el supermercado y me pregunta: «¿Te <strong>llevo</strong> algo de comer?»</div>
+          <div class="gloss">Cita directa. Habla ella, desde el supermercado. La comida se va con ella.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">Mi hermana está en el supermercado y me pregunta si me <strong>trae</strong> algo de comer.</div>
+          <div class="gloss">Estilo indirecto. Hablo yo, desde mi casa. La comida viene hacia mí.</div>
+        </div>
+      </div>
+      <div class="contrast-item bad">
+        <div class="mark">✗</div>
+        <div class="txt">
+          <div class="es">Mi hermana está en el supermercado y me pregunta: «¿Te <strong>traigo</strong> algo de comer?»</div>
+          <div class="gloss">La clave de la página. Comillas de estilo directo con el verbo del estilo indirecto. <em>Es un problema de reported speech — no lo hicieron bien</em>, dijo ella.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="anotacion">
+      En el estilo indirecto se mueve todo a la vez: el verbo deíctico, los pronombres y la persona. Por eso el error es fácil de cometer y difícil de ver.
+    </p>
+
+    <div class="sub-head">Su propio ejemplo: Marta y el pan</div>
+
+    <div class="examples-block">
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Dice Marta: «No se preocupen, yo les llevo el pan al salir de trabajar».</div>
+          <div class="example-en">Marta says: "Don't worry, I'll bring you the bread when I finish work." — habla Marta; el pan <strong>va</strong> con ella.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Dice Marta que no nos preocupemos, que nos trae el pan al salir de trabajar.</div>
+          <div class="example-en">Marta says not to worry, she'll bring us the bread when she finishes work. — hablo yo; el pan <strong>viene</strong> hacia nosotros.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="anotacion">
+      Un solo pan, un solo viaje, dos verbos distintos. Fijate que en la versión indirecta también se movieron <em>se preocupen → nos preocupemos</em> y <em>les → nos</em>. Nunca se mueve el verbo solo.
+    </p>
+
+    <div class="sub-head">Lo que hay debajo: una diferencia regional, y no la esperada</div>
+
+    <p class="explanation">
+      Hasta acá, todo cierra. Pero queda una pregunta de fondo: ¿<em>traer</em> puede apuntar hacia <strong>el oyente</strong> en vez de hacia el hablante? La explicación de la página lo daba por sentado —glosaba <em>traer</em> como «transportar hacia el oyente»— y esa glosa, como regla general, es incorrecta.
+    </p>
+
+    <p class="explanation">
+      <span class="var-tag">Uso variable</span>La <em>Nueva gramática</em> de la RAE trata <em>ir · venir · llevar · traer</em> como verbos deícticos y dice que en la mayor parte del mundo hispanohablante el destino tiene que coincidir con el lugar donde está <strong>el hablante</strong>, no el oyente: por eso <em>mañana vendré a tu casa</em> suena raro por teléfono. Pero aclara que ese requisito <strong>no se cumple</strong> en algunas variedades — el español de Chile, y el de <em>parte</em> de las zonas andina y rioplatense, además de las zonas de contacto con el catalán y con el inglés.
+    </p>
+
+    <div class="nota">
+      <strong>NOTA — the surprise is which way this runs.</strong> The intuitive story would be that Peninsular Spanish is loose about this and Río de la Plata is strict. The RAE grammar says roughly the reverse: strict speaker-anchoring is the majority norm across the Spanish-speaking world, and the <em>relaxation</em> — the hearer-oriented <em>traer</em> the quiz page reached for — is documented for Chilean Spanish and for <em>part of</em> the Andean and Rioplatense zones. Which part is doing a lot of work in that sentence, and Buenos Aires may well be the strict part. Two things are true at once and they don't cancel: her reported-speech diagnosis is right and stands on its own, and there is a real regional axis underneath it that runs the surprising way. That second half is a question for her, not a correction of her.
+    </div>
+
+    <p class="anotacion">
+      Vale la pena registrar cómo salió esto: la respuesta de la página parecía mal, la discusión duró toda la clase y lo que se aprendió no fue la clave del ejercicio sino la estructura que lo rompía. Un ítem malo enseñó más que diez buenos.
+    </p>
+
+    <a class="topic-link pending">
+      <strong>Llevar y traer, ir y venir</strong> — <em>la deixis del movimiento: las combinaciones con pronombres, el estilo indirecto y los casos de frontera. Página por construir.</em> <span class="arrow">›</span>
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ③ ─────────────────────────── -->
+  <article class="grammar-card card-epsilon" id="s3">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Las cuatro señales</div>
+        <div class="card-title-en">Her tells for picking the right verb before you think about it</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Mientras discutíamos el ítem, fue anotando las pistas que ella misma usa. No son reglas nuevas: son cuatro lugares de la oración donde la respuesta ya está escrita antes de llegar al hueco.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Señal</th>
+            <th>Qué indica</th>
+            <th>Por qué</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Se nombra el lugar</strong></td>
+            <td><em>ir · llevar</em></td>
+            <td>Si ya estuvieras ahí, no lo nombrarías. Nombrarlo dice que está lejos de vos.</td>
+          </tr>
+          <tr>
+            <td><strong>Los pronombres</strong></td>
+            <td>Depende de hacia quién</td>
+            <td><em>te · les</em> apuntan afuera → <em>llevar</em>. <em>me · nos</em> apuntan hacia mí → <em>traer</em>.</td>
+          </tr>
+          <tr>
+            <td><strong>Estilo indirecto</strong></td>
+            <td>Se da vuelta todo</td>
+            <td>Cambia el hablante, así que cambian el verbo y los pronombres juntos. Tarjeta ②.</td>
+          </tr>
+          <tr>
+            <td><strong>La preposición</strong></td>
+            <td><em>a</em> → ir · <em>de</em> → venir</td>
+            <td>Se va <em>a</em> un lugar y se viene <em>de</em> un lugar. El par de movimiento arrastra al par de transporte.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Voy a la fiesta y llevo el postre.</div>
+          <div class="example-en">I'm going to the party and I'm bringing dessert. — se nombra el lugar y aparece <em>a</em>: dos señales, misma respuesta.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Vengo del centro y te traigo lo que pediste.</div>
+          <div class="example-en">I'm coming from downtown and I'm bringing you what you asked for. — <em>de</em> arrastra a <em>venir</em>, y <em>venir</em> arrastra a <em>traer</em>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — <em>ir a</em>, <em>venir de</em>.</strong> She flagged this as a standing reminder rather than a discovery: you <strong>go to</strong> a place and you <strong>come from</strong> one. English lets "come" drift — <em>come to my place</em> — and that drift is what pulls English speakers toward <em>venir</em> and then toward <em>traer</em> in sentences where Spanish wants the other pair.
+    </div>
+
+    <a class="topic-link pending">
+      <strong>Llevar y traer, ir y venir</strong> — <em>las cuatro señales, desarrolladas con más casos. Página por construir.</em> <span class="arrow">›</span>
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ④ ─────────────────────────── -->
+  <article class="grammar-card card-zeta" id="s4">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Actitud activa, actitud pasiva</div>
+        <div class="card-title-en">The pair stops being about objects and starts being about posture</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Acá dejó de hablar de supermercados. Fue anotando frases sueltas cada vez más abstractas, y al final salió la idea que las ordena: <em>llevar</em> y <em>traer</em> no dividen el mundo en cosas que van y cosas que vienen, sino en <strong>dos posturas frente a lo que pasa</strong>. Una se mueve; la otra espera.
+    </p>
+
+    <div class="eje">
+      <div class="eje-fila">
+        <span class="eje-mov">yo me muevo</span>
+        <span class="eje-verbos">llevar</span>
+        <span class="eje-glosa">Transporto algo, me desplazo, voy hacia algún lado. Actitud activa.</span>
+      </div>
+      <div class="eje-fila">
+        <span class="eje-mov">yo espero</span>
+        <span class="eje-verbos">traer</span>
+        <span class="eje-glosa">Espero recibir, estoy sentado, pido. Actitud pasiva.</span>
+      </div>
+    </div>
+
+    <div class="sub-head">El eje doméstico</div>
+
+    <div class="examples-block">
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">A mi casa vienen las personas y traen cosas; a la casa de otros yo voy y llevo cosas.</div>
+          <div class="example-en">People come to my house and bring things; I go to other people's houses and take things. — la frase con la que resumió todo el sistema.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Cuando lo que se transporta no es una cosa</div>
+
+    <div class="examples-block">
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Espero que la vida me traiga cosas buenas.</div>
+          <div class="example-en">I hope life brings me good things. — nada se mueve físicamente. Lo que hay es alguien esperando: por eso <em>traer</em>.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quiero llevar mi futuro hacia adelante.</div>
+          <div class="example-en">I want to carry my future forward. — acá hay que moverse, empujar, ir. Por eso <em>llevar</em>.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Su formulación, tal como quedó anotada: siempre importa la perspectiva del que habla — si transporta algo consigo, <em>lleva algo a alguien</em>; si espera recibir, <em>que le traigan algo</em>. El sentido figurado no es una excepción al sistema deíctico. Es el mismo sistema aplicado a algo que no se puede levantar con las manos.
+    </p>
+
+    <div class="nota">
+      <strong>NOTA — why this is the useful half.</strong> The concrete cases can be handled with a rule and a bit of care. The figurative ones can't, because there is no room to point at: no supermarket, no doorway, no box of empanadas. What survives is the posture — am I the one moving, or the one waiting? That question still has an answer when the physical scene has evaporated, and it gives the right verb in <em>traer suerte</em>, <em>llevar una vida tranquila</em>, <em>traer problemas</em>, <em>llevar la cuenta</em>.
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ⑤ ─────────────────────────── -->
+  <article class="grammar-card card-eta" id="s5">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">Trampas de sonido y falsos amigos</div>
+        <div class="card-title-en">Four words that look or sound like something they are not</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <div class="sub-head">Las vocales no se relajan</div>
+
+    <p class="explanation">
+      <em>Película</em> no es <em>pey-LICK-ula</em>. En español las cinco vocales se pronuncian plenas y estables en toda posición, tónica o átona — no hay reducción a schwa como en inglés. Cada sílaba conserva su vocal entera: <strong>pe-LÍ-cu-la</strong>.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">la película</div>
+          <div class="example-en">peh-LEE-koo-lah — las cuatro vocales, enteras.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">el ítem</div>
+          <div class="example-en">EE-tem. Misma grafía que en inglés, pronunciación completamente distinta — por eso no lo reconocí cuando lo dijo. Plural: <em>los ítems</em>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Chorro, chorrito, churro</div>
+
+    <p class="explanation">
+      Un <strong>chorro</strong> es un flujo de líquido: un chorro de agua, un chorro de aire. El diminutivo <strong>chorrito</strong> es la medida de café: <em>un chorrito de leche</em>. Un <strong>churro</strong> es la masa frita. Se parecen lo suficiente como para equivocarse y son cosas distintas.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Un cortado con un chorrito de leche, por favor.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>A cortado with a splash of milk, please.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le entraron los chorros al departamento.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>His flat got burgled. — en la Argentina <em>un chorro</em> es un ladrón, y es el sentido que más se oye.</div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Los motochorros le arrebataron el celular.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>Thieves on a motorbike snatched his phone. — <em>moto</em> + <em>chorro</em>, una palabra específicamente argentina para una modalidad específica.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — the regional map of <em>chorro</em>.</strong> The literal sense (a jet or stream) is universal. The slang splits by country: in Argentina a <em>chorro</em> is a thief, and <em>motochorro</em> is the near-untranslatable local compound for a motorbike snatch-and-grab. In Mexico the colloquial sense goes a different way entirely and refers to diarrhoea. Same word, three regions, three different things to accidentally say.
+    </div>
+
+    <div class="sub-head">Molestar no es <em>molest</em></div>
+
+    <p class="explanation">
+      <em>Molestar</em> significa incomodar, fastidiar, interrumpir — y nada más. No arrastra la carga que tiene <em>molest</em> en inglés. Esa asociación es un problema exclusivo del hablante de inglés, y es la razón por la que uno duda antes de usar un verbo que en español es completamente cotidiano.
+    </p>
+
+    <div class="contrast">
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">¿Te importaría esperar diez minutos?</div>
+          <div class="gloss">Would you mind waiting? — el pedido más neutro de los dos.</div>
+        </div>
+      </div>
+      <div class="contrast-item good">
+        <div class="mark">✓</div>
+        <div class="txt">
+          <div class="es">¿Te molestaría esperar diez minutos?</div>
+          <div class="gloss">Would it bother you to wait? — igual de educado, pero nombra explícitamente la molestia. Reconoce que se está pidiendo algo.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="anotacion">
+      Los dos son fórmulas de cortesía y los dos funcionan. La diferencia es de encuadre, no de nivel de formalidad: <em>importar</em> pregunta por la voluntad, <em>molestar</em> pregunta por el costo.
+    </p>
+
+    <div class="sub-head">Zarpazo no viene de zarpar</div>
+
+    <p class="explanation">
+      <span class="prov prov-ampl">Ampliación</span> Un <strong>zarpazo</strong> es el golpe que da un animal con la garra, y viene de <strong>la zarpa</strong> — la garra misma —, no de <em>zarpar</em>, que es lo que hace un barco cuando sale del puerto. Son dos palabras distintas del español actual; si comparten una raíz remota, está lejos y discutida. El sufijo <em>-azo</em> es el mismo de <em>portazo</em>, <em>codazo</em>, <em>manotazo</em>: un golpe dado con eso.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">El gato le dio un zarpazo a mi profesora.</div>
+          <div class="example-en">The cat took a swipe at my teacher. — el contexto en que salió la palabra.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chip-row">
+      <span class="chip">la zarpa</span>
+      <span class="chip">el zarpazo</span>
+      <span class="chip">el portazo</span>
+      <span class="chip">el codazo</span>
+      <span class="chip">el manotazo</span>
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ⑥ ─────────────────────────── -->
+  <article class="grammar-card card-iota" id="s6">
+    <div class="card-header">
+      <div class="card-number">⑥</div>
+      <div class="card-title-group">
+        <div class="card-title">Seis palabras para una pastilla</div>
+        <div class="card-title-en">She listed them; the distinctions are worth having straight</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Las tiró en fila, sin separarlas: <em>pastillas, píldoras, comprimidos, grageas, cápsulas, tabletas</em>. No son sinónimos exactos. Algunas describen la <strong>forma farmacéutica</strong> y otras son simplemente la palabra que usa la gente.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Palabra</th>
+            <th>Qué es</th>
+            <th>Registro</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>la pastilla</strong></td><td>Cualquier cosa chica que se traga o se chupa. También la pastilla de menta.</td><td>La palabra de todos los días. La que se dice.</td></tr>
+          <tr><td><strong>el comprimido</strong></td><td>Polvo comprimido en un disco sólido. Término técnico exacto.</td><td>Prospecto, farmacia, receta.</td></tr>
+          <tr><td><strong>la gragea</strong></td><td>Comprimido con una capa que lo recubre, lisa y a veces de color.</td><td>Técnico. También la confitería.</td></tr>
+          <tr><td><strong>la cápsula</strong></td><td>Envoltura de gelatina con el contenido adentro. Se abre, no se parte.</td><td>Técnico y corriente a la vez.</td></tr>
+          <tr><td><strong>la píldora</strong></td><td>Sentido general, pero <em>la píldora</em> a secas es el anticonceptivo oral.</td><td><span class="var-tag">Cuidado</span>El artículo definido cambia el significado.</td></tr>
+          <tr><td><strong>la tableta</strong></td><td>Sinónimo de comprimido. Fuera de la farmacia, la tableta de chocolate.</td><td>Menos frecuente en el Río de la Plata.</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">El eje real es forma farmacéutica contra habla cotidiana. En la farmacia se pide por el nombre del medicamento; en la conversación, todo es <em>pastilla</em>.</p>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">¿Te tomaste la pastilla?</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>Did you take your pill? — así se dice, sea comprimido, cápsula o gragea.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Un comprimido cada ocho horas, por vía oral.</div>
+          <div class="example-en">One tablet every eight hours, orally. — registro de prospecto.</div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ───────────────────── Vocabulario de la clase ───────────────────── -->
+  <section class="vocabulario" id="vocabulario">
+    <h2>Vocabulario de la clase</h2>
+    <div class="sub">Todo lo que fue apareciendo, en el orden en que apareció — la lista completa, sin filtrar</div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">A · Lo que fue saliendo</div>
+      <p class="vocab-grupo-sub">Vocabulario suelto, escrito en el panel a medida que aparecía en la conversación. Empezó con las fórmulas para responderle a alguien que avisa que llega tarde.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">tomate tu tiempo</td><td class="vt-en">take your time — <em>imperativo voseante; con</em> tú <em>sería</em> tómate tu tiempo</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">sin prisa</td><td class="vt-en">no rush — <em>la misma respuesta, más corta</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la película</td><td class="vt-en">film, movie — <em>tarjeta ⑤</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">las sobras</td><td class="vt-en">leftovers — <em>de</em> sobrar<em>, ser excedente</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">me sobran dos pedazos</td><td class="vt-en">I've got two pieces left over — <em>construcción tipo</em> gustar<em>: el sujeto es lo que sobra</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">sobra comida después de la fiesta</td><td class="vt-en">there's food left over after the party — <em>uso intransitivo, sin dativo</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">un chorrito de leche</td><td class="vt-en">a splash of milk — <em>tarjeta ⑤</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el armazón</td><td class="vt-en">frame — <em>también</em> el armazón de los anteojos<em>, la montura de los lentes</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el ítem</td><td class="vt-en">item — <em>se pronuncia</em> EE-tem<em>; tarjeta ⑤</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">minimizar</td><td class="vt-en">to minimise — <em>una ventana, o la importancia de algo</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">se cortó internet</td><td class="vt-en">the internet went down — <em>la forma nativa; igual que</em> se cortó la luz</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el bombón · los bombones</td><td class="vt-en">chocolate — <em>coloquialmente, una persona muy atractiva</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">¿te importaría? · ¿te molestaría?</td><td class="vt-en">would you mind? · would it bother you? — <em>tarjeta ⑤</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la carpa</td><td class="vt-en">tent — <em>en la Argentina, frente a</em> la tienda de campaña <em>de España</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">ir a · venir de</td><td class="vt-en">to go to · to come from — <em>tarjeta ③</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">desplazarse</td><td class="vt-en"><span class="var-tag">Reg: incierto</span>to travel, to get about — <em>lo anotó como «commute», pero suena formal; en el habla porteña lo corriente es</em> viajar al trabajo</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el viaje diario al trabajo</td><td class="vt-en">the daily commute — <em>la perífrasis, cuando hace falta el sustantivo</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">descifrar · descifrando</td><td class="vt-en">to decipher · deciphering</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el préstamo</td><td class="vt-en">the loan — <em>el sustantivo de</em> prestar<em>; tarjeta ①</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el zarpazo</td><td class="vt-en">a swipe with a claw — <em>de</em> la zarpa<em>; tarjeta ⑤</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">B · Las seis formas de una pastilla</div>
+      <p class="vocab-grupo-sub">Las escribió todas juntas al final. Desarrolladas en la tarjeta ⑥.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la pastilla</td><td class="vt-en">pill, tablet — <em>la palabra cotidiana</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la píldora</td><td class="vt-en">pill — <em>«la píldora» a secas: el anticonceptivo</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el comprimido</td><td class="vt-en">tablet — <em>el término del prospecto</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la gragea</td><td class="vt-en">coated tablet, dragee</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la cápsula</td><td class="vt-en">capsule</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la tableta</td><td class="vt-en">tablet — <em>también la de chocolate</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ───────────────────── Materiales de la clase ───────────────────── -->
+  <section class="materiales" id="materiales">
+    <h2>Materiales de la clase</h2>
+
+    <div class="sub">Esta clase no tuvo láminas ni archivos. Lo que quedó son enlaces externos sobre <em>llevar</em> y <em>traer</em>: tres videos y siete páginas de ejercicios. No están archivados acá — se abren en otra pestaña.</div>
+
+    <a class="material-item" href="https://www.youtube.com/watch?v=CZNL5R7qCe8" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Video</span>
+        <div>
+          <div class="material-title">Llevar vs. traer — explicación en video (1)</div>
+          <div class="material-desc">Repaso del par deíctico con ejemplos hablados.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://www.youtube.com/watch?v=4zzy1Y6uivA" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Video</span>
+        <div>
+          <div class="material-title">Llevar vs. traer — explicación en video (2)</div>
+          <div class="material-desc">Mismo tema, otra presentación.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://www.youtube.com/watch?v=Pbwru_hG624" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Video</span>
+        <div>
+          <div class="material-title">Llevar vs. traer — explicación en video (3)</div>
+          <div class="material-desc">Mismo tema, otra presentación.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <div class="sub sub-laminas">Páginas de ejercicios sobre <em>llevar</em> y <em>traer</em>. Se listan sin más comentario, salvo una.</div>
+
+    <a class="material-item" href="https://espanol.lingolia.com/es/vocabulario/palabras-confundibles/llevar-traer/ejercicios" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicios</span>
+        <div><div class="material-title">Lingolia — llevar / traer</div></div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://deleahora.com/actividades/gramatica/traer-vs-llevar-e" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicios</span>
+        <div><div class="material-title">De ELE Ahora — traer vs. llevar</div></div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://1001reasonstolearnspanish.com/llevar-y-traer/" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicios</span>
+        <div><div class="material-title">1001 Reasons to Learn Spanish — llevar y traer</div></div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://ailespanol.com/es/actividad-espanol-verbos-llevar-traer/" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicios</span>
+        <div><div class="material-title">AIL Español — actividad de llevar y traer</div></div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://burbujadelespanol.com/diferencia-verbos-espanol/" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicios</span>
+        <div>
+          <div class="material-title">Burbuja del Español — diferencia entre verbos</div>
+          <div class="material-desc">De acá salió el ítem de la tarjeta ②, con la clave discutida y una glosa de <em>traer</em> que no se sostiene como regla general. Se deja el enlace igual: fue la página que más enseñó, precisamente por estar mal.</div>
+          <div class="material-destino">Discutida en la tarjeta ②.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://wordwall.net/es/resource/58812812/llevar-y-traer" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicios</span>
+        <div><div class="material-title">Wordwall — llevar y traer</div></div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://www.profedeele.es/actividad/ir-venir-llevar-traer/" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Ejercicios</span>
+        <div><div class="material-title">ProfeDeELE — ir, venir, llevar, traer</div></div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+  </section>
+
+  <!-- ───────────────────── Preguntas para la profe ───────────────────── -->
+  <section class="preguntas" id="preguntas">
+    <h2>Preguntas para la profe</h2>
+    <div class="sub">Lo que quedó sin resolver — para cuando surja</div>
+    <ol>
+      <li><strong>El <em>traer</em> orientado al oyente.</strong> La <em>Nueva gramática</em> dice que el requisito de anclar el destino en el hablante no se cumple en el español de Chile ni en parte de las zonas andina y rioplatense. Eso sugiere que la variedad permisiva es la de acá, no la de España — al revés de lo que uno esperaría. ¿Reconocés ese uso en alguna parte de la Argentina? ¿Buenos Aires sería la zona estricta?</li>
+      <li><strong><em>Desplazarse</em> para el viaje al trabajo.</strong> ¿Lo dirías en una conversación, o es palabra de informe? Si alguien te cuenta que tarda dos horas en llegar a la oficina, ¿qué verbo usa?</li>
+      <li><strong>La carga de <em>molestar</em>.</strong> Para vos, ¿tiene algún matiz incómodo, o es completamente neutro? Preguntado al revés: ¿hay algún contexto donde evitarías <em>¿te molestaría?</em> y elegirías <em>¿te importaría?</em></li>
+      <li><strong><em>Zarpado</em> y <em>zarpazo</em>.</strong> ¿Se sienten emparentados, o son dos palabras sin relación? Y <em>zarparse</em> con el sentido de pasarse de la raya, ¿lo usás?</li>
+    </ol>
+  </section>
+
+  <div class="page-footer">Clase del 3 de septiembre de 2026 · Mi Proyecto Español</div>
+</div>
+
+
+<!-- ───────────────────── Visor de imágenes ───────────────────── -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+  <div class="visor-barra">
+    <div class="visor-titulo" id="visor-titulo"></div>
+    <div class="visor-acciones">
+      <button class="visor-btn" id="visor-zoom" onclick="alternarZoom()">Ampliar</button>
+      <button class="visor-btn visor-cerrar" onclick="cerrarVisor()" title="Cerrar (Esc)">✕</button>
+    </div>
+  </div>
+  <div class="visor-cuerpo" id="visor-cuerpo" onclick="alternarZoom(event)">
+    <img id="visor-img" src="" alt="">
+  </div>
+  <div class="visor-pie" id="visor-pie"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish is the default site-wide.
+//  data-region="rioplatense" rows are TEXTUAL flags only; their
+//  audio stays neutral.
+//
+//  This sheet has NO card whose subject is a sound, so there are no
+//  data-voice="rio" rows on it and all audio is neutral. The rioVoice
+//  picker and speakVerbo() below are kept so this file stays byte-
+//  comparable with the other class sheets; they are simply unused here.
+// ═══════════════════════════════════════════════════════════════
+let neutralVoice = null;
+let rioVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  // Scoped to card ② only. Null is a normal outcome.
+  rioVoice =
+       voices.find(v => /argentin/i.test(v.name))
+    || voices.find(v => v.lang === 'es-AR')
+    || voices.find(v => v.lang === 'es-UY')
+    || null;
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Shared utterance path. wantRio is honoured only where the markup asks.
+async function say(text, btn, wantRio) {
+  if (!window.speechSynthesis || !text) return;
+
+  if (btn && btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  const chosen = (wantRio && rioVoice) ? rioVoice : neutralVoice;
+  if (chosen) { u.voice = chosen; u.lang = chosen.lang; }
+  else { u.lang = wantRio ? 'es-AR' : 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  if (btn) {
+    u.onstart = () => btn.classList.add('playing');
+    u.onend   = () => btn.classList.remove('playing');
+    u.onerror = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+async function speakExample(btn) {
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, row.dataset.voice === 'rio');
+}
+
+// Vocabulario de la clase — one button per term row.
+async function speakTerm(btn) {
+  const row = btn.closest('tr');
+  if (!row) return;
+  const esEl = row.querySelector('.vt-es');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, false);
+}
+
+// Unused on this sheet — kept for parity with the other class sheets.
+async function speakVerbo(btn) {
+  const row = btn.closest('tr');
+  if (!row) return;
+  const esEl = row.querySelector('strong');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.textContent);
+  await say(text, btn, true);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Visor de imágenes — materiales y figuras se abren acá en vez
+//  de saltar a otra pestaña. Cierra con ✕, con clic en el fondo
+//  o con Esc. "Ampliar" pasa a tamaño natural con scroll, que es
+//  lo que necesitan las láminas densas.
+// ═══════════════════════════════════════════════════════════════
+const visor       = document.getElementById('visor');
+const visorImg    = document.getElementById('visor-img');
+const visorTitulo = document.getElementById('visor-titulo');
+const visorPie    = document.getElementById('visor-pie');
+const visorCuerpo = document.getElementById('visor-cuerpo');
+const visorZoom   = document.getElementById('visor-zoom');
+
+// Cuánto agranda "Ampliar", en % del tamaño nativo del archivo. Se fija por
+// imagen con data-zoom, porque las láminas llegan en tamaños muy distintos:
+// una de 204 px y una de 1080 px no pueden compartir un solo factor.
+const ZOOM_POR_DEFECTO = 220;
+let zoomActual = ZOOM_POR_DEFECTO;
+
+function abrirVisor(src, titulo, pie, zoom) {
+  if (!visor) return;
+  zoomActual = Number(zoom) > 0 ? Number(zoom) : ZOOM_POR_DEFECTO;
+  visorImg.style.width = '';
+  visorImg.src = src;
+  visorImg.alt = titulo || '';
+  visorTitulo.textContent = titulo || '';
+  visorPie.textContent = pie || '';
+  visorPie.style.display = pie ? '' : 'none';
+  visorCuerpo.classList.remove('ampliado');
+  visorZoom.textContent = 'Ampliar';
+  visor.classList.add('abierto');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarVisor() {
+  if (!visor) return;
+  visor.classList.remove('abierto');
+  visorCuerpo.classList.remove('ampliado');
+  visorImg.style.width = '';
+  visorImg.src = '';
+  document.body.style.overflow = '';
+}
+
+function alternarZoom(e) {
+  // Clic en el fondo del cuerpo (no en la imagen) cierra el visor.
+  if (e && e.target === visorCuerpo) { cerrarVisor(); return; }
+  const ampliado = visorCuerpo.classList.toggle('ampliado');
+  visorZoom.textContent = ampliado ? 'Ajustar' : 'Ampliar';
+  if (ampliado) {
+    const nativo = visorImg.naturalWidth || visorImg.width;
+    visorImg.style.width = Math.round(nativo * zoomActual / 100) + 'px';
+    // Centra el recorte visible en vez de dejarlo pegado al borde.
+    requestAnimationFrame(() => {
+      visorCuerpo.scrollLeft = (visorCuerpo.scrollWidth  - visorCuerpo.clientWidth)  / 2;
+      visorCuerpo.scrollTop  = (visorCuerpo.scrollHeight - visorCuerpo.clientHeight) / 2;
+    });
+  } else {
+    visorImg.style.width = '';
+    visorCuerpo.scrollTo({ top: 0, left: 0 });
+  }
+}
+
+// Materiales: intercepta el enlace. Si el JS falla, el href abre la pestaña.
+function abrirMaterial(a) {
+  const titulo = a.querySelector('.material-title');
+  const desc   = a.querySelector('.material-desc');
+  abrirVisor(a.getAttribute('href'),
+             titulo ? titulo.textContent.trim() : '',
+             desc ? desc.textContent.trim() : '',
+             a.dataset.zoom);
+  return false;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && visor && visor.classList.contains('abierto')) cerrarVisor();
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  Ampliación en el lugar — para las imágenes de las tarjetas.
+//  Mismo gesto que en el resto del sitio: clic para agrandar,
+//  clic de nuevo (o afuera, o scroll, o Esc) para soltar.
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.duo img, .figura-cartel img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (!activeImage) return;
+    activeImage.classList.remove('magnified');
+    const cont = activeImage.closest('figure');
+    if (cont) cont.classList.remove('zoomed');
+    activeImage = null;
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) { resetZoom(); return; }
+      resetZoom();
+      img.classList.add('magnified');
+      const cont = img.closest('figure');
+      if (cont) cont.classList.add('zoomed');
+      activeImage = img;
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') resetZoom(); });
+});
+</script>
+
+</body>
+</html>

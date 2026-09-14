@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Práctica: Contenedores y recipientes</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep:        #0a1628;
+      --bg-card:        #111d35;
+      --bg-card-hover:  #162544;
+      --bg-input:       #0d1a2f;
+      --border:         #1e3355;
+      --border-focus:   #3b6cb5;
+      --text-primary:   #e2e8f0;
+      --text-secondary: #8a9bb8;
+      --text-muted:     #5a6f8e;
+      --accent:         #4a90d9;
+      --accent-glow:    rgba(74, 144, 217, 0.15);
+
+      --accent-alpha:   #4a90d9;
+      --accent-beta:    #c084fc;
+      --accent-gamma:   #fbbf24;
+
+      /* Colores de región — tomados de las banderas, igual que en
+         topics/contenedores.html. NO armonizar con las .reg-badge del resto
+         del sitio: acá el mapa de banderas es la regla mnemotécnica. */
+      --reg-esp: #e05260;
+      --reg-mex: #3fa96a;
+      --reg-rpl: #d9b026;
+      --reg-neu: #4a90d9;
+
+      /* Corrección — 04-app-standards §3 */
+      --ok:   #34d399;
+      --tibio:#fbbf24;
+      --mal:  #f87171;
+
+      --lamina-bg: #818e9e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      padding: 32px 16px 90px;
+      position: relative;
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("../assets/los fondos/azulejos.webp");
+      background-size: cover; background-repeat: no-repeat; background-position: center;
+      opacity: 0.10; pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 880px; margin: 0 auto; position: relative; z-index: 1; }
+
+    .back-nav {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--text-muted); text-decoration: none;
+      font-size: 0.9rem; padding: 6px 0; margin-bottom: 24px;
+      transition: color 0.2s;
+    }
+    .back-nav:hover { color: var(--accent); }
+
+    .title-card {
+      text-align: center; padding: 40px 24px 44px; margin-bottom: 26px;
+      background: linear-gradient(180deg, rgba(192,132,252,0.06), rgba(192,132,252,0));
+      border-radius: 14px; border: 1px solid var(--border);
+    }
+    .overline {
+      font-size: 0.72rem; font-weight: 500; letter-spacing: 0.32em;
+      text-transform: uppercase; color: var(--accent-beta); margin-bottom: 18px;
+    }
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.9rem, 5vw, 2.9rem);
+      font-weight: normal; line-height: 1.05; letter-spacing: -0.01em;
+    }
+    .ornament {
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      margin: 20px auto 10px; color: var(--accent-beta); opacity: 0.6; max-width: 280px;
+    }
+    .ornament::before, .ornament::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-beta), transparent);
+    }
+    .sub { font-size: 0.95rem; color: var(--text-muted); }
+
+    /* ── Tarjetas de configuración ──────────────── */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 24px; margin-bottom: 16px;
+    }
+    .card-title {
+      font-family: 'DM Serif Display', serif; font-size: 1.35rem; margin-bottom: 5px;
+    }
+    .card-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+
+    .opciones { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .opt {
+      flex: 1 1 220px; text-align: left;
+      padding: 14px 16px; border-radius: 10px;
+      border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-secondary); font-family: 'Outfit', sans-serif;
+      cursor: pointer; transition: all 0.18s;
+    }
+    .opt:hover { border-color: #2a4a75; color: var(--text-primary); }
+    .opt.active {
+      border-color: var(--accent-beta); background: rgba(192,132,252,0.10);
+      color: var(--text-primary);
+    }
+    .opt .opt-t { font-size: 1rem; font-weight: 600; display: block; }
+    .opt .opt-d { font-size: 0.82rem; color: var(--text-muted); margin-top: 3px; display: block; line-height: 1.5; }
+
+    .region-bar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .region-btn {
+      padding: 6px 14px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); font-family: 'Outfit', sans-serif;
+      font-size: 0.82rem; cursor: pointer; transition: all 0.18s;
+    }
+    .region-btn:hover { color: var(--text-primary); border-color: #2a4a75; }
+    .region-btn.active {
+      color: #0a1628; font-weight: 600;
+      background: var(--btn-col); border-color: var(--btn-col);
+    }
+    .region-btn[data-reg="general"] { --btn-col: var(--reg-neu); }
+    .region-btn[data-reg="esp"]     { --btn-col: var(--reg-esp); }
+    .region-btn[data-reg="mex"]     { --btn-col: var(--reg-mex); }
+    .region-btn[data-reg="rpl"]     { --btn-col: var(--reg-rpl); }
+
+    .lam-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .lam-chip-btn {
+      padding: 6px 12px; border-radius: 6px;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-muted); font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem; cursor: pointer; transition: all 0.18s;
+    }
+    .lam-chip-btn:hover { color: var(--text-primary); border-color: #2a4a75; }
+    .lam-chip-btn.active {
+      background: rgba(74,144,217,0.16); color: var(--accent);
+      border-color: rgba(74,144,217,0.45);
+    }
+
+    .btn-grande {
+      display: block; width: 100%; margin: 22px 0 10px;
+      padding: 16px; border-radius: 12px;
+      border: 1px solid var(--accent-beta);
+      background: rgba(192,132,252,0.12);
+      color: var(--text-primary); font-family: 'DM Serif Display', serif;
+      font-size: 1.25rem; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-grande:hover { background: rgba(192,132,252,0.22); transform: translateY(-2px); }
+
+    .btn {
+      padding: 10px 18px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-secondary); font-family: 'Outfit', sans-serif;
+      font-size: 0.9rem; cursor: pointer; transition: all 0.18s;
+    }
+    .btn:hover { color: var(--text-primary); border-color: #2a4a75; }
+    .btn.primario {
+      border-color: var(--accent); background: rgba(74,144,217,0.14); color: var(--text-primary);
+    }
+    .btn.primario:hover { background: rgba(74,144,217,0.26); }
+    .btn.peligro { border-color: rgba(248,113,113,0.35); color: var(--mal); }
+    .btn.peligro:hover { background: rgba(248,113,113,0.10); }
+
+    /* ── Cabecera de la ronda ───────────────────── */
+    .ronda-cab {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 18px; margin-bottom: 14px;
+    }
+    .ronda-cab .num {
+      font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent-beta);
+    }
+    .ronda-cab .tit { font-family: 'DM Serif Display', serif; font-size: 1.35rem; line-height: 1.2; }
+    .ronda-cab .der { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .pill {
+      font-size: 0.75rem; padding: 3px 10px; border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
+      background: color-mix(in srgb, var(--c) 14%, transparent);
+      color: color-mix(in srgb, var(--c) 55%, #ffffff);
+      --c: var(--reg-neu);
+    }
+    .pill.p-esp { --c: var(--reg-esp); }
+    .pill.p-mex { --c: var(--reg-mex); }
+    .pill.p-rpl { --c: var(--reg-rpl); }
+    .pill.p-modo { --c: var(--accent-beta); }
+
+    /* ── Lámina + ranuras ───────────────────────── */
+    .lamina-figure {
+      position: relative; margin-bottom: 14px;
+      border: 1px solid var(--border); border-radius: 12px;
+      background: var(--lamina-bg); overflow: hidden; line-height: 0;
+    }
+    .lamina-plate { position: relative; display: block; }
+    .lamina-plate img { display: block; width: 100%; height: auto; }
+
+    .pin {
+      position: absolute; transform: translate(-50%, -50%);
+      width: 24px; height: 24px; border-radius: 50%;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(10,22,40,0.9); border: 2px solid var(--accent);
+      color: #fff; font-size: 0.72rem; font-weight: 700; line-height: 1;
+      font-family: 'Outfit', sans-serif;
+    }
+    .pin.ok  { border-color: var(--ok); }
+    .pin.art { border-color: var(--tibio); }
+    .pin.mal { border-color: var(--mal); }
+
+    .ranura {
+      position: absolute; transform: translate(-50%, 0);
+      min-width: 108px; max-width: 190px;
+      padding: 4px 9px; border-radius: 8px;
+      background: rgba(10,22,40,0.86);
+      border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 500;
+      line-height: 1.3; text-align: center; cursor: pointer;
+      transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    }
+    .ranura .rn {
+      font-size: 0.6rem; font-weight: 700; color: var(--accent);
+      display: block; opacity: 0.8;
+    }
+    .ranura .rtxt { display: block; word-break: break-word; }
+    .ranura.vacia .rtxt { color: var(--text-muted); font-style: italic; }
+    .ranura.llena { border-style: solid; background: rgba(10,22,40,0.95); }
+    .ranura.blanco {
+      border-color: var(--accent-beta);
+      box-shadow: 0 0 0 3px rgba(192,132,252,0.25);
+    }
+    .ranura.ok  { border-color: var(--ok);    box-shadow: 0 0 0 2px rgba(52,211,153,0.22); }
+    .ranura.art { border-color: var(--tibio); box-shadow: 0 0 0 2px rgba(251,191,36,0.22); }
+    .ranura.mal { border-color: var(--mal);   box-shadow: 0 0 0 2px rgba(248,113,113,0.22); }
+
+    .ranura input {
+      width: 100%; background: transparent; border: none; outline: none;
+      color: var(--text-primary); font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem; text-align: center;
+    }
+    .ranura input::placeholder { color: var(--text-muted); font-style: italic; }
+
+    /* Lista de ranuras (pantalla angosta) */
+    .ranuras-lista { display: none; margin-bottom: 14px; }
+    .ranuras-lista .fila {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 4px; border-bottom: 1px solid var(--border);
+    }
+    .ranuras-lista .fila:last-child { border-bottom: none; }
+    .ranuras-lista .fnum {
+      flex: 0 0 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--accent); color: var(--text-primary);
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .ranuras-lista .ranura {
+      position: static; transform: none; flex: 1; max-width: none; text-align: left;
+      padding: 8px 12px;
+    }
+    .ranuras-lista .ranura input { text-align: left; }
+    .ranuras-lista .ranura .rn { display: none; }
+
+    body.angosto .pin { display: flex; }
+    body.angosto .ranuras-lista { display: block; }
+
+    /* ── Mazo de cartas ─────────────────────────── */
+    .mazo-cab {
+      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+      margin: 18px 2px 8px;
+    }
+    .mazo-cab .t { font-family: 'DM Serif Display', serif; font-size: 1.15rem; }
+    .mazo-cab .d { font-size: 0.83rem; color: var(--text-muted); }
+    .mazo {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px; min-height: 70px;
+    }
+    .carta {
+      padding: 7px 13px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--bg-input);
+      color: var(--text-primary); font-family: 'Outfit', sans-serif;
+      font-size: 0.86rem; cursor: grab; user-select: none;
+      touch-action: none; transition: all 0.15s;
+    }
+    .carta:hover { border-color: var(--accent-beta); background: var(--bg-card-hover); }
+    .carta.sel {
+      border-color: var(--accent-beta); background: rgba(192,132,252,0.18);
+      box-shadow: 0 0 0 3px rgba(192,132,252,0.2);
+    }
+    .carta.usada { display: none; }
+    .fantasma {
+      position: fixed; z-index: 999; pointer-events: none;
+      padding: 7px 13px; border-radius: 999px;
+      border: 1px solid var(--accent-beta); background: rgba(17,29,53,0.97);
+      color: var(--text-primary); font-size: 0.86rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
+    .barra-accion {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      margin-top: 18px;
+    }
+    .barra-accion .cuenta { font-size: 0.85rem; color: var(--text-muted); margin-left: auto; }
+
+    /* ── Correcciones ───────────────────────────── */
+    .correcciones { margin-top: 22px; }
+    .corr-cab {
+      font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 4px;
+    }
+    .corr-sub { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 16px; }
+    .corr-row {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 13px 14px; border-bottom: 1px solid var(--border);
+    }
+    .corr-row:last-child { border-bottom: none; }
+    .corr-marca {
+      flex: 0 0 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700;
+    }
+    .corr-marca.ok  { background: rgba(52,211,153,0.16); color: var(--ok); }
+    .corr-marca.art { background: rgba(251,191,36,0.16); color: var(--tibio); }
+    .corr-marca.mal { background: rgba(248,113,113,0.16); color: var(--mal); }
+    .corr-main { flex: 1; min-width: 0; }
+    .corr-term {
+      font-family: 'DM Serif Display', serif; font-size: 1.08rem; line-height: 1.35;
+    }
+    .corr-term .en {
+      font-family: 'Outfit', sans-serif; font-size: 0.82rem;
+      color: var(--text-muted); margin-left: 9px;
+    }
+    .corr-diste { font-size: 0.87rem; color: var(--text-secondary); margin-top: 4px; }
+    .corr-diste b { color: var(--text-primary); font-weight: 600; }
+    .corr-regs { margin-top: 6px; display: flex; gap: 7px; flex-wrap: wrap; }
+    .reg-chip {
+      font-size: 0.75rem; padding: 2px 8px; border-radius: 5px;
+      border: 1px solid color-mix(in srgb, var(--reg) 45%, transparent);
+      background: color-mix(in srgb, var(--reg) 14%, transparent);
+      color: color-mix(in srgb, var(--reg) 50%, #ffffff);
+      --reg: var(--reg-neu);
+    }
+    .reg-chip b { font-weight: 700; opacity: 0.8; margin-right: 4px; font-size: 0.68rem; }
+    .reg-chip.c-esp { --reg: var(--reg-esp); }
+    .reg-chip.c-mex { --reg: var(--reg-mex); }
+    .reg-chip.c-rpl { --reg: var(--reg-rpl); }
+    .reg-chip.c-neu { --reg: var(--reg-neu); }
+    .corr-nota {
+      font-size: 0.86rem; color: var(--text-secondary); line-height: 1.6; margin-top: 6px;
+    }
+    .corr-choque {
+      font-size: 0.86rem; color: var(--accent-gamma); line-height: 1.6; margin-top: 6px;
+    }
+
+    .marcador {
+      text-align: center; padding: 26px 20px; margin-bottom: 16px;
+      border: 1px solid var(--border); border-radius: 14px;
+      background: linear-gradient(180deg, rgba(74,144,217,0.07), rgba(74,144,217,0));
+    }
+    .marcador .puntaje {
+      font-family: 'DM Serif Display', serif; font-size: 2.6rem; line-height: 1;
+    }
+    .marcador .detalle { font-size: 0.9rem; color: var(--text-muted); margin-top: 8px; }
+
+    /* ── Estadísticas ───────────────────────────── */
+    .est-fila {
+      display: flex; align-items: center; gap: 12px;
+      padding: 9px 2px; border-bottom: 1px solid var(--border); font-size: 0.88rem;
+    }
+    .est-fila:last-child { border-bottom: none; }
+    .est-fila .et { flex: 1; min-width: 0; color: var(--text-secondary); }
+    .est-fila .et b { color: var(--text-primary); font-weight: 600; }
+    .est-fila .val { color: var(--text-muted); font-size: 0.82rem; flex-shrink: 0; }
+    .barrita {
+      flex: 0 0 110px; height: 6px; border-radius: 3px;
+      background: rgba(255,255,255,0.07); overflow: hidden;
+    }
+    .barrita i { display: block; height: 100%; background: var(--ok); border-radius: 3px; }
+    .barrita i.flojo { background: var(--tibio); }
+    .barrita i.malo  { background: var(--mal); }
+
+    .vacio { font-size: 0.88rem; color: var(--text-muted); font-style: italic; padding: 8px 2px; }
+
+    .est-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+
+    .escape-row {
+      display: flex; gap: 12px; align-items: flex-start;
+      padding: 11px 2px; border-bottom: 1px solid var(--border);
+    }
+    .escape-row:last-child { border-bottom: none; }
+    .escape-row .cnt {
+      flex: 0 0 auto; font-size: 0.75rem; padding: 2px 8px; border-radius: 5px;
+      background: rgba(248,113,113,0.14); color: var(--mal);
+      border: 1px solid rgba(248,113,113,0.3);
+    }
+    .escape-row a { color: var(--accent); text-decoration: none; }
+    .escape-row a:hover { text-decoration: underline; }
+
+    @media (max-width: 700px) {
+      body { padding: 24px 10px 70px; }
+      .card { padding: 18px 16px; }
+      .ronda-cab { padding: 12px 14px; }
+      .ronda-cab .der { margin-left: 0; width: 100%; }
+      .opt { flex: 1 1 100%; }
+      .barrita { flex: 0 0 70px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="back-nav">← Volver al menú</a>
+
+  <div class="title-card">
+    <div class="overline">Práctica · Contenedores</div>
+    <h1>¿Cómo se llama cada cosa?</h1>
+    <div class="ornament"></div>
+    <div class="sub">Nueve láminas, setenta y cuatro objetos. Todo se queda en este dispositivo.</div>
+  </div>
+
+  <!-- ══════════════ PANTALLA: INICIO ══════════════ -->
+  <div id="pantalla-inicio">
+
+    <div class="card">
+      <div class="card-title">Modo</div>
+      <div class="card-sub">Las dos formas apuntan a lo mismo: ver el objeto y ponerle el nombre.</div>
+      <div class="opciones" id="sel-modo">
+        <button class="opt active" data-modo="arrastrar">
+          <span class="opt-t">Arrastrar</span>
+          <span class="opt-d">Veinte cartas abajo, nueve ranuras arriba. Sobran señuelos. Arrastrá o tocá una carta y después la ranura.</span>
+        </button>
+        <button class="opt" data-modo="escribir">
+          <span class="opt-t">Escribir</span>
+          <span class="opt-d">Ranuras en blanco sobre la lámina. El artículo es opcional; el género equivocado avisa pero no reprueba.</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Región</div>
+      <div class="card-sub">
+        En <strong>General</strong> vale cualquier variante regional. Si elegís una región,
+        solo se acepta la forma de esa región — y las otras dos aparecen entre los señuelos.
+      </div>
+      <div class="region-bar" id="sel-region">
+        <button class="region-btn active" data-reg="general">General</button>
+        <button class="region-btn" data-reg="esp">España</button>
+        <button class="region-btn" data-reg="mex">México</button>
+        <button class="region-btn" data-reg="rpl">Rioplatense</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Empezar por</div>
+      <div class="card-sub">Al terminar una lámina podés pasar a otra al azar o cortar ahí.</div>
+      <div class="lam-chips" id="sel-lamina"></div>
+    </div>
+
+    <button class="btn-grande" id="btn-empezar">Empezar →</button>
+
+    <!-- Estadísticas -->
+    <div class="card" style="margin-top:26px">
+      <div class="card-title">Cómo vengo</div>
+      <div class="card-sub">Guardado en este navegador, en esta computadora. Nada sale de acá.</div>
+      <div class="est-tabs">
+        <button class="btn primario" data-est="laminas">Por lámina</button>
+        <button class="btn" data-est="escapan">Las que se me escapan</button>
+        <button class="btn" data-est="regiones">Por región</button>
+      </div>
+      <div id="est-cuerpo"></div>
+      <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn peligro" id="btn-reset">Borrar todas las estadísticas</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ PANTALLA: RONDA ══════════════ -->
+  <div id="pantalla-ronda" hidden>
+
+    <div class="ronda-cab">
+      <div>
+        <div class="num" id="r-num">Lámina 01</div>
+        <div class="tit" id="r-tit">—</div>
+      </div>
+      <div class="der">
+        <span class="pill p-modo" id="r-modo">Arrastrar</span>
+        <span class="pill" id="r-region">General</span>
+        <button class="btn" id="btn-salir">Salir</button>
+      </div>
+    </div>
+
+    <figure class="lamina-figure">
+      <div class="lamina-plate" id="plate">
+        <img id="r-img" src="" alt="">
+      </div>
+    </figure>
+
+    <div class="ranuras-lista" id="ranuras-lista"></div>
+
+    <div id="zona-mazo">
+      <div class="mazo-cab">
+        <span class="t">Las cartas</span>
+        <span class="d" id="mazo-ayuda">Arrastrá una carta a su ranura, o tocala y después tocá la ranura. Tocá una ranura llena para devolver la carta.</span>
+      </div>
+      <div class="mazo" id="mazo"></div>
+    </div>
+
+    <div class="barra-accion">
+      <button class="btn primario" id="btn-comprobar">Comprobar</button>
+      <button class="btn" id="btn-limpiar">Vaciar</button>
+      <span class="cuenta" id="cuenta">0 de 0</span>
+    </div>
+
+    <div class="correcciones" id="correcciones" hidden></div>
+
+    <div class="barra-accion" id="barra-siguiente" hidden>
+      <button class="btn primario" id="btn-otra">Otra lámina →</button>
+      <button class="btn" id="btn-terminar">Terminar</button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ PANTALLA: FIN ══════════════ -->
+  <div id="pantalla-fin" hidden>
+    <div class="marcador">
+      <div class="puntaje" id="fin-puntaje">—</div>
+      <div class="detalle" id="fin-detalle"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">La sesión</div>
+      <div id="fin-laminas"></div>
+    </div>
+    <div class="barra-accion">
+      <button class="btn primario" id="btn-volver-inicio">Volver al inicio</button>
+      <a class="btn" href="../topics/contenedores.html">Ir a la página de referencia</a>
+    </div>
+  </div>
+
+</div>
+
+<script src="../datos/contenedores/contenedores-data.js"></script>
+<script>
+/* ════════════════════════════════════════════════════════════
+   Práctica de contenedores.
+   Dos modos sobre la misma lámina: arrastrar cartas o escribir.
+   Sin Drive, sin contraseña, sin TTS en los ítems
+   (04-app-standards §8.3). Todo el estado vive en localStorage.
+   ════════════════════════════════════════════════════════════ */
+
+const REGIONES = { esp: 'España', mex: 'México', rpl: 'Rioplatense' };
+const ABREV    = { esp: 'ES', mex: 'MX', rpl: 'RPl' };
+const CLAVE_LS = 'contenedores_quiz_v1';
+const CARTAS_POR_MAZO = 20;
+
+/* Señuelos que no son contenedores: los parónimos de §7 de la página.
+   Acá no se producen, solo se descartan — que es justamente el punto. */
+const SENUELOS_EXTRA = ['la bota', 'la cuba', 'la saca', 'el frigorífico'];
+
+/* ── Utilidades de datos ─────────────────────────────────── */
+
+function formasDe(item) {
+  const s = [];
+  [item.neutral, item.esp, item.mex, item.rpl].forEach(v => {
+    if (v && !s.includes(v)) s.push(v);
+  });
+  return s;
+}
+
+function regionesDe(item, forma) {
+  return ['esp', 'mex', 'rpl'].filter(r => item[r] === forma);
+}
+
+function aceptadasDe(item, region) {
+  return region === 'general' ? formasDe(item) : [item[region]];
+}
+
+function objetivoDe(item, region) {
+  if (region !== 'general') return item[region];
+  const f = formasDe(item);
+  return f[Math.floor(Math.random() * f.length)];
+}
+
+function itemsDe(n) { return CONTENEDORES.filter(c => c.lamina === n); }
+function laminaDe(n) { return LAMINAS.find(l => l.n === n); }
+
+function mezclar(a) {
+  const x = a.slice();
+  for (let i = x.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [x[i], x[j]] = [x[j], x[i]];
+  }
+  return x;
+}
+
+/* Normalización para escribir: minúsculas, sin tildes, sin espacios de más.
+   Las tildes no se penalizan — no es lo que se está midiendo acá. */
+function norm(s) {
+  return (s || '').toLowerCase().trim()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ');
+}
+function partir(s) {
+  const m = norm(s).match(/^(el|la|los|las|un|una)\s+(.+)$/);
+  return m ? { art: m[1], base: m[2] } : { art: null, base: norm(s) };
+}
+
+/* ── Estado guardado ─────────────────────────────────────── */
+
+function estadoVacio() {
+  return {
+    v: 1,
+    items: {},                       /* id -> { intentos, fallos } */
+    laminas: {},                     /* n  -> { corridas, ok, total } */
+    regiones: { esp: { ok: 0, mal: 0 }, mex: { ok: 0, mal: 0 }, rpl: { ok: 0, mal: 0 } }
+  };
+}
+function cargar() {
+  try {
+    const raw = localStorage.getItem(CLAVE_LS);
+    if (!raw) return estadoVacio();
+    const d = JSON.parse(raw);
+    if (!d || d.v !== 1) return estadoVacio();
+    d.items = d.items || {};
+    d.laminas = d.laminas || {};
+    d.regiones = d.regiones || estadoVacio().regiones;
+    return d;
+  } catch (e) { return estadoVacio(); }
+}
+function guardar(d) {
+  try { localStorage.setItem(CLAVE_LS, JSON.stringify(d)); } catch (e) {}
+}
+
+let datos = cargar();
+
+/* ── Configuración de la sesión ──────────────────────────── */
+
+const config = { modo: 'arrastrar', region: 'general', laminaInicial: 0 };
+const sesion = { vistas: [], resultados: [] };
+
+/* Ronda activa */
+let ronda = null;
+/*  {
+      n, items, orden,
+      mazo:      [{ txt, id, usadaEn }],
+      respuestas:{ [itemId]: { carta: cardId|null, texto: '' } },
+      corregida: false
+    }
+*/
+
+/* ════════════════════════════════════════════════════════════
+   PANTALLA DE INICIO
+   ════════════════════════════════════════════════════════════ */
+
+document.querySelectorAll('#sel-modo .opt').forEach(b => {
+  b.addEventListener('click', () => {
+    config.modo = b.dataset.modo;
+    document.querySelectorAll('#sel-modo .opt').forEach(x =>
+      x.classList.toggle('active', x === b));
+  });
+});
+
+document.querySelectorAll('#sel-region .region-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    config.region = b.dataset.reg;
+    document.querySelectorAll('#sel-region .region-btn').forEach(x =>
+      x.classList.toggle('active', x === b));
+  });
+});
+
+(function construirChipsLamina() {
+  const cont = document.getElementById('sel-lamina');
+  const mk = (valor, texto) => {
+    const b = document.createElement('button');
+    b.className = 'lam-chip-btn' + (valor === 0 ? ' active' : '');
+    b.dataset.lam = valor;
+    b.textContent = texto;
+    b.addEventListener('click', () => {
+      config.laminaInicial = valor;
+      cont.querySelectorAll('.lam-chip-btn').forEach(x =>
+        x.classList.toggle('active', x === b));
+    });
+    cont.appendChild(b);
+  };
+  mk(0, 'Al azar');
+  LAMINAS.forEach(l => mk(l.n, l.n + ' · ' + l.titulo));
+})();
+
+/* ── Estadísticas ────────────────────────────────────────── */
+
+let estVista = 'laminas';
+
+document.querySelectorAll('.est-tabs .btn').forEach(b => {
+  b.addEventListener('click', () => {
+    estVista = b.dataset.est;
+    document.querySelectorAll('.est-tabs .btn').forEach(x =>
+      x.classList.toggle('primario', x === b));
+    pintarEstadisticas();
+  });
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if (!confirm('¿Borrar todas las estadísticas de este dispositivo? No se puede deshacer.')) return;
+  datos = estadoVacio();
+  guardar(datos);
+  pintarEstadisticas();
+});
+
+function pintarEstadisticas() {
+  const c = document.getElementById('est-cuerpo');
+  c.innerHTML = '';
+
+  if (estVista === 'laminas') {
+    const hay = LAMINAS.some(l => datos.laminas[l.n]);
+    if (!hay) { c.innerHTML = '<div class="vacio">Todavía no hiciste ninguna lámina.</div>'; return; }
+    LAMINAS.forEach(l => {
+      const d = datos.laminas[l.n];
+      const fila = document.createElement('div');
+      fila.className = 'est-fila';
+      if (!d) {
+        fila.innerHTML =
+          '<span class="et"><b>' + l.n + '</b> · ' + l.titulo + '</span>'
+          + '<span class="val">sin hacer</span>';
+      } else {
+        const pct = d.total ? Math.round(100 * d.ok / d.total) : 0;
+        const clase = pct >= 85 ? '' : (pct >= 60 ? 'flojo' : 'malo');
+        fila.innerHTML =
+          '<span class="et"><b>' + l.n + '</b> · ' + l.titulo + '</span>'
+          + '<span class="barrita"><i class="' + clase + '" style="width:' + pct + '%"></i></span>'
+          + '<span class="val">' + d.ok + '/' + d.total + ' · '
+          + d.corridas + (d.corridas === 1 ? ' corrida' : ' corridas') + '</span>';
+      }
+      c.appendChild(fila);
+    });
+    return;
+  }
+
+  if (estVista === 'escapan') {
+    const lista = CONTENEDORES
+      .map(it => ({ it, d: datos.items[it.id] }))
+      .filter(x => x.d && x.d.fallos >= 2)
+      .sort((a, b) => b.d.fallos - a.d.fallos);
+    if (!lista.length) {
+      c.innerHTML = '<div class="vacio">Nada fallado dos veces o más. Todavía.</div>';
+      return;
+    }
+    lista.forEach(({ it, d }) => {
+      const row = document.createElement('div');
+      row.className = 'escape-row';
+      row.innerHTML =
+          '<span class="cnt">' + d.fallos + '/' + d.intentos + '</span>'
+        + '<div style="flex:1;min-width:0">'
+        +   '<div class="corr-term">' + (it.neutral || 'sin forma neutra')
+        +     '<span class="en">' + it.en + '</span></div>'
+        +   '<div class="corr-regs">' + chipsDe(it) + '</div>'
+        +   '<div style="margin-top:5px;font-size:0.82rem">'
+        +     '<a href="../topics/contenedores.html#lamina-' + it.lamina + '">'
+        +     'Lámina ' + it.lamina + ' · ' + laminaDe(it.lamina).titulo + ' →</a></div>'
+        + '</div>';
+      c.appendChild(row);
+    });
+    return;
+  }
+
+  /* regiones */
+  const total = ['esp', 'mex', 'rpl'].reduce((s, r) =>
+    s + datos.regiones[r].ok + datos.regiones[r].mal, 0);
+  if (!total) {
+    c.innerHTML = '<div class="vacio">Esto se llena cuando corrés una lámina con una región '
+      + 'forzada. En General no se mide nada por región.</div>';
+    return;
+  }
+  ['esp', 'mex', 'rpl'].forEach(r => {
+    const d = datos.regiones[r];
+    const n = d.ok + d.mal;
+    const pct = n ? Math.round(100 * d.ok / n) : 0;
+    const clase = pct >= 85 ? '' : (pct >= 60 ? 'flojo' : 'malo');
+    const fila = document.createElement('div');
+    fila.className = 'est-fila';
+    fila.innerHTML =
+        '<span class="et"><b>' + REGIONES[r] + '</b></span>'
+      + '<span class="barrita"><i class="' + clase + '" style="width:' + pct + '%"></i></span>'
+      + '<span class="val">' + (n ? pct + '% · ' + n + ' ítems' : 'sin datos') + '</span>';
+    c.appendChild(fila);
+  });
+}
+
+function chipsDe(item) {
+  if (item.contested) {
+    return ['esp', 'mex', 'rpl'].map(r =>
+      '<span class="reg-chip c-' + r + '"><b>' + ABREV[r] + '</b>' + item[r] + '</span>').join('');
+  }
+  const out = ['<span class="reg-chip c-neu"><b>NEU</b>' + item.neutral + '</span>'];
+  ['esp', 'mex', 'rpl'].forEach(r => {
+    if (item[r] !== item.neutral) {
+      out.push('<span class="reg-chip c-' + r + '"><b>' + ABREV[r] + '</b>' + item[r] + '</span>');
+    }
+  });
+  return out.join('');
+}
+
+pintarEstadisticas();
+
+/* ════════════════════════════════════════════════════════════
+   ARRANQUE DE UNA RONDA
+   ════════════════════════════════════════════════════════════ */
+
+document.getElementById('btn-empezar').addEventListener('click', () => {
+  sesion.vistas = [];
+  sesion.resultados = [];
+  const n = config.laminaInicial || elegirLaminaAlAzar();
+  iniciarRonda(n);
+});
+
+function elegirLaminaAlAzar() {
+  let candidatas = LAMINAS.map(l => l.n).filter(n => !sesion.vistas.includes(n));
+  if (!candidatas.length) candidatas = LAMINAS.map(l => l.n);
+  return candidatas[Math.floor(Math.random() * candidatas.length)];
+}
+
+function mostrar(cual) {
+  document.getElementById('pantalla-inicio').hidden = cual !== 'inicio';
+  document.getElementById('pantalla-ronda').hidden  = cual !== 'ronda';
+  document.getElementById('pantalla-fin').hidden    = cual !== 'fin';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function iniciarRonda(n) {
+  const lam = laminaDe(n);
+  const items = itemsDe(n);
+
+  /* Snapshot al arrancar (04-app-standards §8.1): el mazo y los objetivos
+     se congelan acá y no se vuelven a sortear a mitad de la ronda. */
+  ronda = {
+    n, items,
+    mazo: [],
+    respuestas: {},
+    corregida: false
+  };
+  items.forEach(it => { ronda.respuestas[it.id] = { carta: null, texto: '' }; });
+
+  if (config.modo === 'arrastrar') ronda.mazo = armarMazo(items, config.region);
+
+  if (!sesion.vistas.includes(n)) sesion.vistas.push(n);
+
+  document.getElementById('r-num').textContent = 'Lámina ' + String(n).padStart(2, '0');
+  document.getElementById('r-tit').textContent = lam.titulo;
+  document.getElementById('r-modo').textContent = config.modo === 'arrastrar' ? 'Arrastrar' : 'Escribir';
+
+  const pr = document.getElementById('r-region');
+  pr.textContent = config.region === 'general' ? 'General' : REGIONES[config.region];
+  pr.className = 'pill' + (config.region === 'general' ? '' : ' p-' + config.region);
+
+  const img = document.getElementById('r-img');
+  img.src = '../assets/contenedores/' + lam.slug + '.webp';
+  img.alt = 'Lámina: ' + lam.titulo;
+
+  document.getElementById('zona-mazo').hidden = config.modo !== 'arrastrar';
+  document.getElementById('correcciones').hidden = true;
+  document.getElementById('correcciones').innerHTML = '';
+  document.getElementById('barra-siguiente').hidden = true;
+  document.getElementById('btn-comprobar').disabled = false;
+  document.getElementById('btn-limpiar').disabled = false;
+
+  render();
+  mostrar('ronda');
+}
+
+/* ── El mazo ─────────────────────────────────────────────── */
+
+function armarMazo(items, region) {
+  const cartas = [];
+  const objetivos = [];
+
+  /* Una carta por objeto. Si dos objetos de la lámina comparten forma
+     — la tetera, el baúl, la cartera — salen dos cartas idénticas, y eso
+     es exactamente lo que hay que ver. */
+  items.forEach(it => {
+    const t = objetivoDe(it, region);
+    objetivos.push(t);
+    cartas.push(t);
+  });
+
+  const pool = [];
+  const agregar = w => {
+    if (!w) return;
+    if (objetivos.includes(w)) return;     /* ya está como objetivo */
+    if (pool.includes(w)) return;
+    pool.push(w);
+  };
+
+  /* 1. Las otras formas de estos mismos objetos. Con región forzada son
+        las trampas buenas: el cubo y el balde al lado de la cubeta. */
+  items.forEach(it => formasDe(it).forEach(agregar));
+
+  /* 2. Parónimos y falsos amigos que no son contenedores. */
+  mezclar(SENUELOS_EXTRA).forEach(agregar);
+
+  /* 3. Lo que haga falta, del resto de las láminas. */
+  mezclar(CONTENEDORES.filter(c => c.lamina !== items[0].lamina))
+    .forEach(it => formasDe(it).forEach(agregar));
+
+  let i = 0;
+  while (cartas.length < CARTAS_POR_MAZO && i < pool.length) cartas.push(pool[i++]);
+
+  return mezclar(cartas).map((txt, k) => ({ txt, id: 'c' + k, usadaEn: null }));
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDER
+   ════════════════════════════════════════════════════════════ */
+
+function esAngosto() { return window.matchMedia('(max-width: 700px)').matches; }
+
+function render() {
+  document.body.classList.toggle('angosto', esAngosto());
+  renderRanuras();
+  renderMazo();
+  actualizarCuenta();
+}
+
+function renderRanuras() {
+  const plate = document.getElementById('plate');
+  const lista = document.getElementById('ranuras-lista');
+  plate.querySelectorAll('.ranura, .pin').forEach(e => e.remove());
+  lista.innerHTML = '';
+
+  const angosto = esAngosto();
+
+  ronda.items.forEach((item, idx) => {
+    const num = idx + 1;
+
+    /* El alfiler numerado va siempre sobre la lámina; en pantalla ancha
+       está oculto por CSS y la ranura ocupa su lugar. */
+    const pin = document.createElement('span');
+    pin.className = 'pin';
+    pin.dataset.id = item.id;
+    pin.style.left = item.x + '%';
+    pin.style.top  = item.y + '%';
+    pin.textContent = num;
+    if (ronda.corregida && ronda.marcas && ronda.marcas[item.id]) {
+      pin.classList.add(ronda.marcas[item.id]);
+    }
+    plate.appendChild(pin);
+
+    const r = crearRanura(item, num);
+
+    if (angosto) {
+      const fila = document.createElement('div');
+      fila.className = 'fila';
+      const n = document.createElement('span');
+      n.className = 'fnum';
+      n.textContent = num;
+      fila.appendChild(n);
+      fila.appendChild(r);
+      lista.appendChild(fila);
+    } else {
+      r.style.left = item.x + '%';
+      r.style.top  = item.y + '%';
+      plate.appendChild(r);
+    }
+  });
+}
+
+function crearRanura(item, num) {
+  const r = document.createElement('div');
+  r.className = 'ranura';
+  r.dataset.id = item.id;
+
+  const etq = document.createElement('span');
+  etq.className = 'rn';
+  etq.textContent = num;
+  r.appendChild(etq);
+
+  const resp = ronda.respuestas[item.id];
+
+  if (config.modo === 'escribir') {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.value = resp.texto;
+    inp.placeholder = '…';
+    inp.autocomplete = 'off';
+    inp.spellcheck = false;
+    inp.disabled = ronda.corregida;
+    inp.addEventListener('input', () => {
+      ronda.respuestas[item.id].texto = inp.value;
+      r.classList.toggle('vacia', !inp.value.trim());
+      actualizarCuenta();
+    });
+    inp.addEventListener('keydown', e => {
+      if (e.key !== 'Enter') return;
+      e.preventDefault();
+      const todos = Array.from(document.querySelectorAll('.ranura input'));
+      const i = todos.indexOf(inp);
+      if (i > -1 && i < todos.length - 1) todos[i + 1].focus();
+      else comprobar();
+    });
+    r.appendChild(inp);
+    r.classList.toggle('vacia', !resp.texto.trim());
+    r.classList.toggle('llena', !!resp.texto.trim());
+  } else {
+    const t = document.createElement('span');
+    t.className = 'rtxt';
+    const carta = resp.carta ? ronda.mazo.find(c => c.id === resp.carta) : null;
+    t.textContent = carta ? carta.txt : '—';
+    r.appendChild(t);
+    r.classList.toggle('vacia', !carta);
+    r.classList.toggle('llena', !!carta);
+    r.addEventListener('click', () => {
+      if (ronda.corregida) return;
+      if (resp.carta) { devolverCarta(item.id); return; }
+      if (cartaSeleccionada) { colocarCarta(cartaSeleccionada, item.id); }
+    });
+  }
+
+  if (ronda.corregida && ronda.marcas && ronda.marcas[item.id]) {
+    r.classList.add(ronda.marcas[item.id]);
+  }
+  return r;
+}
+
+function renderMazo() {
+  const cont = document.getElementById('mazo');
+  cont.innerHTML = '';
+  if (config.modo !== 'arrastrar') return;
+
+  ronda.mazo.forEach(c => {
+    const b = document.createElement('div');
+    b.className = 'carta' + (c.usadaEn ? ' usada' : '') + (cartaSeleccionada === c.id ? ' sel' : '');
+    b.dataset.id = c.id;
+    b.textContent = c.txt;
+    if (!ronda.corregida) engancharArrastre(b, c);
+    cont.appendChild(b);
+  });
+
+  if (ronda.mazo.every(c => c.usadaEn)) {
+    const v = document.createElement('div');
+    v.className = 'vacio';
+    v.textContent = 'No queda ninguna carta suelta.';
+    cont.appendChild(v);
+  }
+}
+
+function actualizarCuenta() {
+  const total = ronda.items.length;
+  let puestas = 0;
+  ronda.items.forEach(it => {
+    const r = ronda.respuestas[it.id];
+    if (config.modo === 'escribir' ? r.texto.trim() : r.carta) puestas++;
+  });
+  document.getElementById('cuenta').textContent = puestas + ' de ' + total;
+}
+
+/* ════════════════════════════════════════════════════════════
+   COLOCAR CARTAS — puntero (mouse + tacto) y toque-toque
+   ════════════════════════════════════════════════════════════ */
+
+let cartaSeleccionada = null;
+let arrastre = null;
+
+function engancharArrastre(el, carta) {
+  el.addEventListener('pointerdown', ev => {
+    if (ronda.corregida) return;
+    ev.preventDefault();
+    const r = el.getBoundingClientRect();
+    arrastre = {
+      carta, el, movido: false,
+      dx: ev.clientX - r.left, dy: ev.clientY - r.top,
+      fantasma: null
+    };
+    el.setPointerCapture(ev.pointerId);
+  });
+
+  el.addEventListener('pointermove', ev => {
+    if (!arrastre || arrastre.el !== el) return;
+    if (!arrastre.movido) {
+      const r = el.getBoundingClientRect();
+      if (Math.abs(ev.clientX - r.left - arrastre.dx) < 6 &&
+          Math.abs(ev.clientY - r.top  - arrastre.dy) < 6) return;
+      arrastre.movido = true;
+      const f = document.createElement('div');
+      f.className = 'fantasma';
+      f.textContent = carta.txt;
+      document.body.appendChild(f);
+      arrastre.fantasma = f;
+    }
+    arrastre.fantasma.style.left = (ev.clientX - arrastre.dx) + 'px';
+    arrastre.fantasma.style.top  = (ev.clientY - arrastre.dy) + 'px';
+    marcarBlanco(ranuraEn(ev.clientX, ev.clientY));
+  });
+
+  const soltar = ev => {
+    if (!arrastre || arrastre.el !== el) return;
+    const movido = arrastre.movido;
+    const destino = movido ? ranuraEn(ev.clientX, ev.clientY) : null;
+    if (arrastre.fantasma) arrastre.fantasma.remove();
+    arrastre = null;
+    marcarBlanco(null);
+
+    if (movido) {
+      if (destino) colocarCarta(carta.id, destino.dataset.id);
+      return;
+    }
+    /* Un toque sin movimiento selecciona la carta. */
+    cartaSeleccionada = cartaSeleccionada === carta.id ? null : carta.id;
+    renderMazo();
+  };
+  el.addEventListener('pointerup', soltar);
+  el.addEventListener('pointercancel', () => {
+    if (arrastre && arrastre.fantasma) arrastre.fantasma.remove();
+    arrastre = null; marcarBlanco(null);
+  });
+}
+
+function ranuraEn(x, y) {
+  const todas = document.querySelectorAll('.ranura');
+  for (const r of todas) {
+    const b = r.getBoundingClientRect();
+    if (x >= b.left && x <= b.right && y >= b.top && y <= b.bottom) return r;
+  }
+  return null;
+}
+
+function marcarBlanco(r) {
+  document.querySelectorAll('.ranura.blanco').forEach(x => x.classList.remove('blanco'));
+  if (r) r.classList.add('blanco');
+}
+
+function colocarCarta(cartaId, itemId) {
+  const carta = ronda.mazo.find(c => c.id === cartaId);
+  if (!carta) return;
+
+  /* Si la ranura ya tenía carta, esa vuelve al mazo. */
+  const previa = ronda.respuestas[itemId].carta;
+  if (previa) {
+    const p = ronda.mazo.find(c => c.id === previa);
+    if (p) p.usadaEn = null;
+  }
+  /* Si la carta estaba en otra ranura, se libera esa. */
+  if (carta.usadaEn) ronda.respuestas[carta.usadaEn].carta = null;
+
+  carta.usadaEn = itemId;
+  ronda.respuestas[itemId].carta = cartaId;
+  cartaSeleccionada = null;
+  render();
+}
+
+function devolverCarta(itemId) {
+  const id = ronda.respuestas[itemId].carta;
+  if (!id) return;
+  const c = ronda.mazo.find(x => x.id === id);
+  if (c) c.usadaEn = null;
+  ronda.respuestas[itemId].carta = null;
+  render();
+}
+
+document.getElementById('btn-limpiar').addEventListener('click', () => {
+  if (ronda.corregida) return;
+  ronda.items.forEach(it => { ronda.respuestas[it.id] = { carta: null, texto: '' }; });
+  ronda.mazo.forEach(c => { c.usadaEn = null; });
+  cartaSeleccionada = null;
+  render();
+});
+
+document.getElementById('btn-salir').addEventListener('click', () => mostrar('inicio'));
+
+/* ════════════════════════════════════════════════════════════
+   CORRECCIÓN
+   ════════════════════════════════════════════════════════════ */
+
+function calificar(item, dado) {
+  /* Devuelve { marca, nota } donde marca ∈ ok | art | mal */
+  if (!dado || !dado.trim()) return { marca: 'mal', nota: 'en blanco' };
+
+  const q = partir(dado);
+  const aceptadas = aceptadasDe(item, config.region);
+
+  for (const f of aceptadas) {
+    const p = partir(f);
+    if (p.base !== q.base) continue;
+    if (q.art === null || q.art === p.art) return { marca: 'ok', forma: f };
+    return { marca: 'art', forma: f, nota: 'el artículo: va <b>' + f.split(' ')[0] + '</b>' };
+  }
+
+  /* ¿Es la forma de otra región del mismo objeto? */
+  if (config.region !== 'general') {
+    for (const r of ['esp', 'mex', 'rpl']) {
+      if (r === config.region) continue;
+      if (partir(item[r]).base === q.base) {
+        return {
+          marca: 'mal',
+          nota: 'esa es la forma de <b>' + REGIONES[r] + '</b>; acá pedía '
+              + REGIONES[config.region]
+        };
+      }
+    }
+  }
+
+  /* ¿Es una palabra de otro objeto? */
+  const otro = CONTENEDORES.find(o =>
+    o.id !== item.id && formasDe(o).some(f => partir(f).base === q.base));
+  if (otro) return { marca: 'mal', nota: 'eso es <b>' + otro.en + '</b>' };
+
+  return { marca: 'mal' };
+}
+
+function textoDado(item) {
+  const r = ronda.respuestas[item.id];
+  if (config.modo === 'escribir') return r.texto.trim();
+  const c = r.carta ? ronda.mazo.find(x => x.id === r.carta) : null;
+  return c ? c.txt : '';
+}
+
+document.getElementById('btn-comprobar').addEventListener('click', comprobar);
+
+function comprobar() {
+  if (ronda.corregida) return;
+  ronda.corregida = true;
+  ronda.marcas = {};
+
+  let ok = 0;
+  const filas = [];
+
+  ronda.items.forEach(item => {
+    const dado = textoDado(item);
+    const res = calificar(item, dado);
+    ronda.marcas[item.id] = res.marca;
+    if (res.marca === 'ok') ok++;
+
+    /* Estadísticas por ítem */
+    const d = datos.items[item.id] || { intentos: 0, fallos: 0 };
+    d.intentos++;
+    if (res.marca !== 'ok') d.fallos++;
+    datos.items[item.id] = d;
+
+    /* Estadísticas por región */
+    if (config.region !== 'general') {
+      datos.regiones[config.region][res.marca === 'ok' ? 'ok' : 'mal']++;
+    }
+
+    filas.push({ item, dado, res });
+  });
+
+  /* Estadísticas por lámina */
+  const dl = datos.laminas[ronda.n] || { corridas: 0, ok: 0, total: 0 };
+  dl.corridas++;
+  dl.ok = ok;
+  dl.total = ronda.items.length;
+  datos.laminas[ronda.n] = dl;
+  guardar(datos);
+
+  sesion.resultados.push({ n: ronda.n, ok, total: ronda.items.length });
+
+  pintarCorrecciones(filas, ok);
+  render();
+
+  document.getElementById('btn-comprobar').disabled = true;
+  document.getElementById('btn-limpiar').disabled = true;
+  document.getElementById('barra-siguiente').hidden = false;
+  pintarEstadisticas();
+}
+
+function pintarCorrecciones(filas, ok) {
+  const c = document.getElementById('correcciones');
+  const total = filas.length;
+  const SIGNOS = { ok: '✓', art: '≈', mal: '✕' };
+
+  let html =
+      '<div class="corr-cab">' + ok + ' de ' + total + '</div>'
+    + '<div class="corr-sub">'
+    + (config.region === 'general'
+        ? 'En General valía cualquier variante. Abajo están todas, con su región.'
+        : 'Corregido contra la forma de ' + REGIONES[config.region] + '.')
+    + '</div>';
+
+  filas.forEach(({ item, dado, res }) => {
+    const choque = choqueDe(item, dado);
+    html +=
+        '<div class="corr-row">'
+      +   '<span class="corr-marca ' + res.marca + '">' + SIGNOS[res.marca] + '</span>'
+      +   '<div class="corr-main">'
+      +     '<div class="corr-term">' + (item.neutral || 'sin forma neutra')
+      +       '<span class="en">' + item.en + '</span></div>'
+      +     '<div class="corr-diste">'
+      +       (dado ? 'Pusiste <b>' + escapar(dado) + '</b>' : 'Quedó en blanco')
+      +       (res.nota ? ' — ' + res.nota : '')
+      +     '</div>'
+      +     '<div class="corr-regs">' + chipsDe(item) + '</div>'
+      +     (item.nota ? '<div class="corr-nota">' + item.nota + '</div>' : '')
+      +     (choque ? '<div class="corr-choque">' + choque + '</div>' : '')
+      +   '</div>'
+      + '</div>';
+  });
+
+  c.innerHTML = html;
+  c.hidden = false;
+}
+
+/* Si la palabra que pusiste también nombra otro objeto en otra región,
+   decilo. Es la tarjeta de falsos amigos apareciendo donde hace falta. */
+function choqueDe(item, dado) {
+  if (!dado) return '';
+  const q = partir(dado);
+  const otros = CONTENEDORES.filter(o =>
+    o.id !== item.id && formasDe(o).some(f => partir(f).base === q.base));
+  if (!otros.length) return '';
+  return otros.map(o => {
+    const forma = formasDe(o).find(f => partir(f).base === q.base);
+    const regs = regionesDe(o, forma);
+    const donde = regs.length && regs.length < 3
+      ? ' en ' + regs.map(r => REGIONES[r]).join(' y ')
+      : '';
+    return '«' + forma + '»' + donde + ' también es <b>' + o.en + '</b>.';
+  }).join(' ');
+}
+
+function escapar(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/* ── Siguiente / terminar ────────────────────────────────── */
+
+document.getElementById('btn-otra').addEventListener('click', () => {
+  iniciarRonda(elegirLaminaAlAzar());
+});
+
+document.getElementById('btn-terminar').addEventListener('click', terminar);
+
+function terminar() {
+  const ok = sesion.resultados.reduce((s, r) => s + r.ok, 0);
+  const total = sesion.resultados.reduce((s, r) => s + r.total, 0);
+  document.getElementById('fin-puntaje').textContent = total ? ok + ' / ' + total : '—';
+  document.getElementById('fin-detalle').textContent =
+    sesion.resultados.length
+      ? sesion.resultados.length + (sesion.resultados.length === 1 ? ' lámina' : ' láminas')
+        + ' · ' + (config.region === 'general' ? 'General' : REGIONES[config.region])
+        + ' · ' + (config.modo === 'arrastrar' ? 'Arrastrar' : 'Escribir')
+      : 'Sin láminas corregidas.';
+
+  const cont = document.getElementById('fin-laminas');
+  cont.innerHTML = '';
+  if (!sesion.resultados.length) {
+    cont.innerHTML = '<div class="vacio">Nada que mostrar.</div>';
+  } else {
+    sesion.resultados.forEach(r => {
+      const pct = r.total ? Math.round(100 * r.ok / r.total) : 0;
+      const clase = pct >= 85 ? '' : (pct >= 60 ? 'flojo' : 'malo');
+      const fila = document.createElement('div');
+      fila.className = 'est-fila';
+      fila.innerHTML =
+          '<span class="et"><b>' + r.n + '</b> · ' + laminaDe(r.n).titulo + '</span>'
+        + '<span class="barrita"><i class="' + clase + '" style="width:' + pct + '%"></i></span>'
+        + '<span class="val">' + r.ok + '/' + r.total + '</span>';
+      cont.appendChild(fila);
+    });
+  }
+  mostrar('fin');
+}
+
+document.getElementById('btn-volver-inicio').addEventListener('click', () => {
+  pintarEstadisticas();
+  mostrar('inicio');
+});
+
+/* ── Reflow al cambiar el ancho ──────────────────────────── */
+
+let tReflow = null;
+window.addEventListener('resize', () => {
+  if (!ronda || document.getElementById('pantalla-ronda').hidden) return;
+  clearTimeout(tReflow);
+  tReflow = setTimeout(render, 150);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,2395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase del 8 de septiembre de 2026 — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accents — violet and teal deliberately unused here so the
+     región chips (teal = Rioplatense, violet = España) stay unambiguous. */
+  --accent-alpha:   #4a90d9;  /* ① blue        */
+  --accent-gamma:   #fbbf24;  /* ② gold        */
+  --accent-epsilon: #f472b6;  /* ③ rose        */
+  --accent-zeta:    #34d399;  /* ④ green       */
+  --accent-eta:     #fb923c;  /* ⑤ orange      */
+  --accent-theta:   #94a3b8;  /* ⑥ slate       */
+  --accent-iota:    #38bdf8;  /* ⑦ sky         */
+  --accent-kappa:   #a3e635;  /* ⑧ lime        */
+  --accent-lambda:  #d4a373;  /* ⑨ tan         */
+  --accent-mu:      #cbd5e1;  /* ⑩ light slate */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/cadaquez iglesia.webp') center/cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Contents strip ── */
+.contents {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 22px 0 18px;
+}
+.contents-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.contents-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.contents-list a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.84rem;
+  transition: all 0.2s;
+}
+.contents-list a:hover {
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.45);
+  background: rgba(74, 144, 217, 0.08);
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 8px 0 0 18px; }
+.nota li { margin-bottom: 5px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.nota h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 14px 0 5px;
+}
+.nota h4:first-of-type { margin-top: 8px; }
+
+/* ── Provenance legend (sits under the contents strip) ── */
+.leyenda {
+  background: rgba(138, 155, 184, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  margin: 0 0 18px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.leyenda .leyenda-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.leyenda-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.leyenda-row:last-child { margin-bottom: 0; }
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  scroll-margin-top: 16px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-theta   { border-left-color: var(--accent-theta); }
+.card-iota    { border-left-color: var(--accent-iota); }
+.card-kappa   { border-left-color: var(--accent-kappa); }
+.card-lambda  { border-left-color: var(--accent-lambda); }
+.card-mu      { border-left-color: var(--accent-mu); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+.card-theta   .card-number { color: var(--accent-theta);   opacity: 0.75; }
+.card-iota    .card-number { color: var(--accent-iota);    opacity: 0.75; }
+.card-kappa   .card-number { color: var(--accent-kappa);   opacity: 0.75; }
+.card-lambda  .card-number { color: var(--accent-lambda);  opacity: 0.75; }
+.card-mu      .card-number { color: var(--accent-mu);      opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Provenance chips ── */
+.prov-chips {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.prov {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.prov-clase    { background: rgba(74, 222, 128, 0.10); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.28); }
+.prov-material { background: rgba(250, 204, 21, 0.10); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.28); }
+.prov-ampl     { background: rgba(148, 163, 184, 0.10); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.28); }
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+.explanation + .explanation { margin-top: -6px; }
+
+/* ── Epigraph (her words, verbatim) ── */
+.epigrafe {
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 16px;
+  margin: 4px 0 16px;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.epigrafe .fuente {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 7px;
+}
+
+/* ── Sub-heading inside a card ── */
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 20px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.6);
+}
+
+/* ── Formula ── */
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+.formula strong { color: var(--text-primary); }
+
+/* ── Example rows ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+/* Spine example — the one sentence a card turns on */
+.example-row.spine {
+  background: rgba(74, 144, 217, 0.07);
+  border: 1px solid rgba(74, 144, 217, 0.22);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 10px;
+}
+.example-row.spine .example-es { font-size: 1.14rem; }
+.anotacion {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+.anotacion b { color: var(--text-secondary); font-weight: 600; }
+.anotacion em { color: var(--accent); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Región chips (textual only — audio is always neutral) ── */
+.rio-tag, .esp-tag, .neu-tag, .var-tag, .vulg-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.rio-tag  { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.esp-tag  { background: rgba(192, 132, 252, 0.14); color: #d0a8ff; }
+.neu-tag  { background: rgba(138, 155, 184, 0.14); color: #a8b8d0; }
+.var-tag  { background: rgba(251, 191, 36, 0.14); color: #fbbf24; }
+.vulg-tag { background: rgba(248, 113, 113, 0.14); color: #f87171; }
+
+/* ── Chip row (flat word lists) ── */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+.chip {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 11px;
+}
+
+/* ── Evitar / usar rows ── */
+.contrast {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.contrast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.contrast-item .mark {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  width: 16px;
+  text-align: center;
+}
+.contrast-item.bad  { border-left: 3px solid var(--red); }
+.contrast-item.good { border-left: 3px solid var(--green); }
+.contrast-item.bad  .mark { color: var(--red); }
+.contrast-item.good .mark { color: var(--green); }
+.contrast-item .txt { flex: 1; }
+.contrast-item .es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+}
+.contrast-item .gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Aviso box — register warning ── */
+.aviso {
+  background: rgba(248, 113, 113, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-left: 4px solid var(--red);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0 4px;
+}
+.aviso .aviso-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 9px;
+}
+.aviso .frase {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+.aviso .frase:last-of-type { margin-bottom: 0; }
+.aviso .aviso-nota {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(248, 113, 113, 0.18);
+}
+.aviso .aviso-nota em { color: var(--text-primary); font-style: italic; }
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  vertical-align: bottom;
+}
+.table-wrapper th .var-tag { display: inline-block; margin: 4px 0 0; }
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td strong { color: var(--text-primary); font-weight: 600; }
+.table-note {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: -2px 0 10px;
+  padding-left: 2px;
+}
+.table-note em { color: var(--text-secondary); font-style: italic; }
+.table-note strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ── Cross-link out to a full topic page ── */
+.topic-link {
+  display: block;
+  margin: 16px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-primary); }
+.topic-link strong { color: var(--text-primary); font-weight: 600; }
+.topic-link em { color: var(--text-muted); font-style: italic; }
+.topic-link .arrow { color: var(--accent); font-weight: 600; }
+.topic-link.pending { border-left-color: var(--text-muted); background: rgba(138, 155, 184, 0.05); }
+.topic-link.pending .arrow { color: var(--text-muted); }
+
+/* ── Materiales de la clase ── */
+.materiales {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.materiales h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.materiales .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.material-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  margin-bottom: 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.material-item:last-child { margin-bottom: 0; }
+.material-item:hover { border-color: #2a4a75; background: var(--bg-card-hover); }
+.material-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+.material-tipo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tipo-tabla     { background: rgba(74, 144, 217, 0.12); color: #4a90d9; border: 1px solid rgba(74, 144, 217, 0.3); }
+.tipo-expl      { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.tipo-ejercicio { background: rgba(251, 146, 60, 0.12); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+.tipo-sitio     { background: rgba(148, 163, 184, 0.12); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+.materiales .sub.sub-laminas { margin-top: 26px; }
+.material-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+.material-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: 3px;
+}
+.material-destino {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 5px;
+}
+.material-dl {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+/* ── Preguntas para la profe ── */
+.preguntas {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--yellow);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 18px;
+  scroll-margin-top: 16px;
+}
+.preguntas h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.preguntas .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.preguntas ol { margin: 0 0 0 20px; }
+.preguntas li {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 0.93rem;
+  padding-left: 4px;
+}
+.preguntas li:last-child { margin-bottom: 0; }
+.preguntas li em { color: var(--accent); font-style: italic; }
+.preguntas li strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .grammar-card { padding: 20px 18px 18px; }
+  .preguntas, .materiales { padding: 20px 18px; }
+  .card-header { gap: 10px; }
+  .card-number { font-size: 1.8rem; }
+  .contents-list a { font-size: 0.8rem; padding: 5px 10px; }
+  .prov-chips { padding-top: 0; }
+  .material-item { flex-direction: column; gap: 8px; }
+  .material-dl { padding-top: 0; align-self: flex-end; }
+}
+
+/* ── Par de imágenes (degrada sin romper si faltan los archivos) ── */
+.duo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 18px 0 6px;
+}
+.duo figure {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+.duo img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+.duo figcaption {
+  padding: 11px 14px 13px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
+}
+.duo figcaption strong {
+  display: block;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.06rem;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+@media (max-width: 640px) {
+  .duo { grid-template-columns: 1fr; }
+  .duo img { height: 190px; }
+}
+
+/* ── Eje de la deixis — diagrama en HTML, sin imagen ── */
+.eje {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 4px;
+}
+.eje-fila {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+}
+.eje-mov {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eje-verbos {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eje-glosa { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+@media (max-width: 640px) {
+  .eje-fila { flex-wrap: wrap; gap: 8px; }
+}
+
+/* ── Figura centrada y chica (un cartel, no una ilustración) ── */
+.figura-cartel {
+  margin: 18px auto 4px;
+  max-width: 260px;
+  text-align: center;
+}
+.figura-cartel img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+}
+.figura-cartel figcaption {
+  margin-top: 10px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+
+/* ── Ampliación en el lugar — estándar para las imágenes dentro de
+      las tarjetas de contenido (mismo gesto que el resto del sitio) ── */
+.duo figure.zoomed,
+.figura-cartel.zoomed { overflow: visible; position: relative; z-index: 60; }
+.duo img,
+.figura-cartel img {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-radius 0.25s ease;
+}
+.duo img.magnified {
+  object-fit: contain;
+  transform: scale(2);
+  cursor: zoom-out;
+  z-index: 60;
+  border-radius: 6px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+.duo figure:nth-child(1) img.magnified { transform-origin: left center; }
+.duo figure:nth-child(2) img.magnified { transform-origin: right center; }
+.figura-cartel img.magnified {
+  transform: scale(2.2);
+  transform-origin: center center;
+  cursor: zoom-out;
+  z-index: 60;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+@media (max-width: 640px) {
+  .duo img.magnified { transform: scale(1.6); transform-origin: center center; }
+}
+
+/* ── Visor de imágenes (materiales y figuras) ── */
+.visor {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  background: rgba(8, 14, 26, 0.93);
+  backdrop-filter: blur(3px);
+}
+.visor.abierto { display: flex; flex-direction: column; }
+.visor-barra {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.visor-titulo {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+  min-width: 0;
+}
+.visor-acciones { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.visor-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.visor-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.12); }
+.visor-cerrar {
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 5px 13px 8px;
+  letter-spacing: 0;
+}
+.visor-cuerpo {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  padding: 22px;
+}
+.visor-cuerpo img {
+  /* margin auto centra cuando entra y NO recorta cuando no entra —
+     justify-content/align-items harían inalcanzable el borde izquierdo. */
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  cursor: zoom-in;
+}
+/* Estado ampliado: el ancho lo fija el JS por archivo; el cuerpo hace scroll
+   y margin:auto mantiene la imagen centrada mientras entre en pantalla. */
+.visor-cuerpo.ampliado img {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+}
+.visor-pie {
+  flex-shrink: 0;
+  padding: 12px 22px 18px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+@media (max-width: 640px) {
+  .visor-barra { padding: 11px 14px; }
+  .visor-titulo { font-size: 0.95rem; }
+  .visor-cuerpo { padding: 12px; }
+}
+
+/* ── Vocabulario de la clase ── */
+.vocabulario {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent-kappa);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.vocabulario h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.vocabulario .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 18px;
+}
+.vocab-grupo { margin-top: 22px; }
+.vocab-grupo:first-of-type { margin-top: 0; }
+.vocab-grupo-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.vocab-grupo-sub {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 8px 0 10px;
+  line-height: 1.5;
+}
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.vocab-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.vocab-table tr:last-child td { border-bottom: none; }
+.vocab-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.vocab-table .vt-audio { width: 40px; padding-left: 0; }
+.vocab-table .vt-es {
+  width: 42%;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.04rem;
+  color: var(--text-primary);
+}
+.vocab-table .vt-en { color: var(--text-secondary); }
+.vocab-table .vt-en em { color: var(--text-muted); font-style: italic; }
+@media (max-width: 640px) {
+  .vocabulario { padding: 20px 16px; }
+  .vocab-table .vt-es { width: 46%; font-size: 0.98rem; }
+  .vocab-table td { padding: 8px 6px; font-size: 0.88rem; }
+}
+
+/* ── Plancha con etiquetas — imagen con las anotaciones de la profe
+      puestas en HTML encima, no quemadas en el archivo (Role D) ── */
+.plancha { margin: 22px auto 8px; max-width: 640px; }
+.plancha-marco {
+  position: relative;
+  display: block;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+}
+.plancha-marco img { width: 100%; height: auto; display: block; }
+.etiqueta {
+  position: absolute;
+  transform: translate(-50%, 0);
+  width: 42%;
+  background: rgba(8, 18, 34, 0.93);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 9px 11px;
+  text-align: left;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.etiqueta.et-quedar  { border-left-color: var(--accent-alpha); }
+.etiqueta.et-faltar  { border-left-color: var(--accent-eta); }
+.etiqueta-texto {
+  display: block;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  font-style: italic;
+}
+.etiqueta-verbo {
+  display: inline-block;
+  margin-top: 7px;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.etiqueta .habla { margin-top: 6px; }
+.plancha-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 26px; height: 26px;
+  display: none;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: rgba(8, 18, 34, 0.94);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 0.78rem; font-weight: 600;
+}
+.plancha-pin.pin-quedar { border-color: var(--accent-alpha); }
+.plancha-pin.pin-faltar { border-color: var(--accent-eta); }
+.plancha-lista { display: none; margin: 12px 0 0; padding: 0; list-style: none; }
+.plancha-lista li {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem; line-height: 1.5;
+}
+.plancha-lista .pl-num {
+  flex: 0 0 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; border: 1px solid var(--border);
+  font-size: 0.72rem; color: var(--text-secondary);
+}
+.plancha figcaption {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-style: italic;
+  text-align: center;
+}
+@media (max-width: 640px) {
+  .etiqueta { display: none; }
+  .plancha-pin { display: flex; }
+  .plancha-lista { display: block; }
+  .plancha figcaption { text-align: left; }
+}
+
+/* ── Nota al pie — bloque de cierre, no es tarjeta ── */
+.nota-pie {
+  margin: 34px 0 0;
+  padding: 26px 28px;
+  background: rgba(17, 29, 53, 0.72);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent-theta);
+  border-radius: 14px;
+}
+.nota-pie h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 4px;
+  color: var(--text-primary);
+}
+.nota-pie .np-firma {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.nota-pie h3 {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 22px 0 10px;
+}
+.nota-pie p { font-size: 0.94rem; line-height: 1.72; color: var(--text-secondary); margin: 0 0 12px; }
+.nota-pie p strong { color: var(--text-primary); font-weight: 600; }
+.nota-pie em { color: var(--text-primary); font-style: italic; }
+@media (max-width: 640px) {
+  .nota-pie { padding: 20px 16px; }
+}
+
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Notas de Clase</div>
+    <h1>Clase del <em>8 de septiembre</em> de 2026</h1>
+    <p class="subtitle">La perspectiva decide entre <em>faltar</em> y <em>quedar</em> — no el reloj · <em>faltar</em> no es <em>hacer falta</em> · <em>me hacés falta</em>, el agujero que hay que llenar · el dativo y a quién le importa · la cuenta regresiva y sus vecinos <em>tardar</em> y <em>durar</em>.</p>
+  </header>
+
+  <nav class="contents">
+    <div class="contents-label">Lo que vimos</div>
+    <div class="contents-list">
+      <a href="#s1">① La perspectiva decide, no el reloj</a>
+      <a href="#s2">② Faltar no es hacer falta</a>
+      <a href="#s3">③ Me hacés falta — el agujero</a>
+      <a href="#s4">④ Falta leche / me falta leche</a>
+      <a href="#s5">⑤ ¿Cuánto falta? — la cuenta regresiva</a>
+      <a href="#nota-al-pie">◆ Nota al pie — el anclaje de los dos verbos</a>
+      <a href="#vocabulario">📖 Vocabulario de la clase</a>
+      <a href="#materiales">📂 Materiales de la clase</a>
+      <a href="#preguntas">✎ Preguntas para la profe</a>
+    </div>
+  </nav>
+
+  <div class="leyenda">
+    <span class="leyenda-label">Cómo leer las etiquetas</span>
+    <div class="leyenda-row"><span class="prov prov-clase">En clase</span> <span>She taught this. Teacher-attested.</span></div>
+    <div class="leyenda-row"><span class="prov prov-material">Material</span> <span>She sent it, but we never worked through it.</span></div>
+    <div class="leyenda-row"><span class="prov prov-ampl">Ampliación</span> <span>Added after class from reference material — not hers.</span></div>
+  </div>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+  <!-- ─────────────────────────── ① ─────────────────────────── -->
+  <article class="grammar-card card-alpha" id="s1">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">La perspectiva decide, no el reloj</div>
+        <div class="card-title-en">Same clock, same room — the verb changes with where your attention sits</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Las dos láminas que mandó la profe son sobre <em>faltar</em> y <em>hacer falta</em>. La clase no fue sobre eso. La clase fue sobre <strong>faltar y quedar</strong>, y sobre una idea que ella repitió de varias maneras: <strong>el hecho externo no elige el verbo</strong>. El mismo día de vacaciones, el mismo examen, los mismos cinco minutos — y los dos verbos siguen disponibles. Lo que decide es desde dónde mira el que habla.
+    </p>
+
+    <div class="formula">el reloj no cambia · cambia hacia dónde mira el hablante</div>
+
+    <figure class="plancha">
+      <div class="plancha-marco">
+        <img src="../../recursos/clase-2026-09-08/colectivo-perspectiva.webp" alt="Dibujo de dos pasajeros en un colectivo: a la izquierda un hombre triste con la ventanilla dando a una pared de roca, a la derecha un hombre contento con la ventanilla dando a un atardecer sobre las montañas." onerror="this.closest('figure').style.display='none'">
+
+        <div class="plancha-pin pin-quedar" style="left: 19%; top: 58%;">1</div>
+        <div class="plancha-pin pin-faltar" style="left: 69%; top: 54%;">2</div>
+
+        <div class="etiqueta et-quedar" style="left: 24%; top: 73%;">
+          <span class="etiqueta-texto">Me queda un solo día de vacaciones… y después, a trabajar.</span>
+          <span class="etiqueta-verbo">quedar</span>
+          <button class="speak-btn" onclick="speakPlancha(this)" title="Escuchar">🔊</button>
+        </div>
+
+        <div class="etiqueta et-faltar" style="left: 74%; top: 73%;">
+          <span class="etiqueta-texto">¡Falta un solo día para volver a ver a mi perro!</span>
+          <span class="etiqueta-verbo">faltar</span>
+          <button class="speak-btn" onclick="speakPlancha(this)" title="Escuchar">🔊</button>
+        </div>
+      </div>
+
+      <ol class="plancha-lista">
+        <li><span class="pl-num">1</span><span class="pl-texto"><em>Me queda un solo día de vacaciones… y después, a trabajar.</em> — quedar</span><button class="speak-btn" onclick="speakPlancha(this)" title="Escuchar">🔊</button></li>
+        <li><span class="pl-num">2</span><span class="pl-texto"><em>¡Falta un solo día para volver a ver a mi perro!</em> — faltar</span><button class="speak-btn" onclick="speakPlancha(this)" title="Escuchar">🔊</button></li>
+      </ol>
+
+      <figcaption>El dibujo que trajo la profe, con lo que ella escribió encima puesto acá en texto. El chiste está en las ventanillas: el mismo colectivo, el mismo viaje, el mismo día — y de un lado se ve una pared de roca y del otro un atardecer. Dibujo firmado por Genildo.</figcaption>
+    </figure>
+
+    <div class="sub-head">Las cuatro lecturas</div>
+
+    <p class="explanation">
+      La lectura fácil del dibujo sería «el triste dice <em>quedar</em> y el contento dice <em>faltar</em>». No es eso, y la propia profe lo desarmó: escribió también <em>falta un solo día para terminar las vacaciones</em> para alguien a quien <strong>no</strong> le gusta el viaje. Es <em>faltar</em> en boca del pasajero infeliz. Las cuatro casillas existen.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th><em>quedar</em> — el tiempo que todavía tengo</th>
+            <th><em>faltar</em> — lo que me separa del final</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Le gusta el viaje</strong></td>
+            <td><em>Me queda un solo día.</em> Lo que tengo se me está terminando.</td>
+            <td><em>Falta un día para volver a ver a mi perro.</em> Lo bueno está del otro lado.</td>
+          </tr>
+          <tr>
+            <td><strong>No le gusta el viaje</strong></td>
+            <td><em>Me quedan doce horas antes de tener que levantarme.</em> Todavía tengo colchón.</td>
+            <td><em>Falta un solo día para que terminen estas vacaciones.</em> El final es el alivio.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="table-note">Las dos casillas de arriba son suyas, escritas sobre el dibujo. Las dos de abajo están reconstruidas a partir de lo que dijo en clase — la de <em>doce horas</em> salió del ejemplo de levantarse temprano, la de las vacaciones es su cuarta anotación reformulada con <em>para que</em>.</p>
+    </div>
+
+    <div class="sub-head">El examen — el mismo reloj, dos verbos</div>
+
+    <p class="explanation">
+      El ejemplo más limpio de la clase no está en el dibujo. Son cinco minutos de examen: la misma sala, el mismo reloj, la misma cantidad de tiempo. Lo único que cambia es cómo le está yendo al que habla.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me quedan cinco minutos.</div>
+          <div class="example-en">I've got five minutes left. — Voy bien, estoy repasando. Cinco minutos de trabajo <em>que todavía tengo</em>.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me faltan cinco minutos.</div>
+          <div class="example-en">Five minutes to go. — Esto es duro. Cinco minutos <em>que se interponen</em> entre yo y el final.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Faltan dos días para el examen.</div>
+          <div class="example-en">The exam is two days away. — El foco está en el examen.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Quedan dos días.</div>
+          <div class="example-en">There are two days left. — El mismo calendario; el foco está en los dos días.</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="anotacion">
+      Y algo que ella aclaró y conviene no perder: <strong>muchas veces no hay ninguna diferencia</strong>. Uno agarra el verbo que le vino a la cabeza y no hay historia emocional atrás. La perspectiva no es una regla que obligue — es lo que <em>decide</em> cuando sí hay algo que decidir. El dicho inglés del <em>vaso medio lleno o medio vacío</em> (que trajo Daniel a la clase, no ella) es exactamente esto: dos descripciones verdaderas del mismo vaso.
+    </p>
+
+    <div class="nota">
+      <strong>NOTA — why both verbs are always available here.</strong> An interval between now and an endpoint is an unusual kind of quantity: it is simultaneously <em>time you still hold</em> and <em>distance to a target</em>. Both descriptions are true at once, which is why <em>quedar</em> and <em>faltar</em> are near-interchangeable in countdowns and why your feeling gets to pick. That is not true of the verbs in general — <em>falta sal</em> and <em>queda sal</em> are opposite claims about the same kitchen. The closing note at the bottom of this page works that out; card ② is where the non-interchangeable half starts.
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ② ─────────────────────────── -->
+  <article class="grammar-card card-gamma" id="s2">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Faltar no es hacer falta</div>
+        <div class="card-title-en">One reports a subtraction; the other reports a requirement</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-material">Material</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Esta es la tarjeta que esta página <strong>no</strong> intenta agotar. Es el tema de las dos láminas y de los tres hilos de foro que están abajo en <em>Materiales</em>, y da para una página entera. Acá va lo mínimo para no confundirlos.
+    </p>
+
+    <div class="formula">faltar · falta algo que debería estar &nbsp;·&nbsp; hacer falta · se necesita algo</div>
+
+    <p class="explanation">
+      <em>Faltar</em> informa una <strong>resta</strong>: algo no está, algo se descontó de lo que había. <em>Hacer falta</em> informa una <strong>necesidad</strong>: algo se requiere. Son dos ejes distintos, no dos niveles del mismo. La prueba rápida es la sustitución:
+    </p>
+
+    <div class="eje">
+      <div class="eje-fila">
+        <span class="eje-mov">se cambia por</span>
+        <span class="eje-verbos">no tengo · no está · no hay</span>
+        <span class="eje-glosa">entonces es <em>faltar</em>.</span>
+      </div>
+      <div class="eje-fila">
+        <span class="eje-mov">se cambia por</span>
+        <span class="eje-verbos">necesito · es necesario</span>
+        <span class="eje-glosa">entonces es <em>hacer falta</em>.</span>
+      </div>
+    </div>
+
+    <div class="examples-block">
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me faltan cinco euros.</div>
+          <div class="example-en">I'm five euros short. — <em>No tengo cinco euros.</em> Una resta.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hace falta estudiar más.</div>
+          <div class="example-en">More studying is needed. — <em>Es necesario estudiar más.</em> Una necesidad.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Falta una página para terminar.</div>
+          <div class="example-en">One page to go. — <em>Queda una página.</em> Acá <em>faltar</em> y <em>quedar</em> sí se tocan: es la tarjeta ①.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La concordancia, una sola vez</div>
+
+    <p class="explanation">
+      En <em>hacer falta</em>, <em>falta</em> es el <strong>sustantivo</strong>, no el verbo. El único que se conjuga es <em>hacer</em>, y concuerda con lo que se necesita:
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me hace falta una silla.</div>
+          <div class="example-en">I need a chair. — singular.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me hacen falta dos sillas.</div>
+          <div class="example-en">I need two chairs. — plural. Nunca <em>hacen faltas</em>: <em>falta</em> no se mueve.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Faltar a — donde la gramática se da vuelta</div>
+
+    <p class="explanation">
+      Con la preposición <em>a</em>, <em>faltar</em> deja de funcionar como <em>gustar</em> y la persona pasa a ser el <strong>sujeto</strong>. Es el mismo verbo con otro andamiaje, y no admite <em>hacer falta</em> en su lugar.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Juan falta a clase.</div>
+          <div class="example-en">Juan is absent from class. — <em>Juan</em> es el sujeto.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Le faltó el respeto a su jefe.</div>
+          <div class="example-en">He was disrespectful to his boss. — la preposición es obligatoria.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Faltó a su palabra.</div>
+          <div class="example-en">He broke his word.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — where the two genuinely overlap.</strong> With a concrete quantity aimed at a purpose — money, chairs, ingredients — both are normal and the choice is stylistic. The infographic's own contrast, <em>me faltan dos euros</em> against <em>me hacen falta dos euros para comprarlo</em>, does not actually separate them: if you are two euros short of buying the thing, both sentences are true at the same time. The clean split is elsewhere — <em>hace falta estudiar</em> (requirement, no subtraction) against <em>falta María</em> (absence, nothing required).
+    </div>
+
+    <a class="topic-link pending">
+      <strong>Faltar y hacer falta</strong> — <em>los dos ejes, el marco dativo comparado con</em> gustar<em>, la inversión de</em> faltar a<em>, los pares mínimos y</em> sobrar<em>. Página por construir.</em> <span class="arrow">›</span>
+    </a>
+  </article>
+
+  <!-- ─────────────────────────── ③ ─────────────────────────── -->
+  <article class="grammar-card card-epsilon" id="s3">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">Me hacés falta — el agujero</div>
+        <div class="card-title-en">When the thing that is needed is a person</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Acá no hay una segunda acepción. <em>Hacer falta</em> significa una sola cosa — <strong>ser necesario</strong> — y cuando lo necesario es una persona, el inglés traduce <em>I miss you</em> porque no tiene otra forma de decirlo. La imagen que usó la profe: <strong>un agujero, un vacío que hay que llenar</strong>. Por eso con personas pesa tanto, igual que <em>me gustás</em>.
+    </p>
+
+    <div class="formula">me hacés falta &nbsp;=&nbsp; te extraño &nbsp;+&nbsp; te necesito</div>
+
+    <div class="examples-block">
+      <div class="example-row spine" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me hacés falta.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>I miss you — <em>y te necesito</em>. Forma neutra: <em>me haces falta</em>.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Te extraño.</div>
+          <div class="example-en">I miss you. — Nombra el sentimiento y nada más. Es la forma por defecto, la que se dice todo el tiempo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">La dirección — el error fácil</div>
+
+    <p class="explanation">
+      El pronombre marca <strong>quién tiene el agujero</strong>, no quién se fue. Dado vuelta, la frase dice lo contrario de lo que uno quería decir.
+    </p>
+
+    <div class="eje">
+      <div class="eje-fila">
+        <span class="eje-mov">el agujero es mío</span>
+        <span class="eje-verbos">me hacés falta</span>
+        <span class="eje-glosa">I miss you.</span>
+      </div>
+      <div class="eje-fila">
+        <span class="eje-mov">el agujero es tuyo</span>
+        <span class="eje-verbos">te hago falta</span>
+        <span class="eje-glosa">You miss me. Gramaticalmente impecable — y según la profe, raro de escuchar.</span>
+      </div>
+    </div>
+
+    <div class="sub-head">Extrañar y necesitar no son lo mismo</div>
+
+    <p class="explanation">
+      Los tres escenarios que planteó ella, en su orden. El tercero es el que muestra que <em>hacer falta</em> no es un sinónimo elegante de <em>extrañar</em>: se puede necesitar a alguien sin extrañarlo en absoluto.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Te extraño, pero no te necesito, porque me hacés daño.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>Una relación tóxica: el sentimiento sigue, la necesidad no.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Lo extraño y la mayoría de los días lo necesito para ayudarme.</div>
+          <div class="example-en">Una relación sana: las dos cosas juntas.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Mi jefe se fue de vacaciones y me hace falta para tomar una decisión. No lo extraño, pero lo necesito.</div>
+          <div class="example-en">Necesidad sin sentimiento. Acá <em>extrañar</em> no serviría.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">El registro, según ella</div>
+
+    <p class="explanation">
+      Advirtió que <em>hacer falta</em> con cosas se escucha sobre todo en <strong>chicos</strong> y en hablantes de menos escolaridad, o como énfasis medio en broma, buscando lástima — <em>me hace falta un lápiz</em>, <em>me hace falta una mascota</em>. No es que esté mal; es que no es neutro. Dónde exactamente está el límite quedó como pregunta para ella.
+    </p>
+
+    <div class="nota">
+      <strong>NOTA — <em>echar de menos</em> is not the Buenos Aires word.</strong> <em>Echar de menos</em> is the peninsular expression for missing someone, and it appears in every textbook. In Buenos Aires the verb is <em>extrañar</em>, full stop — you will hear <em>te extraño</em> and essentially never <em>te echo de menos</em>. Worth recognising in writing and in Spanish films; not worth producing on this trip.
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ④ ─────────────────────────── -->
+  <article class="grammar-card card-zeta" id="s4">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Falta leche / me falta leche</div>
+        <div class="card-title-en">What the dative does: whose shortfall it is</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Esta salió de una pregunta de Daniel: si <em>hace falta</em> era un impersonal como <em>llueve</em>. No lo es — pero la respuesta terminó siendo más útil que la pregunta. Los impersonales de verdad son los del clima: <em>llueve</em>, <em>hace frío</em>, <em>hace calor</em>. No tienen sujeto posible y se asume que afectan a todos por igual. <em>Faltar</em> sí puede sonar así… hasta que aparece un dativo, y entonces el asunto tiene dueño.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Falta leche en la heladera.</div>
+          <div class="example-en">There's no milk in the fridge. — Sin dativo. Acá todos tomamos leche: nos afecta a todos, como la lluvia. <em>Faltar</em> = <em>no hay</em>.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me falta leche en la heladera.</div>
+          <div class="example-en">I'm out of milk. — Con dativo. La leche la tomo yo: es mi faltante y mi problema.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Me faltan cinco minutos para terminar.</div>
+          <div class="example-en">I need five more minutes. — El que opera soy yo.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Faltan cinco minutos para terminar la cirugía.</div>
+          <div class="example-en">The surgery ends in five minutes. — El dato es de todos los que están en el quirófano.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-head">Hacer falta siempre tiene sujeto</div>
+
+    <p class="explanation">
+      Y por eso no es un impersonal: siempre hay algo que es lo necesario — una cosa, un infinitivo o una oración entera. Lo que puede faltar es el dativo, no el sujeto.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hace falta esperar un poco más.</div>
+          <div class="example-en">We need to wait a bit longer. — <em>Todavía hay que esperar.</em> El sujeto es el infinitivo.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Hace falta un mapa para llegar ahí.</div>
+          <div class="example-en">You need a map to get there. — <em>Se necesita un mapa.</em></div>
+        </div>
+      </div>
+      <div class="example-row" data-region="rioplatense">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Faltás vos.</div>
+          <div class="example-en"><span class="rio-tag">Rioplatense</span>You're the one missing. — Forma neutra: <em>faltas tú</em>. Prueba de que el verbo no está congelado en tercera persona.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — the dative is not decoration.</strong> Spanish has a whole family of verbs that put the affected person in the dative and the thing in the subject slot: <em>gustar</em>, <em>quedar</em>, <em>sobrar</em>, <em>faltar</em>, <em>hacer falta</em>. Adding or dropping <em>me</em> does not make the sentence more or less polite — it changes who owns the situation. <em>Falta leche</em> is a fact about the fridge; <em>me falta leche</em> is a fact about me.
+    </div>
+  </article>
+
+  <!-- ─────────────────────────── ⑤ ─────────────────────────── -->
+  <article class="grammar-card card-eta" id="s5">
+    <div class="card-header">
+      <div class="card-number">⑤</div>
+      <div class="card-title-group">
+        <div class="card-title">¿Cuánto falta? — la cuenta regresiva</div>
+        <div class="card-title-en">faltar + para, and the two neighbours it gets confused with</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-material">Material</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Esto viene de <em>¿Cuánto tiempo falta?</em>, la unidad B1 de VideoEle que mandó la profe — el video y sus actividades están enlazados abajo en <em>Materiales</em>. Es la construcción de la cuenta regresiva, y tiene dos formas según lo que venga después de <em>para</em>.
+    </p>
+
+    <div class="formula">faltar + [cantidad] + para + [infinitivo] &nbsp;·&nbsp; faltar + [cantidad] + para que + [subjuntivo]</div>
+
+    <div class="examples-block">
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Falta media hora para llegar.</div>
+          <div class="example-en">Half an hour to go. — Infinitivo: el que llega es el mismo que habla.</div>
+        </div>
+      </div>
+      <div class="example-row spine">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Falta media hora para que llegue el tren.</div>
+          <div class="example-en">The train is half an hour away. — Cambia el sujeto, entonces <em>para que</em> + subjuntivo.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Faltan treinta minutos para que llegue el tren.</div>
+          <div class="example-en">Thirty minutes until the train arrives. — El verbo concuerda con la cantidad, no con el tren.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Faltan veinte kilómetros para que lleguemos.</div>
+          <div class="example-en">Twenty kilometres to go. — También sirve para distancia, no solo para tiempo.</div>
+        </div>
+      </div>
+    </div>
+
+    <figure class="figura-cartel">
+      <img src="../../recursos/clase-2026-09-08/y-falta-mucho.webp" alt="Meme: un cachorro y un gatito posando juntos, con la leyenda «¿Y… falta mucho? ¿Ya sacaron la foto? ¿Podemos irnos?»" onerror="this.closest('figure').style.display='none'">
+      <figcaption><em>¿Y… falta mucho?</em> — la lectura impaciente de <em>faltar</em>: el intervalo como puro estorbo. Nadie que la esté pasando bien pregunta esto. Sale de una de las páginas que mandó la profe, <em>Helping You Learn Spanish</em>.</figcaption>
+    </figure>
+
+    <div class="sub-head">Tardar, durar, faltar</div>
+
+    <p class="explanation">
+      La hoja los presenta juntos porque en inglés los tres caen en <em>take</em> o en <em>last</em>. En español miden cosas distintas.
+    </p>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Verbo</th>
+            <th>Qué mide</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><em>tardar</em></td><td>El tiempo que lleva hacer algo.</td><td><em>El tren tarda una hora.</em></td></tr>
+          <tr><td><em>durar</em></td><td>El tiempo que algo existe o se extiende.</td><td><em>El viaje dura una hora.</em></td></tr>
+          <tr><td><em>faltar</em></td><td>El tiempo que queda hasta que algo termine o empiece.</td><td><em>Falta una hora para llegar.</em></td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">Los tres pueden aparecer en la misma escena sin repetirse: <em>el viaje dura una hora, el tren tarda una hora en hacerlo, y falta media hora para llegar</em>.</p>
+    </div>
+
+    <div class="sub-head">Quedar y faltar + por + infinitivo</div>
+
+    <p class="explanation">
+      No está en ninguna de las láminas y conviene tenerlo: con <em>por</em> + infinitivo, los dos verbos hablan de lo que todavía <strong>está sin hacer</strong>.
+    </p>
+
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Queda mucho por hacer.</div>
+          <div class="example-en">There's a lot left to do.</div>
+        </div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body">
+          <div class="example-es">Faltan dos informes por entregar.</div>
+          <div class="example-en">Two reports still have to be handed in.</div>
+        </div>
+      </div>
+    </div>
+
+    <a class="topic-link pending">
+      <strong>Disparadores del subjuntivo</strong> — <em>la lista de construcciones que lo exigen, con</em> para que <em>entre ellas. Página por construir.</em> <span class="arrow">›</span>
+    </a>
+  </article>
+
+  <!-- ──────────────────── Nota al pie ──────────────────── -->
+  <section class="nota-pie" id="nota-al-pie">
+    <h2>Nota al pie — el anclaje de los dos verbos</h2>
+    <p class="np-firma">
+      <span class="prov prov-ampl">Ampliación</span> &nbsp; Esto no es de la profe ni sale de ninguna gramática de referencia: es un análisis escrito por Claude en la sesión en que se armó esta página, a partir de los ejemplos de la clase. Se guarda acá para no perder el razonamiento; el tratamiento completo va a la página de <em>faltar y hacer falta</em> cuando se construya.
+    </p>
+
+    <h3>Los dos verbos se anclan en puntos opuestos</h3>
+    <p>
+      <strong><em>Quedar</em> se ancla hacia atrás</strong>, a un total previo que se fue gastando: presupone que había más y perfila <strong>el resto</strong>. <strong><em>Faltar</em> se ancla hacia adelante</strong>, a una meta, una norma o un punto de llegada: presupone un total requerido y perfila <strong>lo que falta para alcanzarlo</strong>. Esto no tiene nada que ver con emociones y se ve con sillas:
+    </p>
+    <p>
+      <em>Quedan dos sillas</em> — todavía hay dos. <em>Faltan dos sillas</em> — estamos dos sillas por debajo de lo que necesitamos. <em>Sobran dos sillas</em> — hay dos de más. Tres posiciones sobre una misma cuenta: lo que hay, lo que falta contra un objetivo, lo que excede.
+    </p>
+
+    <h3>Por eso no son intercambiables en general</h3>
+    <p>
+      Solo describen la misma situación cuando los dos anclajes son construibles a la vez — había diez y se necesitan diez. En cuanto eso se rompe, se separan del todo: <em>falta sal</em> y <em>queda sal</em> son afirmaciones opuestas sobre la misma cocina. <em>A la camisa le falta un botón</em> es una camisa a la que hay que coserle un botón; <em>le queda un botón</em> es una camisa mucho peor. <em>Falta María</em> significa que no vino; <em>queda María</em>, que es la única que sigue acá.
+    </p>
+
+    <h3>El tiempo es el caso raro</h3>
+    <p>
+      Un intervalo entre ahora y un final tiene <strong>los dos anclajes disponibles siempre</strong>: es a la vez tiempo que todavía tengo y distancia que me separa del final. Las dos descripciones son verdaderas del mismo intervalo — el vaso medio lleno y medio vacío. Por eso, en las cuentas regresivas y solo ahí, los verbos entran en variación casi libre, y por eso tiene razón la profe cuando dice que muchas veces no hay ninguna diferencia y uno agarra el que se le ocurrió.
+    </p>
+
+    <h3>Y ahí es donde entra lo que enseñó ella</h3>
+    <p>
+      Cuando los dos anclajes están disponibles, algo tiene que decidir — y lo que decide es la postura del hablante. <em>Quedar</em> es el marco de la posesión, así que implica cuidar o valorar el intervalo. <em>Faltar</em> es el marco del faltante, así que implica estar orientado al final. De ahí sale todo lo de la tarjeta ①: el que teme el lunes cuenta lo que todavía tiene, el que espera a su perro cuenta lo que se interpone, y el pasajero infeliz puede usar <em>faltar</em> sin contradecirse, porque para él el último día no es ningún activo.
+    </p>
+
+    <h3>El límite</h3>
+    <p>
+      Todo esto vale <strong>dentro de la zona de solapamiento</strong> — intervalos y cantidades. Fuera de ahí no hay elección que hacer: <em>faltar a clase</em> y <em>faltarle el respeto a alguien</em> son otro comportamiento del verbo, y «hueco» o «resto» no explican nada. Eso lo cubre la tarjeta ②.
+    </p>
+
+    <h3>Honestidad sobre el estatus</h3>
+    <p>
+      La mitad estructural — anclaje hacia atrás contra anclaje hacia adelante — es semántica léxica corriente y es segura. La mitad afectiva encaja con todos los ejemplos que dio la profe, pero no hay una gramática de referencia a mano que la enuncie así; puede ser una observación de enseñanza más que un hecho documentado. Queda marcado como tal, y preguntado en la lista de abajo.
+    </p>
+
+    <a class="topic-link pending">
+      <strong>Faltar y hacer falta</strong> — <em>donde esto va a desarrollarse en serio, con los pares mínimos y</em> sobrar <em>como tercer término. Página por construir.</em> <span class="arrow">›</span>
+    </a>
+  </section>
+
+  <section class="vocabulario" id="vocabulario">
+    <h2>Vocabulario de la clase</h2>
+    <div class="sub">Todo lo que fue apareciendo, en el orden en que apareció — la lista completa, sin filtrar</div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">A · De la heladera a la carencia</div>
+      <p class="vocab-grupo-sub">Arrancó con la frase de la leche en la heladera —el ejemplo que iba a sostener toda la clase— y con las palabras que fueron saliendo alrededor.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la heladera</td><td class="vt-en">the fridge — <em>rioplatense; neutro:</em> el refrigerador, la nevera</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la heladería</td><td class="vt-en">the ice cream shop — <em>la casi gemela que hace que la otra se fije</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la carencia</td><td class="vt-en">the lack, the shortage — <em>el sustantivo que hay detrás de</em> hacer falta</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">sobrepensar</td><td class="vt-en">to overthink</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">B · Describiendo el dibujo del colectivo</div>
+      <p class="vocab-grupo-sub">Poner en palabras la lámina de los dos pasajeros: el paisaje, los asientos, quién está sentado dónde.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">están pasando por las montañas</td><td class="vt-en">they're going through the mountains</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el paisaje</td><td class="vt-en">the landscape</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">que está sentado</td><td class="vt-en">who is sitting — <em>el estado, no la acción;</em> sentarse <em>es el acto de sentarse</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el asiento</td><td class="vt-en">the seat</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">tener una mala ubicación</td><td class="vt-en">to be badly placed, to have a bad spot</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la ladera</td><td class="vt-en">the hillside</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">C · La perspectiva, dicha de otras maneras</div>
+      <p class="vocab-grupo-sub">La columna vertebral de la clase, en refrán y en números.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el vaso medio lleno o el vaso medio vacío</td><td class="vt-en">the glass half full or half empty — <em>el dicho inglés que trajo Daniel; es la tarjeta ① en versión refrán</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">dos años y medio</td><td class="vt-en">two and a half years</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la cuenta regresiva</td><td class="vt-en">the countdown — <em>americano; en España</em> la cuenta atrás<em>. Es el hashtag del tuit de la primavera, abajo en Materiales</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">sobreentendido</td><td class="vt-en">taken as read, understood without being said — <em>también</em> sobrentendido<em>; del verbo</em> sobre(e)ntender</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">D · Una foto de casas de colores, y quiénes viven ahí</div>
+      <p class="vocab-grupo-sub">Describir una calle: los materiales, las aberturas, los colores. Varias entradas salieron de preguntas sobre cómo lo dice un nativo.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">casas de colores</td><td class="vt-en">colourful houses</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">en la parte de arriba</td><td class="vt-en">at the top — <em>la forma corriente; el par formal es</em> la parte superior / inferior</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el adoquín · los adoquines</td><td class="vt-en">the cobblestone · the cobblestones</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">los abrigos</td><td class="vt-en">the coats</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">las persianas</td><td class="vt-en">the blinds, the shutters</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la baranda</td><td class="vt-en">the railing</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">los barrotes</td><td class="vt-en">the bars</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">celeste</td><td class="vt-en">light blue — <em>no es</em> azul claro<em>: es un término de color propio,</em> el color del cielo</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el color rosa</td><td class="vt-en">pink — <em>no flexiona: nunca</em> roso</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">azul oscuro</td><td class="vt-en">dark blue — <em>acá sí se modifica el color, porque no hay palabra propia</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la maceta</td><td class="vt-en">the flowerpot</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">son jubilados</td><td class="vt-en">they're retired — <em>con</em> ser<em>, no</em> estar<em>: un rasgo con forma de participio clasifica</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">los nietos</td><td class="vt-en">the grandchildren</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">E · Estaciones, temporadas y alojamiento</div>
+      <p class="vocab-grupo-sub">La deriva hacia viajes: las dos palabras para «season» y lo que vino detrás.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la estación del año</td><td class="vt-en">the season of the year — <em>la del calendario</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la temporada alta / baja</td><td class="vt-en">high / low season — <em>la comercial; es el contraste que se preguntó</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la sequía</td><td class="vt-en">the drought</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el hostal</td><td class="vt-en">the hostel — <em>la forma estándar;</em> el hostel <em>es el anglicismo</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">ruidoso</td><td class="vt-en">noisy</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">F · Malestares, con su registro</div>
+      <p class="vocab-grupo-sub">Cómo se dice y cómo no. Salió de una pregunta sobre chorro como variante regional en México.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">estoy descompuesto de la panza</td><td class="vt-en">my stomach is upset — <em>la forma decible</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">tener cagadera</td><td class="vt-en">to have the runs — <em>vulgar, rioplatense. Queda anotado porque lo escribió ella, no porque convenga usarlo</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la panza · la barriga</td><td class="vt-en">the belly, the gut</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">estar descompuesto</td><td class="vt-en">to be broken; to be unwell — <em>la misma palabra para el aparato y para el cuerpo</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el motochorro</td><td class="vt-en">thief working off a motorbike — <em>lunfardo porteño. En México</em> chorro <em>es diarrea; en Buenos Aires</em> chorro <em>es ladrón</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">G · Recuerdos de viaje, y un refrán</div>
+      <p class="vocab-grupo-sub">La última deriva de la hora: souvenirs, Turquía, y un dicho para cerrar.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">en ese entonces</td><td class="vt-en">back then</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el souvenir · los recuerditos · los recuerdos</td><td class="vt-en">the souvenir — <em>el diminutivo marca registro, no tamaño</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el imán</td><td class="vt-en">the fridge magnet — <em>ejemplo de lo anterior</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el llavero</td><td class="vt-en">the keyring — <em>ídem</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">los bombones</td><td class="vt-en">the chocolates</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">Turquía</td><td class="vt-en">Turkey</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">demasiado dulce</td><td class="vt-en">too sweet</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la huella · las huellas</td><td class="vt-en">the footprint, the track, the trace — <em>no es «clue»; también</em> la huella dactilar<em>, la de los dedos</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la pista</td><td class="vt-en">the clue, the lead — <em>esta sí es «clue». Anotada para marcar la diferencia</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">perro que ladra no muerde</td><td class="vt-en">a barking dog doesn't bite — <em>la clase abrió con un hombre que extraña a su perro y cerró con este</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+  <section class="materiales" id="materiales">
+    <h2>Materiales de la clase</h2>
+
+    <div class="sub">Las dos láminas que mandó la profe — archivadas en <em>recursos/clase-2026-09-08/</em>. Tocá <em>ver</em> para abrirlas acá mismo.</div>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/faltar-vs-hacer-falta.jpg" data-zoom="150" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-tabla">Lámina</span>
+        <div>
+          <div class="material-title">Faltar vs. hacer falta</div>
+          <div class="material-desc">La lámina principal: <em>faltar</em> como ausencia o resto contra <em>hacer falta</em> como necesidad, con la concordancia del plural al final. Es sobre el par que la clase no trató a fondo.</div>
+          <div class="material-destino">Resumida en la tarjeta ②.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/colectivo-anotado-profe.webp" data-zoom="160" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Lámina</span>
+        <div>
+          <div class="material-title">El colectivo, con sus anotaciones</div>
+          <div class="material-desc">La captura original: el dibujo con las cuatro frases que ella escribió encima. El archivo es chico y la letra queda justa — por eso el dibujo limpio y sus frases en texto están arriba, en la tarjeta ①. Esta fila es la constancia de qué escribió exactamente.</div>
+          <div class="material-destino">Reconstruida en la tarjeta ①.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+
+    <div class="sub sub-laminas">Las seis páginas que mandó la profe como material de la clase. Son externas: se abren en otra pestaña y no están archivadas acá.</div>
+
+    <a class="material-item" href="https://videoele.com/B1-cuanto-tiempo-falta.html" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-ejercicio">Video + actividades</span>
+        <div>
+          <div class="material-title">¿Cuánto tiempo falta? — VideoEle, nivel B1</div>
+          <div class="material-desc">El video del que sale la hoja de actividades: un partido en el Camp Nou, unas lentejas y un viaje a Ibiza y Formentera. La página tiene el video, la transcripción, la guía didáctica en PDF y ejercicios interactivos.</div>
+          <div class="material-destino">Base de la tarjeta ⑤.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://www.escuelaespanolvivo.com/quedar-faltar-aprende-espanol/" target="_blank" rel="noopener noreferrer">
+        <div class="material-left">
+        <span class="material-tipo tipo-expl">Explicación</span>
+        <div>
+          <div class="material-title">Quedar y faltar — Español VIVO</div>
+          <div class="material-desc">La única de las seis que trata los dos verbos juntos, y la más cercana al tema de la clase: arranca diciendo que se confunden porque comparten un significado, y que por eso se pueden intercambiar en ciertos contextos y en otros no. Su ejemplo es <em>quedan / faltan dos días para que empiece la primavera</em> — el mismo de la captura de Crónica que está más abajo.</div>
+          <div class="material-destino">Tarjetas ① y ②. En español.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://www.realfastspanish.com/vocabulary/the-spanish-verb-faltar" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Explicación</span>
+        <div>
+          <div class="material-title">The Spanish verb faltar — Real Fast Spanish</div>
+          <div class="material-desc">La más completa de las seis. Cinco usos del verbo, el adjetivo <em>falto de</em>, tres usos del sustantivo <em>la falta</em> (carencia, infracción, defecto) y una sección final sobre <em>me falta</em> contra <em>me hace falta</em>. En inglés.</div>
+          <div class="material-destino">Tarjeta ②.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://helpingyoulearnspanish.com/falta-mucho/" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Explicación</span>
+        <div>
+          <div class="material-title">3 uses of the verb faltar — Helping You Learn Spanish</div>
+          <div class="material-desc">Tres usos con muchos ejemplos cortos: carecer de algo, estar ausente, y la cuenta regresiva con <em>¿cuánto falta para que…?</em>. De acá sale el meme de la tarjeta ⑤. En inglés, con ejemplos mexicanos.</div>
+          <div class="material-destino">Tarjetas ② y ⑤.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://blogdeespanol.com/2014/11/faltar/" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Explicación</span>
+        <div>
+          <div class="material-title">Faltar — El blog para aprender español</div>
+          <div class="material-desc">Una «tapa gramatical» breve de María, profesora de ELE en Madrid: los usos numerados del verbo, incluidos <em>faltar a clase</em>, <em>faltar a sus promesas</em> y el tiempo que queda hasta el final de algo. Todo en español.</div>
+          <div class="material-destino">Tarjetas ② y ⑤.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+    <a class="material-item" href="https://www.espanolistos.com/271/" target="_blank" rel="noopener noreferrer">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Pódcast</span>
+        <div>
+          <div class="material-title">Episodio 271: llevar, echar y faltar — Españolistos</div>
+          <div class="material-desc">Episodio con ejercicios de traducción sobre cuatro usos de cada verbo. Abre con las tres maneras de decir <em>I miss you</em> —<em>te extraño</em>, <em>te echo de menos</em>, <em>me haces falta</em>— que es exactamente la tarjeta ③. Español de Colombia.</div>
+          <div class="material-destino">Tarjeta ③.</div>
+        </div>
+      </div>
+      <div class="material-dl">IR ›</div>
+    </a>
+
+
+    <div class="sub sub-laminas">Los tres hilos de foro que miramos durante la clase, capturados como estaban. Son opiniones de hablantes nativos en un foro, no una fuente de referencia — valen por lo que muestran del uso, no como autoridad.</div>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/foro-faltar-vs-hacer-falta-cosas.png" data-zoom="170" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Foro</span>
+        <div>
+          <div class="material-title">Con cosas se tocan; con personas, no</div>
+          <div class="material-desc">Un hablante colombiano explica que con objetos los dos verbos suelen ser intercambiables —<em>a la camisa le falta un botón</em>— pero que con personas <em>hacer falta</em> se corre hacia «extrañar». Cierra diciendo que <em>faltar</em> le suena objetivo y <em>hacer falta</em> subjetivo.</div>
+          <div class="material-destino">Tarjetas ② y ③.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/foro-hacer-falta-necesitar.png" data-zoom="180" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Foro</span>
+        <div>
+          <div class="material-title">La paella, y la diferencia entre las dos preguntas</div>
+          <div class="material-desc">Un hablante peninsular separa <em>¿qué te hace falta para cocinar una paella?</em> (qué se necesita, en abstracto) de <em>¿qué te falta?</em> (de lo necesario, qué es lo que no tenés ahora). El mejor ejemplo de los tres hilos.</div>
+          <div class="material-destino">Tarjeta ②.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/foro-hace-falta-es-necesario.png" data-zoom="170" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Foro</span>
+        <div>
+          <div class="material-title">Cinco equivalencias con «es necesario»</div>
+          <div class="material-desc">Un hablante de Barcelona reescribe cinco frases con <em>hacer falta</em> usando <em>ser necesario</em> y <em>necesitar</em>. Es la prueba de sustitución de la tarjeta ② hecha cinco veces seguidas.</div>
+          <div class="material-destino">Tarjeta ②.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/cuenta-regresiva-primavera.png" data-zoom="200" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Captura</span>
+        <div>
+          <div class="material-title">«Faltan 20 días para la primavera»</div>
+          <div class="material-desc">Un posteo de Crónica TV con el Obelisco de fondo y el hashtag <em>#CuentaRegresiva</em>. <em>Faltar</em> en su hábitat: una cuenta regresiva hacia algo que se espera, escrita por un canal porteño.</div>
+          <div class="material-destino">Tarjeta ⑤ y el vocabulario, grupo C.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+
+    <div class="sub sub-laminas">Material propio — no es de esta clase. <em>Quedar</em> tiene cuatro o cinco usos más que no tienen nada que ver con el tiempo, y esta página no los trata. Quedan enlazados acá para tenerlos a un clic cuando la pregunta sea «¿y los otros usos?».</div>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/quedar-quedarse-notas.jpg" data-zoom="200" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-tabla">Apunte propio</span>
+        <div>
+          <div class="material-title">Quedar y quedarse — los apuntes completos</div>
+          <div class="material-desc">Cinco usos de <em>quedar</em> (quedar algo, sentar bien, citarse, estar ubicado, terminar de cierta manera) y cuatro de <em>quedarse</em> (permanecer, cambio de estado, <em>quedarse con</em>, <em>quedarse sin</em>), más una tabla que compara <em>quedar</em> con <em>encontrarse con</em>, <em>verse</em>, <em>conocer</em> y <em>reunirse</em>. Había una versión más corta de este mismo apunte; se archivó solo esta.</div>
+          <div class="material-destino">Fuera del tema de esta clase. Futuro explorador de <em>quedar</em>.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-08/quedar-quedarse-lamina.png" data-zoom="190" target="_blank" rel="noopener" onclick="return abrirMaterial(this)">
+      <div class="material-left">
+        <span class="material-tipo tipo-tabla">Lámina propia</span>
+        <div>
+          <div class="material-title">Quedar y quedarse — la versión ilustrada</div>
+          <div class="material-desc">El mismo contenido del apunte anterior, en lámina y con dibujos: una columna por verbo, un ejemplo por uso. Generada con IA a partir del apunte.</div>
+          <div class="material-destino">Fuera del tema de esta clase.</div>
+        </div>
+      </div>
+      <div class="material-dl">VER ›</div>
+    </a>
+  </section>
+
+  <section class="preguntas" id="preguntas">
+    <h2>Preguntas para la profe</h2>
+    <div class="sub">Lo que quedó sin resolver — para cuando surja</div>
+    <ol>
+      <li><strong>La zona de solapamiento.</strong> <em>Me faltan cinco pesos</em> y <em>me hacen falta cinco pesos</em>: ¿escuchás alguna diferencia real, o es elegir una u otra sin más? Preguntado al revés: ¿hay algún contexto donde una de las dos te suene mal?</li>
+      <li><strong><em>Te hago falta</em>.</strong> ¿Es realmente raro o simplemente poco frecuente? ¿Lo dirías alguna vez, y si no, cómo decís «me extrañás»?</li>
+      <li><strong>El registro de <em>hacer falta</em> con cosas.</strong> Dijiste que puede sonar a chico o a búsqueda de lástima. ¿Eso depende de la edad y la escolaridad del que habla, o de la situación? Un adulto que dice <em>me hace falta descansar</em>, ¿entra en eso o no tiene nada de raro?</li>
+      <li><strong>Lo que tiene cada verbo adentro.</strong> ¿Te suena que <em>quedar</em> sea «lo que todavía tengo» y <em>faltar</em> «lo que me separa del final» — o para vos empieza y termina en que es la perspectiva? Y lo otro: eso de la perspectiva, ¿te lo enseñaron así o lo fuiste armando vos dando clase?</li>
+      <li><strong><em>Sobreentendido</em>.</strong> ¿Cuál usás en la práctica: <em>sobre(e)ntender</em>, <em>dar por sentado</em>, <em>darse por sobreentendido</em>? ¿Alguna suena a escrito?</li>
+      <li><strong><em>Motochorro</em>.</strong> Quedó anotado <em>autochorro</em> en los apuntes de la clase y parece error de oído. ¿<em>Motochorro</em> es la palabra, y existe alguna para el que roba desde un auto?</li>
+    </ol>
+  </section>
+
+
+  <div class="page-footer">Clase del 8 de septiembre de 2026 · Mi Proyecto Español</div>
+</div>
+
+
+<!-- ───────────────────── Visor de imágenes ───────────────────── -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+  <div class="visor-barra">
+    <div class="visor-titulo" id="visor-titulo"></div>
+    <div class="visor-acciones">
+      <button class="visor-btn" id="visor-zoom" onclick="alternarZoom()">Ampliar</button>
+      <button class="visor-btn visor-cerrar" onclick="cerrarVisor()" title="Cerrar (Esc)">✕</button>
+    </div>
+  </div>
+  <div class="visor-cuerpo" id="visor-cuerpo" onclick="alternarZoom(event)">
+    <img id="visor-img" src="" alt="">
+  </div>
+  <div class="visor-pie" id="visor-pie"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish is the default site-wide.
+//  data-region="rioplatense" rows are TEXTUAL flags only; their
+//  audio stays neutral.
+//
+//  This sheet has NO card whose subject is a sound, so there are no
+//  data-voice="rio" rows on it and all audio is neutral. The rioVoice
+//  picker and speakVerbo() below are kept so this file stays byte-
+//  comparable with the other class sheets; they are simply unused here.
+// ═══════════════════════════════════════════════════════════════
+let neutralVoice = null;
+let rioVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  // Scoped to card ② only. Null is a normal outcome.
+  rioVoice =
+       voices.find(v => /argentin/i.test(v.name))
+    || voices.find(v => v.lang === 'es-AR')
+    || voices.find(v => v.lang === 'es-UY')
+    || null;
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Shared utterance path. wantRio is honoured only where the markup asks.
+async function say(text, btn, wantRio) {
+  if (!window.speechSynthesis || !text) return;
+
+  if (btn && btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  const chosen = (wantRio && rioVoice) ? rioVoice : neutralVoice;
+  if (chosen) { u.voice = chosen; u.lang = chosen.lang; }
+  else { u.lang = wantRio ? 'es-AR' : 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  if (btn) {
+    u.onstart = () => btn.classList.add('playing');
+    u.onend   = () => btn.classList.remove('playing');
+    u.onerror = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+async function speakExample(btn) {
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, row.dataset.voice === 'rio');
+}
+
+// Vocabulario de la clase — one button per term row.
+async function speakTerm(btn) {
+  const row = btn.closest('tr');
+  if (!row) return;
+  const esEl = row.querySelector('.vt-es');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, false);
+}
+
+// Plancha con etiquetas — the labels sitting over the cartoon in card ①.
+// Works for both renderers: the pill on desktop, the list item on mobile.
+async function speakPlancha(btn) {
+  const cont = btn.closest('.etiqueta') || btn.closest('li');
+  if (!cont) return;
+  const esEl = cont.querySelector('.etiqueta-texto, .pl-texto');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, false);
+}
+
+// Unused on this sheet — kept for parity with the other class sheets.
+async function speakVerbo(btn) {
+  const row = btn.closest('tr');
+  if (!row) return;
+  const esEl = row.querySelector('strong');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.textContent);
+  await say(text, btn, true);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Visor de imágenes — materiales y figuras se abren acá en vez
+//  de saltar a otra pestaña. Cierra con ✕, con clic en el fondo
+//  o con Esc. "Ampliar" pasa a tamaño natural con scroll, que es
+//  lo que necesitan las láminas densas.
+// ═══════════════════════════════════════════════════════════════
+const visor       = document.getElementById('visor');
+const visorImg    = document.getElementById('visor-img');
+const visorTitulo = document.getElementById('visor-titulo');
+const visorPie    = document.getElementById('visor-pie');
+const visorCuerpo = document.getElementById('visor-cuerpo');
+const visorZoom   = document.getElementById('visor-zoom');
+
+// Cuánto agranda "Ampliar", en % del tamaño nativo del archivo. Se fija por
+// imagen con data-zoom, porque las láminas llegan en tamaños muy distintos:
+// una de 204 px y una de 1080 px no pueden compartir un solo factor.
+const ZOOM_POR_DEFECTO = 220;
+let zoomActual = ZOOM_POR_DEFECTO;
+
+function abrirVisor(src, titulo, pie, zoom) {
+  if (!visor) return;
+  zoomActual = Number(zoom) > 0 ? Number(zoom) : ZOOM_POR_DEFECTO;
+  visorImg.style.width = '';
+  visorImg.src = src;
+  visorImg.alt = titulo || '';
+  visorTitulo.textContent = titulo || '';
+  visorPie.textContent = pie || '';
+  visorPie.style.display = pie ? '' : 'none';
+  visorCuerpo.classList.remove('ampliado');
+  visorZoom.textContent = 'Ampliar';
+  visor.classList.add('abierto');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarVisor() {
+  if (!visor) return;
+  visor.classList.remove('abierto');
+  visorCuerpo.classList.remove('ampliado');
+  visorImg.style.width = '';
+  visorImg.src = '';
+  document.body.style.overflow = '';
+}
+
+function alternarZoom(e) {
+  // Clic en el fondo del cuerpo (no en la imagen) cierra el visor.
+  if (e && e.target === visorCuerpo) { cerrarVisor(); return; }
+  const ampliado = visorCuerpo.classList.toggle('ampliado');
+  visorZoom.textContent = ampliado ? 'Ajustar' : 'Ampliar';
+  if (ampliado) {
+    const nativo = visorImg.naturalWidth || visorImg.width;
+    visorImg.style.width = Math.round(nativo * zoomActual / 100) + 'px';
+    // Centra el recorte visible en vez de dejarlo pegado al borde.
+    requestAnimationFrame(() => {
+      visorCuerpo.scrollLeft = (visorCuerpo.scrollWidth  - visorCuerpo.clientWidth)  / 2;
+      visorCuerpo.scrollTop  = (visorCuerpo.scrollHeight - visorCuerpo.clientHeight) / 2;
+    });
+  } else {
+    visorImg.style.width = '';
+    visorCuerpo.scrollTo({ top: 0, left: 0 });
+  }
+}
+
+// Materiales: intercepta el enlace. Si el JS falla, el href abre la pestaña.
+function abrirMaterial(a) {
+  const titulo = a.querySelector('.material-title');
+  const desc   = a.querySelector('.material-desc');
+  abrirVisor(a.getAttribute('href'),
+             titulo ? titulo.textContent.trim() : '',
+             desc ? desc.textContent.trim() : '',
+             a.dataset.zoom);
+  return false;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && visor && visor.classList.contains('abierto')) cerrarVisor();
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  Ampliación en el lugar — para las imágenes de las tarjetas.
+//  Mismo gesto que en el resto del sitio: clic para agrandar,
+//  clic de nuevo (o afuera, o scroll, o Esc) para soltar.
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.duo img, .figura-cartel img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (!activeImage) return;
+    activeImage.classList.remove('magnified');
+    const cont = activeImage.closest('figure');
+    if (cont) cont.classList.remove('zoomed');
+    activeImage = null;
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) { resetZoom(); return; }
+      resetZoom();
+      img.classList.add('magnified');
+      const cont = img.closest('figure');
+      if (cont) cont.classList.add('zoomed');
+      activeImage = img;
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') resetZoom(); });
+});
+</script>
+
+</body>
+</html>

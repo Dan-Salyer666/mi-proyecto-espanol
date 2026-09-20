@@ -43,6 +43,7 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
     html, body { min-height: 100%; }
 
     body {
@@ -189,6 +190,7 @@
     }
     .ronda-cab .tit { font-family: 'DM Serif Display', serif; font-size: 1.35rem; line-height: 1.2; }
     .ronda-cab .der { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .ronda-cab .cuenta-cab { font-size: 0.85rem; color: var(--text-muted); margin: 0 4px; }
     .pill {
       font-size: 0.75rem; padding: 3px 10px; border-radius: 999px;
       border: 1px solid color-mix(in srgb, var(--c) 45%, transparent);
@@ -224,12 +226,12 @@
 
     .ranura {
       position: absolute; transform: translate(-50%, 0);
-      min-width: 108px; max-width: 190px;
-      padding: 4px 9px; border-radius: 8px;
+      min-width: 118px; max-width: 220px;
+      padding: 4px 10px; border-radius: 8px;
       background: rgba(10,22,40,0.86);
       border: 1px dashed color-mix(in srgb, var(--accent) 55%, transparent);
       color: var(--text-primary);
-      font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 500;
+      font-family: 'Outfit', sans-serif; font-size: 0.95rem; font-weight: 500;
       line-height: 1.3; text-align: center; cursor: pointer;
       transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
     }
@@ -247,11 +249,25 @@
     .ranura.ok  { border-color: var(--ok);    box-shadow: 0 0 0 2px rgba(52,211,153,0.22); }
     .ranura.art { border-color: var(--tibio); box-shadow: 0 0 0 2px rgba(251,191,36,0.22); }
     .ranura.mal { border-color: var(--mal);   box-shadow: 0 0 0 2px rgba(248,113,113,0.22); }
+    /* Fila de abajo de la lámina: la ranura crece hacia arriba, así la
+       línea de corrección no queda cortada por el borde de la imagen. */
+    .ranura.abajo { transform: translate(-50%, -100%); }
+
+    /* Corrección dentro de la ranura: lo que pusiste tachado, la forma
+       correcta debajo. El detalle completo sigue en la lista de abajo. */
+    .ranura .tachado,
+    .ranura input.tachado { text-decoration: line-through; color: var(--mal); opacity: 0.85; }
+    .ranura.vacia .tachado { text-decoration: none; }
+    .ranura .rcorr {
+      display: block; margin-top: 2px; padding-top: 3px;
+      border-top: 1px solid rgba(255,255,255,0.10);
+      color: var(--ok); font-weight: 600; word-break: break-word;
+    }
 
     .ranura input {
       width: 100%; background: transparent; border: none; outline: none;
       color: var(--text-primary); font-family: 'Outfit', sans-serif;
-      font-size: 0.8rem; text-align: center;
+      font-size: 0.95rem; text-align: center;
     }
     .ranura input::placeholder { color: var(--text-muted); font-style: italic; }
 
@@ -286,15 +302,16 @@
     .mazo-cab .t { font-family: 'DM Serif Display', serif; font-size: 1.15rem; }
     .mazo-cab .d { font-size: 0.83rem; color: var(--text-muted); }
     .mazo {
-      display: flex; flex-wrap: wrap; gap: 8px;
+      display: flex; flex-direction: column; gap: 8px;
       background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 14px; min-height: 70px;
+      border-radius: 12px; padding: 12px; align-self: start;
     }
     .carta {
-      padding: 7px 13px; border-radius: 999px;
+      padding: 9px 14px; border-radius: 999px;
       border: 1px solid var(--border); background: var(--bg-input);
       color: var(--text-primary); font-family: 'Outfit', sans-serif;
-      font-size: 0.86rem; cursor: grab; user-select: none;
+      font-size: 1rem; line-height: 1.3; text-align: center;
+      cursor: grab; user-select: none;
       touch-action: none; transition: all 0.15s;
     }
     .carta:hover { border-color: var(--accent-beta); background: var(--bg-card-hover); }
@@ -302,12 +319,12 @@
       border-color: var(--accent-beta); background: rgba(192,132,252,0.18);
       box-shadow: 0 0 0 3px rgba(192,132,252,0.2);
     }
-    .carta.usada { display: none; }
+    .carta.usada { visibility: hidden; }
     .fantasma {
       position: fixed; z-index: 999; pointer-events: none;
       padding: 7px 13px; border-radius: 999px;
       border: 1px solid var(--accent-beta); background: rgba(17,29,53,0.97);
-      color: var(--text-primary); font-size: 0.86rem;
+      color: var(--text-primary); font-size: 1rem;
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
 
@@ -316,6 +333,51 @@
       margin-top: 18px;
     }
     .barra-accion .cuenta { font-size: 0.85rem; color: var(--text-muted); margin-left: auto; }
+
+    /* ── Pantalla de ronda: ancha, sin scroll ──────
+       Cartas a los dos lados, lámina al medio. La lámina es cuadrada y su
+       lado sale del alto de la ventana menos la cabecera (--reservado lo
+       calcula render()), así lámina y cartas entran enteras en pantalla. */
+    body.en-ronda { padding-top: 14px; }
+    body.en-ronda .container { max-width: 1400px; }
+    body.en-ronda .back-nav,
+    body.en-ronda .title-card { display: none; }
+
+    .ronda-cuerpo {
+      --lado: min(calc(100vh - var(--reservado, 130px)), 940px);
+      display: grid; gap: 14px; justify-content: center; align-items: start;
+      grid-template-columns: minmax(150px, 215px) minmax(360px, var(--lado)) minmax(150px, 215px);
+      grid-template-areas: "izq fig der";
+    }
+    .ronda-cuerpo .lamina-figure { grid-area: fig; margin-bottom: 0; }
+    #mazo-izq { grid-area: izq; }
+    #mazo-der { grid-area: der; }
+    .mazo-ayuda {
+      font-size: 0.8rem; color: var(--text-muted); text-align: center;
+      margin: 10px 4px 0; line-height: 1.5;
+    }
+    body.modo-escribir .ronda-cuerpo {
+      grid-template-columns: minmax(360px, var(--lado));
+      grid-template-areas: "fig";
+    }
+
+    /* Ventana mediana: las columnas de cartas se angostan antes que la lámina. */
+    @media (max-width: 1100px) {
+      .ronda-cuerpo {
+        grid-template-columns: minmax(140px, 180px) minmax(360px, var(--lado)) minmax(140px, 180px);
+      }
+      .carta { padding: 8px 10px; font-size: 0.95rem; }
+    }
+    /* Teléfono: lista numerada (body.angosto) y cartas debajo, en fila. */
+    @media (max-width: 700px) {
+      .ronda-cuerpo {
+        grid-template-columns: 1fr;
+        grid-template-areas: "fig" "izq" "der"; gap: 10px;
+      }
+      .mazo { flex-direction: row; flex-wrap: wrap; }
+      .carta { font-size: 0.9rem; padding: 7px 13px; }
+      .carta.usada { display: none; }
+    }
 
     /* ── Correcciones ───────────────────────────── */
     .correcciones { margin-top: 22px; }
@@ -500,38 +562,30 @@
       <div class="der">
         <span class="pill p-modo" id="r-modo">Arrastrar</span>
         <span class="pill" id="r-region">General</span>
+        <span class="cuenta-cab" id="cuenta">0 de 0</span>
+        <button class="btn primario" id="btn-comprobar">Comprobar</button>
+        <button class="btn" id="btn-limpiar">Vaciar</button>
+        <button class="btn primario" id="btn-otra" hidden>Otra lámina →</button>
+        <button class="btn" id="btn-terminar" hidden>Terminar</button>
         <button class="btn" id="btn-salir">Salir</button>
       </div>
     </div>
 
-    <figure class="lamina-figure">
-      <div class="lamina-plate" id="plate">
-        <img id="r-img" src="" alt="">
-      </div>
-    </figure>
+    <div class="ronda-cuerpo" id="ronda-cuerpo">
+      <div class="mazo" id="mazo-izq"></div>
+      <figure class="lamina-figure">
+        <div class="lamina-plate" id="plate">
+          <img id="r-img" src="" alt="">
+        </div>
+      </figure>
+      <div class="mazo" id="mazo-der"></div>
+    </div>
+
+    <div class="mazo-ayuda" id="mazo-ayuda">Arrastrá una carta a su ranura, o tocala y después tocá la ranura. Tocá una ranura llena para devolver la carta.</div>
 
     <div class="ranuras-lista" id="ranuras-lista"></div>
 
-    <div id="zona-mazo">
-      <div class="mazo-cab">
-        <span class="t">Las cartas</span>
-        <span class="d" id="mazo-ayuda">Arrastrá una carta a su ranura, o tocala y después tocá la ranura. Tocá una ranura llena para devolver la carta.</span>
-      </div>
-      <div class="mazo" id="mazo"></div>
-    </div>
-
-    <div class="barra-accion">
-      <button class="btn primario" id="btn-comprobar">Comprobar</button>
-      <button class="btn" id="btn-limpiar">Vaciar</button>
-      <span class="cuenta" id="cuenta">0 de 0</span>
-    </div>
-
     <div class="correcciones" id="correcciones" hidden></div>
-
-    <div class="barra-accion" id="barra-siguiente" hidden>
-      <button class="btn primario" id="btn-otra">Otra lámina →</button>
-      <button class="btn" id="btn-terminar">Terminar</button>
-    </div>
 
   </div>
 
@@ -566,6 +620,16 @@ const REGIONES = { esp: 'España', mex: 'México', rpl: 'Rioplatense' };
 const ABREV    = { esp: 'ES', mex: 'MX', rpl: 'RPl' };
 const CLAVE_LS = 'contenedores_quiz_v1';
 const CARTAS_POR_MAZO = 20;
+
+/* Ajustes de posición sólo para la práctica. La ranura de la práctica es
+   más grande que la etiqueta de la página de referencia (y crece con la
+   corrección), así que donde dos chocan se mueve acá, sin tocar el archivo
+   de datos compartido. La heladera (lám. 3) quedaba encima de la sartén. */
+const POS_PRACTICA = { heladera: { y: 95 } };
+function posDe(item) {
+  const a = POS_PRACTICA[item.id] || {};
+  return { x: a.x != null ? a.x : item.x, y: a.y != null ? a.y : item.y };
+}
 
 /* Señuelos que no son contenedores: los parónimos de §7 de la página.
    Acá no se producen, solo se descartan — que es justamente el punto. */
@@ -836,6 +900,7 @@ function mostrar(cual) {
   document.getElementById('pantalla-inicio').hidden = cual !== 'inicio';
   document.getElementById('pantalla-ronda').hidden  = cual !== 'ronda';
   document.getElementById('pantalla-fin').hidden    = cual !== 'fin';
+  document.body.classList.toggle('en-ronda', cual === 'ronda');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -848,12 +913,13 @@ function iniciarRonda(n) {
   ronda = {
     n, items,
     mazo: [],
+    objetivos: {},
     respuestas: {},
     corregida: false
   };
   items.forEach(it => { ronda.respuestas[it.id] = { carta: null, texto: '' }; });
 
-  if (config.modo === 'arrastrar') ronda.mazo = armarMazo(items, config.region);
+  if (config.modo === 'arrastrar') ronda.mazo = armarMazo(items, config.region, ronda.objetivos);
 
   if (!sesion.vistas.includes(n)) sesion.vistas.push(n);
 
@@ -869,12 +935,14 @@ function iniciarRonda(n) {
   img.src = '../assets/contenedores/' + lam.slug + '.webp';
   img.alt = 'Lámina: ' + lam.titulo;
 
-  document.getElementById('zona-mazo').hidden = config.modo !== 'arrastrar';
+  const arrastrar = config.modo === 'arrastrar';
+  document.body.classList.toggle('modo-escribir', !arrastrar);
+  document.getElementById('mazo-izq').hidden = !arrastrar;
+  document.getElementById('mazo-der').hidden = !arrastrar;
+  document.getElementById('mazo-ayuda').hidden = !arrastrar;
   document.getElementById('correcciones').hidden = true;
   document.getElementById('correcciones').innerHTML = '';
-  document.getElementById('barra-siguiente').hidden = true;
-  document.getElementById('btn-comprobar').disabled = false;
-  document.getElementById('btn-limpiar').disabled = false;
+  ponerBotones(false);
 
   render();
   mostrar('ronda');
@@ -882,7 +950,7 @@ function iniciarRonda(n) {
 
 /* ── El mazo ─────────────────────────────────────────────── */
 
-function armarMazo(items, region) {
+function armarMazo(items, region, objetivosPorId) {
   const cartas = [];
   const objetivos = [];
 
@@ -891,6 +959,7 @@ function armarMazo(items, region) {
      es exactamente lo que hay que ver. */
   items.forEach(it => {
     const t = objetivoDe(it, region);
+    if (objetivosPorId) objetivosPorId[it.id] = t;
     objetivos.push(t);
     cartas.push(t);
   });
@@ -926,8 +995,27 @@ function armarMazo(items, region) {
 
 function esAngosto() { return window.matchMedia('(max-width: 700px)').matches; }
 
+/* Antes de corregir: Comprobar / Vaciar. Después: Otra lámina / Terminar.
+   Todo vive en la cabecera, para no tener que bajar a buscar botones. */
+function ponerBotones(corregida) {
+  document.getElementById('btn-comprobar').hidden = corregida;
+  document.getElementById('btn-limpiar').hidden   = corregida;
+  document.getElementById('btn-otra').hidden      = !corregida;
+  document.getElementById('btn-terminar').hidden  = !corregida;
+}
+
+/* Alto que la lámina tiene que dejar libre: la cabecera y los márgenes.
+   El lado de la lámina = alto de ventana − esto (ver .ronda-cuerpo). */
+function medirReservado() {
+  const cab = document.querySelector('#pantalla-ronda .ronda-cab');
+  if (!cab || !cab.offsetHeight) return;
+  const cuerpo = document.getElementById('ronda-cuerpo');
+  cuerpo.style.setProperty('--reservado', (cab.offsetHeight + 14 + 14 + 18) + 'px');
+}
+
 function render() {
   document.body.classList.toggle('angosto', esAngosto());
+  medirReservado();
   renderRanuras();
   renderMazo();
   actualizarCuenta();
@@ -949,8 +1037,9 @@ function renderRanuras() {
     const pin = document.createElement('span');
     pin.className = 'pin';
     pin.dataset.id = item.id;
-    pin.style.left = item.x + '%';
-    pin.style.top  = item.y + '%';
+    const pos = posDe(item);
+    pin.style.left = pos.x + '%';
+    pin.style.top  = pos.y + '%';
     pin.textContent = num;
     if (ronda.corregida && ronda.marcas && ronda.marcas[item.id]) {
       pin.classList.add(ronda.marcas[item.id]);
@@ -969,8 +1058,9 @@ function renderRanuras() {
       fila.appendChild(r);
       lista.appendChild(fila);
     } else {
-      r.style.left = item.x + '%';
-      r.style.top  = item.y + '%';
+      r.style.left = pos.x + '%';
+      r.style.top  = pos.y + '%';
+      if (pos.y > 80) r.classList.add('abajo');
       plate.appendChild(r);
     }
   });
@@ -993,6 +1083,7 @@ function crearRanura(item, num) {
     inp.type = 'text';
     inp.value = resp.texto;
     inp.placeholder = '…';
+    inp.size = 13;   /* ancho propio: si no, la ranura se estira al máximo */
     inp.autocomplete = 'off';
     inp.spellcheck = false;
     inp.disabled = ronda.corregida;
@@ -1028,31 +1119,37 @@ function crearRanura(item, num) {
   }
 
   if (ronda.corregida && ronda.marcas && ronda.marcas[item.id]) {
-    r.classList.add(ronda.marcas[item.id]);
+    const marca = ronda.marcas[item.id];
+    r.classList.add(marca);
+    if (marca !== 'ok') {
+      const dado = r.querySelector('.rtxt, input');
+      if (dado) dado.classList.add('tachado');
+      const c = document.createElement('span');
+      c.className = 'rcorr';
+      c.textContent = '✓ ' + (ronda.correctas[item.id] || '');
+      r.appendChild(c);
+    }
   }
   return r;
 }
 
+/* La primera mitad del mazo va a la izquierda, la segunda a la derecha.
+   Cada carta tiene lugar fijo: al usarla queda el hueco, nada se corre. */
 function renderMazo() {
-  const cont = document.getElementById('mazo');
-  cont.innerHTML = '';
+  const izq = document.getElementById('mazo-izq');
+  const der = document.getElementById('mazo-der');
+  izq.innerHTML = '';
+  der.innerHTML = '';
   if (config.modo !== 'arrastrar') return;
-
-  ronda.mazo.forEach(c => {
+  const mitad = Math.ceil(ronda.mazo.length / 2);
+  ronda.mazo.forEach((c, k) => {
     const b = document.createElement('div');
     b.className = 'carta' + (c.usadaEn ? ' usada' : '') + (cartaSeleccionada === c.id ? ' sel' : '');
     b.dataset.id = c.id;
     b.textContent = c.txt;
     if (!ronda.corregida) engancharArrastre(b, c);
-    cont.appendChild(b);
+    (k < mitad ? izq : der).appendChild(b);
   });
-
-  if (ronda.mazo.every(c => c.usadaEn)) {
-    const v = document.createElement('div');
-    v.className = 'vacio';
-    v.textContent = 'No queda ninguna carta suelta.';
-    cont.appendChild(v);
-  }
 }
 
 function actualizarCuenta() {
@@ -1218,6 +1315,19 @@ function calificar(item, dado) {
   return { marca: 'mal' };
 }
 
+/* La forma que se muestra en la ranura cuando fallaste.
+   - Región forzada: la de esa región.
+   - Artículo mal: la forma cuyo sustantivo acertaste, con su artículo.
+   - General, arrastrar: la carta que el mazo trajo para ese objeto.
+   - General, escribir: la neutra; si no hay neutra, las regionales. */
+function formaCorrecta(item, res) {
+  if (res && res.marca === 'art' && res.forma) return res.forma;
+  if (config.region !== 'general') return item[config.region];
+  if (config.modo === 'arrastrar' && ronda.objetivos[item.id]) return ronda.objetivos[item.id];
+  if (item.neutral) return item.neutral;
+  return formasDe(item).join(' / ');
+}
+
 function textoDado(item) {
   const r = ronda.respuestas[item.id];
   if (config.modo === 'escribir') return r.texto.trim();
@@ -1231,7 +1341,7 @@ function comprobar() {
   if (ronda.corregida) return;
   ronda.corregida = true;
   ronda.marcas = {};
-
+  ronda.correctas = {};
   let ok = 0;
   const filas = [];
 
@@ -1239,6 +1349,7 @@ function comprobar() {
     const dado = textoDado(item);
     const res = calificar(item, dado);
     ronda.marcas[item.id] = res.marca;
+    ronda.correctas[item.id] = formaCorrecta(item, res);
     if (res.marca === 'ok') ok++;
 
     /* Estadísticas por ítem */
@@ -1268,9 +1379,7 @@ function comprobar() {
   pintarCorrecciones(filas, ok);
   render();
 
-  document.getElementById('btn-comprobar').disabled = true;
-  document.getElementById('btn-limpiar').disabled = true;
-  document.getElementById('barra-siguiente').hidden = false;
+  ponerBotones(true);
   pintarEstadisticas();
 }
 

@@ -140,6 +140,22 @@ body::after {
   content:''; flex:1; height:1px; background:var(--border);
 }
 
+/* ── Notas de Clase: months as collapsible groups (newest open) ── */
+details.mes { margin-bottom:6px; }
+details.mes > summary {
+  list-style:none; cursor:pointer; display:flex; align-items:center; gap:10px;
+  padding:8px 14px; border-radius:10px; font-size:0.85rem; font-weight:600;
+  color:var(--text-primary); transition:background 0.18s ease;
+}
+details.mes > summary::-webkit-details-marker { display:none; }
+details.mes > summary::before {
+  content:'›'; color:#f472b6; font-size:1.1rem; line-height:1; transition:transform 0.2s ease;
+}
+details.mes[open] > summary::before { transform:rotate(90deg); }
+details.mes > summary:hover { background:var(--bg-card-hover); }
+details.mes .mes-count { margin-left:auto; font-size:0.72rem; font-weight:500; color:var(--text-muted); }
+details.mes > .link-item { margin-left:14px; }
+
 /* ── LINK ITEMS ── */
 .link-item {
   display:flex; align-items:center; justify-content:space-between;
@@ -980,7 +996,7 @@ body::after {
         </div>
       </div>
       <div class="hub-meta">
-        <span class="hub-count">7 clases</span>
+        <span class="hub-count">8 clases</span>
         <span class="hub-chevron">▼</span>
       </div>
     </div>
@@ -989,90 +1005,108 @@ body::after {
 
         <div class="hub-section">
           <div class="hub-section-label">2026</div>
-          <a class="link-item" href="topics/clase-de-espanol/clase-2026-09-22.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#f472b6"></div>
-              <div>
-                <div class="link-title">Clase del 22 de septiembre de 2026</div>
-                <div class="link-sub">La redacción sobre Biró, corregida · quitar el agente: cosas y personas · el hecho de que y el modo — no afirmar · volver y volverse</div>
+          <details class="mes" open>
+            <summary><span class="mes-nombre">Septiembre</span><span class="mes-count">4 clases</span></summary>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-09-22.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 22 de septiembre de 2026</div>
+                  <div class="link-sub">La redacción sobre Biró, corregida · quitar el agente: cosas y personas · el hecho de que y el modo — no afirmar · volver y volverse</div>
+                </div>
               </div>
-            </div>
-            <div class="link-right">
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
-          <a class="link-item" href="topics/clase-de-espanol/clase-2026-09-08.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#f472b6"></div>
-              <div>
-                <div class="link-title">Clase del 8 de septiembre de 2026</div>
-                <div class="link-sub">La perspectiva decide entre faltar y quedar · faltar no es hacer falta · me hacés falta, el agujero · el dativo y a quién le importa · la cuenta regresiva</div>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
               </div>
-            </div>
-            <div class="link-right">
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
-          <a class="link-item" href="topics/clase-de-espanol/clase-2026-09-03.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#f472b6"></div>
-              <div>
-                <div class="link-title">Clase del 3 de septiembre de 2026</div>
-                <div class="link-sub">Prestar en dos direcciones · el ítem de quiz que estaba mal · las cuatro señales · actitud activa y pasiva · trampas de sonido</div>
+            </a>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-09-15.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 15 de septiembre de 2026</div>
+                  <div class="link-sub">El relato «Los dos de la foto», corregido · nunca creí que…: una frase, tres decisiones · el dativo de posesión, dónde sí y dónde no · ser, medir, pesar, tener</div>
+                </div>
               </div>
-            </div>
-            <div class="link-right">
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
-          <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-27.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#f472b6"></div>
-              <div>
-                <div class="link-title">Clase del 27 de agosto de 2026</div>
-                <div class="link-sub">Llevar y traer · las cinco con LL · futuro de probabilidad · pedir en el café · los carpinchos</div>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
               </div>
-            </div>
-            <div class="link-right">
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
-          <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-26.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#f472b6"></div>
-              <div>
-                <div class="link-title">Clase del 26 de agosto de 2026</div>
-                <div class="link-sub">Vocabulario regional · ¿se entiende? · adverbios de duda · orden de los pronombres · abajo y debajo</div>
+            </a>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-09-08.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 8 de septiembre de 2026</div>
+                  <div class="link-sub">La perspectiva decide entre faltar y quedar · faltar no es hacer falta · me hacés falta, el agujero · el dativo y a quién le importa · la cuenta regresiva</div>
+                </div>
               </div>
-            </div>
-            <div class="link-right">
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
-          <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-18.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#f472b6"></div>
-              <div>
-                <div class="link-title">Clase del 18 de agosto de 2026</div>
-                <div class="link-sub">Emociones y preposiciones · dar por + participio · el «dar» escondido · gustar</div>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
               </div>
-            </div>
-            <div class="link-right">
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
-          <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-12.html">
-            <div class="link-item-left">
-              <div class="link-dot" style="background:#f472b6"></div>
-              <div>
-                <div class="link-title">Clase del 12 de agosto de 2026</div>
-                <div class="link-sub">Entradas y pasajes · hablar de mi nivel · economía del lenguaje · interrogativos</div>
+            </a>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-09-03.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 3 de septiembre de 2026</div>
+                  <div class="link-sub">Prestar en dos direcciones · el ítem de quiz que estaba mal · las cuatro señales · actitud activa y pasiva · trampas de sonido</div>
+                </div>
               </div>
-            </div>
-            <div class="link-right">
-              <span class="link-arrow">›</span>
-            </div>
-          </a>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
+              </div>
+            </a>
+          </details>
+          <details class="mes">
+            <summary><span class="mes-nombre">Agosto</span><span class="mes-count">4 clases</span></summary>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-27.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 27 de agosto de 2026</div>
+                  <div class="link-sub">Llevar y traer · las cinco con LL · futuro de probabilidad · pedir en el café · los carpinchos</div>
+                </div>
+              </div>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
+              </div>
+            </a>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-26.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 26 de agosto de 2026</div>
+                  <div class="link-sub">Vocabulario regional · ¿se entiende? · adverbios de duda · orden de los pronombres · abajo y debajo</div>
+                </div>
+              </div>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
+              </div>
+            </a>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-18.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 18 de agosto de 2026</div>
+                  <div class="link-sub">Emociones y preposiciones · dar por + participio · el «dar» escondido · gustar</div>
+                </div>
+              </div>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
+              </div>
+            </a>
+            <a class="link-item" href="topics/clase-de-espanol/clase-2026-08-12.html">
+              <div class="link-item-left">
+                <div class="link-dot" style="background:#f472b6"></div>
+                <div>
+                  <div class="link-title">Clase del 12 de agosto de 2026</div>
+                  <div class="link-sub">Entradas y pasajes · hablar de mi nivel · economía del lenguaje · interrogativos</div>
+                </div>
+              </div>
+              <div class="link-right">
+                <span class="link-arrow">›</span>
+              </div>
+            </a>
+          </details>
         </div>
 
       </div>

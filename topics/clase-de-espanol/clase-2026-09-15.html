@@ -1,0 +1,2423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clase del 15 de septiembre de 2026 — Mi Proyecto Español</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/bandera/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/assets/bandera/icon-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/bandera/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep:        #0a1628;
+  --bg-card:        #111d35;
+  --bg-card-hover:  #162544;
+  --bg-input:       #0d1a2f;
+  --border:         #1e3355;
+  --border-focus:   #3b6cb5;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #8a9bb8;
+  --text-muted:     #5a6f8e;
+  --accent:         #4a90d9;
+  --accent-glow:    rgba(74, 144, 217, 0.15);
+  --green:          #34d399;
+  --yellow:         #fbbf24;
+  --red:            #f87171;
+
+  /* Per-card accents — violet and teal deliberately unused here so the
+     región chips (teal = Rioplatense, violet = España) stay unambiguous. */
+  --accent-alpha:   #4a90d9;  /* ① blue        */
+  --accent-gamma:   #fbbf24;  /* ② gold        */
+  --accent-epsilon: #f472b6;  /* ③ rose        */
+  --accent-zeta:    #34d399;  /* ④ green       */
+  --accent-eta:     #fb923c;  /* ⑤ orange      */
+  --accent-theta:   #94a3b8;  /* ⑥ slate       */
+  --accent-iota:    #38bdf8;  /* ⑦ sky         */
+  --accent-kappa:   #a3e635;  /* ⑧ lime        */
+  --accent-lambda:  #d4a373;  /* ⑨ tan         */
+  --accent-mu:      #cbd5e1;  /* ⑩ light slate */
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── Background ── */
+.bg-photo {
+  position: fixed; inset: 0;
+  background: url('../../assets/los fondos/cadaquez iglesia.webp') center/cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+}
+.bg-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10, 22, 40, 0.6);
+  z-index: 0;
+}
+
+.page-wrap {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+/* ── Back link & header ── */
+.back-link {
+  display: inline-block;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.9rem;
+  padding: 20px 0 8px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: var(--accent); }
+
+.page-header {
+  text-align: center;
+  padding: 14px 0 18px;
+  position: relative;
+}
+.page-header .overline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 14px;
+}
+.page-header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header .subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Contents strip ── */
+.contents {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 22px 0 18px;
+}
+.contents-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+.contents-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.contents-list a {
+  display: inline-block;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.84rem;
+  transition: all 0.2s;
+}
+.contents-list a:hover {
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.45);
+  background: rgba(74, 144, 217, 0.08);
+}
+
+/* ── Rate bar ── */
+.rate-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 0 0 22px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.rate-label { font-size: 0.82rem; color: var(--text-muted); margin-right: 4px; }
+.rate-btn {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rate-btn:hover { border-color: #2a4a75; color: var(--text-primary); }
+.rate-btn.active {
+  background: rgba(74, 144, 217, 0.15);
+  color: var(--accent);
+  border-color: rgba(74, 144, 217, 0.3);
+}
+
+/* ── NOTA blocks ── */
+.nota {
+  background: rgba(74, 144, 217, 0.08);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 14px 0;
+  font-size: 0.93rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.nota .nota-label {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--accent);
+  margin-right: 6px;
+  letter-spacing: 0.02em;
+}
+.nota strong { color: var(--text-primary); font-weight: 600; }
+.nota em { color: var(--accent); font-style: italic; }
+.nota p + p { margin-top: 10px; }
+.nota ul { margin: 8px 0 0 18px; }
+.nota li { margin-bottom: 5px; }
+.nota code {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.nota h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 14px 0 5px;
+}
+.nota h4:first-of-type { margin-top: 8px; }
+
+/* ── Provenance legend (sits under the contents strip) ── */
+.leyenda {
+  background: rgba(138, 155, 184, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  margin: 0 0 18px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.leyenda .leyenda-label {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.leyenda-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; flex-wrap: wrap; }
+.leyenda-row:last-child { margin-bottom: 0; }
+
+/* ── Cards ── */
+.grammar-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 14px;
+  padding: 24px 26px 22px;
+  margin-bottom: 18px;
+  scroll-margin-top: 16px;
+  transition: border-color 0.2s;
+}
+.grammar-card:hover {
+  border-top-color: #2a4a75;
+  border-right-color: #2a4a75;
+  border-bottom-color: #2a4a75;
+}
+.card-alpha   { border-left-color: var(--accent-alpha); }
+.card-gamma   { border-left-color: var(--accent-gamma); }
+.card-epsilon { border-left-color: var(--accent-epsilon); }
+.card-zeta    { border-left-color: var(--accent-zeta); }
+.card-eta     { border-left-color: var(--accent-eta); }
+.card-theta   { border-left-color: var(--accent-theta); }
+.card-iota    { border-left-color: var(--accent-iota); }
+.card-kappa   { border-left-color: var(--accent-kappa); }
+.card-lambda  { border-left-color: var(--accent-lambda); }
+.card-mu      { border-left-color: var(--accent-mu); }
+.card-alpha   .card-number { color: var(--accent-alpha);   opacity: 0.75; }
+.card-gamma   .card-number { color: var(--accent-gamma);   opacity: 0.75; }
+.card-epsilon .card-number { color: var(--accent-epsilon); opacity: 0.75; }
+.card-zeta    .card-number { color: var(--accent-zeta);    opacity: 0.75; }
+.card-eta     .card-number { color: var(--accent-eta);     opacity: 0.75; }
+.card-theta   .card-number { color: var(--accent-theta);   opacity: 0.75; }
+.card-iota    .card-number { color: var(--accent-iota);    opacity: 0.75; }
+.card-kappa   .card-number { color: var(--accent-kappa);   opacity: 0.75; }
+.card-lambda  .card-number { color: var(--accent-lambda);  opacity: 0.75; }
+.card-mu      .card-number { color: var(--accent-mu);      opacity: 0.75; }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.card-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.card-title-group { flex: 1; min-width: 240px; }
+.card-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+.card-title em { color: var(--accent); font-style: italic; }
+.card-title-en {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+}
+
+/* ── Provenance chips ── */
+.prov-chips {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  align-items: center;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+.prov {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.prov-clase    { background: rgba(74, 222, 128, 0.10); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.28); }
+.prov-material { background: rgba(250, 204, 21, 0.10); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.28); }
+.prov-ampl     { background: rgba(148, 163, 184, 0.10); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.28); }
+
+/* ── Explanation prose ── */
+.explanation {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 6px 0 14px;
+  font-size: 0.95rem;
+}
+.explanation em { color: var(--accent); font-style: italic; }
+.explanation strong { color: var(--text-primary); font-weight: 600; }
+.explanation + .explanation { margin-top: -6px; }
+
+/* ── Epigraph (her words, verbatim) ── */
+.epigrafe {
+  border-left: 2px solid var(--accent);
+  padding: 4px 0 4px 16px;
+  margin: 4px 0 16px;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.12rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.epigrafe .fuente {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 7px;
+}
+
+/* ── Sub-heading inside a card ── */
+.sub-head {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 20px 0 6px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(30, 51, 85, 0.6);
+}
+
+/* ── Formula ── */
+.formula {
+  display: inline-block;
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 4px 0 14px;
+  line-height: 1.7;
+}
+.formula strong { color: var(--text-primary); }
+
+/* ── Example rows ── */
+.example-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(30, 51, 85, 0.4);
+}
+.example-row:first-of-type { border-top: none; }
+.example-row .speak-wrap { flex-shrink: 0; padding-top: 2px; }
+.example-row .example-body { flex: 1; min-width: 0; }
+.example-es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+.example-es strong { color: var(--accent); font-weight: 600; font-style: italic; }
+.example-en {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.example-en em { color: var(--text-secondary); font-style: italic; }
+
+/* Spine example — the one sentence a card turns on */
+.example-row.spine {
+  background: rgba(74, 144, 217, 0.07);
+  border: 1px solid rgba(74, 144, 217, 0.22);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-top: 10px;
+}
+.example-row.spine .example-es { font-size: 1.14rem; }
+.anotacion {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.55;
+}
+.anotacion b { color: var(--text-secondary); font-weight: 600; }
+.anotacion em { color: var(--accent); font-style: italic; }
+
+.speak-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.speak-btn:hover { color: var(--accent); border-color: var(--accent); }
+.speak-btn.playing { color: var(--accent); border-color: var(--accent); background: var(--accent-glow); }
+
+/* ── Región chips (textual only — audio is always neutral) ── */
+.rio-tag, .esp-tag, .neu-tag, .var-tag, .vulg-tag {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 3px;
+  margin-right: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+.rio-tag  { background: rgba(20, 184, 166, 0.14); color: #5eead4; }
+.esp-tag  { background: rgba(192, 132, 252, 0.14); color: #d0a8ff; }
+.neu-tag  { background: rgba(138, 155, 184, 0.14); color: #a8b8d0; }
+.var-tag  { background: rgba(251, 191, 36, 0.14); color: #fbbf24; }
+.vulg-tag { background: rgba(248, 113, 113, 0.14); color: #f87171; }
+
+/* ── Chip row (flat word lists) ── */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 10px 0 4px;
+}
+.chip {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 11px;
+}
+
+/* ── Evitar / usar rows ── */
+.contrast {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 4px;
+}
+.contrast-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+}
+.contrast-item .mark {
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  width: 16px;
+  text-align: center;
+}
+.contrast-item.bad  { border-left: 3px solid var(--red); }
+.contrast-item.good { border-left: 3px solid var(--green); }
+.contrast-item.bad  .mark { color: var(--red); }
+.contrast-item.good .mark { color: var(--green); }
+.contrast-item .txt { flex: 1; }
+.contrast-item .es {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+}
+.contrast-item .gloss {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* ── Aviso box — register warning ── */
+.aviso {
+  background: rgba(248, 113, 113, 0.06);
+  border: 1px solid rgba(248, 113, 113, 0.28);
+  border-left: 4px solid var(--red);
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin: 16px 0 4px;
+}
+.aviso .aviso-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 9px;
+}
+.aviso .frase {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  margin-bottom: 7px;
+}
+.aviso .frase:last-of-type { margin-bottom: 0; }
+.aviso .aviso-nota {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(248, 113, 113, 0.18);
+}
+.aviso .aviso-nota em { color: var(--text-primary); font-style: italic; }
+
+/* ── Tables ── */
+.table-wrapper {
+  overflow-x: auto;
+  margin: 12px 0;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; text-align: left; }
+.table-wrapper th {
+  background: rgba(0,0,0,0.4);
+  color: var(--text-primary);
+  padding: 11px 14px;
+  font-weight: 600;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  vertical-align: bottom;
+}
+.table-wrapper th .var-tag { display: inline-block; margin: 4px 0 0; }
+.table-wrapper td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  vertical-align: top;
+}
+.table-wrapper tr:last-child td { border-bottom: none; }
+.table-wrapper tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.table-wrapper td em {
+  color: var(--text-primary);
+  font-style: italic;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.02em;
+}
+.table-wrapper td strong { color: var(--text-primary); font-weight: 600; }
+.table-note {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: -2px 0 10px;
+  padding-left: 2px;
+}
+.table-note em { color: var(--text-secondary); font-style: italic; }
+.table-note strong { color: var(--text-secondary); font-weight: 600; }
+
+/* ── Cross-link out to a full topic page ── */
+.topic-link {
+  display: block;
+  margin: 16px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  background: rgba(74, 144, 217, 0.06);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+a.topic-link:hover { background: rgba(74, 144, 217, 0.13); color: var(--text-primary); }
+.topic-link strong { color: var(--text-primary); font-weight: 600; }
+.topic-link em { color: var(--text-muted); font-style: italic; }
+.topic-link .arrow { color: var(--accent); font-weight: 600; }
+.topic-link.pending { border-left-color: var(--text-muted); background: rgba(138, 155, 184, 0.05); }
+.topic-link.pending .arrow { color: var(--text-muted); }
+
+/* ── Materiales de la clase ── */
+.materiales {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.materiales h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.materiales .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.material-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 13px 16px;
+  margin-bottom: 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-input);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.material-item:last-child { margin-bottom: 0; }
+.material-item:hover { border-color: #2a4a75; background: var(--bg-card-hover); }
+.material-left { display: flex; align-items: flex-start; gap: 12px; flex: 1; min-width: 0; }
+.material-tipo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tipo-tabla     { background: rgba(74, 144, 217, 0.12); color: #4a90d9; border: 1px solid rgba(74, 144, 217, 0.3); }
+.tipo-expl      { background: rgba(52, 211, 153, 0.12); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.tipo-ejercicio { background: rgba(251, 146, 60, 0.12); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+.tipo-sitio     { background: rgba(148, 163, 184, 0.12); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+.materiales .sub.sub-laminas { margin-top: 26px; }
+.material-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+.material-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-top: 3px;
+}
+.material-destino {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 5px;
+}
+.material-dl {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+/* ── Preguntas para la profe ── */
+.preguntas {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--yellow);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 18px;
+  scroll-margin-top: 16px;
+}
+.preguntas h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.preguntas .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.preguntas ol { margin: 0 0 0 20px; }
+.preguntas li {
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.6;
+  font-size: 0.93rem;
+  padding-left: 4px;
+}
+.preguntas li:last-child { margin-bottom: 0; }
+.preguntas li em { color: var(--accent); font-style: italic; }
+.preguntas li strong { color: var(--text-primary); font-weight: 600; }
+
+/* ── Footer ── */
+.page-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .page-wrap { padding: 0 14px 60px; }
+  .grammar-card { padding: 20px 18px 18px; }
+  .preguntas, .materiales { padding: 20px 18px; }
+  .card-header { gap: 10px; }
+  .card-number { font-size: 1.8rem; }
+  .contents-list a { font-size: 0.8rem; padding: 5px 10px; }
+  .prov-chips { padding-top: 0; }
+  .material-item { flex-direction: column; gap: 8px; }
+  .material-dl { padding-top: 0; align-self: flex-end; }
+}
+
+/* ── Par de imágenes (degrada sin romper si faltan los archivos) ── */
+.duo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin: 18px 0 6px;
+}
+.duo figure {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0;
+}
+.duo img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+.duo figcaption {
+  padding: 11px 14px 13px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  border-top: 1px solid var(--border);
+}
+.duo figcaption strong {
+  display: block;
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.06rem;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+@media (max-width: 640px) {
+  .duo { grid-template-columns: 1fr; }
+  .duo img { height: 190px; }
+}
+
+/* ── Eje de la deixis — diagrama en HTML, sin imagen ── */
+.eje {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 4px;
+}
+.eje-fila {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+}
+.eje-mov {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eje-verbos {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.eje-glosa { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; }
+@media (max-width: 640px) {
+  .eje-fila { flex-wrap: wrap; gap: 8px; }
+}
+
+/* ── Figura centrada y chica (un cartel, no una ilustración) ── */
+.figura-cartel {
+  margin: 18px auto 4px;
+  max-width: 260px;
+  text-align: center;
+}
+.figura-cartel img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  cursor: zoom-in;
+}
+.figura-cartel figcaption {
+  margin-top: 10px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+
+/* ── Ampliación en el lugar — estándar para las imágenes dentro de
+      las tarjetas de contenido (mismo gesto que el resto del sitio) ── */
+.duo figure.zoomed,
+.figura-cartel.zoomed { overflow: visible; position: relative; z-index: 60; }
+.duo img,
+.figura-cartel img {
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.25s ease, border-radius 0.25s ease;
+}
+.duo img.magnified {
+  object-fit: contain;
+  transform: scale(2);
+  cursor: zoom-out;
+  z-index: 60;
+  border-radius: 6px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+.duo figure:nth-child(1) img.magnified { transform-origin: left center; }
+.duo figure:nth-child(2) img.magnified { transform-origin: right center; }
+.figura-cartel img.magnified {
+  transform: scale(2.2);
+  transform-origin: center center;
+  cursor: zoom-out;
+  z-index: 60;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+}
+@media (max-width: 640px) {
+  .duo img.magnified { transform: scale(1.6); transform-origin: center center; }
+}
+
+/* ── Visor de imágenes (materiales y figuras) ── */
+.visor {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: none;
+  background: rgba(8, 14, 26, 0.93);
+  backdrop-filter: blur(3px);
+}
+.visor.abierto { display: flex; flex-direction: column; }
+.visor-barra {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.visor-titulo {
+  font-family: 'DM Serif Display', serif;
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  line-height: 1.3;
+  min-width: 0;
+}
+.visor-acciones { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.visor-btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 7px 15px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.visor-btn:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.12); }
+.visor-cerrar {
+  font-size: 1.3rem;
+  line-height: 1;
+  padding: 5px 13px 8px;
+  letter-spacing: 0;
+}
+.visor-cuerpo {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  padding: 22px;
+}
+.visor-cuerpo img {
+  /* margin auto centra cuando entra y NO recorta cuando no entra —
+     justify-content/align-items harían inalcanzable el borde izquierdo. */
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  cursor: zoom-in;
+}
+/* Estado ampliado: el ancho lo fija el JS por archivo; el cuerpo hace scroll
+   y margin:auto mantiene la imagen centrada mientras entre en pantalla. */
+.visor-cuerpo.ampliado img {
+  max-width: none;
+  max-height: none;
+  cursor: zoom-out;
+}
+.visor-pie {
+  flex-shrink: 0;
+  padding: 12px 22px 18px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+@media (max-width: 640px) {
+  .visor-barra { padding: 11px 14px; }
+  .visor-titulo { font-size: 0.95rem; }
+  .visor-cuerpo { padding: 12px; }
+}
+
+/* ── Vocabulario de la clase ── */
+.vocabulario {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent-kappa);
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px;
+  margin-top: 30px;
+  scroll-margin-top: 16px;
+}
+.vocabulario h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.vocabulario .sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 18px;
+}
+.vocab-grupo { margin-top: 22px; }
+.vocab-grupo:first-of-type { margin-top: 0; }
+.vocab-grupo-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.vocab-grupo-sub {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 8px 0 10px;
+  line-height: 1.5;
+}
+.vocab-table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+.vocab-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.vocab-table tr:last-child td { border-bottom: none; }
+.vocab-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.vocab-table .vt-audio { width: 40px; padding-left: 0; }
+.vocab-table .vt-es {
+  width: 42%;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.04rem;
+  color: var(--text-primary);
+}
+.vocab-table .vt-en { color: var(--text-secondary); }
+.vocab-table .vt-en em { color: var(--text-muted); font-style: italic; }
+@media (max-width: 640px) {
+  .vocabulario { padding: 20px 16px; }
+  .vocab-table .vt-es { width: 46%; font-size: 0.98rem; }
+  .vocab-table td { padding: 8px 6px; font-size: 0.88rem; }
+}
+
+/* ── Plancha con etiquetas — imagen con las anotaciones de la profe
+      puestas en HTML encima, no quemadas en el archivo (Role D) ── */
+.plancha { margin: 22px auto 8px; max-width: 640px; }
+.plancha-marco {
+  position: relative;
+  display: block;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-input);
+}
+.plancha-marco img { width: 100%; height: auto; display: block; }
+.etiqueta {
+  position: absolute;
+  transform: translate(-50%, 0);
+  width: 42%;
+  background: rgba(8, 18, 34, 0.93);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 9px 11px;
+  text-align: left;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+}
+.etiqueta.et-quedar  { border-left-color: var(--accent-alpha); }
+.etiqueta.et-faltar  { border-left-color: var(--accent-eta); }
+.etiqueta-texto {
+  display: block;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  font-style: italic;
+}
+.etiqueta-verbo {
+  display: inline-block;
+  margin-top: 7px;
+  font-size: 0.64rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.etiqueta .habla { margin-top: 6px; }
+.plancha-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 26px; height: 26px;
+  display: none;
+  align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: rgba(8, 18, 34, 0.94);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 0.78rem; font-weight: 600;
+}
+.plancha-pin.pin-quedar { border-color: var(--accent-alpha); }
+.plancha-pin.pin-faltar { border-color: var(--accent-eta); }
+.plancha-lista { display: none; margin: 12px 0 0; padding: 0; list-style: none; }
+.plancha-lista li {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 9px 0;
+  border-top: 1px solid var(--border);
+  font-size: 0.9rem; line-height: 1.5;
+}
+.plancha-lista .pl-num {
+  flex: 0 0 22px; height: 22px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; border: 1px solid var(--border);
+  font-size: 0.72rem; color: var(--text-secondary);
+}
+.plancha figcaption {
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+  font-style: italic;
+  text-align: center;
+}
+@media (max-width: 640px) {
+  .etiqueta { display: none; }
+  .plancha-pin { display: flex; }
+  .plancha-lista { display: block; }
+  .plancha figcaption { text-align: left; }
+}
+
+/* ── Nota al pie — bloque de cierre, no es tarjeta ── */
+.nota-pie {
+  margin: 34px 0 0;
+  padding: 26px 28px;
+  background: rgba(17, 29, 53, 0.72);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent-theta);
+  border-radius: 14px;
+}
+.nota-pie h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0 0 4px;
+  color: var(--text-primary);
+}
+.nota-pie .np-firma {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.nota-pie h3 {
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin: 22px 0 10px;
+}
+.nota-pie p { font-size: 0.94rem; line-height: 1.72; color: var(--text-secondary); margin: 0 0 12px; }
+.nota-pie p strong { color: var(--text-primary); font-weight: 600; }
+.nota-pie em { color: var(--text-primary); font-style: italic; }
+@media (max-width: 640px) {
+  .nota-pie { padding: 20px 16px; }
+}
+
+
+/* ── Chip propio (mis notas) ── */
+.prov-propio   { background: rgba(56, 189, 248, 0.10); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.28); }
+
+/* ══════════════════════════════════════════════════════════════
+   Redacción corregida — markup contract of TALLER-redacciones §4,
+   scoped under .rd so it cannot collide with the sheet's classes.
+   View modes live on .rd (not body) because the story sits inside
+   a card. Four semantic colours only: del / ins / note / open.
+   ══════════════════════════════════════════════════════════════ */
+.rd {
+  --rd-del:  #f0818f;  --rd-del-bg:  rgba(240, 129, 143, 0.12);
+  --rd-ins:  #5fcea7;  --rd-ins-bg:  rgba(95, 206, 167, 0.12);
+  --rd-note: #e8b869;  --rd-note-bg: rgba(232, 184, 105, 0.10);
+  --rd-open: #b096f5;  --rd-open-bg: rgba(176, 150, 245, 0.12);
+  margin-top: 10px;
+}
+.rd-meta { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 0.8rem; color: var(--text-muted); margin: 4px 0 12px; }
+.rd-meta b { color: var(--text-secondary); font-weight: 500; }
+.rd-bar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center;
+  margin: 0 -26px; padding: 10px 26px;
+  background: rgba(17, 29, 53, 0.94);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.rd-barlabel { font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); }
+.rd-seg { display: flex; border: 1px solid #2a4a75; border-radius: 7px; overflow: hidden; }
+.rd-seg button {
+  font-family: 'Outfit', sans-serif; font-size: 0.82rem; font-weight: 500;
+  background: transparent; color: var(--text-secondary); border: 0;
+  padding: 6px 13px; cursor: pointer; white-space: nowrap;
+}
+.rd-seg button + button { border-left: 1px solid var(--border); }
+.rd-seg button[aria-pressed="true"] { background: var(--text-primary); color: var(--bg-deep); }
+.rd-seg button:focus-visible { outline: 2px solid var(--rd-open); outline-offset: -2px; }
+.rd-clear {
+  font-family: 'Outfit', sans-serif; font-size: 0.78rem;
+  background: var(--rd-note-bg); color: var(--rd-note);
+  border: 1px solid rgba(232, 184, 105, 0.4); border-radius: 99px;
+  padding: 4px 12px; cursor: pointer; margin-left: auto;
+}
+.rd-clear[hidden] { display: none !important; }
+.rd-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 12px 0 4px; font-size: 0.8rem; color: var(--text-secondary); }
+.rd-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.rd-key { width: 22px; height: 0; border-top: 2px solid; display: inline-block; }
+
+.rd-story {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: 1.06rem; line-height: 1.85; color: var(--text-primary);
+  margin: 18px 0 8px;
+}
+.rd-story p { margin: 0 0 1.3em; }
+.rd-story .rd-preface { font-style: italic; color: var(--text-secondary); font-size: 0.98rem; }
+.rd-titulo {
+  font-family: 'DM Serif Display', serif; font-weight: 400;
+  font-size: 1.35rem; text-align: center; margin: 0 0 16px; color: var(--text-primary);
+}
+.rd-story del {
+  text-decoration: line-through; text-decoration-thickness: 1.5px;
+  text-decoration-color: rgba(240, 129, 143, 0.75);
+  color: var(--rd-del); background: var(--rd-del-bg); border-radius: 2px; padding: 0 1px;
+}
+.rd-story ins {
+  text-decoration: none; color: var(--rd-ins); background: var(--rd-ins-bg);
+  border-bottom: 1.5px solid rgba(95, 206, 167, 0.6); border-radius: 2px; padding: 0 1px; font-weight: 600;
+}
+.rd-story .c { border-radius: 3px; transition: box-shadow .18s, background .18s; }
+.rd-story .c.open del { color: var(--rd-open); background: var(--rd-open-bg); text-decoration-color: rgba(176, 150, 245, 0.6); }
+.rd-story .c.open ins { color: var(--rd-open); background: var(--rd-open-bg); border-bottom-color: rgba(176, 150, 245, 0.55); }
+.rd-story .c.hit { background: var(--rd-note-bg); box-shadow: 0 0 0 3px var(--rd-note-bg), 0 0 0 4px rgba(232, 184, 105, 0.55); }
+
+.rd-story .n {
+  font-family: 'Outfit', sans-serif; font-size: 0.74em; font-weight: 500;
+  color: var(--rd-note); background: var(--rd-note-bg);
+  border: 1px solid rgba(232, 184, 105, 0.28); border-radius: 99px;
+  padding: 1px 9px; margin-inline: 4px; white-space: nowrap; vertical-align: 0.08em;
+}
+.rd-story .n.ok { color: var(--rd-ins); background: var(--rd-ins-bg); border-color: rgba(95, 206, 167, 0.3); }
+/* Long margin notes: same colour, but a block so they can wrap. */
+.rd-story .n.bloque {
+  display: block; white-space: normal; border-radius: 9px;
+  margin: 10px 0 12px; padding: 9px 13px; line-height: 1.55; font-size: 0.82rem;
+}
+.rd-story .n.bloque em { font-family: 'Source Serif 4', Georgia, serif; font-style: italic; color: var(--text-primary); }
+.rd-story .n.bloque b { font-weight: 600; }
+.rd-story .n.bloque.pizarra { display: flex; flex-direction: column; gap: 3px; margin: -4px 0 1.3em; }
+.rd-story .pizarra > b { letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.72rem; margin-bottom: 3px; }
+.rd-story .pizarra code { font-family: ui-monospace, 'SF Mono', monospace; font-size: 0.95em; color: var(--text-primary); }
+.rd-story mark.ok {
+  background: var(--rd-ins-bg); color: inherit; border-radius: 2px; padding: 0 1px;
+  box-shadow: inset 0 -0.45em 0 rgba(95, 206, 167, 0.16);
+}
+
+/* View modes — one markup, pure CSS */
+.rd.v-clean .rd-story del, .rd.v-clean .rd-story .n { display: none; }
+.rd.v-clean .rd-story ins { color: inherit; background: none; border-bottom: 0; font-weight: inherit; padding: 0; }
+.rd.v-orig .rd-story ins, .rd.v-orig .rd-story .n { display: none; }
+.rd.v-orig .rd-story del { color: inherit; background: none; text-decoration: none; padding: 0; }
+.rd.v-clean .rd-story mark.ok, .rd.v-orig .rd-story mark.ok { box-shadow: none; background: none; }
+.rd.v-clean .rd-story .q, .rd.v-orig .rd-story .q { display: none; }
+
+/* His questions, her answers */
+.rd-story .q {
+  font-family: 'Outfit', sans-serif; font-size: 0.9rem; line-height: 1.6;
+  background: var(--bg-input); border: 1px solid var(--border); border-left: 3px solid #35486b;
+  border-radius: 0 9px 9px 0; padding: 15px 18px; margin: 0 0 1.3em;
+}
+.rd-story .q .qh { font-size: 0.66rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); font-weight: 600; margin: 0 0 7px; }
+.rd-story .q p { margin: 0 0 8px; color: var(--text-secondary); }
+.rd-story .q p:last-child { margin-bottom: 0; }
+.rd-story .q em { color: var(--text-primary); }
+.rd-story .ans { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #35486b; }
+.rd-story .ans .who { display: block; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rd-note); font-weight: 600; margin-bottom: 5px; }
+.rd-story .ans p { color: var(--text-primary); }
+.rd-story .ans code { font-family: ui-monospace, 'SF Mono', monospace; font-size: 0.86em; background: rgba(255,255,255,0.05); border-radius: 4px; padding: 1px 6px; }
+
+/* Error table */
+.rd-h {
+  font-family: 'DM Serif Display', serif; font-weight: 400; font-size: 1.2rem;
+  color: var(--text-primary); margin: 26px 0 4px; padding-top: 18px; border-top: 1px solid var(--border);
+}
+.rd-lede { font-size: 0.88rem; color: var(--text-secondary); margin: 0 0 12px; line-height: 1.6; }
+.rd-tablewrap { overflow-x: auto; }
+.rd-table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 0.88rem; }
+.rd-table thead th {
+  text-align: left; font-size: 0.66rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-muted); font-weight: 600; padding: 0 12px 9px 0; border-bottom: 1px solid #35486b; white-space: nowrap;
+}
+.rd-table tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; }
+.rd-table tbody tr:hover { background: var(--bg-card-hover); }
+.rd-table tbody tr[aria-selected="true"] { background: var(--rd-note-bg); }
+.rd-table tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 3px 0 0 var(--rd-note); }
+.rd-table tbody tr:focus-visible { outline: 2px solid var(--rd-note); outline-offset: -2px; }
+.rd-table td { padding: 10px 12px 10px 0; vertical-align: top; color: var(--text-secondary); }
+.rd-table td:first-child { padding-left: 10px; font-weight: 500; color: var(--text-primary); white-space: nowrap; }
+.rd-rule em { font-family: 'Source Serif 4', Georgia, serif; font-style: italic; color: var(--text-primary); }
+.rd-rule b { color: var(--rd-ins); font-weight: 600; }
+.rd-cnt { display: flex; align-items: center; gap: 7px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.rd-cnt i { display: block; height: 6px; border-radius: 99px; background: rgba(232, 184, 105, 0.6); }
+.rd-hint { margin: 12px 0 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.55; }
+
+/* Sin resolver */
+.rd-pending {
+  margin-top: 22px; padding: 18px 20px; border-radius: 0 9px 9px 0;
+  border: 1px solid rgba(176, 150, 245, 0.3); border-left: 3px solid var(--rd-open); background: var(--rd-open-bg);
+}
+.rd-pending h5 { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--rd-open); margin: 0 0 4px; font-weight: 600; }
+.rd-pending > p { margin: 0 0 14px; color: var(--text-secondary); font-size: 0.88rem; }
+.rd-pending ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 12px; }
+.rd-pending li { font-size: 0.9rem; line-height: 1.55; color: var(--text-primary); }
+.rd-pending li b { font-weight: 600; }
+.rd-pending li span { display: block; color: var(--text-secondary); font-size: 0.85rem; margin-top: 2px; }
+.rd-pending em { font-family: 'Source Serif 4', Georgia, serif; font-style: italic; color: var(--text-primary); }
+
+@media (max-width: 640px) {
+  .rd-bar { margin: 0 -18px; padding: 9px 18px; gap: 8px 10px; }
+  .rd-barlabel { display: none; }
+  .rd-clear { margin-left: 0; }
+  .rd-story { font-size: 1.01rem; line-height: 1.8; }
+  .rd-story .n { white-space: normal; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+}
+
+/* ── Análisis por funciones (card ④) ── */
+.analisis { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 12px; }
+.an-col {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; padding: 8px 12px;
+}
+.an-es { font-family: 'DM Serif Display', serif; font-size: 1.02rem; color: var(--text-primary); }
+.an-fn { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent-zeta); }
+.an-fn em { text-transform: none; font-style: italic; }
+.grupo-h {
+  font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
+  color: var(--accent-zeta); margin: 18px 0 4px;
+}
+
+/* ── Lo que me llevo (card ⑤) ── */
+.llevo { display: grid; gap: 12px; margin-top: 8px; }
+.llevo-item { display: flex; gap: 14px; align-items: flex-start; padding: 13px 16px; background: var(--bg-input); border: 1px solid var(--border); border-radius: 10px; }
+.llevo-n { font-family: 'DM Serif Display', serif; font-size: 1.5rem; line-height: 1; color: var(--accent-theta); flex-shrink: 0; width: 18px; }
+.llevo-item p { font-size: 0.93rem; line-height: 1.65; color: var(--text-secondary); margin: 0; }
+.llevo-item p strong { color: var(--text-primary); }
+.llevo-item p em { color: var(--accent); font-style: italic; }
+.llevo-fix { margin-top: 8px !important; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 0.85rem !important; color: var(--text-muted) !important; }
+.llevo-fix::before { content: 'Ajuste · '; color: var(--accent-theta); font-weight: 600; letter-spacing: 0.04em; }
+
+/* ── Added for clase-2026-09-15 ── */
+.rd-story .n.rio { color: var(--rd-open); background: var(--rd-open-bg); border-color: rgba(176, 150, 245, 0.3); }
+.rd-story mark.hl { background: rgba(251, 191, 36, 0.16); color: inherit; border-radius: 2px; padding: 0 2px; }
+.rd-story .rd-foto { margin: 0 0 1.3em; }
+.rd-story .rd-foto img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+.rd-story .rd-foto figcaption { font-family: 'Outfit', sans-serif; font-size: 0.78rem; color: var(--text-muted); margin-top: 6px; }
+.rd-story sup { font-size: 0.65em; color: var(--text-muted); }
+.rd.v-clean .rd-story sup, .rd.v-orig .rd-story sup { display: none; }
+.rd-table tr.rd-noerr td:first-child { color: var(--text-secondary); font-style: italic; }
+</style>
+</head>
+<body>
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<div class="page-wrap">
+  <a href="../../index.html" class="back-link">← Volver al menú</a>
+
+  <header class="page-header">
+    <div class="overline">Notas de Clase</div>
+    <h1>Clase del <em>15 de septiembre</em> de 2026</h1>
+    <p class="subtitle">El relato «Los dos de la foto», corregido en clase · <em>nunca creí que…</em>: una frase, tres decisiones · el dativo de posesión — dónde sí y dónde no · describir a una persona: <em>ser, medir, pesar, tener</em>.</p>
+  </header>
+
+  <nav class="contents">
+    <div class="contents-label">Lo que vimos</div>
+    <div class="contents-list">
+      <a href="#s1">① La redacción: Los dos de la foto</a>
+      <a href="#s2">② Nunca creí que… — tres decisiones</a>
+      <a href="#s3">③ El dativo de posesión</a>
+      <a href="#s4">④ Ser, medir, pesar, tener</a>
+      <a href="#vocabulario">📖 Vocabulario de la clase</a>
+      <a href="#materiales">📂 Materiales de la clase</a>
+      <a href="#preguntas">✎ Preguntas para la profe</a>
+    </div>
+  </nav>
+
+  <div class="leyenda">
+    <span class="leyenda-label">Cómo leer las etiquetas</span>
+    <div class="leyenda-row"><span class="prov prov-clase">En clase</span> <span>She taught this. Teacher-attested.</span></div>
+    <div class="leyenda-row"><span class="prov prov-material">Material</span> <span>From the notes she wrote and sent.</span></div>
+    <div class="leyenda-row"><span class="prov prov-ampl">Ampliación</span> <span>Added after class from reference material — not hers.</span></div>
+  </div>
+
+  <div class="rate-bar">
+    <span class="rate-label">Velocidad 🔊</span>
+    <button class="rate-btn" onclick="setRate('lento', this)">Lento</button>
+    <button class="rate-btn active" onclick="setRate('normal', this)">Normal</button>
+    <button class="rate-btn" onclick="setRate('rapido', this)">Rápido</button>
+  </div>
+
+  <!-- ─────────────────────────── ① ─────────────────────────── -->
+  <article class="grammar-card card-alpha" id="s1">
+    <div class="card-header">
+      <div class="card-number">①</div>
+      <div class="card-title-group">
+        <div class="card-title">La redacción: Los dos de la foto</div>
+        <div class="card-title-en">My detective story about two pet thieves, as she corrected it in class</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Un relato policial escrito a partir de una foto — tres páginas, sin pulir a propósito, porque los errores son el material. La profe lo corrigió mientras hablábamos, y de sus marcas salieron las tarjetas ②, ③ y ④. Acá está el texto con sus correcciones encima: <strong>rojo tachado</strong> es lo que yo escribí, <strong>verde</strong> es lo que puso ella, las pastillas <strong>ámbar</strong> son sus notas al margen, y <strong>violeta</strong> es una marca que no logro leer con seguridad.
+    </p>
+
+    <div class="rd" id="rd">
+      <div class="rd-meta">
+        <span><b>Correcciones:</b> 70</span>
+        <span><b>Tipos:</b> 24</span>
+        <span><b>Sin resolver:</b> 6</span>
+      </div>
+
+      <div class="rd-bar">
+        <span class="rd-barlabel">Vista</span>
+        <div class="rd-seg" role="group" aria-label="Modo de vista">
+          <button type="button" data-mode="v-changes" aria-pressed="true">Cambios</button>
+          <button type="button" data-mode="v-clean" aria-pressed="false">Corregido</button>
+          <button type="button" data-mode="v-orig" aria-pressed="false">Mi original</button>
+        </div>
+        <button type="button" class="rd-clear" id="rd-clear" hidden>Quitar resaltado</button>
+      </div>
+
+      <div class="rd-legend">
+        <span><i class="rd-key" style="border-color:var(--rd-del)"></i> lo que escribí yo</span>
+        <span><i class="rd-key" style="border-color:var(--rd-ins)"></i> lo que puso ella</span>
+        <span><i class="rd-key" style="border-color:var(--rd-note)"></i> nota al margen</span>
+        <span><i class="rd-key" style="border-color:var(--rd-open)"></i> marca sin descifrar</span>
+      </div>
+
+      <div class="rd-story" id="rd-story">
+
+        <h3 class="rd-titulo">Los dos de la foto</h3>
+
+        <p>Una historia sobre los dos, lo siento, los tres que <span class="c" data-g="concord-v"><del>se </del></span>aparece<span class="c" data-g="concord-v"><ins>n</ins></span> en la foto.</p>
+
+        <p>Me llamo Juan Corona, soy detective en el departamento de policía de la ciudad de Buenos Aires en el país de Argentina. Mi trabajo consiste en perseguir y atrapar <span class="c" data-g="a-personal"><ins>a </ins></span>los <span class="c" data-g="lexico"><del>delincuencias</del><ins>delincuentes</ins></span><span class="n">atrapar a los delincuentes</span> que trafican <span class="c open" data-g="regimen"><del>en </del><ins>? </ins></span>los animales robados. Hace dos meses recibí un soplo sobre dos personas que fingían <span class="c" data-g="turista"><del>como turísticos</del><ins>ser turistas</ins></span><span class="n">fingían ser turistas</span> para <span class="c" data-g="para"><del>que </del></span>mover animales por las fronteras entre Argentina y Brasil.<span class="n">para + infinitivo · para que + subjuntivo</span> Mi informante me dijo «yo sé de dos personas que <span class="c" data-g="se-verbo"><ins>se </ins></span>visten como <span class="c" data-g="turista"><del>turísticos</del><ins>turistas</ins></span> y roban a las mascotas de <span class="c" data-g="articulo"><ins>la </ins></span>gente en Buenos Aires. Entonces, llevan a los animales a Brasil para <span class="c" data-g="para"><del>que </del></span>ganar mucho dinero en el mercado negro» Fue un pedazo de información que podría utilizar para <span class="c" data-g="para"><del>que </del></span>romper un <span class="c open" data-g="calco"><del>anillo</del><ins>círculo ?</ins></span> del crimen pero necesitaba más. Si <mark class="ok">pudiera</mark> encontrar<sup>1</sup> a una persona que <span class="c" data-g="subj"><del>tenía</del><ins>tuviera</ins></span> una mascota robada, quizá <mark class="ok">podría</mark> atrapar estos dos ladrones. (tipo dos de los condicionales)</p>
+
+        <div class="q">
+          <p class="qh">Mi pregunta 1</p>
+          <p>acá tengo una pregunta sobre este verbo, cuál es el verbo más apropiado en este contexto, <em>buscar</em> o <em>encontrar</em>.</p>
+          <div class="ans">
+            <span class="who">La profe</span>
+            <p><code>Tengo que buscar</code> &nbsp;·&nbsp; <code>Necesito encontrar</code> — <em>buscar</em> es el proceso; <em>encontrar</em>, el resultado. En sus apuntes agregó otro <em>buscar</em>, el de ir a recoger algo: <code>Tengo que buscarla en lo de mi mamá</code>.</p>
+          </div>
+        </div>
+
+        <p>Mi primera pista me vino de una queja sobre un perro perdido que desapareció de un parque en el centro de la ciudad. <span class="c" data-g="imperf"><del>Fueron</del><ins>Eran</ins></span><span class="n">descripción</span> las diez de la noche y la queja dijo «una mujer que caminaba por el parque con su perro fue detenid<span class="c" data-g="genero"><del>o</del><ins>a</ins></span> por dos personas que tomaron a su perro» parecía ser un caso que <span class="c" data-g="calco"><del>combinar</del><ins>coincidía</ins></span><span class="n">o <em>combinaba</em></span> por completo con mi caso.<sup>2</sup> El día siguiente me encontraría con esta mujer y me enteraría más del crimen.</p>
+
+        <div class="q">
+          <p class="qh">Mi pregunta 2</p>
+          <p>(quería decir algo como, <em>it seemed to be a case that matched completely with my case</em>)</p>
+          <div class="ans">
+            <span class="who">La profe</span>
+            <p>✓ — la idea se entiende; lo que corrigió fue el verbo: <em>coincidía</em>, o <em>combinaba</em>.</p>
+          </div>
+        </div>
+
+        <p>A las ocho de la mañana<span class="n">puntual</span> me encontré con una señora muy triste llamada Marta Verde, me dijo «detective, fue horrible, tan horrible. Mi <span class="c" data-g="calco"><del>peor</del><ins>pobre</ins></span> amiguito, no puedo parar de llorar desde <span class="c" data-g="desde-que"><ins>que </ins></span>se me perdió mi perro pequeño» le pregunté sobre la descripción de los dos y me contó «pues, uno de los dos, el hombre, <span class="c" data-g="ser-tener"><del>era</del><ins>tenía</ins></span> como seis pies de altura con pelo negro y una barba y un bigote, ambos con un poco de gris, llevaba un abrigo pequeño, como un <span class="c" data-g="calco"><del>hoodie</del><ins>buzo</ins></span>, que <span class="c" data-g="imperf"><del>fue</del><ins>era</ins></span> celeste, también llevaba vaqueros azules <span class="c" data-g="conector"><del>con</del><ins>y</ins></span> zapatillas de tenis, creo que <span class="c" data-g="genero"><del>esos</del><ins>esas</ins></span> eran negr<span class="c" data-g="genero"><del>o</del><ins>as</ins></span> como <span class="c" data-g="articulo"><del>ellos</del><ins>las</ins></span> de Nike. ¡vaya! <span class="c" data-g="imperf"><del>Tuvo</del><ins>Tenía</ins></span> un par de gafas negras que llevaba colgadas enfrente del <span class="c" data-g="calco"><del>hoodie</del><ins>buzo</ins></span>» Bueno, ¿cuántos años tenía? «no estoy seguro, quizá tenga veinte o treinta años, la noche estaba muy oscur<span class="c" data-g="genero"><del>o</del><ins>a</ins></span> y actuaron muy rápido»</p>
+
+        <p>Bueno, señora, y la mujer, ¿cómo <span class="c" data-g="calco"><del>parecía</del><ins>se veía</ins></span>? «pues, era más joven que él, probablemente como veinticinco años, más o menos, llevaba un abrigo blanco con una cartera con una correa colgada sobre su hombro, como una mochila pequeña, también llevaba pantalones de camuflaje, marrón y verde como en el ejército, y zapatos blancos. Era más baja que él, como cinco pies de altura. tenía pelo castaño oscuro y ambos parecían extranjeros» Bueno, y tu perro, ¿cómo parecía?</p>
+
+        <p>«mi perrito!, le extraño tanto mucho, porfa, porfa, <span class="c" data-g="voseo"><del>tienes</del><ins>tenés</ins></span><span class="n rio">rioplatense</span> que encontrarlo<sup>3</sup>, detective» Bueno, dame los detalles de <span class="c" data-g="voseo"><del>su</del><ins>tu</ins></span><span class="n">dame = tu · deme = su</span> mascota. «pues, es de tamaño medio (talla no es correcto acá? Solo usado con ropa?)<span class="n ok">✓ sí</span>, casi todo blanco excepto su cabeza con pelaje negro alrededor de sus ojos, y tiene un collar con una etiqueta con su nombre, Mancha<span class="n ok">Manchita</span>» Bueno, voy a hacer lo que puedo hacer.</p>
+
+        <div class="q">
+          <p class="qh">Mi pregunta 3</p>
+          <p>ahora creo que verlo, si quiero decir que al final tengo algo depués de una búsqueda, se usa «encontrar». Sin embargo, si quiero subrayar el acto de la búsqueda, el proce<span class="c" data-g="orto"><del>ss</del><ins>s</ins></span>o entero, se usa «buscar». Por ejemplo, la frase, tienes que encontrarlo, no es lo mismo con la frase, tienes que buscarlo. <span class="c" data-g="orto"><del>La émfasis</del><ins>El énfasis</ins></span> está en puntos distintos, uno está en el final, encontrar, y otro, es un proce<span class="c" data-g="orto"><del>ss</del><ins>s</ins></span>o. ¿Tengo sentido?</p>
+          <div class="ans">
+            <span class="who">La profe</span>
+            <p>Solo marcó la ortografía; la explicación no tiene respuesta escrita. Es la misma división que ella dio en la pregunta 1, y la usé bien en el relato.</p>
+          </div>
+        </div>
+
+        <p>En aquel<span class="c" data-g="demostr"><del>lo</del></span> momento pensé que <span class="c" data-g="imperf"><del>tuve</del><ins>tenía</ins></span> bastantes pruebas para encontrar estos ladrones de mascotas. <span class="c" data-g="imperf"><del>Tuve</del><ins>Tenía</ins></span> descripciones, motivos, hasta una mascota que <span class="c" data-g="pluscuam"><del>estaba</del><ins>había sido</ins></span> robada<span class="n">pluscuamperfecto de indicativo</span><span class="n">ser robado por alguien</span> ni siquiera un día antes. Pero, <span class="c" data-g="lo-que"><del>qué</del><ins>lo que</ins></span> <span class="c" data-g="tiempo"><del>necesito</del><ins>necesitaba</ins></span> <span class="c" data-g="imperf"><del>fue</del><ins>era</ins></span> una foto de los dos.</p>
+
+        <p>Por suerte, el día siguiente recibí una llamada de un dueño de una de las tiendas que queda a lo largo de la calle principal cerca del parque donde hay muchos <span class="c" data-g="turista"><del>turísticos</del><ins>turistas</ins></span> y muchos perros. Me dijo que <span class="c open" data-g="imperf"><del>tuvo</del><ins>tenían ?</ins></span> una foto de dos personas que <mark class="ok">habían robado</mark><span class="n ok">✓</span> a una mascota de otro <span class="c" data-g="turista"><del>turístico</del><ins>turista</ins></span> la semana anterior. <span class="c" data-g="imperf"><del>Fue</del><ins>Era</ins></span> mi gran oportunidad!</p>
+
+        <p>Me encontré con un hombre mayor en su tienda de recuerditos, un señor Martinez. era un cascarrabias con un rostro que <span class="c" data-g="modismo"><del>había visto mucho más tiempo que tenía</del><ins>había vivido más años de los que tenía</ins></span><span class="n">o: con un rostro que había visto más de lo que había vivido</span>, pero me mostró una foto con dos personas y un perro que <span class="c" data-g="imperf"><del>pareció</del><ins>parecía</ins></span> <span class="c" data-g="calco"><del>lo mismo con</del><ins>igual que</ins></span> la descripción provist<span class="c" data-g="genero"><del>o</del><ins>a</ins></span> de <span class="c" data-g="articulo"><ins>la </ins></span>señora Verde. En ese momento, sabía que tenía <span class="c" data-g="a-personal"><ins>a </ins></span>mis ladrones.<span class="n">tenía a mis ladrones = OD = los tenía</span> Todo <span class="c" data-g="lo-que"><del>yo</del><ins>lo que</ins></span> tenía <span class="c" data-g="lo-que"><del>lo </del></span>que hacer <span class="c" data-g="imperf"><del>fue</del><ins>era</ins></span> encontrarlos.<sup>4</sup> Contacté <span class="c" data-g="regimen"><del>el</del><ins>al</ins></span> noticiero y <span class="c" data-g="leismo"><del>lo</del><ins>le</ins></span><span class="n">le = OI</span> envié todos los detalles<span class="n">OD</span> sobre mi caso para que <mark class="ok">mostraran</mark><span class="n ok">✓</span> la historia por <span class="c" data-g="orto"><del>el</del><ins>la</ins></span> radio y la televisi<span class="c" data-g="orto"><del>o</del><ins>ó</ins></span>n.</p>
+
+        <figure class="rd-foto">
+          <img src="../../recursos/clase-2026-09-15/la-foto.webp" alt="Una calle peatonal con casas de colores: un hombre con buzo gris y una mujer con abrigo claro caminan con un perro blanco y negro con correa." width="931" height="725" loading="lazy">
+          <figcaption>La foto del relato — los dos, lo siento, los tres.</figcaption>
+        </figure>
+
+        <div class="q">
+          <p class="qh">Mi pregunta 4</p>
+          <p>al principio escribí la frase, todo <span class="c" data-g="lo-que"><ins>lo que </ins></span>tenía que hacer <span class="c" data-g="imperf"><del>fue</del><ins>era</ins></span> encontrarlos, pero no pareció correcto así que lo cambié? Quería decir en inglés «all i had to do was find them».</p>
+          <div class="ans">
+            <span class="who">La profe</span>
+            <p>Lo corrigió dentro de la pregunta: <code>Todo lo que tenía que hacer era encontrarlos</code>. La primera versión estaba más cerca; al cambiarla metí un <em>yo</em> y un <em>lo</em> en el lugar equivocado.</p>
+          </div>
+        </div>
+
+        <p>Por suerte conseguí <span class="c" data-g="region"><del>otro soplo</del><ins>otra pista</ins></span> de una persona que <mark class="ok">había visto</mark><span class="n ok">✓ ✓</span> el noticiero la noche anterior sobre ladrones de mascotas y me dijo «Señor, vio <span class="c" data-g="a-personal"><ins>a </ins></span>sus sospechosos y eso <span class="c" data-g="calco"><del>peor</del><ins>pobre</ins></span> perrito llamado Mancha, ahora <span class="c" data-g="se-verbo"><ins>se </ins></span>quedan en un Air<span class="c" data-g="orto"><del>e</del></span> B&amp;B al lado de mi apartamento,<span class="n rio">departamento (solo en Argentina)</span> 4A en el edificio de Gran Vuelta del Generalísimo de San Martín en la avenida de Carlos Pellegrini, porfa, ¡date prisa! »</p>
+
+        <p>Qué suerte! De inmediato, llamé <mark class="ok">a la policía</mark> en la ciudad de Rosario y <mark class="ok">transmitieron</mark> todos los detalles y después de solo una hora <mark class="ok">arrestaron a</mark> mis ladrones. Esa noche <mark class="ok">regresé</mark><sup>5</sup> a un perrito asustado al hogar<span class="n ok">✓ ×4</span> y <span class="c" data-g="articulo"><ins>la </ins></span>señora Verde me dijo «muchas gracias<span class="c open" data-g="orto"><ins>, ?</ins></span> detective por su gran trabajo, nunca <span class="c" data-g="preterito"><del>creía</del><ins>creí</ins></span><span class="n">opinión cerrada</span><span class="n">HECHO PUNTUAL</span> que <span class="c" data-g="fut-pasado"><del>viera</del><ins>iba a ver</ins></span> a mi amiguito otra vez, estoy tan feliz»</p>
+
+        <div class="n bloque pizarra">
+          <b>Sus cuatro versiones — tarjeta ②</b>
+          <span class="pz-fila"><em>Nunca creo que voy a ver / veré a mi perrito</em></span>
+          <span class="pz-fila"><em>Nunca creí que iba a ver / vería a mi perrito</em></span>
+          <span class="pz-fila"><b>ir</b> · <em>Nunca creo que vaya a ver a mi perrito</em></span>
+          <span class="pz-fila"><em>Nunca creí que fuera a ver a mi perrito</em></span>
+        </div>
+
+        <div class="q">
+          <p class="qh">Mi pregunta 5</p>
+          <p>regresar, devolver, llevar, entregar. ¿Cuál es el verbo preferido acá?</p>
+          <div class="ans">
+            <span class="who">La profe</span>
+            <p>✓ <em>regresar</em> &nbsp;·&nbsp; ✓ <em>devolver</em> &nbsp;·&nbsp; <em>llevar</em> → <code>llevar de regreso</code> &nbsp;·&nbsp; ✓ <em>entregar</em> — sirven los cuatro; <em>llevar</em> solo necesita el <em>de regreso</em>.</p>
+          </div>
+        </div>
+
+        <div class="q">
+          <p class="qh">Mis preguntas sobre el <em>le</em></p>
+          <p>tengo algunas preguntas sobre el tema abajo, leí la primera frase y estaba confundido.</p>
+          <p><mark class="hl">Le encuentro sentido a esto</mark><br>
+          Le cambié el aceite al coche — cuál es la diferencia entre estos.. cambié el aceite del coche<br>
+          Le limpié la alfombra a mi madre — o, limpié la alfombra de mi madre<br>
+          Le acaricié la cabeza al carpincho — acá, una parte de cuerpo, hay que usar la estructura, lo entiendo.<br>
+          <mark class="hl">Le veo dificultades</mark> — abstracto, no estoy seguro de que lo signifique<br>
+          Le puse sal a la sopa — o, puse sal en la sopa</p>
+          <p>entiendo la idea con partes del cuerpo, me duele la cabeza o le toqué la brazo a mi padre o me queda bien la ropa, la gramática con partes del cuerpo y roba pero, no estoy seguro de que lo entienda en casos más abstracto o casos como la frase con el coche.</p>
+          <div class="ans">
+            <span class="who">La profe</span>
+            <p>Resaltó en amarillo las dos abstractas y no escribió nada: lo vimos hablando. Lo que dijo — incluido que nadie pone la sal <em>a la sopa</em> — está en la tarjeta ③.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <h4 class="rd-h">Qué fallé, agrupado</h4>
+      <p class="rd-lede">Un error suelto es un descuido; el mismo error dos o tres veces es un hábito. Toca una fila para que se enciendan sus casos en el texto.</p>
+
+      <div class="rd-tablewrap">
+        <table class="rd-table">
+          <thead>
+            <tr><th>Tipo</th><th>Veces</th><th>La regla</th></tr>
+          </thead>
+          <tbody id="rd-tbody">
+            <tr data-g="imperf"><td>Pretérito por imperfecto</td><td><span class="rd-cnt"><i style="width:132px"></i>11</span></td><td class="rd-rule">Descripción y estado de fondo van en imperfecto: <em>eran las diez</em>, <em>era celeste</em>, <em>tenía gafas</em>, <em>tenía pruebas</em>, <em>era mi gran oportunidad</em>, <em>lo que necesitaba era una foto</em>.</td></tr>
+            <tr data-g="calco"><td>Calco del inglés</td><td><span class="rd-cnt"><i style="width:96px"></i>8</span></td><td class="rd-rule"><em>hoodie</em> → <em>buzo</em>, <em>combinar</em> → <em>coincidir</em>, <em>peor</em> (<em>poor</em>) → <em>pobre</em>, <em>¿cómo parecía?</em> → <em>¿cómo se veía?</em>, <em>lo mismo con</em> → <em>igual que</em>.</td></tr>
+            <tr data-g="orto"><td>Ortografía y género</td><td><span class="rd-cnt"><i style="width:84px"></i>7</span></td><td class="rd-rule"><em>proceso</em> con una <em>s</em>; <em>el énfasis</em> es masculino; <em>la radio</em> (de <em>radiofonía</em> — <em>el radio</em> es otra cosa); <em>televisión</em> con tilde; Airbnb.</td></tr>
+            <tr data-g="genero"><td>Concordancia de género</td><td><span class="rd-cnt"><i style="width:60px"></i>5</span></td><td class="rd-rule"><em>detenida</em>, <em>esas</em>, <em>negras</em>, <em>oscura</em>, <em>provista</em> — el adjetivo sigue a su sustantivo, no al último que escribí.</td></tr>
+            <tr data-g="turista"><td>turista / turístico</td><td><span class="rd-cnt"><i style="width:48px"></i>4</span></td><td class="rd-rule"><em>turista</em> es la persona; <em>turístico</em> es el adjetivo: <em>un lugar turístico</em>. Invariable en género: <em>el/la turista</em>.</td></tr>
+            <tr data-g="articulo"><td>Artículo definido</td><td><span class="rd-cnt"><i style="width:48px"></i>4</span></td><td class="rd-rule"><em>de la gente</em>; <em>las de Nike</em>. Y con un título, artículo cuando hablas de la persona: <em>la señora Verde</em>; sin artículo cuando le hablas: <em>Señora Verde, ¿cómo está?</em></td></tr>
+            <tr data-g="lo-que"><td>lo que</td><td><span class="rd-cnt"><i style="width:48px"></i>4</span></td><td class="rd-rule">Un «what» que no pregunta nada es <em>lo que</em>: <em>lo que necesitaba</em>, <em>todo lo que tenía que hacer</em>. Y <em>tener que</em> + infinitivo va sin <em>lo</em>.</td></tr>
+            <tr data-g="para"><td>para + infinitivo</td><td><span class="rd-cnt"><i style="width:36px"></i>3</span></td><td class="rd-rule">Mismo sujeto → <em>para</em> + infinitivo. Sujeto distinto → <em>para que</em> + subjuntivo.</td></tr>
+            <tr data-g="a-personal"><td>a personal</td><td><span class="rd-cnt"><i style="width:36px"></i>3</span></td><td class="rd-rule"><em>atrapar <b>a</b> los delincuentes</em>, <em>tenía <b>a</b> mis ladrones</em>, <em>vio <b>a</b> sus sospechosos</em> — personas como objeto directo.</td></tr>
+            <tr data-g="voseo"><td>vos / tú mezclados</td><td><span class="rd-cnt"><i style="width:24px"></i>2</span></td><td class="rd-rule">Elegido el tuteo: <em>dame</em> → <em>tu mascota</em>. Con <em>deme</em> iría <em>su</em>. En Buenos Aires: <em>tenés</em>.</td></tr>
+            <tr data-g="concord-v"><td>Concordancia del verbo</td><td><span class="rd-cnt"><i style="width:24px"></i>2</span></td><td class="rd-rule"><em>los tres aparecen</em> — sin <em>se</em>, y el verbo en plural.</td></tr>
+            <tr data-g="se-verbo"><td>Verbo pronominal</td><td><span class="rd-cnt"><i style="width:24px"></i>2</span></td><td class="rd-rule"><em>vestirse como</em>; <em>quedarse</em> en un lugar = to stay. El <em>se</em> es obligatorio.</td></tr>
+            <tr data-g="regimen"><td>Régimen del verbo</td><td><span class="rd-cnt"><i style="width:24px"></i>2</span></td><td class="rd-rule"><em>contactar <b>a</b></em> alguien: <em>contacté al noticiero</em>. Y <em>traficar algo</em> — ver <em>Sin resolver</em>.</td></tr>
+            <tr data-g="desde-que"><td>desde que</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule"><em>desde</em> + sustantivo, pero <em>desde que</em> + verbo conjugado.</td></tr>
+            <tr data-g="ser-tener"><td>ser por tener</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule">Medidas y edad con <em>tener</em> (o <em>medir</em>): <em>tenía como seis pies de altura</em>. Tarjeta ④.</td></tr>
+            <tr data-g="conector"><td>Conector</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule">Enumeración de prendas: <em>vaqueros y zapatillas</em>, no <em>vaqueros con zapatillas</em>.</td></tr>
+            <tr data-g="subj"><td>Subjuntivo en relativa</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule"><em>Si pudiera encontrar a una persona que tuviera…</em>: dentro del «si» todo va en el mismo mundo — los tiempos coinciden (<em>pudiera · tuviera · podría</em>), y la persona es hipotética. Con <em>tenía</em> sería una persona concreta que sé que existe.</td></tr>
+            <tr data-g="lexico"><td>Palabra equivocada</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule"><em>la delincuencia</em> es el fenómeno; <em>el delincuente</em> es la persona.</td></tr>
+            <tr data-g="demostr"><td>Demostrativo</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule"><em>aquello, esto, eso</em> son neutros y van solos (<em>eso no me gusta</em>). Delante de un sustantivo: <em>aquel momento</em>, <em>ese perrito</em>.</td></tr>
+            <tr data-g="pluscuam"><td>Pluscuamperfecto</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule">Algo anterior a otro momento del pasado → <em>había</em> + participio. Y un robo es un hecho, no un estado: <em>ser robado</em> (por alguien), no <em>estar</em> — <em>había sido robada</em>.</td></tr>
+            <tr data-g="tiempo"><td>Presente por pasado</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule">Un relato en pasado se queda en pasado: <em>lo que necesitaba</em>, no <em>necesito</em>.</td></tr>
+            <tr data-g="leismo"><td>le / lo</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule"><em>enviar algo a alguien</em>: los detalles son el OD; quien los recibe es el OI → <em>le envié</em>. Aquí el error fue al revés que en la clase del 22.</td></tr>
+            <tr data-g="preterito"><td>Imperfecto por pretérito</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule">Una opinión que ya se cerró va en pretérito: <em>nunca creí</em> — «opinión cerrada», «hecho puntual». Tarjeta ②.</td></tr>
+            <tr data-g="fut-pasado"><td>Futuro en el pasado</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule">Futuro visto desde el pasado: <em>ir</em> en imperfecto + <em>a</em> + infinitivo — <em>iba a ver</em> / <em>fuera a ver</em>. Tarjeta ②.</td></tr>
+            <tr data-g="region" class="rd-noerr"><td>Preferencia regional</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule"><em>Soplo</em> es correcto (<em>dar un soplo</em> = to tip off, coloquial); en la Argentina lo natural es <em>pista</em>. No es un error.</td></tr>
+            <tr data-g="modismo" class="rd-noerr"><td>Modismo inglés</td><td><span class="rd-cnt"><i style="width:12px"></i>1</span></td><td class="rd-rule"><em>A face that had seen more years than its age</em>: el español no tiene ese modismo, y lo metí a propósito para ver qué hacía ella. Lo reescribió de dos maneras; lo llano sería <em>aparentaba más edad de la que tenía</em>. No es un error.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="rd-hint">Toca la fila otra vez, o «Quitar resaltado», para apagarlo. Lo que ella no marcó quedó como lo escribí — el texto registra su corrección, no una versión perfecta. Las dos últimas filas no son errores: una es una preferencia de la región, y la otra, un modismo inglés metido a propósito.</p>
+
+      <div class="rd-pending">
+        <h5>Sin resolver</h5>
+        <p>Marcas que no leo con seguridad, o cosas que quedaron a medias. Nada de esto entra al texto corregido hasta confirmarlo.</p>
+        <ol>
+          <li><b>«que trafican <em>en</em> los animales robados»</b> — hay una marca sobre <em>en</em>, sin reemplazo escrito.
+            <span>En el vocabulario escribió <em>traficar algo</em>, sin preposición — eso apunta a borrar el <em>en</em>: <em>que trafican animales robados</em>. La otra posibilidad es <em>traficar con</em>.</span></li>
+          <li><b>«un <em>anillo</em> del crimen»</b> — escribió <em>círculo</em> al margen.
+            <span>¿Reemplazo directo, o buscaba otra frase entera, como <em>una red de traficantes</em>?</span></li>
+          <li><b>«Bueno, y tu perro, ¿cómo <em>parecía</em>?»</b> — el primer <em>¿cómo parecía?</em> lo cambió por <em>se veía</em>; el segundo no lo marcó.
+            <span>Probablemente se le pasó; no lo cambio sin preguntar.</span></li>
+          <li><b>«Me dijo que <em>tuvo</em> una foto»</b> — escribió <em>tenían</em>.
+            <span>El sujeto es el dueño de la tienda, así que se esperaría <em>tenía</em>. ¿Un desliz, o leyó <em>dos personas</em> como sujeto?</span></li>
+          <li><b>«muchas gracias detective»</b> — una marquita roja entre las letras de <em>gracias</em>, sin nada escrito.
+            <span>Lo más probable es la coma antes de nombrar a la persona: <em>muchas gracias, detective</em>. Pero es una conjetura.</span></li>
+          <li><b>«vio a sus sospechosos y <em>eso</em> pobre perrito»</b> — cambió <em>peor</em> por <em>pobre</em> pero no tocó <em>eso</em>.
+            <span>Es el mismo error que <em>aquello momento</em>: delante de un sustantivo va <em>ese</em>, y seguramente con la <em>a</em> personal — <em>y a ese pobre perrito</em>.</span></li>
+        </ol>
+      </div>
+    </div>
+
+    <p class="anotacion"><strong><em>Departamento</em>, <em>apartamento</em>, <em>piso</em>.</strong> Su nota no dice que <em>departamento</em> sea solo argentino, sino que en la Argentina es la palabra preferida. <em>Departamento</em>: Argentina, México, Chile, Perú, Ecuador, Bolivia. <em>Apartamento</em>: Colombia, Venezuela, Uruguay y casi toda Centroamérica y el Caribe. <em>Piso</em>: España — donde <em>departamento</em> confunde, porque allá es la sección de una empresa o de una universidad. <span class="var-tag">Uso variable</span></p>
+  </article>
+
+  <!-- ─────────────────────────── ② ─────────────────────────── -->
+  <article class="grammar-card card-gamma" id="s2">
+    <div class="card-header">
+      <div class="card-number">②</div>
+      <div class="card-title-group">
+        <div class="card-title">Nunca creí que… — una frase, tres decisiones</div>
+        <div class="card-title-en">Aspect, time and mood in one sentence — and the mood was not the mistake</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Al final del relato, la señora Verde dice que nunca pensó volver a ver a su perro. Escribí <em>nunca creía que viera a mi amiguito otra vez</em>, pensando que después de <em>no creo que</em> siempre va subjuntivo. La profe corrigió dos cosas — y ninguna de las dos era el modo.
+    </p>
+
+    <div class="contrast">
+      <div class="contrast-item bad"><span class="mark">✗</span><div class="txt"><div class="es">Nunca creía que viera a mi amiguito otra vez.</div><div class="gloss">Lo que escribí.</div></div></div>
+      <div class="contrast-item good"><span class="mark">✓</span><div class="txt"><div class="es">Nunca creí que iba a ver a mi amiguito otra vez.</div><div class="gloss">Su corrección.</div></div></div>
+      <div class="contrast-item good"><span class="mark">✓</span><div class="txt"><div class="es">Nunca creí que fuera a ver a mi amiguito otra vez.</div><div class="gloss">La otra versión que apoyó. También correcta.</div></div></div>
+    </div>
+
+    <div class="sub-head">Tres decisiones en una frase</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Decisión</th><th>Escribí</th><th>Corrección</th><th>Por qué</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Aspecto</strong> de <em>creer</em></td><td><em>creía</em></td><td><em>creí</em></td><td>Una creencia que ya terminó es un hecho cerrado. Sus palabras: <strong>«opinión cerrada»</strong>, <strong>«hecho puntual»</strong>.</td></tr>
+          <tr><td><strong>Tiempo</strong> de lo que sigue</td><td><em>viera</em></td><td><em>iba a ver</em> · <em>fuera a ver</em></td><td>Es un futuro visto desde el pasado: <em>ir</em> en imperfecto + <em>a</em> + infinitivo. <em>Viera</em> solo no dice «más tarde».</td></tr>
+          <tr><td><strong>Modo</strong></td><td>subjuntivo</td><td>indicativo <strong>o</strong> subjuntivo</td><td>Los dos son correctos. Depende de desde dónde hablas — abajo.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">Lo que yo creía que era el error — el subjuntivo — era lo único que estaba bien.</p>
+
+    <div class="sub-head">Su pizarra — el mismo corrimiento que el estilo indirecto</div>
+    <p class="explanation">
+      Escribió cuatro versiones: dos en presente, y las mismas dos pasadas al pasado. Cuando <em>creer</em> pasa al pasado, lo que depende de él retrocede un paso — la misma regla de sus apuntes de estilo indirecto: <strong>presente → imperfecto, futuro → condicional</strong>.
+    </p>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Presente</th><th>Pasado</th><th>El paso</th></tr></thead>
+        <tbody>
+          <tr><td><em>Nunca creo que voy a ver a mi perrito.</em></td><td><em>Nunca creí que iba a ver a mi perrito.</em></td><td><em>voy → iba</em></td></tr>
+          <tr><td><em>Nunca creo que veré a mi perrito.</em></td><td><em>Nunca creí que vería a mi perrito.</em></td><td><em>veré → vería</em></td></tr>
+          <tr><td><em>Nunca creo que vaya a ver a mi perrito.</em></td><td><em>Nunca creí que fuera a ver a mi perrito.</em></td><td><em>vaya → fuera</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Nunca creí que iba a ver a mi perrito otra vez.</div><div class="example-en">I never thought I'd see my little dog again. — indicativo</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Nunca creí que vería a mi perrito otra vez.</div><div class="example-en">The same, with the conditional. — indicativo</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Nunca creí que fuera a ver a mi perrito otra vez.</div><div class="example-en">The same, from inside the old disbelief. — subjuntivo</div></div>
+      </div>
+    </div>
+
+    <div class="sub-head">El modo es el punto de vista</div>
+    <p class="explanation">
+      El indicativo y el subjuntivo dicen cosas un poco distintas. <strong>El indicativo habla desde ahora:</strong> el perro está acá, y lo afirmas. <strong>El subjuntivo habla desde la incredulidad de entonces:</strong> cuenta lo que sentías, sin afirmar nada. Los hechos no obligan a elegir uno; lo decide cómo lo cuentas.
+    </p>
+    <div class="contrast">
+      <div class="contrast-item good"><span class="mark">✓</span><div class="txt"><div class="es">Nunca creí que iba a verlo otra vez.</div><div class="gloss">Desde ahora — y aquí está. Afirmas que pasó.</div></div></div>
+      <div class="contrast-item good"><span class="mark">✓</span><div class="txt"><div class="es">Nunca creí que fuera a verlo otra vez.</div><div class="gloss">Desde la incredulidad de entonces. Correcta aunque el perro haya vuelto.</div></div></div>
+    </div>
+    <div class="aviso">
+      <span class="aviso-label">Una prueba — agrega un final en el que no pasó</span>
+      <div class="frase">✓ Nunca creí que fuera a verlo otra vez… y de hecho nunca lo volví a ver.</div>
+      <div class="frase">✗ Nunca creí que iba a verlo otra vez… y de hecho nunca lo volví a ver.</div>
+      <div class="aviso-nota">
+        Con el subjuntivo el final encaja: no se había afirmado nada. Con el indicativo choca, porque la frase ya había dado por hecho que sí lo volviste a ver. <span class="var-tag">No atestiguado</span> La prueba es mía; el principio no. La gramática de la RAE (NGLE §25.7) lo describe así: con <em>creer</em> negado, el indicativo implica que lo que sigue es verdad. Y el subjuntivo no implica lo contrario — <em>No sabía que tocaras el saxofón</em> se dice aunque lo toques.
+      </div>
+    </div>
+
+    <div class="sub-head">Creer, pensar, parecer</div>
+    <p class="explanation">En inglés todo es <em>think</em>. El español lo divide según lo que haces con la cabeza.</p>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Uso</th><th>Verbo</th><th>Ejemplos</th></tr></thead>
+        <tbody>
+          <tr><td>«I think» = mi opinión, mi apuesta</td><td><strong>creer que</strong></td><td><em>Creo que sí. Creo que no. Creo que va a llover. No creo que venga.</em></td></tr>
+          <tr><td>Pensar como actividad</td><td><strong>pensar</strong></td><td><em>Estoy pensando. Déjame pensarlo.</em></td></tr>
+          <tr><td>Pensar en algo o alguien</td><td><strong>pensar en</strong></td><td><em>Pienso en ti. ¿En qué piensas?</em></td></tr>
+          <tr><td>Tener la intención</td><td><strong>pensar</strong> + infinitivo</td><td><em>Pienso ir el sábado.</em></td></tr>
+          <tr><td>Opinión sobre algo</td><td><strong>pensar de</strong></td><td><em>¿Qué piensas de la película?</em></td></tr>
+          <tr><td>Más suave que los dos</td><td><strong>me parece que</strong></td><td><em>Me parece que va a llover.</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Creo que va a llover.</div><div class="example-en">I think it's going to rain. — «probably»: creer</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">¿En qué piensas?</div><div class="example-en">What are you thinking about? — «about»: pensar en</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Nunca pensé que te volvería a ver.</div><div class="example-en">I never thought I'd see you again. — tan natural como nunca creí</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Me parece que llegamos tarde.</div><div class="example-en">It seems to me we're late. — la más suave</div></div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — the quick rule.</strong> If you could swap English "I think" for "probably," use <em>creo</em>. If "think" describes the act, or has "about" or "of" after it, use <em>pensar</em>. <em>Pienso que es un error</em> is fine — it just sounds more considered than <em>creo que</em>. <em>Creo que sí / creo que no</em> are fixed answers. For "I never thought…", <em>nunca creí que</em> and <em>nunca pensé que</em> are both natural; <em>pensé</em> is probably the more common.
+    </div>
+
+    <p class="anotacion"><span class="var-tag">Uso variable</span> <em>No creas que es fácil</em> · <em>No creas que sea fácil</em> — después de una orden negativa aparecen los dos modos. El indicativo es por lo menos igual de común, porque quien lo dice está afirmando lo contrario: no es fácil.</p>
+
+    <a class="topic-link pending"><span class="arrow">→</span> <strong>Subjuntivo</strong> <em>— página completa (pendiente)</em></a>
+  </article>
+
+  <!-- ─────────────────────────── ③ ─────────────────────────── -->
+  <article class="grammar-card card-epsilon" id="s3">
+    <div class="card-header">
+      <div class="card-number">③</div>
+      <div class="card-title-group">
+        <div class="card-title">El dativo de posesión — dónde sí y dónde no</div>
+        <div class="card-title-en">Le acaricié la cabeza al carpincho, le encuentro sentido — and why the salt goes en la sopa</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-clase">En clase</span>
+        <span class="prov prov-ampl">Ampliación</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      Al final de la redacción le pregunté por frases como <em>le cambié el aceite al coche</em>. Con las partes del cuerpo entiendo la estructura; con lo abstracto, no. Lo vimos hablando. Resulta que son <strong>tres usos distintos del <em>le</em></strong>, más un caso en que un nativo no lo usa.
+    </p>
+
+    <div class="sub-head">1 · Partes y pertenencias — un patrón que sí se puede usar</div>
+    <p class="explanation">
+      La persona, el animal o el coche es dueño de la cosa, y además lo que le pasa a la cosa le pasa a él. El español marca al dueño con <strong><em>le</em> … <em>a</em></strong>, y la cosa lleva artículo, no posesivo: <em>la cabeza</em>, no <em>su cabeza</em>.
+    </p>
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Le acaricié la cabeza al carpincho.</div><div class="example-en">I stroked the capybara's head.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Le toqué el brazo a mi padre.</div><div class="example-en">I touched my father's arm.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Le cambié el aceite al auto.</div><div class="example-en">I changed the car's oil.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Le limpié la alfombra a mi madre.</div><div class="example-en">I cleaned my mother's rug (for her).</div></div>
+      </div>
+    </div>
+
+    <div class="sub-head">Con <em>le</em> o con <em>de</em> — no es lo mismo</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Con <em>de</em></th><th>Con <em>le</em> … <em>a</em></th></tr></thead>
+        <tbody>
+          <tr><td><em>Cambié el aceite del auto.</em><br>Un dato: de quién es el aceite.</td><td><em>Le cambié el aceite al auto.</em><br>El auto es el afectado: lo atendiste.</td></tr>
+          <tr><td><em>Limpié la alfombra de mi madre.</em><br>Solo pertenencia. Quizá ella ni se enteró.</td><td><em>Le limpié la alfombra a mi madre.</em><br>Lo hiciste por ella; ella se beneficia.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub-head">2 · Lo abstracto — frases hechas</div>
+    <p class="explanation">
+      Son las dos que resaltó en amarillo. Ayuda pensar en <em>tener</em> — <em>esto tiene sentido</em> → <em>le encuentro sentido a esto</em> — pero esa idea sirve para <strong>entenderlas</strong>, no para inventar otras. Apréndelas enteras.
+    </p>
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Le encuentro sentido a esto.</div><div class="example-en">I can see the point of this. — y la forma más común: no le encuentro sentido</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Le veo dificultades al plan.</div><div class="example-en">I can see problems with the plan.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Le veo futuro a esta idea.</div><div class="example-en">I think this idea has a future.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">No le veo la gracia.</div><div class="example-en">I don't see what's funny about it.</div></div>
+      </div>
+    </div>
+
+    <div class="sub-head">3 · Donde no va — la sal en la sopa</div>
+    <div class="contrast">
+      <div class="contrast-item bad"><span class="mark">✗</span><div class="txt"><div class="es">Le puse sal a la sopa.</div><div class="gloss">Para la profe, un nativo no lo diría así — al menos en la Argentina.</div></div></div>
+      <div class="contrast-item good"><span class="mark">✓</span><div class="txt"><div class="es">Puse sal en la sopa.</div><div class="gloss">Lo que diría un nativo.</div></div></div>
+    </div>
+    <p class="explanation">
+      La sal no es parte de la sopa como la cabeza es parte del carpincho: va <strong>adentro</strong>, y el español lo dice con <em>en</em>. Por eso la prueba de <em>tener</em> engaña: la sopa «tiene» sal, pero eso no alcanza.
+    </p>
+
+    <div class="sub-head">4 · Otro <em>le</em> — el que siente</div>
+    <p class="explanation">
+      En <em>me duele la cabeza</em>, <em>me queda bien la ropa</em> o <em>me falta tiempo</em>, el pronombre no es un dueño: es quien siente o sufre algo, como en <em>gustar</em>. Y este sí funciona con la sopa.
+    </p>
+    <div class="contrast">
+      <div class="contrast-item good"><span class="mark">✓</span><div class="txt"><div class="es">A la sopa le falta sal.</div><div class="gloss"><em>Faltar</em> funciona como <em>gustar</em>: la sopa es la que «sufre» la falta. La misma sopa, la misma sal — otro verbo, otra estructura.</div></div></div>
+    </div>
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">A la sopa le falta sal.</div><div class="example-en">The soup needs salt.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Me duele la cabeza.</div><div class="example-en">My head hurts. — <em>la</em>, no <em>mi</em>: la misma lógica del grupo 1</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Esta camisa me queda bien.</div><div class="example-en">This shirt fits me well.</div></div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — sorting a <em>le</em>.</strong> Ask what the person or thing is to the object. <strong>Its owner, and affected</strong> (head, arm, car oil, rug) → possessive dative, usable freely. <strong>An abstract "has"</strong> (sense, problems, a future) → a fixed phrase: learn it, don't build it. <strong>The one who feels or lacks</strong> (<em>doler, quedar, faltar</em>) → the <em>gustar</em> pattern. And when the thing simply goes <em>into</em> something, it's <em>en</em>: <em>puse sal en la sopa</em>.
+    </div>
+
+    <a class="topic-link" href="../IOP%20usage.html"><span class="arrow">→</span> <strong>IOP usage</strong> <em>— la página de los pronombres de objeto indirecto</em></a>
+  </article>
+
+  <!-- ─────────────────────────── ④ ─────────────────────────── -->
+  <article class="grammar-card card-zeta" id="s4">
+    <div class="card-header">
+      <div class="card-number">④</div>
+      <div class="card-title-group">
+        <div class="card-title">Describir a una persona — ser, medir, pesar, tener</div>
+        <div class="card-title-en">Adjectives take ser; numbers take medir, pesar or tener; age only takes tener</div>
+      </div>
+      <div class="prov-chips">
+        <span class="prov prov-material">Material</span>
+        <span class="prov prov-clase">En clase</span>
+      </div>
+    </div>
+
+    <p class="explanation">
+      En el relato escribí <em>el hombre era como seis pies de altura</em>, y la profe lo cambió por <em>tenía</em>. En sus apuntes dejó la regla:
+    </p>
+
+    <div class="aviso">
+      <span class="aviso-label">Su regla</span>
+      <div class="frase">Características físicas medibles en números o en sustantivos = tengo / tener.</div>
+      <div class="frase">Características físicas con adjetivos = soy / ser.</div>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th></th><th>Con adjetivo → <em>ser</em></th><th>Con número o sustantivo → <em>medir, pesar, tener</em></th></tr></thead>
+        <tbody>
+          <tr><td><strong>Altura</strong></td><td><em>Soy alto · soy mediano · soy bajo</em><br><em>soy petiso</em> <span class="rio-tag">Rioplatense</span></td><td><em>Mido 1,72</em> — «uno setenta y dos»<br><em>Mido 6 pies · Tengo 6 pies de altura</em></td></tr>
+          <tr><td><strong>Peso</strong></td><td><em>Soy flaco · soy gordo</em></td><td><em>Peso 60 kilos · Tengo 60 kilos de peso</em><br><em>Tengo 10 kilos de más</em> — <em>engordé</em></td></tr>
+          <tr><td><strong>Edad</strong></td><td><em>Soy joven · soy viejo</em></td><td><em>Tengo cincuenta años</em> — solo <em>tener</em></td></tr>
+          <tr><td><strong>Rasgos</strong></td><td><em>Soy rubia · soy blanca</em></td><td><em>Tengo ojos claros</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="aviso">
+      <span class="aviso-label">Lo que no se dice</span>
+      <div class="frase">✗ El hombre era como seis pies de altura.</div>
+      <div class="frase">✓ El hombre tenía como seis pies de altura. · ✓ El hombre medía como seis pies.</div>
+      <div class="frase">✗ Tengo un metro setenta y dos de altura. — su nota: «nadie usa».</div>
+      <div class="aviso-nota">
+        <em>Ser</em> más una medida no funciona nunca. Y para la altura con número, lo seguro es <em>medir</em>: <em>mido uno setenta y dos</em>. La versión con <em>medía</em> es mía, no de ella.
+      </div>
+    </div>
+
+    <div class="sub-head">Medir — e → i, como pedir</div>
+    <div class="table-wrapper">
+      <table>
+        <thead><tr><th>Persona</th><th>Presente</th></tr></thead>
+        <tbody>
+          <tr><td>yo</td><td><em>mido</em></td></tr>
+          <tr><td>tú</td><td><em>mides</em></td></tr>
+          <tr><td>vos</td><td><em>medís</em> <span class="rio-tag">Rioplatense</span></td></tr>
+          <tr><td>él, ella, usted</td><td><em>mide</em></td></tr>
+          <tr><td>nosotros</td><td><em>medimos</em></td></tr>
+          <tr><td>vosotros</td><td><em>medís</em> <span class="esp-tag">España</span></td></tr>
+          <tr><td>ellos, ustedes</td><td><em>miden</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Mido uno setenta y dos.</div><div class="example-en">I'm 1.72 m tall.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">¿Cuánto mides?</div><div class="example-en">How tall are you? <span class="rio-tag">Rioplatense: ¿cuánto medís?</span></div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Peso sesenta kilos.</div><div class="example-en">I weigh sixty kilos.</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Tengo cincuenta años y tengo ojos claros.</div><div class="example-en">I'm fifty and I have light-colored eyes.</div></div>
+      </div>
+    </div>
+
+    <div class="sub-head">¿Cómo era? — preguntar por el aspecto</div>
+    <p class="explanation">
+      Ella cambió mi <em>¿cómo parecía?</em> por <em>¿cómo se veía?</em>. <em>Parecer</em> necesita algo detrás — <em>parecía cansada</em>, <em>parecía extranjero</em>, <em>parecía tener treinta años</em> — y con <em>cómo</em> solo, no funciona. Para preguntar por el aspecto de alguien, lo más común es <em>¿cómo era?</em>
+    </p>
+    <div class="examples-block">
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">¿Cómo era?</div><div class="example-en">What did she look like? — la pregunta más común</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">¿Cómo se veía?</div><div class="example-en">How did she look? — su corrección</div></div>
+      </div>
+      <div class="example-row">
+        <div class="speak-wrap"><button class="speak-btn" onclick="speakExample(this)" title="Escuchar">🔊</button></div>
+        <div class="example-body"><div class="example-es">Ambos parecían extranjeros.</div><div class="example-en">They both looked foreign. — mi frase del relato, correcta: parecer + algo</div></div>
+      </div>
+    </div>
+
+    <div class="nota">
+      <strong>NOTA — units.</strong> Argentina is metric, so a porteño says <em>mide uno ochenta</em> — the number read as "one eighty," with no <em>metro</em>. Feet only appear on this sheet because I wrote the story from the US. <em>Petiso</em> (short) is everyday Rioplatense; the neutral word is <em>bajo</em>.
+    </div>
+
+    <a class="topic-link" href="../verbos-en-profundidad/tener.html"><span class="arrow">→</span> <strong>Tener</strong> <em>— la página del verbo, con edad, medidas y rasgos</em></a>
+  </article>
+
+  <section class="vocabulario" id="vocabulario">
+    <h2>Vocabulario de la clase</h2>
+    <div class="sub">Lo que escribió la profe durante la clase, en el orden en que salió. Glosas en inglés.</div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">A · Para empezar y la primera página</div>
+      <p class="vocab-grupo-sub">La charla del fin de semana, y lo que salió corrigiendo el comienzo del relato.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el finde</td><td class="vt-en">the weekend — <em>de</em> fin de semana<em>; coloquial</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">interactuar</td><td class="vt-en">to interact</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">atrapar a alguien</td><td class="vt-en">to catch someone — <em>con la</em> a <em>personal; tarjeta ①</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el delincuente · la delincuencia</td><td class="vt-en">the criminal · crime (the phenomenon) — <em>yo escribí</em> delincuencias</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">traficar algo</td><td class="vt-en">to traffic (in) something — <em>así lo escribió, sin preposición; también se dice</em> traficar con algo</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la pista</td><td class="vt-en">the clue, the lead</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">vestirse (como)</td><td class="vt-en">to dress (as) — <em>el</em> se <em>es obligatorio</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el turista, la turista · turístico</td><td class="vt-en">tourist (the person) · tourist (the adjective): <em>un lugar turístico</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">en lo de mamá</td><td class="vt-en">at Mom's — <span class="rio-tag">Rioplatense</span> lo de <em>+ persona = la casa de. Su ejemplo:</em> tengo que buscarla en lo de mi mamá<em>, con</em> buscar <em>= ir a recoger</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">matchear</td><td class="vt-en">to match — <span class="var-tag">Uso variable</span> <em>anglicismo coloquial; lo neutro es</em> coincidir</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">coincidir (con)</td><td class="vt-en">to match, to coincide — <em>su corrección de mi</em> combinar</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">medible</td><td class="vt-en">measurable — <em>tarjeta ④</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">B · Del buzo a la birome</div>
+      <p class="vocab-grupo-sub">Mi «hoodie» abrió una cadena de palabras que terminó en el bolígrafo — el tema de la clase siguiente.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el buzo</td><td class="vt-en">the hoodie, the sweatshirt — <span class="rio-tag">Rioplatense</span> <em>y también</em> the diver<em>: según ella, la capucha recuerda al traje de buzo. En otros países,</em> buzo <em>puede ser el conjunto deportivo</em> <span class="var-tag">Uso variable</span></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el buceo</td><td class="vt-en">diving, scuba diving</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la capucha</td><td class="vt-en">the hood</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la sudadera</td><td class="vt-en">the sweatshirt — <em>México, España</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el mono capuchino</td><td class="vt-en">the capuchin monkey — <em>mi corazonada era buena: la</em> capucha <em>de los frailes capuchinos le dio nombre al mono, y al café</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el capuchón de la lapicera</td><td class="vt-en">the pen cap</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la birome</td><td class="vt-en">the ballpoint pen — <span class="rio-tag">Rioplatense</span> <em>de Biró, el de la clase del 22</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el bolígrafo · la lapicera · la birome</td><td class="vt-en">three names for a pen — bolígrafo <em>general;</em> lapicera <em>Río de la Plata y Chile;</em> birome <em>Río de la Plata</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el charco</td><td class="vt-en">the puddle</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el mármol</td><td class="vt-en">marble (the stone)</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la esfera</td><td class="vt-en">the sphere</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la birome esferográfica</td><td class="vt-en">the ballpoint pen — <span class="var-tag">Reg: incierto</span> esferográfica <em>/</em> esfero <em>es la palabra de Colombia; no sé si en la Argentina se dice así o fue para explicar la bolita</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">las zapatillas</td><td class="vt-en">the sneakers — <span class="var-tag">Uso variable</span> <em>en México y Colombia,</em> los tenis</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">C · La segunda página</div>
+      <p class="vocab-grupo-sub">Las correcciones del hombre de la tienda y del noticiero.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">verse (como)</td><td class="vt-en">to look (like) — ¿cómo se veía?</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">ser robado (por alguien)</td><td class="vt-en">to be stolen (by someone) — <em>había sido robada; un hecho, no un estado</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">parecer igual (a)</td><td class="vt-en">to look the same (as) — <em>ella usó</em> igual que</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">parecer el mismo perro</td><td class="vt-en">to seem to be the same dog</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">contactar a</td><td class="vt-en">to contact — contacté al noticiero</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">D · Los medios y los femeninos en -o</div>
+      <p class="vocab-grupo-sub">Del noticiero a las palabras cortadas que se quedan con el género de la palabra larga.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">el noticiero</td><td class="vt-en">the TV news</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">los medios (de comunicación)</td><td class="vt-en">the media</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la radio</td><td class="vt-en">the radio — <em>de la</em> radiofonía<em>.</em> El radio <em>es el radio de un círculo, y en parte de América también el aparato</em> <span class="var-tag">Uso variable</span></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la foto</td><td class="vt-en">the photo — <em>de la</em> fotografía</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la moto</td><td class="vt-en">the motorbike — <em>de la</em> motocicleta</td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la mano</td><td class="vt-en">the hand — <em>la excepción de verdad: femenina en -o, sin palabra larga detrás</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="vocab-grupo">
+      <div class="vocab-grupo-title">E · El final del relato</div>
+      <p class="vocab-grupo-sub">La señora Verde, la llamada y cómo nombrar a la gente.</p>
+      <table class="vocab-table">
+        <tbody>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">porfa · porfi</td><td class="vt-en">please — <em>coloquial; ella lo marcó como muy común en el Río de la Plata</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">llevar de regreso</td><td class="vt-en">to take back — <em>su respuesta a mi pregunta 5</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">la señora · la señorita · el señor · el doctor</td><td class="vt-en">Mrs. · Miss · Mr. · Dr. — <em>con artículo cuando hablas de la persona (</em>la señora Verde<em>), sin artículo cuando le hablas. Me faltó dos veces: tarjeta ①</em></td></tr>
+          <tr><td class="vt-audio"><button class="speak-btn" onclick="speakTerm(this)" title="Escuchar">🔊</button></td><td class="vt-es">personificar</td><td class="vt-en">to personify</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="materiales" id="materiales">
+    <h2>Materiales de la clase</h2>
+    <div class="sub">Lo que subió la profe — archivado en <em>recursos/clase-2026-09-15/</em>. El PDF se abre en otra pestaña.</div>
+
+    <a class="material-item" href="../../recursos/clase-2026-09-15/apuntes-medidas-y-estilo-indirecto.pdf" target="_blank" rel="noopener">
+      <div class="material-left">
+        <span class="material-tipo tipo-expl">Apuntes</span>
+        <div>
+          <div class="material-title">Medidas, <em>enviar</em> y estilo indirecto — sus apuntes de la clase</div>
+          <div class="material-desc">Lo que escribió mientras hablábamos: el <em>buscar</em> de «tengo que buscarla en lo de mi mamá»; <em>medir</em> conjugado; <em>ser</em> contra <em>tener</em> para describir a una persona, con su regla y el «nadie usa»; <em>enviar algo a alguien</em> (OD + OI) con mi <em>lo envié</em> corregido; y el estilo indirecto: presente → imperfecto, futuro → condicional. Corto y todo útil. 2 p.</div>
+          <div class="material-destino">→ Tarjetas ② y ④, y el <em>le envié</em> de la tarjeta ①.</div>
+        </div>
+      </div>
+      <span class="material-dl">PDF ↓</span>
+    </a>
+  </section>
+
+  <section class="preguntas" id="preguntas">
+    <h2>Preguntas para la profe</h2>
+    <div class="sub">Lo que quedó sin resolver — para cuando surja</div>
+    <ol>
+      <li><strong><em>Nunca creí que iba a verlo otra vez</em>.</strong> Para vos, ¿ya dice que lo volví a ver? ¿Y con <em>fuera a verlo</em> queda abierto?</li>
+      <li><strong><em>Le puse sal</em>.</strong> Hablando de la sopa, sin decir <em>a la sopa</em> — «¿le pusiste sal?» — ¿te suena bien? ¿El problema era el <em>le</em>, o decir <em>a la sopa</em>?</li>
+      <li><strong><em>La birome esferográfica</em>.</strong> ¿Se dice así en la Argentina, o fue para explicar la bolita? Tengo entendido que <em>esfero</em> es de Colombia.</li>
+      <li><strong><em>¿Cómo era?</em> o <em>¿cómo se veía?</em></strong> Para preguntar por el aspecto de alguien, ¿cuál te sale primero?</li>
+      <li><strong><em>Trafican en los animales</em>.</strong> En el vocabulario escribiste <em>traficar algo</em>, sin preposición. ¿Había que borrar el <em>en</em>, o cambiarlo por <em>con</em>?</li>
+    </ol>
+  </section>
+
+  <div class="page-footer">Clase del 15 de septiembre de 2026 · Mi Proyecto Español</div>
+</div>
+
+
+<!-- ───────────────────── Visor de imágenes ───────────────────── -->
+<div class="visor" id="visor" role="dialog" aria-modal="true" aria-label="Visor de imágenes">
+  <div class="visor-barra">
+    <div class="visor-titulo" id="visor-titulo"></div>
+    <div class="visor-acciones">
+      <button class="visor-btn" id="visor-zoom" onclick="alternarZoom()">Ampliar</button>
+      <button class="visor-btn visor-cerrar" onclick="cerrarVisor()" title="Cerrar (Esc)">✕</button>
+    </div>
+  </div>
+  <div class="visor-cuerpo" id="visor-cuerpo" onclick="alternarZoom(event)">
+    <img id="visor-img" src="" alt="">
+  </div>
+  <div class="visor-pie" id="visor-pie"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  TTS — neutral Latin American Spanish is the default site-wide.
+//  data-region="rioplatense" rows are TEXTUAL flags only; their
+//  audio stays neutral.
+//
+//  This sheet has NO card whose subject is a sound, so there are no
+//  data-voice="rio" rows on it and all audio is neutral — including
+//  the ¿cuánto medís? line in card ④, which is written neutral with
+//  a Rioplatense chip beside it. rioVoice, speakPlancha() and
+//  speakVerbo() are kept for parity with the other class sheets.
+// ═══════════════════════════════════════════════════════════════
+let neutralVoice = null;
+let rioVoice = null;
+let voicesReady = false;
+let ttsRate = 1.0;
+
+function pickVoices() {
+  if (!window.speechSynthesis) return;
+  const voices = speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+  neutralVoice =
+       voices.find(v => v.lang === 'es-419')
+    || voices.find(v => v.lang === 'es-MX')
+    || voices.find(v => v.lang === 'es-US')
+    || voices.find(v => v.lang === 'es-CO')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY' && v.lang !== 'es-ES')
+    || voices.find(v => v.lang && v.lang.startsWith('es') && v.lang !== 'es-AR' && v.lang !== 'es-UY')
+    || voices.find(v => v.lang && v.lang.startsWith('es'));
+
+  // Scoped to card ② only. Null is a normal outcome.
+  rioVoice =
+       voices.find(v => /argentin/i.test(v.name))
+    || voices.find(v => v.lang === 'es-AR')
+    || voices.find(v => v.lang === 'es-UY')
+    || null;
+
+  voicesReady = true;
+}
+
+if (window.speechSynthesis) {
+  speechSynthesis.addEventListener('voiceschanged', pickVoices);
+  pickVoices();
+}
+
+function ensureVoices() {
+  return new Promise(resolve => {
+    if (voicesReady) return resolve();
+    let attempts = 0;
+    const iv = setInterval(() => {
+      pickVoices();
+      attempts++;
+      if (voicesReady || attempts > 20) { clearInterval(iv); resolve(); }
+    }, 100);
+  });
+}
+
+function setRate(label, btn) {
+  ttsRate = label === 'lento' ? 0.78 : label === 'rapido' ? 1.22 : 1.0;
+  document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function cleanForTTS(text) {
+  if (!text) return '';
+  return text
+    .replace(/\p{Extended_Pictographic}/gu, '')
+    .replace(/[\u{FE00}-\u{FE0F}]/gu, '')
+    .replace(/\u200D/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// Shared utterance path. wantRio is honoured only where the markup asks.
+async function say(text, btn, wantRio) {
+  if (!window.speechSynthesis || !text) return;
+
+  if (btn && btn.classList.contains('playing')) {
+    speechSynthesis.cancel();
+    btn.classList.remove('playing');
+    return;
+  }
+  speechSynthesis.cancel();
+  document.querySelectorAll('.speak-btn.playing').forEach(b => b.classList.remove('playing'));
+
+  if (!voicesReady) await ensureVoices();
+
+  const u = new SpeechSynthesisUtterance(text);
+  const chosen = (wantRio && rioVoice) ? rioVoice : neutralVoice;
+  if (chosen) { u.voice = chosen; u.lang = chosen.lang; }
+  else { u.lang = wantRio ? 'es-AR' : 'es-419'; }
+  u.rate = ttsRate;
+  u.pitch = 1.0;
+  if (btn) {
+    u.onstart = () => btn.classList.add('playing');
+    u.onend   = () => btn.classList.remove('playing');
+    u.onerror = () => btn.classList.remove('playing');
+  }
+  speechSynthesis.speak(u);
+}
+
+async function speakExample(btn) {
+  const row = btn.closest('.example-row');
+  if (!row) return;
+  const esEl = row.querySelector('.example-es');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, row.dataset.voice === 'rio');
+}
+
+// Vocabulario de la clase — one button per term row.
+async function speakTerm(btn) {
+  const row = btn.closest('tr');
+  if (!row) return;
+  const esEl = row.querySelector('.vt-es');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, false);
+}
+
+// Plancha con etiquetas — the labels sitting over the cartoon in card ①.
+// Works for both renderers: the pill on desktop, the list item on mobile.
+async function speakPlancha(btn) {
+  const cont = btn.closest('.etiqueta') || btn.closest('li');
+  if (!cont) return;
+  const esEl = cont.querySelector('.etiqueta-texto, .pl-texto');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.cloneNode(true).textContent);
+  await say(text, btn, false);
+}
+
+// Unused on this sheet — kept for parity with the other class sheets.
+async function speakVerbo(btn) {
+  const row = btn.closest('tr');
+  if (!row) return;
+  const esEl = row.querySelector('strong');
+  if (!esEl) return;
+  const text = cleanForTTS(esEl.textContent);
+  await say(text, btn, true);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Visor de imágenes — materiales y figuras se abren acá en vez
+//  de saltar a otra pestaña. Cierra con ✕, con clic en el fondo
+//  o con Esc. "Ampliar" pasa a tamaño natural con scroll, que es
+//  lo que necesitan las láminas densas.
+// ═══════════════════════════════════════════════════════════════
+const visor       = document.getElementById('visor');
+const visorImg    = document.getElementById('visor-img');
+const visorTitulo = document.getElementById('visor-titulo');
+const visorPie    = document.getElementById('visor-pie');
+const visorCuerpo = document.getElementById('visor-cuerpo');
+const visorZoom   = document.getElementById('visor-zoom');
+
+// Cuánto agranda "Ampliar", en % del tamaño nativo del archivo. Se fija por
+// imagen con data-zoom, porque las láminas llegan en tamaños muy distintos:
+// una de 204 px y una de 1080 px no pueden compartir un solo factor.
+const ZOOM_POR_DEFECTO = 220;
+let zoomActual = ZOOM_POR_DEFECTO;
+
+function abrirVisor(src, titulo, pie, zoom) {
+  if (!visor) return;
+  zoomActual = Number(zoom) > 0 ? Number(zoom) : ZOOM_POR_DEFECTO;
+  visorImg.style.width = '';
+  visorImg.src = src;
+  visorImg.alt = titulo || '';
+  visorTitulo.textContent = titulo || '';
+  visorPie.textContent = pie || '';
+  visorPie.style.display = pie ? '' : 'none';
+  visorCuerpo.classList.remove('ampliado');
+  visorZoom.textContent = 'Ampliar';
+  visor.classList.add('abierto');
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarVisor() {
+  if (!visor) return;
+  visor.classList.remove('abierto');
+  visorCuerpo.classList.remove('ampliado');
+  visorImg.style.width = '';
+  visorImg.src = '';
+  document.body.style.overflow = '';
+}
+
+function alternarZoom(e) {
+  // Clic en el fondo del cuerpo (no en la imagen) cierra el visor.
+  if (e && e.target === visorCuerpo) { cerrarVisor(); return; }
+  const ampliado = visorCuerpo.classList.toggle('ampliado');
+  visorZoom.textContent = ampliado ? 'Ajustar' : 'Ampliar';
+  if (ampliado) {
+    const nativo = visorImg.naturalWidth || visorImg.width;
+    visorImg.style.width = Math.round(nativo * zoomActual / 100) + 'px';
+    // Centra el recorte visible en vez de dejarlo pegado al borde.
+    requestAnimationFrame(() => {
+      visorCuerpo.scrollLeft = (visorCuerpo.scrollWidth  - visorCuerpo.clientWidth)  / 2;
+      visorCuerpo.scrollTop  = (visorCuerpo.scrollHeight - visorCuerpo.clientHeight) / 2;
+    });
+  } else {
+    visorImg.style.width = '';
+    visorCuerpo.scrollTo({ top: 0, left: 0 });
+  }
+}
+
+// Materiales: intercepta el enlace. Si el JS falla, el href abre la pestaña.
+function abrirMaterial(a) {
+  const titulo = a.querySelector('.material-title');
+  const desc   = a.querySelector('.material-desc');
+  abrirVisor(a.getAttribute('href'),
+             titulo ? titulo.textContent.trim() : '',
+             desc ? desc.textContent.trim() : '',
+             a.dataset.zoom);
+  return false;
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && visor && visor.classList.contains('abierto')) cerrarVisor();
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  Ampliación en el lugar — para las imágenes de las tarjetas.
+//  Mismo gesto que en el resto del sitio: clic para agrandar,
+//  clic de nuevo (o afuera, o scroll, o Esc) para soltar.
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.duo img, .figura-cartel img');
+  let activeImage = null;
+
+  const resetZoom = () => {
+    if (!activeImage) return;
+    activeImage.classList.remove('magnified');
+    const cont = activeImage.closest('figure');
+    if (cont) cont.classList.remove('zoomed');
+    activeImage = null;
+  };
+
+  images.forEach(img => {
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (activeImage === img) { resetZoom(); return; }
+      resetZoom();
+      img.classList.add('magnified');
+      const cont = img.closest('figure');
+      if (cont) cont.classList.add('zoomed');
+      activeImage = img;
+    });
+  });
+
+  window.addEventListener('scroll', resetZoom, { passive: true });
+  document.addEventListener('click', resetZoom);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') resetZoom(); });
+});
+
+// ═══════════════════════════════════════════════════════════════
+//  Redacción corregida (card ①) — TALLER-redacciones §4.5–4.6.
+//  Three view modes on .rd; clicking an error-table row lights up
+//  every instance of that group in the story.
+// ═══════════════════════════════════════════════════════════════
+(function () {
+  const rd = document.getElementById('rd');
+  if (!rd) return;
+  const btns  = Array.from(rd.querySelectorAll('.rd-seg button'));
+  const rows  = Array.from(rd.querySelectorAll('#rd-tbody tr'));
+  const marks = Array.from(rd.querySelectorAll('#rd-story .c'));
+  const clear = document.getElementById('rd-clear');
+  let active = null;
+
+  function setMode(mode) {
+    rd.classList.remove('v-changes', 'v-clean', 'v-orig');
+    rd.classList.add(mode);
+    btns.forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode ? 'true' : 'false'));
+  }
+  btns.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+  setMode('v-changes');
+
+  function apply(g) {
+    marks.forEach(m => m.classList.toggle('hit', !!g && m.dataset.g === g));
+    rows.forEach(r => r.setAttribute('aria-selected', r.dataset.g === g ? 'true' : 'false'));
+    active = g;
+    clear.hidden = !g;
+  }
+
+  rows.forEach(r => {
+    r.setAttribute('tabindex', '0');
+    r.setAttribute('aria-selected', 'false');
+    const toggle = () => {
+      const g = r.dataset.g;
+      if (active === g) { apply(null); return; }
+      if (!rd.classList.contains('v-changes')) setMode('v-changes');
+      apply(g);
+      const first = rd.querySelector('#rd-story .c[data-g="' + g + '"]');
+      if (first) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    };
+    r.addEventListener('click', toggle);
+    r.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+  clear.addEventListener('click', () => apply(null));
+})();
+</script>
+
+</body>
+</html>
